@@ -1,0 +1,356 @@
+/* ============================
+   HOME
+============================ */
+
+.Home{
+    position:relative;
+    width:100%;
+    min-height:100vh;
+    overflow:hidden;
+    isolation:isolate;
+}
+
+/* ============================
+   BACKGROUND
+============================ */
+
+.Home-background{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    z-index:-10;
+
+    overflow:hidden;
+
+}
+
+/* Dark Forest Image */
+
+.Home-bgOne{
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:var(--bgOne);
+
+    background-repeat:repeat-y;
+
+    background-position:center top;
+
+    background-size:cover;
+
+    opacity:.55;
+
+    transform:scale(1.05);
+
+    filter:blur(1px);
+
+}
+
+/* Fern Image */
+
+.Home-bgTwo{
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:var(--bgTwo);
+
+    background-repeat:repeat-y;
+
+    background-position:center top;
+
+    background-size:cover;
+
+    opacity:.35;
+
+    mix-blend-mode:screen;
+
+    transform:translateZ(0) scale(1.08);
+
+    animation:HomeFloat 14s ease-in-out infinite;
+
+}
+
+/* Green Gradient */
+
+.Home-gradient{
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    radial-gradient(circle at top,
+    rgba(34,197,94,.25),
+    transparent 40%),
+
+    radial-gradient(circle at bottom,
+    rgba(16,185,129,.2),
+    transparent 45%),
+
+    linear-gradient(
+    180deg,
+    rgba(0,0,0,.35),
+    rgba(0,0,0,.55),
+    rgba(0,0,0,.75));
+
+}
+
+/* Extra Overlay */
+
+.Home-overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    backdrop-filter:blur(2px);
+
+    background:
+    radial-gradient(circle,
+    transparent 10%,
+    rgba(0,0,0,.08));
+
+}
+
+/* ============================
+   CONTENT
+============================ */
+
+.Home-content{
+
+    position:relative;
+
+    z-index:10;
+
+    width:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+/* Every component */
+
+.Home-section{
+
+    width:100%;
+
+    padding:80px 6%;
+
+    background:transparent;
+
+}
+
+/* Demo */
+
+.Home-demoCard{
+
+    width:100%;
+
+    min-height:400px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-direction:column;
+
+    color:white;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.35);
+
+}
+
+.Home-demoCard h1{
+
+    font-size:4rem;
+
+    margin-bottom:20px;
+
+}
+
+.Home-demoCard p{
+
+    color:#d2d2d2;
+
+    font-size:1.1rem;
+
+    max-width:650px;
+
+    text-align:center;
+
+}
+
+/* ============================
+   ANIMATION
+============================ */
+
+@keyframes HomeFloat{
+
+    0%{
+
+        transform:
+        translateY(0px)
+        scale(1.05);
+
+    }
+
+    50%{
+
+        transform:
+        translateY(-18px)
+        scale(1.08);
+
+    }
+
+    100%{
+
+        transform:
+        translateY(0px)
+        scale(1.05);
+
+    }
+
+}
+
+/* ============================
+   LAPTOP
+============================ */
+
+@media(max-width:1200px){
+
+.Home-section{
+
+padding:70px 5%;
+
+}
+
+.Home-demoCard h1{
+
+font-size:3rem;
+
+}
+
+}
+
+/* ============================
+   TABLET
+============================ */
+
+@media(max-width:992px){
+
+.Home-demoCard{
+
+min-height:320px;
+
+padding:40px;
+
+}
+
+.Home-demoCard h1{
+
+font-size:2.5rem;
+
+}
+
+.Home-demoCard p{
+
+font-size:1rem;
+
+}
+
+}
+
+/* ============================
+   MOBILE
+============================ */
+
+@media(max-width:768px){
+
+.Home-section{
+
+padding:50px 20px;
+
+}
+
+.Home-demoCard{
+
+min-height:260px;
+
+border-radius:22px;
+
+}
+
+.Home-demoCard h1{
+
+font-size:2rem;
+
+}
+
+.Home-bgOne{
+
+background-size:cover;
+
+background-repeat:repeat-y;
+
+}
+
+.Home-bgTwo{
+
+background-size:cover;
+
+background-repeat:repeat-y;
+
+opacity:.25;
+
+}
+
+}
+
+/* ============================
+   SMALL MOBILE
+============================ */
+
+@media(max-width:480px){
+
+.Home-demoCard{
+
+padding:30px 20px;
+
+}
+
+.Home-demoCard h1{
+
+font-size:1.7rem;
+
+}
+
+.Home-demoCard p{
+
+font-size:.9rem;
+
+}
+
+}
