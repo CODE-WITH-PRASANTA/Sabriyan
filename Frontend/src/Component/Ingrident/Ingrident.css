@@ -1,0 +1,146 @@
+/* Container styling */
+.Ingrident {
+  background-color: transparent;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.Ingrident-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.Ingrident-subtitle {
+  color: #A1B882;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.Ingrident-title {
+  color: #FFFFFF;
+  font-size: 2.25rem;
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  letter-spacing: 0.025em;
+  margin: 0;
+}
+
+.Ingrident-titleHighlight {
+  color: #8FB339;
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* Grid Layout */
+.Ingrident-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+/* Responsive Grid Breakpoints */
+@media (min-width: 640px) {
+  .Ingrident-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .Ingrident-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .Ingrident-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .Ingrident-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .Ingrident-title {
+    font-size: 3rem;
+  }
+}
+
+/* Card Styling */
+.Ingrident-card {
+  background-color: rgba(9, 28, 18, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid #1A3828;
+  border-radius: 1rem;
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+.Ingrident-card:hover {
+  border-color: #A1B882;
+  box-shadow: 0px 10px 25px rgba(161, 184, 130, 0.15);
+  transform: translateY(-5px);
+}
+
+/* Icon Section */
+.Ingrident-iconContainer {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem;
+  border-radius: 50%;
+  background-color: rgba(19, 42, 28, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.Ingrident-card:hover .Ingrident-iconContainer {
+  background-color: #1E3F2B;
+}
+
+.Ingrident-icon {
+  color: #B5E048;
+  font-size: 2.75rem;
+  transition: transform 0.3s ease;
+}
+
+.Ingrident-card:hover .Ingrident-icon {
+  transform: scale(1.1);
+}
+
+/* Text Styling */
+.Ingrident-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.Ingrident-cardTitle {
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.Ingrident-card:hover .Ingrident-cardTitle {
+  color: #B5E048;
+}
+
+.Ingrident-cardDescription {
+  color: #A0B0A6;
+  font-size: 0.825rem;
+  line-height: 1.5;
+  margin: 0;
+}

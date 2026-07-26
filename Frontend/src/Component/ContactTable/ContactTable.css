@@ -1,0 +1,488 @@
+/* Base Section Layout */
+.contact-table {
+  position: relative;
+  width: 100%;
+  min-height: 950px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 60px 8%;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Height Responsive Breakpoints */
+@media (min-width: 1200px) {
+  .contact-table { height: 950px; }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .contact-table { height: 850px; }
+}
+
+@media (max-width: 991px) {
+  .contact-table {
+    height: auto;
+    justify-content: center;
+    padding: 60px 20px;
+  }
+}
+
+/* Background Scene & Effects */
+.contact-table-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: transform 0.2s ease-out;
+}
+
+.contact-table-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: contactTableBgZoom 20s ease-in-out infinite alternate;
+}
+
+@keyframes contactTableBgZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+.contact-table-fog-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 75% 30%, rgba(255, 255, 255, 0.15) 0%, rgba(10, 25, 12, 0.4) 80%);
+  pointer-events: none;
+}
+
+/* Step 17: Fireflies Effect */
+.contact-table-fireflies {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.contact-table-firefly {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #7DFF4F;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #7DFF4F, 0 0 20px #7DFF4F;
+  animation: contactTableFlicker linear infinite;
+}
+
+@keyframes contactTableFlicker {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  50% { opacity: 1; transform: translate(25px, -35px); }
+}
+
+/* Step 18: Floating Dust Particles */
+.contact-table-dust {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.contact-table-particle {
+  position: absolute;
+  bottom: -10px;
+  width: 4px;
+  height: 4px;
+  background-color: #FFD24C;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #FFD24C;
+  animation: contactTableFloatDust linear infinite;
+}
+
+@keyframes contactTableFloatDust {
+  0% { opacity: 0; transform: translateY(40px); }
+  50% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-100px); }
+}
+
+/* Main Container & Hanging Ropes */
+.contact-table-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Step 2: Hanging Ropes */
+.contact-table-ropes {
+  position: absolute;
+  top: -80px;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.contact-table-rope {
+  width: 6px;
+  height: 90px;
+  background: repeating-linear-gradient(45deg, #8a623a, #8a623a 6px, #5c4024 6px, #5c4024 12px);
+  border-radius: 3px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+  animation: contactTableRopeSway 7s ease-in-out infinite alternate;
+}
+
+@keyframes contactTableRopeSway {
+  0% { transform: rotate(1deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+/* Step 1 & Step 3: Wooden Main Board Layering */
+.contact-table-board-wrapper {
+  position: relative;
+  width: 100%;
+  animation: contactTableBoardHang 8s ease-in-out infinite alternate;
+  transition: transform 0.2s ease-out;
+}
+
+@keyframes contactTableBoardHang {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(10px) rotate(1deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Layer 1: Ambient Shadow */
+.contact-table-layer-shadow {
+  position: absolute;
+  inset: 0;
+  transform: scale(1.02) translateY(20px);
+  background: rgba(0, 0, 0, 0.4);
+  filter: blur(20px);
+  border-radius: 35px;
+  animation: contactTableShadowFloat 8s ease-in-out infinite alternate;
+}
+
+@keyframes contactTableShadowFloat {
+  0% { transform: scale(1.02) translateY(20px); }
+  50% { transform: scale(1.02) translateY(28px); }
+  100% { transform: scale(1.02) translateY(20px); }
+}
+
+/* Layer 2: Dark Oak Wood Frame */
+.contact-table-wood-frame {
+  position: relative;
+  background: #3e2713;
+  background-image: radial-gradient(circle, #4a3018 0%, #29180a 100%);
+  border: 10px solid #231306;
+  border-radius: 35px;
+  padding: 15px;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 20px 40px rgba(0,0,0,0.5);
+}
+
+/* Step 4: 3D Corner Leaves */
+.contact-table-3d-leaf {
+  position: absolute;
+  color: #52a332;
+  width: 38px;
+  height: 38px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+  animation: contactTableLeafSway 6s ease-in-out infinite alternate;
+  z-index: 15;
+}
+
+.leaf-top-left { top: -12px; left: -12px; transform: rotate(-45deg); }
+.leaf-top-right { top: -12px; right: -12px; transform: rotate(45deg); }
+.leaf-bottom-left { bottom: -12px; left: -12px; transform: rotate(-135deg); }
+.leaf-bottom-right { bottom: -12px; right: -12px; transform: rotate(135deg); }
+
+@keyframes contactTableLeafSway {
+  0% { transform: rotate(-3deg); }
+  100% { transform: rotate(4deg); }
+}
+
+/* Layer 3: Green Glass Inner Panel */
+.contact-table-green-panel {
+  position: relative;
+  background: linear-gradient(145deg, rgba(49, 73, 39, 0.92) 0%, rgba(24, 39, 24, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  border: 1px solid rgba(125, 255, 79, 0.2);
+  padding: 30px 35px;
+  overflow: hidden;
+}
+
+/* Step 19: Glass Shine Sweep Effect */
+.contact-table-glass-shine {
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transform: skewX(-20deg);
+  animation: contactTableGlassSweep 6s infinite;
+  pointer-events: none;
+}
+
+@keyframes contactTableGlassSweep {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(280%) skewX(-20deg); }
+}
+
+/* Step 5 & 6: Header & Extruded Title */
+.contact-table-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.contact-table-title {
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: #7DFF4F;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 0 6px 0;
+  text-shadow: 0 4px 0 #285418, 0 8px 0 #1c3d10, 0 15px 30px rgba(0, 0, 0, 0.7);
+  animation: contactTableTitlePulse 5s ease-in-out infinite;
+}
+
+@keyframes contactTableTitlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.contact-table-subtitle {
+  color: #d1fae5;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+  animation: contactTableSubtitleFade 4s ease-in-out infinite;
+}
+
+@keyframes contactTableSubtitleFade {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* Step 7: Contact Grid (2x2) */
+.contact-table-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .contact-table-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Step 8-10: Contact Card styling with 3D Tilt */
+.contact-table-card {
+  position: relative;
+  min-height: 140px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(125, 255, 79, 0.25);
+  border-radius: 20px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  animation: contactTableCardEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+}
+
+@keyframes contactTableCardEntrance {
+  0% { opacity: 0; transform: translateY(80px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.contact-table-card:hover {
+  border-color: #7DFF4F;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45), 0 0 20px rgba(125, 255, 79, 0.2);
+}
+
+.contact-table-card-glass-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Step 11 & 12: Icon Circle and Glow */
+.contact-table-icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(49, 73, 39, 0.8);
+  border: 2px solid #FFD24C;
+  color: #FFD24C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transform: translateZ(20px);
+  animation: contactTableIconGlow 4s infinite alternate;
+}
+
+@keyframes contactTableIconGlow {
+  0% { box-shadow: 0 0 0 rgba(255, 210, 76, 0); transform: rotate(0deg) translateZ(20px); }
+  50% { transform: rotate(5deg) translateZ(20px); }
+  100% { box-shadow: 0 0 20px rgba(255, 210, 76, 0.6); transform: rotate(0deg) translateZ(20px); }
+}
+
+.contact-table-card-body {
+  transform: translateZ(15px);
+}
+
+.contact-table-card-title {
+  color: #7DFF4F;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.contact-table-card-value {
+  color: #ffffff;
+  font-size: 0.82rem;
+  margin: 0;
+  line-height: 1.35;
+  white-space: pre-line;
+  opacity: 0.9;
+}
+
+/* Step 15 & 16: Bottom Interactive Widgets */
+.contact-table-bottom-widgets {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 25px;
+  gap: 20px;
+  transition: transform 0.2s ease-out;
+}
+
+@media (max-width: 650px) {
+  .contact-table-bottom-widgets {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Step 15: Social Media Wooden Board */
+.contact-table-social-board {
+  width: 320px;
+  background: #3e2713;
+  background-image: linear-gradient(180deg, #4a3018 0%, #29180a 100%);
+  border: 4px solid #231306;
+  border-radius: 20px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+  animation: contactTableSocialSwing 7s ease-in-out infinite alternate;
+}
+
+@keyframes contactTableSocialSwing {
+  0% { transform: rotate(-2deg); }
+  100% { transform: rotate(2deg); }
+}
+
+.contact-table-social-title {
+  color: #FFD24C;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.contact-table-social-icons {
+  display: flex;
+  gap: 12px;
+}
+
+.contact-table-social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(125, 255, 79, 0.15);
+  border: 1px solid #7DFF4F;
+  color: #7DFF4F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.contact-table-social-btn:hover {
+  transform: translateY(-6px) scale(1.15);
+  background: #7DFF4F;
+  color: #182718;
+  box-shadow: 0 0 15px #7DFF4F;
+}
+
+/* Step 16: Interactive Wooden Mailbox */
+.contact-table-mailbox {
+  position: relative;
+  width: 90px;
+  height: 80px;
+  background: #3e2713;
+  border-radius: 40px 40px 10px 10px;
+  border: 4px solid #231306;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+  cursor: pointer;
+  perspective: 400px;
+}
+
+.contact-table-mailbox-door {
+  position: absolute;
+  inset: 0;
+  background: #4a3018;
+  border-radius: 36px 36px 6px 6px;
+  border: 2px solid #5c4024;
+  transform-origin: bottom;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-table-mailbox-knob {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #FFD24C;
+}
+
+.contact-table-mailbox.is-open .contact-table-mailbox-door {
+  transform: rotateX(-75deg);
+}
+
+.contact-table-mailbox-interior {
+  position: absolute;
+  inset: 0;
+  background: #1a0e05;
+  border-radius: 36px 36px 6px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.contact-table-envelope {
+  transform: translateY(20px);
+  transition: transform 0.4s ease 0.1s;
+}
+
+.contact-table-mailbox.is-open .contact-table-envelope {
+  transform: translateY(0);
+}

@@ -1,0 +1,224 @@
+/* ==========================================================================
+   Crafted Component - Enhanced, SEO-Friendly CSS
+   ========================================================================== */
+
+/* Main Section Container
+   -------------------------------------------------------------------------- */
+.Crafted {
+  background-color: transparent;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem; /* Spacious padding for overall content */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Outer Card Container
+   -------------------------------------------------------------------------- */
+.Crafted-card {
+  background: linear-gradient(145deg, #021109 0%, #082115 60%, #03130b 100%);
+  border: 1px solid #143522;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column; /* Stacked on mobile */
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .Crafted-card {
+    flex-direction: row; /* Horizontal on desktop */
+    align-items: stretch; /* Match height */
+  }
+}
+
+/* Left Image Section
+   -------------------------------------------------------------------------- */
+.Crafted-imageWrapper {
+  width: 100%;
+  min-height: 250px; /* Reduced height on mobile to save space */
+  background-color: #020b06;
+  flex-shrink: 0;
+}
+
+@media (min-width: 900px) {
+  .Crafted-imageWrapper {
+    width: 40%; /* Reduced image width to allow more space for new text */
+    min-height: 100%; /* Spans full card height */
+  }
+}
+
+.Crafted-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Right Content Section
+   -------------------------------------------------------------------------- */
+.Crafted-content {
+  width: 100%;
+  padding: 2rem 1.5rem; /* Smaller padding on mobile */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .Crafted-content {
+    width: 60%;
+    padding: 3rem 4rem; /* More spacious content area */
+  }
+}
+
+/* Content Typography
+   -------------------------------------------------------------------------- */
+.Crafted-subtitle {
+  color: #a1b882;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.Crafted-mainTitle {
+  color: #ffffff;
+  font-size: 2rem;
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  line-height: 1.1;
+  margin: 0 0 1rem 0;
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 640px) {
+  .Crafted-mainTitle {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .Crafted-mainTitle {
+    font-size: 2.75rem;
+  }
+}
+
+.Crafted-titleHighlight {
+  color: #8fb339;
+  font-style: italic;
+  font-weight: 300;
+}
+
+.Crafted-description {
+  color: #a0b0a6;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  max-width: 600px;
+}
+
+/* Enhanced Five-Column Features Grid
+   -------------------------------------------------------------------------- */
+.Crafted-features {
+  display: grid;
+  grid-template-columns: 1fr; /* Default: one column stack on small mobile */
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(161, 184, 130, 0.15);
+  margin-bottom: 2.5rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 480px) {
+  .Crafted-features {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on phones */
+  }
+}
+
+@media (min-width: 768px) {
+  .Crafted-features {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on tablets */
+  }
+}
+
+@media (min-width: 1100px) {
+  .Crafted-features {
+    grid-template-columns: repeat(5, 1fr); /* 5 columns on desktop */
+    gap: 0.75rem; /* Tighten gap slightly for five items */
+  }
+}
+
+.Crafted-featureItem {
+  display: flex;
+  align-items: flex-start; /* Icons align with text top */
+  gap: 0.6rem;
+}
+
+.Crafted-featureIcon {
+  color: #b5e048;
+  font-size: 1.35rem; /* Smaller icons for five columns */
+  flex-shrink: 0;
+  margin-top: 2px; /* Slight alignment offset */
+}
+
+.Crafted-featureTextContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.Crafted-featureTitle {
+  color: #d1dcd5;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.Crafted-featureSubtext {
+  color: #8fa096;
+  font-size: 0.65rem;
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+/* Call To Action Button
+   -------------------------------------------------------------------------- */
+.Crafted-ctaButton {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: #0d3820;
+  color: #ffffff;
+  border: 1px solid #235936;
+  padding: 0.85rem 1.75rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.35s ease-out;
+  text-decoration: none;
+}
+
+.Crafted-ctaButton:hover {
+  background-color: #144d2d;
+  border-color: #8fb339;
+  color: #b5e048;
+  box-shadow: 0 8px 25px rgba(143, 179, 57, 0.25);
+  transform: translateY(-2px);
+}
+
+.Crafted-arrowIcon {
+  transition: transform 0.3s ease;
+  font-size: 1rem;
+}
+
+.Crafted-ctaButton:hover .Crafted-arrowIcon {
+  transform: translateX(5px);
+}

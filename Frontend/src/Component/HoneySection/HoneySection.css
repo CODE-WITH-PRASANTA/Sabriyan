@@ -1,0 +1,429 @@
+/* ==========================================================================
+   HoneySection Component - Premium Fullscreen (100vh) Hero Styles
+   ========================================================================== */
+
+/* Main Section Wrapper */
+.HoneySection {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 720px;
+  margin-left: calc(-50vw + 50%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #ffffff;
+  padding-top: 2rem;
+}
+
+/* Background Layers & Overlays */
+.HoneySection-bgImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+  filter: brightness(0.7) contrast(1.1);
+  transform: scale(1.02);
+}
+
+.HoneySection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 180, 40, 0.25) 0%, rgba(10, 18, 12, 0.8) 80%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Sun Glow Effect */
+.HoneySection-sunGlow {
+  position: absolute;
+  top: -10%;
+  left: 20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 200, 80, 0.45) 0%, rgba(255, 150, 0, 0.15) 50%, transparent 70%);
+  filter: blur(50px);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Drip Stream Effect */
+.HoneySection-honeyDrip {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 120px;
+  background: linear-gradient(180deg, #ffcc00 0%, #e69900 100%);
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 0 15px #ffaa00;
+  z-index: 5;
+}
+
+/* Animated Flying Bees */
+.HoneySection-bee {
+  position: absolute;
+  font-size: 1.5rem;
+  z-index: 6;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+
+.HoneySection-bee1 {
+  top: 18%;
+  left: 42%;
+  animation: beeFloat1 6s infinite ease-in-out;
+}
+
+.HoneySection-bee2 {
+  top: 25%;
+  right: 32%;
+  animation: beeFloat2 7s infinite ease-in-out;
+}
+
+.HoneySection-bee3 {
+  bottom: 25%;
+  left: 38%;
+  animation: beeFloat3 5.5s infinite ease-in-out;
+}
+
+@keyframes beeFloat1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-15px, -20px) rotate(-10deg); }
+}
+
+@keyframes beeFloat2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(20px, -15px) rotate(12deg); }
+}
+
+@keyframes beeFloat3 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-10px, 15px) rotate(-5deg); }
+}
+
+/* Hero Content Layout */
+.HoneySection-heroContent {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 3rem;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+/* Left Column Styling */
+.HoneySection-leftCol {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.HoneySection-tagline {
+  color: #fce055;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.HoneySection-mainTitle {
+  font-family: Georgia, serif;
+  font-size: 4.25rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin: 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f3e5ab 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.HoneySection-scriptTitle {
+  font-family: 'Brush Script MT', cursive, sans-serif;
+  font-size: 2.4rem;
+  color: #fce055;
+  margin: 0.2rem 0 1rem 0;
+  font-weight: 400;
+}
+
+.HoneySection-description {
+  color: #d1dcd5;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 2rem;
+}
+
+/* CTA Action Buttons */
+.HoneySection-ctaGroup {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.HoneySection-primaryBtn {
+  background: linear-gradient(135deg, #fce055 0%, #e69900 100%);
+  color: #1a0d00;
+  border: none;
+  padding: 0.85rem 1.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 20px rgba(230, 153, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.HoneySection-primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(252, 224, 85, 0.6);
+}
+
+.HoneySection-secondaryBtn {
+  background: rgba(15, 25, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 0.85rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.HoneySection-secondaryBtn:hover {
+  border-color: #fce055;
+  color: #fce055;
+  background: rgba(25, 40, 28, 0.8);
+}
+
+/* Feature Badges Grid */
+.HoneySection-featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.HoneySection-featureCard {
+  background: rgba(15, 25, 18, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.HoneySection-featureIcon {
+  color: #fce055;
+  font-size: 1.25rem;
+}
+
+.HoneySection-featureTitle {
+  color: #e2ebe4;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Center Column - Glass Honey Bottle */
+.HoneySection-centerCol {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.HoneySection-bottleContainer {
+  position: relative;
+  width: 380px;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.HoneySection-bottleImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+}
+
+.HoneySection-dipper {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 120px;
+  height: 120px;
+  z-index: 10;
+  pointer-events: none;
+  animation: dipperFloat 5s infinite ease-in-out;
+}
+
+@keyframes dipperFloat {
+  0%, 100% { transform: rotate(0deg) translate(0, 0); }
+  50% { transform: rotate(-5deg) translate(-10px, -15px); }
+}
+
+/* Right Column - Video Widget */
+.HoneySection-rightCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.HoneySection-journeyWidget {
+  background: rgba(15, 25, 18, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 1.25rem;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.HoneySection-circlePlayBtn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fce055 0%, #e69900 100%);
+  border: none;
+  color: #1a0d00;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(252, 224, 85, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.HoneySection-circlePlayBtn:hover {
+  transform: scale(1.1);
+}
+
+.HoneySection-journeyText {
+  color: #fce055;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+}
+
+/* Scroll Indicator Bottom */
+.HoneySection-scrollIndicator {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding-bottom: 1.25rem;
+  cursor: pointer;
+}
+
+.HoneySection-mouseOutline {
+  width: 20px;
+  height: 32px;
+  border: 1.5px solid rgba(252, 224, 85, 0.6);
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
+}
+
+.HoneySection-mouseDot {
+  width: 3px;
+  height: 6px;
+  background-color: #fce055;
+  border-radius: 2px;
+}
+
+.HoneySection-scrollText {
+  color: #fce055;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.HoneySection-scrollArrow {
+  color: #fce055;
+  font-size: 0.9rem;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .HoneySection-heroContent {
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+    text-align: center;
+  }
+
+  .HoneySection-leftCol {
+    align-items: center;
+    max-width: 100%;
+  }
+
+  .HoneySection-mainTitle {
+    font-size: 3.25rem;
+  }
+
+  .HoneySection-bottleContainer {
+    width: 300px;
+    height: 380px;
+  }
+
+  .HoneySection-rightCol {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .HoneySection-mainTitle {
+    font-size: 2.5rem;
+  }
+
+  .HoneySection-scriptTitle {
+    font-size: 1.8rem;
+  }
+
+  .HoneySection-featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

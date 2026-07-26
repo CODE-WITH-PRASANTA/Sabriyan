@@ -1,0 +1,346 @@
+/* Step 1: 50vh Height & Layout Compactness */
+.honey-testimonial {
+  height: 50vh;
+  min-height: 480px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Dark Overlay */
+.honey-testimonial-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.78));
+  backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+.honey-testimonial-parallax {
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Floating Particles */
+.honey-testimonial-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.honey-testimonial-particle {
+  position: absolute;
+  bottom: -10px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffd84d;
+  box-shadow: 0 0 6px #ffd84d;
+  animation: floatUp 8s infinite ease-in;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-50vh) scale(1.3); opacity: 0; }
+}
+
+/* Floating Leaves */
+.honey-testimonial-leaves {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.honey-testimonial-leaf-shape {
+  position: absolute;
+  top: -15px;
+  width: 10px;
+  height: 16px;
+  background: rgba(118, 185, 0, 0.5);
+  border-radius: 0% 100% 0% 100% / 0% 100% 0% 100%;
+  animation: leafFall 10s infinite linear;
+}
+
+@keyframes leafFall {
+  0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.6; }
+  100% { transform: translateY(55vh) rotate(360deg) translateX(40px); opacity: 0; }
+}
+
+/* Bees */
+.honey-testimonial-bee {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));
+}
+
+.bee-1 { top: 4%; left: 4%; }
+.bee-2 { bottom: 8%; right: 5%; }
+
+.honey-testimonial-bee-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Heading Styling */
+.honey-testimonial-heading {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.honey-testimonial-subheading {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #fca311;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.honey-testimonial-mainhead {
+  font-family: 'serif', Georgia, Times;
+  font-size: 2rem;
+  color: #ffffff;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Slider Container with Relative Positioning for Arrows */
+.honey-testimonial-slider-container {
+  position: relative;
+  width: 100%;
+  padding: 0 50px;
+  box-sizing: border-box;
+}
+
+.honey-testimonial-swiper {
+  padding-bottom: 35px !important;
+}
+
+/* Side Navigation Arrows */
+.honey-nav-btn {
+  position: absolute;
+  top: 42%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(252, 163, 17, 0.4);
+  color: #fca311;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.honey-nav-btn:hover {
+  background: #fca311;
+  color: #000;
+  box-shadow: 0 0 15px rgba(252, 163, 17, 0.6);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.honey-nav-prev {
+  left: 4px;
+}
+
+.honey-nav-next {
+  right: 4px;
+}
+
+/* Glassmorphism Card (Compact for 50vh) */
+.honey-testimonial-card {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 18px 22px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.honey-testimonial-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 216, 77, 0.12) 0%, transparent 60%);
+  opacity: 0.2;
+  animation: rotateGlow 25s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotateGlow {
+  100% { transform: rotate(360deg); }
+}
+
+.honey-testimonial-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 216, 77, 0.35);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 216, 77, 0.15);
+}
+
+.honey-testimonial-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.honey-testimonial-avatar-wrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #fca311;
+  box-shadow: 0 0 15px rgba(252, 163, 17, 0.4);
+  flex-shrink: 0;
+}
+
+.honey-testimonial-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.honey-testimonial-user-name {
+  font-size: 1rem;
+  color: #ffffff;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.honey-testimonial-stars {
+  display: flex;
+  gap: 3px;
+}
+
+.honey-testimonial-star {
+  color: #fca311;
+  font-size: 0.8rem;
+}
+
+.honey-testimonial-review {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Swiper Pagination Styling */
+.honey-testimonial-swiper .swiper-pagination {
+  bottom: 0 !important;
+}
+
+.honey-testimonial-swiper .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.3);
+  opacity: 1;
+  width: 6px;
+  height: 6px;
+  transition: all 0.3s ease;
+}
+
+.honey-testimonial-swiper .swiper-pagination-bullet-active {
+  width: 22px;
+  border-radius: 10px;
+  background: #fca311;
+  box-shadow: 0 0 8px #fca311;
+}
+
+/* Decorative Flowers & Pattern */
+.honey-testimonial-flower {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+  width: 65px;
+  height: 65px;
+  opacity: 0.5;
+}
+
+.honey-testimonial-flower-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.honey-testimonial-flower.left {
+  bottom: 0px;
+  left: -10px;
+}
+
+.honey-testimonial-flower.right {
+  bottom: 0px;
+  right: -10px;
+}
+
+.honey-testimonial-honeycomb-pattern {
+  position: absolute;
+  right: 10px;
+  bottom: 8%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 60px;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.honey-testimonial-honeycomb-pattern .hex {
+  width: 18px;
+  height: 20px;
+  background: #fca311;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  margin: 1px;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .honey-testimonial {
+    height: auto;
+    min-height: 480px;
+    padding: 30px 10px;
+  }
+  .honey-testimonial-mainhead {
+    font-size: 1.6rem;
+  }
+  .honey-testimonial-slider-container {
+    padding: 0 38px;
+  }
+  .honey-nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+}

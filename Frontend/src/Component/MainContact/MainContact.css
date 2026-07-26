@@ -1,0 +1,480 @@
+.main-contact-container {
+  position: relative;
+  width: 100%;
+  min-height: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 40px 8%;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Height Responsive Specs */
+@media (min-width: 1200px) {
+  .main-contact-container {
+    height: 900px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .main-contact-container {
+    height: 800px;
+  }
+}
+
+@media (max-width: 991px) {
+  .main-contact-container {
+    height: auto;
+    justify-content: center;
+    padding: 60px 20px;
+  }
+}
+
+/* Background & Ambient Overlay Layers */
+.main-contact-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: transform 0.2s ease-out;
+}
+
+.main-contact-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: bgScale 20s ease-in-out infinite alternate;
+}
+
+@keyframes bgScale {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.main-contact-sun-rays {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 10%, rgba(255, 220, 130, 0.35) 0%, transparent 60%);
+  animation: pulseRays 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes pulseRays {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.85;
+  }
+}
+
+.main-contact-waterfall-overlay {
+  position: absolute;
+  right: 12%;
+  top: 25%;
+  width: 120px;
+  height: 300px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0.15;
+  animation: waterfall 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes waterfall {
+  0% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(120px);
+  }
+}
+
+/* Fireflies Effect */
+.main-contact-fireflies-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.main-contact-firefly {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: #7CFF55;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #7CFF55, 0 0 20px #7CFF55;
+  animation: flicker linear infinite;
+}
+
+@keyframes flicker {
+  0%, 100% {
+    opacity: 0.2;
+    transform: translate(0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(20px, -30px);
+  }
+}
+
+/* Floating Leaves Layer */
+.main-contact-leaves-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.main-contact-leaf {
+  position: absolute;
+  color: #4ade80;
+  opacity: 0.7;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+  animation: leafFloat 8s ease-in-out infinite alternate;
+}
+
+.main-contact-leaf-tl {
+  top: 40px;
+  left: 40px;
+  width: 45px;
+  height: 45px;
+  animation-duration: 6s;
+}
+
+.main-contact-leaf-tr {
+  top: 50px;
+  right: 50px;
+  width: 35px;
+  height: 35px;
+  animation-duration: 10s;
+}
+
+.main-contact-leaf-bl {
+  bottom: 60px;
+  left: 60px;
+  width: 40px;
+  height: 40px;
+  animation-duration: 7s;
+}
+
+.main-contact-leaf-br {
+  bottom: 40px;
+  right: 80px;
+  width: 30px;
+  height: 30px;
+  animation-duration: 9s;
+}
+
+@keyframes leafFloat {
+  0% {
+    transform: rotate(0deg) translateY(0);
+  }
+  50% {
+    transform: rotate(8deg) translateY(-15px);
+  }
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+}
+
+/* Honey Dripping Animation */
+.main-contact-dipper-glow {
+  position: absolute;
+  left: 36%;
+  top: 42%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.main-contact-honey-drop {
+  width: 8px;
+  height: 14px;
+  background: #FFD24C;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: 0 0 8px #FFD24C;
+  animation: honeyDripping 3s ease-in infinite;
+}
+
+@keyframes honeyDripping {
+  0% {
+    transform: scaleY(1) translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: scaleY(1.6) translateY(25px);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0.2) translateY(45px);
+    opacity: 0;
+  }
+}
+
+/* Glass + Wood Contact Card */
+.main-contact-card-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 650px;
+  background: rgba(28, 52, 30, 0.65);
+  backdrop-filter: blur(18px);
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(124, 255, 85, 0.05);
+  padding: 35px 40px;
+  overflow: hidden;
+  transition: transform 0.2s ease-out;
+}
+
+.main-contact-glass-reflection {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.08) 50%, transparent 60%);
+  animation: glassShimmer 8s infinite;
+  pointer-events: none;
+}
+
+@keyframes glassShimmer {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateX(180%);
+    opacity: 0;
+  }
+}
+
+/* Header Styling */
+.main-contact-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.main-contact-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #7CFF55;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  margin: 0 0 8px 0;
+  letter-spacing: 1px;
+}
+
+.main-contact-subtitle {
+  color: #D9F99D;
+  font-size: 0.9rem;
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* Form Styles */
+.main-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.main-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .main-contact-grid {
+    grid-template-columns: 1fr;
+  }
+  .main-contact-card-wrapper {
+    padding: 25px 20px;
+  }
+}
+
+.main-contact-field {
+  position: relative;
+  height: 68px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  transition: all 300ms ease;
+}
+
+.main-contact-textarea-field {
+  height: auto;
+  min-height: 100px;
+  padding-top: 14px;
+  align-items: flex-start;
+}
+
+.main-contact-field.is-focused {
+  border-color: #7CFF55;
+  box-shadow: 0 0 25px rgba(124, 255, 85, 0.4);
+  transform: scale(1.01);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.main-contact-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(124, 255, 85, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7CFF55;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.main-contact-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.main-contact-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #D9F99D;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.main-contact-field.is-focused .main-contact-label,
+.main-contact-label.has-value {
+  color: #FFD24C;
+}
+
+.main-contact-input-wrapper input,
+.main-contact-input-wrapper textarea {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-size: 0.95rem;
+  width: 100%;
+  padding: 0;
+  font-family: inherit;
+}
+
+.main-contact-input-wrapper textarea {
+  resize: none;
+}
+
+.main-contact-input-wrapper input::placeholder,
+.main-contact-input-wrapper textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.88rem;
+}
+
+/* Submit CTA Button */
+.main-contact-btn {
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+  height: 60px;
+  margin: 10px auto 0 auto;
+  background: linear-gradient(135deg, #FFD24C 0%, #E8A500 100%);
+  border: none;
+  border-radius: 30px;
+  color: #1C341E;
+  font-weight: 700;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(232, 165, 0, 0.3);
+}
+
+.main-contact-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(255, 165, 0, 0.6);
+}
+
+.main-contact-btn:active {
+  transform: scale(0.96);
+}
+
+.main-contact-btn-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-20deg);
+  transition: 0.5s;
+}
+
+.main-contact-btn:hover .main-contact-btn-shimmer {
+  left: 150%;
+}
+
+/* Feature Badges Footer */
+.main-contact-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 500px) {
+  .main-contact-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+.main-contact-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.main-contact-feature-icon {
+  color: #7CFF55;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.main-contact-feature-item h4 {
+  color: #D9F99D;
+  font-size: 0.75rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.main-contact-feature-item p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.68rem;
+  margin: 0;
+}

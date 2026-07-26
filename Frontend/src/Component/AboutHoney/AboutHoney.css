@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Main Section Reset */
+.AboutHoney {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Fullscreen Unobscured Background Container */
+.AboutHoney-bg {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: flex-end; /* Keeps left side completely clear */
+  align-items: center;
+}
+
+/* Particle sparkles */
+.AboutHoney-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.AboutHoney-sparkle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: #fff5a0;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ffd700, 0 0 18px #ffae00;
+  animation: AboutHoneyGlow 3.5s infinite ease-in-out;
+}
+
+/* Golden Glass Box (Low Opacity & Soft Blur) */
+.AboutHoney-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 520px;
+  margin-right: 6%;
+  padding: 44px 40px;
+  /* Reduced opacity so image shows softly behind the box */
+  background: rgba(255, 238, 180, 0.22); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 32px;
+  box-shadow: 
+    0 16px 40px rgba(60, 40, 0, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  animation: AboutHoneyFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Tagline */
+.AboutHoney-tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #5c4100;
+  margin-bottom: 12px;
+}
+
+.AboutHoney-star {
+  color: #c47d00;
+  font-size: 10px;
+  animation: AboutHoneyPulse 2.5s infinite ease-in-out;
+}
+
+/* Heading */
+.AboutHoney-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 46px;
+  line-height: 1.12;
+  font-weight: 700;
+  color: #261900;
+  margin: 0 0 16px 0;
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.4);
+}
+
+.AboutHoney-highlight {
+  color: #43701f; /* Leaf Green Accent */
+  font-style: italic;
+}
+
+/* Paragraph Description */
+.AboutHoney-description {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #3b2c12;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+/* Feature Icons Row */
+.AboutHoney-features {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.AboutHoney-featureItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  flex: 1;
+  transition: transform 0.3s ease;
+}
+
+.AboutHoney-featureItem:hover {
+  transform: translateY(-4px);
+}
+
+.AboutHoney-iconWrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  color: #614200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(180, 120, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+.AboutHoney-featureItem:hover .AboutHoney-iconWrapper {
+  background: #ffd859;
+  color: #211600;
+  box-shadow: 0 6px 18px rgba(212, 145, 0, 0.35);
+  transform: scale(1.08);
+}
+
+.AboutHoney-featureLabel {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #2e2003;
+  line-height: 1.25;
+}
+
+.AboutHoney-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(120, 85, 10, 0.18);
+}
+
+/* Golden Pill Button */
+.AboutHoney-button {
+  width: 100%;
+  background: linear-gradient(135deg, #ffd752 0%, #e09800 100%);
+  color: #2b1a00;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 32px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(224, 152, 0, 0.35);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.AboutHoney-button:hover {
+  background: linear-gradient(135deg, #ffe275 0%, #f7a80a 100%);
+  box-shadow: 0 12px 28px rgba(224, 152, 0, 0.55);
+  transform: translateY(-2px);
+}
+
+.AboutHoney-button:active {
+  transform: translateY(1px);
+}
+
+/* Keyframe Animations */
+@keyframes AboutHoneyFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes AboutHoneyGlow {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-15px) scale(1.3);
+    opacity: 0.8;
+  }
+}
+
+@keyframes AboutHoneyPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 900px) {
+  .AboutHoney-bg {
+    justify-content: center;
+    align-items: flex-end;
+    background-position: center top;
+  }
+
+  .AboutHoney-card {
+    margin: 20px;
+    max-width: 100%;
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .AboutHoney-tagline {
+    justify-content: center;
+  }
+
+  .AboutHoney-heading {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 480px) {
+  .AboutHoney-features {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .AboutHoney-divider {
+    width: 60%;
+    height: 1px;
+  }
+}

@@ -5,6 +5,9 @@ import BgOne from "../../assets/bg-1.jpeg";
 import BgTwo from "../../assets/bg-2.jpeg";
 import Herosection from "../../Component/Herosection/Herosection";
 import ChocolateCard from "../../Component/ChocolateCard/ChocolateCard";
+import Ingrident from "../../Component/Ingrident/Ingrident";
+import Crafted from "../../Component/Crafted/Crafted";
+import Testimonial from "../../Component/Testimonial/Testimonial";
 
 
 const Home = () => {
@@ -35,6 +38,9 @@ const Home = () => {
 
        <Herosection />
        <ChocolateCard />
+       <Ingrident />
+       <Crafted />
+       <Testimonial />
       
       </main>
     </div>
