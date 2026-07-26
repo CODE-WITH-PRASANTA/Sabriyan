@@ -13,71 +13,44 @@ const Navbar = () => {
 
   return (
     <header className="Navbar">
-
       <div className="Navbar-container">
-
         {/* Logo */}
-
-        <NavLink to="/" className="Navbar-logo">
-
+        <NavLink to="/" className="Navbar-logo" onClick={closeMenu}>
           <img src={Logo} alt="Logo" />
-
         </NavLink>
 
         {/* Desktop Menu */}
-
         <nav className="Navbar-links">
-
           <NavLink to="/">Home</NavLink>
-
           <NavLink to="/about">About</NavLink>
-
-          <NavLink to="/honey">
-            Honey
-          </NavLink>
-
-          <NavLink to="/blog">
-            Blog
-          </NavLink>
-
-          <NavLink to="/faq">
-            FAQ
-          </NavLink>
-
-          <NavLink to="/contact">
-            Contact
-          </NavLink>
-
+          <NavLink to="/honey">Honey</NavLink>
+          <NavLink to="/blog">Blog</NavLink>
+          <NavLink to="/faq">FAQ</NavLink>
+          <NavLink to="/contact">Contact</NavLink>
         </nav>
 
         {/* Button */}
-
-        <NavLink
-          to="/contact"
-          className="Navbar-btn"
-        >
+        <NavLink to="/contact" className="Navbar-btn">
           Contact Us
         </NavLink>
 
         {/* Mobile Button */}
-
         <button
+          type="button"
           className="Navbar-toggle"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation menu"
         >
           {menuOpen ? <IoClose /> : <HiOutlineMenuAlt3 />}
         </button>
-
       </div>
 
-      {/* Mobile Menu */}
-
+      {/* Mobile Menu Dropdown */}
       <div
         className={`Navbar-mobile ${
           menuOpen ? "Navbar-mobile-show" : ""
         }`}
       >
-
         <NavLink to="/" onClick={closeMenu}>
           Home
         </NavLink>
@@ -86,11 +59,8 @@ const Navbar = () => {
           About
         </NavLink>
 
-        <NavLink
-          to="/classic-confections"
-          onClick={closeMenu}
-        >
-          Classic Confections
+        <NavLink to="/honey" onClick={closeMenu}>
+          Honey
         </NavLink>
 
         <NavLink to="/blog" onClick={closeMenu}>
@@ -112,9 +82,7 @@ const Navbar = () => {
         >
           Contact Us
         </NavLink>
-
       </div>
-
     </header>
   );
 };

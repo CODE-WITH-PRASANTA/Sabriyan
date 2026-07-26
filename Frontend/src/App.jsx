@@ -10,13 +10,14 @@ import Honey from "./Pages/Honey/Honey";
 import Blog from "./Pages/Blog/Blog";
 import Faq from "./Pages/Faq/Faq";
 import Contact from "./Pages/Contact/Contact";
+import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
 
 
 
 const App = () => {
   return (
     <BrowserRouter>
-
+     <ScrollToTop />
       <Navbar />
 
       <Routes>
