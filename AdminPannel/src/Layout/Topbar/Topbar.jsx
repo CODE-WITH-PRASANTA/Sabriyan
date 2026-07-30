@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Menu, Search, Calendar, Bell, Gift, User, Settings, LogOut } from 'lucide-react';
+import { Menu, Search, Calendar, Bell, Gift, User, Settings, LogOut, X } from 'lucide-react';
 import './Topbar.css';
 
 const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
   const location = useLocation();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   const notifRef = useRef(null);
   const profileRef = useRef(null);
@@ -33,18 +34,18 @@ const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
 
   return (
     <header className="topbar">
+      {/* Left Section: Nav Trigger & Page Titles */}
       <div className="topbar-left">
-        <button className="toggle-btn desktop-only" onClick={toggleSidebar}>
+        <button className="toggle-btn desktop-only" onClick={toggleSidebar} aria-label="Toggle Desktop Sidebar">
           <Menu size={20} />
         </button>
-        <button className="toggle-btn mobile-only" onClick={toggleMobileSidebar}>
+        <button className="toggle-btn mobile-only" onClick={toggleMobileSidebar} aria-label="Toggle Mobile Menu">
           <Menu size={20} />
         </button>
 
-        {/* Dynamic Title and Breadcrumb */}
         <div className="topbar-title-section">
           <h1 className="page-title">{currentPageTitle}</h1>
-          <nav className="breadcrumbs">
+          <nav className="breadcrumbs" aria-label="Breadcrumb">
             <span>Dashboard</span>
             {pathNames.map((name, index) => (
               <React.Fragment key={index}>
@@ -58,16 +59,26 @@ const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
         </div>
       </div>
 
+      {/* Right Section: Actions, Search, Notifications, Profile */}
       <div className="topbar-right">
-        {/* Search Bar */}
-        <div className="topbar-search">
+        {/* Desktop Search */}
+        <div className="topbar-search desktop-search">
           <Search size={16} className="search-icon" />
-          <input type="text" placeholder="Search products, SKU, categories..." />
+          <input type="text" placeholder="Search products, SKU..." />
         </div>
+
+        {/* Mobile Search Toggle Button */}
+        <button 
+          className="topbar-icon-btn mobile-search-btn"
+          onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+          aria-label="Toggle Search"
+        >
+          <Search size={18} />
+        </button>
 
         {/* Date Selector Display */}
         <div className="topbar-date-badge">
-          <Calendar size={16} />
+          <Calendar size={15} />
           <span>May 29, 2025</span>
         </div>
 
@@ -79,6 +90,7 @@ const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
               setShowNotifications(!showNotifications);
               setShowProfileMenu(false);
             }}
+            aria-label="View Notifications"
           >
             <Bell size={18} />
             <span className="notification-badge">12</span>
@@ -104,12 +116,12 @@ const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
           )}
         </div>
 
-        {/* Promotion / Gift Button */}
-        <button className="topbar-icon-btn">
+        {/* Promotion Button */}
+        <button className="topbar-icon-btn promo-btn" aria-label="Promotions">
           <Gift size={18} />
         </button>
 
-        {/* Profile Setting & Dropdown */}
+        {/* Profile Dropdown */}
         <div className="topbar-popover-container" ref={profileRef}>
           <button
             className="topbar-profile-btn"
@@ -117,8 +129,9 @@ const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
               setShowProfileMenu(!showProfileMenu);
               setShowNotifications(false);
             }}
+            aria-label="User Profile Menu"
           >
-            <img src="https://i.pravatar.cc/100?img=12" alt="Admin" />
+            <img src="https://i.pravatar.cc/100?img=12" alt="Admin Avatar" />
           </button>
 
           {showProfileMenu && (
@@ -143,6 +156,19 @@ const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
           )}
         </div>
       </div>
+
+      {/* Expandable Mobile Search Overlay */}
+      {isMobileSearchOpen && (
+        <div className="mobile-search-overlay">
+          <div className="mobile-search-input-wrapper">
+            <Search size={16} className="search-icon" />
+            <input type="text" placeholder="Search products, orders..." autoFocus />
+            <button className="close-search-btn" onClick={() => setIsMobileSearchOpen(false)}>
+              <X size={18} />
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
