@@ -1,18 +1,23 @@
 /* ================= Topbar Component Styles ================= */
 .topbar {
-  height: 70px;
+  height: var(--topbar-height);
   background-color: var(--bg-sidebar);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  width: 100%;
 }
 
 .topbar-left {
   display: flex;
   align-items: center;
   gap: 16px;
+  min-width: 0; /* Ensures inner text truncates cleanly if needed */
 }
 
 .toggle-btn {
@@ -25,7 +30,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
 }
 
 .toggle-btn:hover {
@@ -33,22 +39,33 @@
   color: var(--accent-green);
 }
 
+.topbar-title-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .page-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
   margin: 0;
   color: #ffffff;
   text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .breadcrumbs {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   margin-top: 2px;
   text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .breadcrumbs .current {
@@ -62,9 +79,11 @@
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
+/* Search Bar */
 .topbar-search {
   position: relative;
   display: flex;
@@ -79,32 +98,41 @@
   color: var(--text-main);
   outline: none;
   font-size: 13px;
-  width: 220px;
-  transition: border-color 0.2s;
+  width: 200px;
+  transition: border-color 0.2s, width 0.2s;
 }
 
 .topbar-search input:focus {
   border-color: var(--accent-green);
+  width: 240px;
 }
 
 .search-icon {
   position: absolute;
   left: 12px;
   color: var(--text-muted);
+  pointer-events: none;
 }
 
+.mobile-search-btn {
+  display: none;
+}
+
+/* Date Badge */
 .topbar-date-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--bg-dark);
   border: 1px solid var(--border-color);
-  padding: 8px 12px;
+  padding: 7px 10px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-main);
+  white-space: nowrap;
 }
 
+/* Action Icons */
 .topbar-icon-btn {
   background: var(--bg-dark);
   border: 1px solid var(--border-color);
@@ -116,7 +144,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
 }
 
 .topbar-icon-btn:hover {
@@ -130,13 +159,14 @@
   right: -4px;
   background: #ef4444;
   color: #fff;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   padding: 2px 5px;
   border-radius: 10px;
+  line-height: 1;
 }
 
-/* Notification & Profile Popovers */
+/* Popover Floating Cards */
 .topbar-popover-container {
   position: relative;
 }
@@ -144,35 +174,36 @@
 .popover-card {
   position: absolute;
   right: 0;
-  top: 50px;
+  top: calculated;
+  margin-top: 10px;
   width: 290px;
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.6);
-  z-index: 200;
+  padding: 14px;
+  box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.7);
+  z-index: 1000;
 }
 
 .popover-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
 }
 
 .popover-header h3 {
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   color: #fff;
 }
 
 .badge-count {
   background: var(--accent-green);
   color: #000;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   padding: 2px 6px;
   border-radius: 6px;
@@ -204,26 +235,22 @@
   color: var(--text-muted);
 }
 
-/* Profile Dropdown Options */
-.profile-info-header {
-  display: flex;
-  flex-direction: column;
-}
-
+/* Profile Popup */
 .profile-info-header strong {
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
+  display: block;
 }
 
 .profile-info-header span {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .profile-menu-card hr {
   border: 0;
   border-top: 1px solid var(--border-color);
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 .profile-menu-card ul {
@@ -236,10 +263,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 8px;
+  padding: 8px 8px;
   cursor: pointer;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 12px;
   border-radius: 6px;
   transition: all 0.2s;
 }
@@ -259,20 +286,98 @@
   border: none;
   cursor: pointer;
   padding: 0;
+  display: flex;
+  align-items: center;
 }
 
 .topbar-profile-btn img {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 2px solid var(--accent-green);
+  object-fit: cover;
 }
 
-/* Toggle visibility helpers */
+/* Mobile Search Overlay */
+.mobile-search-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bg-sidebar);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  z-index: 1001;
+}
+
+.mobile-search-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-search-input-wrapper input {
+  width: 100%;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  padding: 10px 40px 10px 36px;
+  border-radius: 8px;
+  color: var(--text-main);
+  outline: none;
+  font-size: 14px;
+}
+
+.close-search-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Visibility Control Classes */
 .mobile-only { display: none; }
 .desktop-only { display: flex; }
 
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .topbar-date-badge {
+    display: none; /* Hide date on tablet view to save horizontal space */
+  }
+}
+
 @media (max-width: 768px) {
+  .topbar {
+    padding: 0 14px;
+  }
+
   .mobile-only { display: flex; }
   .desktop-only { display: none; }
+
+  .desktop-search {
+    display: none;
+  }
+
+  .mobile-search-btn {
+    display: flex;
+  }
+
+  .promo-btn {
+    display: none; /* Hide promo icon on standard phone screens */
+  }
+
+  .breadcrumbs {
+    display: none; /* Hide breadcrumbs on mobile to prevent header overcrowding */
+  }
+
+  .page-title {
+    font-size: 15px;
+  }
+
+  .popover-card {
+    right: -10px;
+    width: 270px;
+  }
 }

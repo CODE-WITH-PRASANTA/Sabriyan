@@ -14,9 +14,10 @@ import {
   HelpCircle,
   ChevronDown,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
-import logo from '../../assets/logo.png'; // Replace with your logo path
+import logo from '../../assets/logo.png';
 import './Sidebar.css';
 
 const sidebarConfig = [
@@ -28,6 +29,8 @@ const sidebarConfig = [
     subItems: [
       { title: 'All Orders', path: '/orders/all' },
       { title: 'Pending', path: '/orders/pending' },
+      { title: 'Complete Orders', path: '/orders/complete' },
+      { title: 'Cancel Orders', path: '/orders/cancel' },
     ],
   },
   {
@@ -61,37 +64,46 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
     setOpenSubmenu(openSubmenu === title ? null : title);
   };
 
+  const handleNavClick = () => {
+    if (window.innerWidth <= 768) {
+      setIsMobileOpen(false);
+    }
+  };
+
   return (
     <>
-      {/* Overlay for mobile backdrop */}
+      {/* Mobile Backdrop Overlay */}
       {isMobileOpen && (
-        <div className="sidebar-overlay" onClick={() => setIsMobileOpen(false)} />
+        <div 
+          className="sidebar-overlay" 
+          onClick={() => setIsMobileOpen(false)} 
+          aria-hidden="true"
+        />
       )}
 
       <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}>
         {/* Brand Header */}
         <div className="sidebar-header">
-          <img src={logo} alt="Sabriyana Logo" className="sidebar-logo" />
-          {!isCollapsed && (
-            <div className="sidebar-brand-text">
-              <h3>SABRIYANA</h3>
-              <span>CRAFT CHOCOLATE & HONEY</span>
-            </div>
-          )}
+          <div className="brand-wrapper">
+            <img src={logo} alt="Sabriyana Logo" className="sidebar-logo" />
+            {!isCollapsed && (
+              <div className="sidebar-brand-text">
+                <h3>SABRIYANA</h3>
+                <span>CRAFT CHOCOLATE & HONEY</span>
+              </div>
+            )}
+          </div>
+          <button 
+            className="mobile-close-btn" 
+            onClick={() => setIsMobileOpen(false)}
+            aria-label="Close Sidebar"
+          >
+            <X size={20} />
+          </button>
         </div>
 
-        {/* Profile Info Banner */}
-        <div className="sidebar-user-card">
-          <div className="user-avatar">
-            <img src="https://i.pravatar.cc/100?img=12" alt="Admin User" />
-          </div>
-          {!isCollapsed && (
-            <div className="user-info">
-              <h4>Admin User</h4>
-              <p>Super Admin</p>
-            </div>
-          )}
-        </div>
+        {/* Profile Info Card */}
+       
 
         {/* Navigation Menu */}
         <nav className="sidebar-nav">
@@ -108,6 +120,7 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
                     <div
                       className={`nav-link ${isActive ? 'active' : ''}`}
                       onClick={() => toggleSubmenu(item.title)}
+                      title={isCollapsed ? item.title : undefined}
                     >
                       <span className="nav-icon-wrapper">
                         <Icon size={18} />
@@ -123,6 +136,8 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
                     <Link
                       to={item.path}
                       className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                      onClick={handleNavClick}
+                      title={isCollapsed ? item.title : undefined}
                     >
                       <span className="nav-icon-wrapper">
                         <Icon size={18} />
@@ -139,6 +154,7 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
                           <Link
                             to={sub.path}
                             className={`submenu-link ${location.pathname === sub.path ? 'active' : ''}`}
+                            onClick={handleNavClick}
                           >
                             {sub.title}
                           </Link>
@@ -152,7 +168,7 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
           </ul>
         </nav>
 
-        {/* Dynamic Card Widget */}
+        {/* Revenue Widget */}
         {!isCollapsed && (
           <div className="sidebar-widget">
             <div className="widget-header">
