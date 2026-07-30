@@ -1,0 +1,55 @@
+/* ================= Green Theme Root Variables ================= */
+:root {
+  --bg-dark: #040e0a;           /* Deep dark green background */
+  --bg-sidebar: #06150f;        /* Rich dark green for sidebar */
+  --bg-card: #0a2118;           /* Medium dark green for cards/popups */
+  --bg-card-hover: #102e22;     /* Hover state green */
+  --border-color: #113828;     /* Subtle green border */
+  --text-main: #e2f2eb;         /* Light minty text */
+  --text-muted: #6b9e87;        /* Soft green-gray for labels */
+  --accent-green: #10b981;      /* Bright vibrant green */
+  --accent-light-green: #34d399;/* Secondary light green */
+  --accent-gold: #d97706;       /* Gold contrast */
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Main Layout Wrapper */
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+}
+
+.main-layout-content {
+  flex: 1;
+  display: flex;
+  flex-direction: flex-direction;
+  flex-direction: column;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  background-color: var(--bg-dark);
+}
+
+.main-layout-content.collapsed {
+  margin-left: 80px;
+}
+
+.main-layout-body {
+  padding: 24px;
+  flex: 1;
+  background-color: var(--bg-dark);
+}
+
+/* Mobile responsive helpers */
+@media (max-width: 768px) {
+  .main-layout-content,
+  .main-layout-content.collapsed {
+    margin-left: 0;
+  }
+}
