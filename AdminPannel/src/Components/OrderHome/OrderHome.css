@@ -1,0 +1,230 @@
+/* Dark Theme Variables */
+:root {
+  --odh-bg-dark: #060e0a;
+  --odh-card-bg: #0b150f;
+  --odh-border-color: #16241b;
+  --odh-text-main: #ffffff;
+  --odh-text-muted: #8c9e91;
+  --odh-accent-green: #22c55e;
+  --odh-accent-red: #ef4444;
+}
+
+body {
+  background-color: var(--odh-bg-dark);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: var(--odh-text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+.odh-container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* 3-Column Grid Layout (Default) */
+.odh-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Card Container */
+.odh-stat-card {
+  background-color: var(--odh-card-bg);
+  border: 1px solid var(--odh-border-color);
+  border-radius: 16px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  backdrop-filter: blur(8px);
+}
+
+.odh-stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(34, 197, 94, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6),
+              0 0 15px rgba(34, 197, 94, 0.08);
+}
+
+/* Circular Icon Badge Styles */
+.odh-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.odh-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+/* Icon Badge Color Variants */
+.badge-green {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.28);
+}
+
+.badge-yellow {
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.28);
+}
+
+.badge-purple {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.28);
+}
+
+.badge-blue {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.28);
+}
+
+.badge-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+}
+
+.badge-red {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+}
+
+/* Text Details Styling */
+.odh-stat-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevents flex items from overflowing */
+}
+
+.odh-stat-title {
+  font-size: 0.85rem;
+  color: var(--odh-text-muted);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.odh-stat-value {
+  margin: 2px 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--odh-text-main);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.odh-stat-sub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.sub-green {
+  color: var(--odh-accent-green);
+}
+
+.sub-red {
+  color: var(--odh-accent-red);
+}
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================= */
+
+/* Tablets & Medium Screens (2 Columns) */
+@media (max-width: 992px) {
+  .odh-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .odh-stat-card {
+    padding: 18px 20px;
+  }
+
+  .odh-stat-value {
+    font-size: 1.6rem;
+  }
+}
+
+/* Mobile Devices & Small Tablets (1 Column) */
+@media (max-width: 640px) {
+  .odh-container {
+    padding: 16px;
+  }
+
+  .odh-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .odh-stat-card {
+    padding: 16px 18px;
+    gap: 14px;
+    border-radius: 14px;
+  }
+
+  .odh-icon-badge {
+    width: 46px;
+    height: 46px;
+  }
+
+  .odh-icon {
+    font-size: 1.2rem;
+  }
+
+  .odh-stat-value {
+    font-size: 1.45rem;
+  }
+}
+
+/* Extra Small Mobile Devices */
+@media (max-width: 380px) {
+  .odh-container {
+    padding: 12px;
+  }
+
+  .odh-stat-card {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .odh-icon-badge {
+    width: 42px;
+    height: 42px;
+  }
+
+  .odh-icon {
+    font-size: 1.1rem;
+  }
+
+  .odh-stat-title {
+    font-size: 0.8rem;
+  }
+
+  .odh-stat-value {
+    font-size: 1.35rem;
+  }
+
+  .odh-stat-sub {
+    font-size: 0.72rem;
+  }
+}
