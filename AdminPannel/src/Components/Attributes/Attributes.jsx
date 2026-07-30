@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Attributes.css';
 
-// Using proper standard string paths for banner and attribute item icons based on the design
+// Banner and attribute item images
 const bannerImg = "https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=1200&auto=format&fit=crop";
 const attr1Img = "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?q=80&w=200&auto=format&fit=crop";
 const attr2Img = "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=200&auto=format&fit=crop";
@@ -30,9 +30,32 @@ const Attributes = () => {
   const [sortOrder, setSortOrder] = useState('Newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('2025-05-29');
 
-  const itemsPerPage = 6; // 6 items shown per page as requested
+  // Attribute Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newAttr, setNewAttr] = useState({
+    name: '',
+    slug: '',
+    type: '',
+    inputType: '',
+    description: '',
+    displayOrder: 1,
+    status: 'Active',
+    addValuesManually: true
+  });
+  const [valueInput, setValueInput] = useState('');
+  const [valueTags, setValueTags] = useState(['Raw Honey', 'Organic Honey', 'Floral Honey', 'Wild Honey', 'Manuka Honey']);
+
+  // Add Customer Modal State
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+  const [customerData, setCustomerData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    customerGroup: 'VIP Customers',
+  });
+
+  const itemsPerPage = 6;
   const menuRef = useRef(null);
 
   // Close dropdown menu when clicking outside
@@ -46,7 +69,7 @@ const Attributes = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Toggle attribute status handler for the 3-dot menu
+  // Toggle attribute status handler
   const handleToggleStatus = (id) => {
     setAttributes(prev =>
       prev.map(attr =>
@@ -56,26 +79,90 @@ const Attributes = () => {
     setOpenMenuId(null);
   };
 
-  // Filter logic
+  // Add attribute value tag handlers
+  const handleAddTag = (e) => {
+    if (e.key === 'Enter' && valueInput.trim()) {
+      e.preventDefault();
+      if (!valueTags.includes(valueInput.trim())) {
+        setValueTags([...valueTags, valueInput.trim()]);
+      }
+      setValueInput('');
+    }
+  };
+
+  const handleAddTagButton = () => {
+    if (valueInput.trim() && !valueTags.includes(valueInput.trim())) {
+      setValueTags([...valueTags, valueInput.trim()]);
+      setValueInput('');
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setValueTags(valueTags.filter(tag => tag !== tagToRemove));
+  };
+
+  // Save attribute handler
+  const handleSaveAttribute = (e) => {
+    e.preventDefault();
+    if (!newAttr.name.trim()) return;
+
+    const createdAttribute = {
+      id: attributes.length + 1,
+      name: newAttr.name,
+      description: newAttr.description || 'Product attribute description',
+      values: `Values: ${valueTags.length}`,
+      status: newAttr.status,
+      image: attr1Img
+    };
+
+    setAttributes([createdAttribute, ...attributes]);
+    setIsModalOpen(false);
+    setNewAttr({
+      name: '',
+      slug: '',
+      type: '',
+      inputType: '',
+      description: '',
+      displayOrder: 1,
+      status: 'Active',
+      addValuesManually: true
+    });
+    setValueTags(['Raw Honey', 'Organic Honey']);
+  };
+
+  // Customer form handlers
+  const handleCustomerChange = (e) => {
+    const { name, value } = e.target;
+    setCustomerData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveCustomer = (e) => {
+    e.preventDefault();
+    console.log('Customer saved:', customerData);
+    setCustomerData({
+      fullName: '',
+      email: '',
+      phone: '',
+      customerGroup: 'VIP Customers',
+    });
+    setIsCustomerModalOpen(false);
+  };
+
+  // Filter & Sort Logic
   const filteredAttributes = attributes.filter((attr) => {
     const matchesSearch = attr.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'All' || attr.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  // Sort logic (Newest, Oldest, or A to Z)
   const sortedAttributes = [...filteredAttributes].sort((a, b) => {
-    if (sortOrder === 'Newest') {
-      return b.id - a.id;
-    } else if (sortOrder === 'Oldest') {
-      return a.id - b.id;
-    } else if (sortOrder === 'A to Z') {
-      return a.name.localeCompare(b.name);
-    }
+    if (sortOrder === 'Newest') return b.id - a.id;
+    if (sortOrder === 'Oldest') return a.id - b.id;
+    if (sortOrder === 'A to Z') return a.name.localeCompare(b.name);
     return 0;
   });
 
-  // Pagination logic (6 items per page, exactly 2 pages for 8 total items)
+  // Pagination Logic
   const totalPages = Math.ceil(sortedAttributes.length / itemsPerPage) || 1;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -87,61 +174,21 @@ const Attributes = () => {
     }
   };
 
-  // Format date nicely for display
-  const formattedDisplayDate = new Date(selectedDate).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
-
   return (
     <div className="attributes-container">
-      {/* Top Navigation Bar */}
-      <header className="attributes-header">
-        <div className="attributes-header__left">
-          <button className="attributes-menu-btn" aria-label="Menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-          </button>
-          <div className="attributes-title-wrapper">
-            <h1 className="attributes-main-title">Attributes</h1>
-            <span className="attributes-breadcrumb">Dashboard &gt; Products &gt; Attributes</span>
-          </div>
-        </div>
-        <div className="attributes-header__right">
-          <div className="attributes-search-bar">
-            <svg className="attributes-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" placeholder="Search..." />
-          </div>
-          
-          {/* Working Date Picker Component */}
-          <div className="attributes-date-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            <input 
-              type="date" 
-              value={selectedDate} 
-              onChange={(e) => setSelectedDate(e.target.value)} 
-              className="attributes-date-input"
-              aria-label="Select Date"
-            />
-            <span className="attributes-date-display">{formattedDisplayDate}</span>
-          </div>
-
-          <button className="attributes-icon-btn" aria-label="Notifications">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            <span className="attributes-badge-dot"></span>
-          </button>
-          <div className="attributes-avatar"></div>
-        </div>
-      </header>
-
       {/* Banner Section */}
       <section className="attributes-banner" style={{ backgroundImage: `url(${bannerImg})` }}>
         <div className="attributes-banner__content">
           <h2>Manage Attributes</h2>
           <p>Create and manage product attributes</p>
-          <button className="attributes-add-btn">
-            <span>+</span> Add New Attribute
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button className="attributes-add-btn" onClick={() => setIsModalOpen(true)}>
+              <span>+</span> Add New Attribute
+            </button>
+            <button className="attributes-add-btn" onClick={() => setIsCustomerModalOpen(true)}>
+              <span>+</span> Add New Customer
+            </button>
+          </div>
         </div>
       </section>
 
@@ -149,28 +196,40 @@ const Attributes = () => {
       <div className="attributes-stats-grid">
         <div className="attributes-stat-card">
           <div className="attributes-stat-icon yellow">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
           </div>
           <div>
             <span className="attributes-stat-label">Total Attributes</span>
-            <h3 className="attributes-stat-value">14</h3>
+            <h3 className="attributes-stat-value">{attributes.length}</h3>
           </div>
         </div>
         <div className="attributes-stat-card">
           <div className="attributes-stat-icon green">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
           </div>
           <div>
             <span className="attributes-stat-label">Active Attributes</span>
-            <h3 className="attributes-stat-value">12</h3>
+            <h3 className="attributes-stat-value">
+              {attributes.filter(a => a.status === 'Active').length}
+            </h3>
           </div>
         </div>
       </div>
 
-      {/* Filter and Search Table Controls */}
+      {/* Controls */}
       <div className="attributes-controls">
         <div className="attributes-table-search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
           <input 
             type="text" 
             placeholder="Search attributes..." 
@@ -198,7 +257,7 @@ const Attributes = () => {
         </div>
       </div>
 
-      {/* Attributes List View */}
+      {/* Attributes List */}
       <div className="attributes-list">
         {currentItems.length > 0 ? (
           currentItems.map((attr) => (
@@ -215,15 +274,17 @@ const Attributes = () => {
                 <span className={`attributes-status-badge ${attr.status.toLowerCase()}`}>
                   {attr.status}
                 </span>
-                
-                {/* 3-Dot Options Button with Active/Inactive Dropdown */}
                 <div className="attributes-action-wrapper" ref={openMenuId === attr.id ? menuRef : null}>
                   <button 
                     className="attributes-options-btn" 
                     aria-label="More options"
                     onClick={() => setOpenMenuId(openMenuId === attr.id ? null : attr.id)}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="1"></circle>
+                      <circle cx="12" cy="5" r="1"></circle>
+                      <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
                   </button>
 
                   {openMenuId === attr.id && (
@@ -234,7 +295,6 @@ const Attributes = () => {
                     </div>
                   )}
                 </div>
-
               </div>
             </div>
           ))
@@ -246,7 +306,7 @@ const Attributes = () => {
       {/* Pagination Footer */}
       <footer className="attributes-footer">
         <span className="attributes-pagination-info">
-          Showing 1 to 8 of 14 attributes
+          Showing {filteredAttributes.length > 0 ? indexOfFirstItem + 1 : 0} to {Math.min(indexOfLastItem, filteredAttributes.length)} of {filteredAttributes.length} attributes
         </span>
         <div className="attributes-pagination-controls">
           <button 
@@ -274,6 +334,269 @@ const Attributes = () => {
           </button>
         </div>
       </footer>
+
+      {/* POPUP MODAL FOR ADDING ATTRIBUTE */}
+      {isModalOpen && (
+        <div className="attributes-modal-overlay">
+          <div className="attributes-modal-card">
+            <div className="attributes-modal-header">
+              <div>
+                <h3>Add New Attribute</h3>
+                <p>Create a new product attribute to organize your products better.</p>
+              </div>
+              <button className="attributes-modal-close" onClick={() => setIsModalOpen(false)}>✕</button>
+            </div>
+
+            <form onSubmit={handleSaveAttribute} className="attributes-modal-form">
+              <div className="attributes-form-grid">
+                <div className="attributes-form-col">
+                  <label className="attributes-form-label">Attribute Name *</label>
+                  <input 
+                    type="text" 
+                    required 
+                    className="attributes-input"
+                    value={newAttr.name}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setNewAttr({
+                        ...newAttr, 
+                        name: val,
+                        slug: val.toLowerCase().replace(/\s+/g, '-')
+                      });
+                    }}
+                  />
+                </div>
+
+                <div className="attributes-form-col">
+                  <label className="attributes-form-label">Attribute Slug *</label>
+                  <input 
+                    type="text" 
+                    required 
+                    className="attributes-input"
+                    value={newAttr.slug}
+                    onChange={(e) => setNewAttr({...newAttr, slug: e.target.value})}
+                  />
+                  <small className="attributes-form-hint">Unique slug for internal use (e.g. honey-type)</small>
+                </div>
+
+                <div className="attributes-form-col">
+                  <label className="attributes-form-label">Attribute Type *</label>
+                  <select 
+                    className="attributes-input attributes-select"
+                    value={newAttr.type}
+                    onChange={(e) => setNewAttr({...newAttr, type: e.target.value})}
+                  >
+                    <option value="">Select attribute type</option>
+                    <option value="Select">Select</option>
+                    <option value="Text">Text</option>
+                    <option value="Color">Color</option>
+                  </select>
+                </div>
+
+                <div className="attributes-form-col">
+                  <label className="attributes-form-label">Input Type *</label>
+                  <select 
+                    className="attributes-input attributes-select"
+                    value={newAttr.inputType}
+                    onChange={(e) => setNewAttr({...newAttr, inputType: e.target.value})}
+                  >
+                    <option value="">Select input type</option>
+                    <option value="Dropdown">Dropdown</option>
+                    <option value="Radio">Radio Buttons</option>
+                    <option value="Checkbox">Checkbox List</option>
+                  </select>
+                  <small className="attributes-form-hint">How the attribute values will be entered</small>
+                </div>
+              </div>
+
+              <div className="attributes-form-full" style={{ marginTop: '16px' }}>
+                <label className="attributes-form-label">Description</label>
+                <textarea 
+                  rows="3" 
+                  maxLength="200"
+                  className="attributes-input"
+                  value={newAttr.description}
+                  onChange={(e) => setNewAttr({...newAttr, description: e.target.value})}
+                />
+                <div className="attributes-char-counter">
+                  <span>Optional description for this attribute</span>
+                  <span>{newAttr.description.length} / 200</span>
+                </div>
+              </div>
+
+              <div className="attributes-form-grid" style={{ marginTop: '16px' }}>
+                <div className="attributes-form-col">
+                  <label className="attributes-form-label">Display Order</label>
+                  <input 
+                    type="number" 
+                    className="attributes-input"
+                    value={newAttr.displayOrder}
+                    onChange={(e) => setNewAttr({...newAttr, displayOrder: e.target.value})}
+                  />
+                  <small className="attributes-form-hint">Lower numbers show first</small>
+                </div>
+
+                <div className="attributes-form-col">
+                  <label className="attributes-form-label">Status</label>
+                  <div className="attributes-radio-group">
+                    <label className="attributes-radio-label">
+                      <input 
+                        type="radio" 
+                        name="status" 
+                        checked={newAttr.status === 'Active'} 
+                        onChange={() => setNewAttr({...newAttr, status: 'Active'})}
+                      /> Active
+                    </label>
+                    <label className="attributes-radio-label">
+                      <input 
+                        type="radio" 
+                        name="status" 
+                        checked={newAttr.status === 'Inactive'} 
+                        onChange={() => setNewAttr({...newAttr, status: 'Inactive'})}
+                      /> Inactive
+                    </label>
+                  </div>
+                  <small className="attributes-form-hint">Active attributes will be visible in the store</small>
+                </div>
+              </div>
+
+              <div className="attributes-values-section" style={{ marginTop: '20px' }}>
+                <div className="attributes-values-header">
+                  <label className="attributes-form-label">Attribute Values ▾</label>
+                  <div className="attributes-toggle-wrapper">
+                    <span>Add Values Manually</span>
+                    <label className="attributes-switch">
+                      <input 
+                        type="checkbox" 
+                        checked={newAttr.addValuesManually}
+                        onChange={(e) => setNewAttr({...newAttr, addValuesManually: e.target.checked})}
+                      />
+                      <span className="attributes-slider round"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="attributes-values-box">
+                  <label className="attributes-form-label">Add Values</label>
+                  <div className="attributes-tag-input-row">
+                    <input 
+                      type="text" 
+                      className="attributes-input"
+                      value={valueInput}
+                      onChange={(e) => setValueInput(e.target.value)}
+                      onKeyDown={handleAddTag}
+                    />
+                    <button type="button" className="attributes-btn-add-tag" onClick={handleAddTagButton}>
+                      Add
+                    </button>
+                  </div>
+
+                  <div className="attributes-tags-container">
+                    {valueTags.map((tag, idx) => (
+                      <div className="attributes-tag" key={idx}>
+                        {tag}
+                        <button type="button" onClick={() => removeTag(tag)}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="attributes-modal-actions">
+                <button type="button" className="attributes-btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button type="submit" className="attributes-btn-save">Save Attribute</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* POPUP MODAL FOR ADDING NEW CUSTOMER (NO PLACEHOLDERS & TOP-RIGHT CLOSE CROSS) */}
+      {isCustomerModalOpen && (
+        <div className="customer-modal-overlay">
+          <div className="customer-modal-card">
+            <div className="customer-modal-header">
+              <h3>Add New Customer</h3>
+              <button 
+                type="button" 
+                className="customer-modal-close" 
+                onClick={() => setIsCustomerModalOpen(false)}
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveCustomer} className="customer-modal-form">
+              <div className="customer-form-group">
+                <label htmlFor="fullName">Full Name</label>
+                <input 
+                  type="text" 
+                  id="fullName"
+                  name="fullName"
+                  required
+                  className="customer-input"
+                  value={customerData.fullName}
+                  onChange={handleCustomerChange}
+                />
+              </div>
+
+              <div className="customer-form-group">
+                <label htmlFor="email">Email Address</label>
+                <input 
+                  type="email" 
+                  id="email"
+                  name="email"
+                  required
+                  className="customer-input"
+                  value={customerData.email}
+                  onChange={handleCustomerChange}
+                />
+              </div>
+
+              <div className="customer-form-group">
+                <label htmlFor="phone">Phone Number</label>
+                <input 
+                  type="tel" 
+                  id="phone"
+                  name="phone"
+                  className="customer-input"
+                  value={customerData.phone}
+                  onChange={handleCustomerChange}
+                />
+              </div>
+
+              <div className="customer-form-group">
+                <label htmlFor="customerGroup">Customer Group</label>
+                <select 
+                  id="customerGroup"
+                  name="customerGroup"
+                  className="customer-input customer-select"
+                  value={customerData.customerGroup}
+                  onChange={handleCustomerChange}
+                >
+                  <option value="VIP Customers">VIP Customers</option>
+                  <option value="Regular Customers">Regular Customers</option>
+                  <option value="Wholesale">Wholesale</option>
+                </select>
+              </div>
+
+              <div className="customer-modal-actions">
+                <button 
+                  type="button" 
+                  className="customer-btn-cancel" 
+                  onClick={() => setIsCustomerModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="customer-btn-save">
+                  Save Customer
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

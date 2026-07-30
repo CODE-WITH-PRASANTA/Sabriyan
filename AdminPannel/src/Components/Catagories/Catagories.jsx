@@ -26,9 +26,21 @@ const Catagories = () => {
   const [sortOrder, setSortOrder] = useState('Newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState(null);
-  const itemsPerPage = 6;
+  
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newCatData, setNewCatData] = useState({
+    name: '',
+    slug: '',
+    description: '',
+    displayOrder: 0,
+    status: 'Active',
+    image: ''
+  });
 
+  const itemsPerPage = 6;
   const menuRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Close dropdown menu when clicking outside
   useEffect(() => {
@@ -41,6 +53,18 @@ const Catagories = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Handle image selection and preview
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewCatData(prev => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Toggle status handler for the 3-dot menu
   const handleToggleStatus = (id) => {
     setCategories(prev =>
@@ -49,6 +73,33 @@ const Catagories = () => {
       )
     );
     setOpenMenuId(null);
+  };
+
+  // Handle Save New Category Form Submission
+  const handleSaveCategory = (e) => {
+    e.preventDefault();
+    if (!newCatData.name.trim()) return;
+
+    const newCategoryItem = {
+      id: categories.length + 1,
+      name: newCatData.name,
+      description: newCatData.description || 'Brief description about this category',
+      products: '0 Products',
+      status: newCatData.status,
+      image: newCatData.image || darkChocImg
+    };
+
+    setCategories([newCategoryItem, ...categories]);
+    setIsModalOpen(false);
+    // Reset form
+    setNewCatData({
+      name: '',
+      slug: '',
+      description: '',
+      displayOrder: 0,
+      status: 'Active',
+      image: ''
+    });
   };
 
   // Filter logic
@@ -67,7 +118,7 @@ const Catagories = () => {
     }
   });
 
-  // Pagination logic (6 items per page)
+  // Pagination logic
   const totalPages = Math.ceil(sortedCategories.length / itemsPerPage) || 1;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -81,40 +132,12 @@ const Catagories = () => {
 
   return (
     <div className="catagories-container">
-      {/* Top Navigation Bar */}
-      <header className="catagories-header">
-        <div className="catagories-header__left">
-          <button className="catagories-menu-btn" aria-label="Menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-          </button>
-          <div className="catagories-title-wrapper">
-            <h1 className="catagories-main-title">Categories</h1>
-            <span className="catagories-breadcrumb">Dashboard &gt; Products &gt; Categories</span>
-          </div>
-        </div>
-        <div className="catagories-header__right">
-          <div className="catagories-search-bar">
-            <svg className="catagories-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" placeholder="Search..." />
-          </div>
-          <div className="catagories-date-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            <span>May 29, 2025</span>
-          </div>
-          <button className="catagories-icon-btn" aria-label="Notifications">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            <span className="catagories-badge-dot"></span>
-          </button>
-          <div className="catagories-avatar"></div>
-        </div>
-      </header>
-
       {/* Banner Section with Add Button Below Text */}
       <section className="catagories-banner" style={{ backgroundImage: `url(${bannerImg})` }}>
         <div className="catagories-banner__content">
           <h2>Manage Product Categories</h2>
           <p>Organize your products into meaningful categories</p>
-          <button className="catagories-add-btn">
+          <button className="catagories-add-btn" onClick={() => setIsModalOpen(true)}>
             <span>+</span> Add New Category
           </button>
         </div>
@@ -250,6 +273,157 @@ const Catagories = () => {
           </button>
         </div>
       </footer>
+
+      {/* POPUP MODAL FOR ADDING CATEGORY */}
+      {isModalOpen && (
+        <div className="catagories-modal-overlay">
+          <div className="catagories-modal-card">
+            <div className="catagories-modal-header">
+              <div>
+                <h3>Add New Category</h3>
+                <p>Create a new category to organize your products</p>
+              </div>
+              <button className="catagories-modal-close" onClick={() => setIsModalOpen(false)}>✕</button>
+            </div>
+
+            <form onSubmit={handleSaveCategory} className="catagories-modal-form">
+              <div className="catagories-form-grid">
+                
+                {/* Left Column Inputs */}
+                <div className="catagories-form-col">
+                  <label className="catagories-form-label">Category Name *</label>
+                  <input 
+                    type="text" 
+                    required 
+                    placeholder="Enter category name" 
+                    className="catagories-input"
+                    value={newCatData.name}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setNewCatData({
+                        ...newCatData,
+                        name: val,
+                        slug: val.toLowerCase().replace(/\s+/g, '-')
+                      });
+                    }}
+                  />
+
+                  <label className="catagories-form-label" style={{marginTop: '16px'}}>Category Slug *</label>
+                  <input 
+                    type="text" 
+                    required 
+                    placeholder="enter-category-slug" 
+                    className="catagories-input"
+                    value={newCatData.slug}
+                    onChange={(e) => setNewCatData({...newCatData, slug: e.target.value})}
+                  />
+                  <small className="catagories-form-hint">This will be used in the URL</small>
+
+                  <label className="catagories-form-label" style={{marginTop: '16px'}}>Description</label>
+                  <textarea 
+                    rows="3" 
+                    placeholder="Enter category description" 
+                    className="catagories-input"
+                    value={newCatData.description}
+                    onChange={(e) => setNewCatData({...newCatData, description: e.target.value})}
+                  />
+                  <small className="catagories-form-hint">Brief description about this category</small>
+
+                  <label className="catagories-form-label" style={{marginTop: '16px'}}>Display Order ⓘ</label>
+                  <input 
+                    type="number" 
+                    className="catagories-input"
+                    value={newCatData.displayOrder}
+                    onChange={(e) => setNewCatData({...newCatData, displayOrder: e.target.value})}
+                  />
+                  <small className="catagories-form-hint">Lower numbers appear first</small>
+                </div>
+
+                {/* Right Column Upload & Status Cards */}
+                <div className="catagories-form-col">
+                  <label className="catagories-form-label">Category Image</label>
+                  
+                  {/* Hidden file input */}
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    style={{ display: 'none' }} 
+                    accept="image/png, image/jpeg, image/webp"
+                    onChange={handleImageChange}
+                  />
+
+                  {/* Upload Box */}
+                  <div 
+                    className="catagories-upload-box"
+                    onClick={() => fileInputRef.current.click()}
+                  >
+                    {newCatData.image ? (
+                      <div className="catagories-preview-wrapper">
+                        <img src={newCatData.image} alt="Preview" className="catagories-preview-img" />
+                        <span className="catagories-change-text">Click to change image</span>
+                      </div>
+                    ) : (
+                      <div className="catagories-upload-content">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <strong>Upload category image</strong>
+                        <small>PNG, JPG or WEBP (Max. 2MB)</small>
+                        <button type="button" className="catagories-choose-file-btn">Choose File</button>
+                      </div>
+                    )}
+                  </div>
+
+                  <label className="catagories-form-label" style={{marginTop: '16px'}}>Status</label>
+                  
+                  {/* Active Status Card */}
+                  <div 
+                    className={`catagories-status-card ${newCatData.status === 'Active' ? 'selected' : ''}`}
+                    onClick={() => setNewCatData({...newCatData, status: 'Active'})}
+                  >
+                    <div className="catagories-status-radio">
+                      <input 
+                        type="radio" 
+                        name="cat-status" 
+                        checked={newCatData.status === 'Active'} 
+                        onChange={() => setNewCatData({...newCatData, status: 'Active'})}
+                      />
+                      <strong>Active</strong>
+                    </div>
+                    <span>Category will be visible to customers</span>
+                  </div>
+
+                  {/* Inactive Status Card */}
+                  <div 
+                    className={`catagories-status-card ${newCatData.status === 'Inactive' ? 'selected' : ''}`}
+                    onClick={() => setNewCatData({...newCatData, status: 'Inactive'})}
+                    style={{marginTop: '10px'}}
+                  >
+                    <div className="catagories-status-radio">
+                      <input 
+                        type="radio" 
+                        name="cat-status" 
+                        checked={newCatData.status === 'Inactive'} 
+                        onChange={() => setNewCatData({...newCatData, status: 'Inactive'})}
+                      />
+                      <strong>Inactive</strong>
+                    </div>
+                    <span>Category will be hidden from customers</span>
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Modal Footer Buttons */}
+              <div className="catagories-modal-actions">
+                <button type="button" className="catagories-btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button type="submit" className="catagories-btn-save">
+                  💾 Save Category
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

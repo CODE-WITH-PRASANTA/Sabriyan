@@ -1,20 +1,40 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Catagories from './Components/Catagories/Catagories';
-import ManageBrands from './Components/ManageBrands/ManageBrands';
-import Attributes from './Components/Attributes/Attributes';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Layout
+import MainLayout from "./Layout/MainLayout/MainLayout";
+
+// Pages
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import Catagories from "./Components/Catagories/Catagories";
+import ManageBrands from "./Components/ManageBrands/ManageBrands";
+import Attributes from "./Components/Attributes/Attributes";
+import CompletedOrders from "./Components/CompletedOrders/CompletedOrders";
+import CancelOrders from "./Components/CancelOrders/CancelOrders";
+import Customers from "./Components/Customers/Customers";
 
 function App() {
   return (
     <Router>
       <Routes>
-        
-        
-        {/* Route for the Categories component matching your breadcrumb design */}
-        <Route path="/categories" element={<Catagories />} />
-        <Route path="/brands" element={<ManageBrands />} />
-        <Route path="/attributes" element={<Attributes/>} />
-       
+
+        {/* All admin pages use MainLayout */}
+        <Route path="/" element={<MainLayout />}>
+
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+
+          <Route path="products/categories" element={<Catagories />} />
+          <Route path="products/brands" element={<ManageBrands />} />
+          <Route path="products/attributes" element={<Attributes />} />
+
+          <Route path="orders/complete" element={<CompletedOrders />} />
+          <Route path="orders/cancel" element={<CancelOrders />} />
+
+          <Route path="customers" element={<Customers />} />
+
+        </Route>
+
       </Routes>
     </Router>
   );

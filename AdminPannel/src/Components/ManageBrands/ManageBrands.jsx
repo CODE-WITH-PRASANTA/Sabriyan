@@ -30,10 +30,26 @@ const ManageBrands = () => {
   const [sortOrder, setSortOrder] = useState('A to Z');
   const [currentPage, setCurrentPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('2025-05-29');
-  
-  const itemsPerPage = 6; // 6 items shown per page as requested
+
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newBrandData, setNewBrandData] = useState({
+    name: '',
+    slug: '',
+    category: '',
+    description: '',
+    website: '',
+    status: 'Active',
+    featured: false,
+    seoTitle: '',
+    metaDesc: '',
+    displayOrder: 1,
+    image: ''
+  });
+
+  const itemsPerPage = 6; 
   const menuRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Close dropdown menu when clicking outside
   useEffect(() => {
@@ -46,6 +62,18 @@ const ManageBrands = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Handle file selection and preview generation
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewBrandData(prev => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Toggle brand status handler for the 3-dot menu
   const handleToggleStatus = (id) => {
     setBrands(prev =>
@@ -54,6 +82,38 @@ const ManageBrands = () => {
       )
     );
     setOpenMenuId(null);
+  };
+
+  // Handle Form Submission for Adding Brand
+  const handleSaveBrand = (e) => {
+    e.preventDefault();
+    if (!newBrandData.name.trim()) return;
+
+    const newBrand = {
+      id: brands.length + 1,
+      name: newBrandData.name,
+      description: newBrandData.description || 'No description provided',
+      products: '0 Products',
+      status: newBrandData.status,
+      image: newBrandData.image || brand1Img
+    };
+
+    setBrands([newBrand, ...brands]);
+    setIsModalOpen(false);
+    // Reset form
+    setNewBrandData({
+      name: '',
+      slug: '',
+      category: '',
+      description: '',
+      website: '',
+      status: 'Active',
+      featured: false,
+      seoTitle: '',
+      metaDesc: '',
+      displayOrder: 1,
+      image: ''
+    });
   };
 
   // Filter logic
@@ -85,59 +145,14 @@ const ManageBrands = () => {
     }
   };
 
-  // Format date nicely for display
-  const formattedDisplayDate = new Date(selectedDate).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
-
   return (
     <div className="manage-brands-container">
-      {/* Top Navigation Bar */}
-      <header className="manage-brands-header">
-        <div className="manage-brands-header__left">
-          <button className="manage-brands-menu-btn" aria-label="Menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-          </button>
-          <div className="manage-brands-title-wrapper">
-            <h1 className="manage-brands-main-title">Brands</h1>
-            <span className="manage-brands-breadcrumb">Dashboard &gt; Products &gt; Brands</span>
-          </div>
-        </div>
-        <div className="manage-brands-header__right">
-          <div className="manage-brands-search-bar">
-            <svg className="manage-brands-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" placeholder="Search..." />
-          </div>
-          
-          {/* Working Date Picker Component */}
-          <div className="manage-brands-date-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            <input 
-              type="date" 
-              value={selectedDate} 
-              onChange={(e) => setSelectedDate(e.target.value)} 
-              className="manage-brands-date-input"
-              aria-label="Select Date"
-            />
-            <span className="manage-brands-date-display">{formattedDisplayDate}</span>
-          </div>
-
-          <button className="manage-brands-icon-btn" aria-label="Notifications">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            <span className="manage-brands-badge-dot"></span>
-          </button>
-          <div className="manage-brands-avatar"></div>
-        </div>
-      </header>
-
       {/* Banner Section */}
       <section className="manage-brands-banner" style={{ backgroundImage: `url(${bannerImg})` }}>
         <div className="manage-brands-banner__content">
           <h2>Manage Brands</h2>
           <p>Add and manage product brands</p>
-          <button className="manage-brands-add-btn">
+          <button className="manage-brands-add-btn" onClick={() => setIsModalOpen(true)}>
             <span>+</span> Add New Brand
           </button>
         </div>
@@ -273,6 +288,185 @@ const ManageBrands = () => {
           </button>
         </div>
       </footer>
+
+      {/* POPUP MODAL FOR ADDING BRAND */}
+      {isModalOpen && (
+        <div className="manage-brands-modal-overlay">
+          <div className="manage-brands-modal-card">
+            <div className="manage-brands-modal-header">
+              <div>
+                <h3>Add New Brand</h3>
+                <p>Create a new product brand</p>
+              </div>
+              <button className="manage-brands-modal-close" onClick={() => setIsModalOpen(false)}>✕</button>
+            </div>
+
+            <form onSubmit={handleSaveBrand} className="manage-brands-modal-form">
+              <div className="manage-brands-form-grid">
+                
+                {/* Left Column: Functional Upload Image Box */}
+                <div className="manage-brands-form-col">
+                  <label className="manage-brands-form-label">Brand Logo</label>
+                  
+                  {/* Hidden file input */}
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    style={{ display: 'none' }} 
+                    accept="image/png, image/jpeg, image/webp"
+                    onChange={handleImageChange}
+                  />
+
+                  {/* Clickable upload container */}
+                  <div 
+                    className="manage-brands-upload-box" 
+                    onClick={() => fileInputRef.current.click()}
+                  >
+                    {newBrandData.image ? (
+                      <div className="manage-brands-preview-container">
+                        <img src={newBrandData.image} alt="Logo Preview" className="manage-brands-preview-img" />
+                        <button 
+                          type="button" 
+                          className="manage-brands-remove-img" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setNewBrandData(prev => ({ ...prev, image: '' }));
+                          }}
+                        >
+                          Change Image
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="manage-brands-upload-content">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <strong>Upload Image</strong>
+                        <span>Drag & drop or click to browse</span>
+                        <small>JPG, PNG, WEBP (Max 2MB)</small>
+                      </div>
+                    )}
+                  </div>
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>Description</label>
+                  <textarea 
+                    rows="3" 
+                    placeholder="Enter brand description..." 
+                    className="manage-brands-input"
+                    value={newBrandData.description}
+                    onChange={(e) => setNewBrandData({...newBrandData, description: e.target.value})}
+                  />
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>Brand Status</label>
+                  <div className="manage-brands-radio-group">
+                    <label className="manage-brands-radio-label">
+                      <input 
+                        type="radio" 
+                        name="status" 
+                        checked={newBrandData.status === 'Active'} 
+                        onChange={() => setNewBrandData({...newBrandData, status: 'Active'})}
+                      /> Active
+                    </label>
+                    <label className="manage-brands-radio-label">
+                      <input 
+                        type="radio" 
+                        name="status" 
+                        checked={newBrandData.status === 'Inactive'} 
+                        onChange={() => setNewBrandData({...newBrandData, status: 'Inactive'})}
+                      /> Inactive
+                    </label>
+                  </div>
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>SEO Title</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter SEO title" 
+                    className="manage-brands-input"
+                    value={newBrandData.seoTitle}
+                    onChange={(e) => setNewBrandData({...newBrandData, seoTitle: e.target.value})}
+                  />
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>Display Order</label>
+                  <input 
+                    type="number" 
+                    className="manage-brands-input"
+                    value={newBrandData.displayOrder}
+                    onChange={(e) => setNewBrandData({...newBrandData, displayOrder: e.target.value})}
+                  />
+                </div>
+
+                {/* Right Column: Text inputs */}
+                <div className="manage-brands-form-col">
+                  <label className="manage-brands-form-label">Brand Name *</label>
+                  <input 
+                    type="text" 
+                    required 
+                    placeholder="Enter brand name" 
+                    className="manage-brands-input"
+                    value={newBrandData.name}
+                    onChange={(e) => setNewBrandData({...newBrandData, name: e.target.value})}
+                  />
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>Brand Slug</label>
+                  <input 
+                    type="text" 
+                    placeholder="auto-generated or custom" 
+                    className="manage-brands-input"
+                    value={newBrandData.slug}
+                    onChange={(e) => setNewBrandData({...newBrandData, slug: e.target.value})}
+                  />
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>Brand Category</label>
+                  <select 
+                    className="manage-brands-input manage-brands-select"
+                    value={newBrandData.category}
+                    onChange={(e) => setNewBrandData({...newBrandData, category: e.target.value})}
+                  >
+                    <option value="">Select Category</option>
+                    <option value="Chocolates">Chocolates</option>
+                    <option value="Honey">Honey</option>
+                    <option value="Gifts">Gifts</option>
+                  </select>
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>Website</label>
+                  <input 
+                    type="text" 
+                    placeholder="https://" 
+                    className="manage-brands-input"
+                    value={newBrandData.website}
+                    onChange={(e) => setNewBrandData({...newBrandData, website: e.target.value})}
+                  />
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>Featured Brand</label>
+                  <div className="manage-brands-checkbox-wrapper">
+                    <label className="manage-brands-checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={newBrandData.featured}
+                        onChange={(e) => setNewBrandData({...newBrandData, featured: e.target.checked})}
+                      /> Show on Homepage
+                    </label>
+                  </div>
+
+                  <label className="manage-brands-form-label" style={{marginTop: '20px'}}>Meta Description</label>
+                  <textarea 
+                    rows="3" 
+                    placeholder="Enter meta description..." 
+                    className="manage-brands-input"
+                    value={newBrandData.metaDesc}
+                    onChange={(e) => setNewBrandData({...newBrandData, metaDesc: e.target.value})}
+                  />
+                </div>
+
+              </div>
+
+              {/* Footer Buttons */}
+              <div className="manage-brands-modal-actions">
+                <button type="button" className="manage-brands-btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button type="submit" className="manage-brands-btn-save">Save Brand</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
