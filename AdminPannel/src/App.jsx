@@ -26,11 +26,9 @@ function App() {
 
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
-<<<<<<< HEAD
           <Route path="/products/add" element={<AddnewProduct/>}/>
           <Route path="/products/all"element={<AllProduct/>}/>
           <Route path="/orders/all"element={<AllOrder/>}/>
-=======
 
           <Route path="products/categories" element={<Catagories />} />
           <Route path="products/brands" element={<ManageBrands />} />
@@ -41,7 +39,6 @@ function App() {
 
           <Route path="customers" element={<Customers />} />
 
->>>>>>> 1e9cf53c16988aedd2d2781e35190c7aa7ae3cec
         </Route>
 
       </Routes>
