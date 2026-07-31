@@ -15,6 +15,9 @@ import Attributes from "./Components/Attributes/Attributes";
 import CompletedOrders from "./Components/CompletedOrders/CompletedOrders";
 import CancelOrders from "./Components/CancelOrders/CancelOrders";
 import Customers from "./Components/Customers/Customers";
+import PremiumCollection from "./Components/PremiumCollection/PremiumCollection";
+import Testimonial from "./Components/Testimonial/Testimonial";
+import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
 
 function App() {
   return (
@@ -26,11 +29,9 @@ function App() {
 
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
-<<<<<<< HEAD
           <Route path="/products/add" element={<AddnewProduct/>}/>
           <Route path="/products/all"element={<AllProduct/>}/>
           <Route path="/orders/all"element={<AllOrder/>}/>
-=======
 
           <Route path="products/categories" element={<Catagories />} />
           <Route path="products/brands" element={<ManageBrands />} />
@@ -40,8 +41,10 @@ function App() {
           <Route path="orders/cancel" element={<CancelOrders />} />
 
           <Route path="customers" element={<Customers />} />
+          <Route path="/premium-collection" element={<PremiumCollection/>} />
+          <Route path="/testimonials" element={<Testimonial/>} />
+          <Route path="/honey-product" element={<HoneyProduct/>} />
 
->>>>>>> 1e9cf53c16988aedd2d2781e35190c7aa7ae3cec
         </Route>
 
       </Routes>
