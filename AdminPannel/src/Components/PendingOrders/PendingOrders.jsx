@@ -2,8 +2,6 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   MagnifyingGlass,
   CalendarBlank,
-  Bell,
-  CaretDown,
   Bag,
   Truck,
   Flag,
@@ -16,9 +14,9 @@ import {
   DotsThreeVertical,
   CaretLeft,
   CaretRight,
+  CaretDown,
   Rocket,
-  X,
-  Check
+  X
 } from '@phosphor-icons/react';
 import './PendingOrders.css';
 
@@ -148,14 +146,12 @@ const PendingOrders = () => {
   const [selectedPriority, setSelectedPriority] = useState('All');
   const [selectedShipping, setSelectedShipping] = useState('All');
 
-  // Modal / Dropdown States
   const [viewingOrder, setViewingOrder] = useState(null);
   const [editingOrder, setEditingOrder] = useState(null);
   const [activeDropdownId, setActiveDropdownId] = useState(null);
 
   const containerRef = useRef(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
@@ -166,7 +162,6 @@ const PendingOrders = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filter Logic
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
       const q = searchQuery.toLowerCase();
@@ -184,7 +179,6 @@ const PendingOrders = () => {
     });
   }, [orders, searchQuery, selectedPayment, selectedPriority, selectedShipping]);
 
-  // Pagination Calculations
   const totalPages = Math.max(1, Math.ceil(filteredOrders.length / itemsPerPage));
   
   useEffect(() => {
@@ -198,7 +192,6 @@ const PendingOrders = () => {
     return filteredOrders.slice(start, start + itemsPerPage);
   }, [filteredOrders, activePage, itemsPerPage]);
 
-  // Checkbox handlers
   const toggleSelectAll = (e) => {
     if (e.target.checked) {
       const currentIds = currentOrders.map((o) => o.id);
@@ -219,7 +212,6 @@ const PendingOrders = () => {
     currentOrders.length > 0 &&
     currentOrders.every((o) => selectedOrders.includes(o.id));
 
-  // Actions Logic
   const handleView = (order) => {
     setViewingOrder(order);
     setActiveDropdownId(null);
@@ -245,51 +237,6 @@ const PendingOrders = () => {
 
   return (
     <div className="pending-orders" ref={containerRef}>
-      {/* HEADER NAVBAR */}
-      <header className="pending-orders__header">
-        <div className="pending-orders__header-left">
-          <h1 className="pending-orders__title">
-            <span className="pending-orders__title-accent">Pending</span> Orders
-          </h1>
-          <nav className="pending-orders__breadcrumb" aria-label="Breadcrumb">
-            <span className="pending-orders__breadcrumb-link">Dashboard</span>
-            <span className="pending-orders__breadcrumb-divider">/</span>
-            <span className="pending-orders__breadcrumb-link">Orders</span>
-            <span className="pending-orders__breadcrumb-divider">/</span>
-            <span className="pending-orders__breadcrumb-current">Pending Orders</span>
-          </nav>
-        </div>
-
-        <div className="pending-orders__header-right">
-          <div className="pending-orders__search-bar">
-            <MagnifyingGlass size={18} className="pending-orders__search-icon" />
-            <input
-              type="text"
-              placeholder="Search order ID, customer, product..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <kbd className="pending-orders__shortcut-key">⌘K</kbd>
-          </div>
-
-          <div className="pending-orders__date-badge">
-            <CalendarBlank size={18} />
-            <span>May 26, 2025</span>
-          </div>
-
-          <div className="pending-orders__icon-btn-wrapper">
-            <button className="pending-orders__icon-btn" aria-label="Notifications">
-              <Bell size={20} />
-            </button>
-            <span className="pending-orders__notification-dot">8</span>
-          </div>
-
-          <div className="pending-orders__avatar-btn">
-            <div className="pending-orders__avatar">A</div>
-          </div>
-        </div>
-      </header>
-
       {/* KPI SUMMARY CARDS */}
       <section className="pending-orders__kpi-grid">
         {kpis.map((kpi, index) => (
@@ -534,7 +481,6 @@ const PendingOrders = () => {
                             <DotsThreeVertical size={16} weight="bold" />
                           </button>
 
-                          {/* Contextual Dropdown */}
                           {activeDropdownId === order.id && (
                             <div className="pending-orders__dropdown-menu">
                               <button onClick={() => handleView(order)}>View Details</button>

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { 
-  Search, Calendar, Bell, ChevronLeft, ChevronRight, 
+  Search, Calendar, ChevronLeft, ChevronRight, 
   Eye, Edit2, Trash2, Clock, FileText, 
   IndianRupee, ArrowUpRight, ArrowDownRight, Paperclip, Plus, RefreshCw, X, Filter
 } from 'lucide-react';
@@ -104,47 +104,6 @@ const RefundManagement = () => {
     <div className="refund-app-wrapper">
       <div className="refund-container">
         
-        {/* Header Navigation */}
-        <header className="dashboard-header">
-          <div className="header-titles">
-            <h1 className="header-heading">Refunds Management</h1>
-            <nav className="breadcrumb">
-              <span>Dashboard</span>
-              <span className="breadcrumb-sep">&gt;</span>
-              <span>Orders</span>
-              <span className="breadcrumb-sep">&gt;</span>
-              <span className="breadcrumb-active">Refunds</span>
-            </nav>
-          </div>
-          
-          <div className="header-actions">
-            <div className="search-bar-wrapper top-search">
-              <Search className="search-icon" size={16} />
-              <input 
-                type="search" 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by Order ID, Customer, Email..." 
-                className="search-input"
-              />
-            </div>
-
-            <div className="user-profile-controls">
-              <div className="date-chip">
-                <Calendar className="chip-icon" size={14} />
-                <span>May 29, 2025</span>
-              </div>
-              <button className="icon-btn-ghost relative" title="Notifications">
-                <Bell size={18} />
-                <span className="notification-indicator">12</span>
-              </button>
-              <div className="avatar-chip">
-                <div className="avatar-inner">G</div>
-              </div>
-            </div>
-          </div>
-        </header>
-
         {/* Top Metrics Cards */}
         <section className="metrics-grid">
           {stats.map((stat, index) => {
