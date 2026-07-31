@@ -10,6 +10,14 @@
   --accent-green: #10b981;      /* Bright vibrant green */
   --accent-light-green: #34d399;/* Secondary light green */
   --accent-gold: #d97706;       /* Gold contrast */
+  
+  --sidebar-width-expanded: 260px;
+  --sidebar-width-collapsed: 80px;
+  --topbar-height: 70px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -17,39 +25,64 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-main);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Main Layout Wrapper */
 .main-layout {
   display: flex;
   min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--bg-dark);
+  position: relative;
+  width: 100%;
 }
 
 .main-layout-content {
   flex: 1;
   display: flex;
-  flex-direction: flex-direction;
   flex-direction: column;
-  margin-left: 260px;
-  transition: margin-left 0.3s ease;
+  min-width: 0; /* Prevents flex items from overflowing horizontally */
+  margin-left: var(--sidebar-width-expanded);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: var(--bg-dark);
 }
 
 .main-layout-content.collapsed {
-  margin-left: 80px;
+  margin-left: var(--sidebar-width-collapsed);
 }
 
 .main-layout-body {
-  padding: 24px;
+  padding: 2px;
   flex: 1;
   background-color: var(--bg-dark);
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
-/* Mobile responsive helpers */
+/* Breakpoint 1: Laptops & Tablets (<= 1024px) */
+@media (max-width: 1024px) {
+  .main-layout-body {
+    padding: 18px;
+  }
+}
+
+/* Breakpoint 2: Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
   .main-layout-content,
   .main-layout-content.collapsed {
     margin-left: 0;
+  }
+
+  .main-layout-body {
+    padding: 14px;
+  }
+}
+
+/* Breakpoint 3: Small Mobile (<= 480px) */
+@media (max-width: 480px) {
+  .main-layout-body {
+    padding: 10px;
   }
 }

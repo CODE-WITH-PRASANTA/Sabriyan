@@ -1,0 +1,139 @@
+/* Color Palette Variables matching your dark dashboard theme */
+:root {
+  --aph-bg-dark: #070d09;
+  --aph-card-bg: #0d1712;
+  --aph-border-color: #16241b;
+  --aph-text-main: #ffffff;
+  --aph-text-muted: #829487;
+  --aph-accent-green: #22c55e;
+  --aph-accent-red: #ef4444;
+}
+
+body {
+  background-color: var(--aph-bg-dark);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.aph-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 4-Column Grid System */
+.aph-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+/* Individual Card Styling */
+.aph-stat-card {
+  background-color: var(--aph-card-bg);
+  border: 1px solid var(--aph-border-color);
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.aph-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(34, 197, 94, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Circle Icon Wrapper Base */
+.aph-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.aph-icon {
+  font-size: 1.35rem;
+}
+
+/* Specific Theme Badges */
+.theme-green {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.theme-orange {
+  background: rgba(234, 88, 12, 0.18);
+  border: 1px solid rgba(234, 88, 12, 0.25);
+}
+
+.theme-yellow {
+  background: rgba(234, 179, 8, 0.16);
+  border: 1px solid rgba(234, 179, 8, 0.25);
+}
+
+.theme-red {
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* Stat Text Content Layout */
+.aph-stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.aph-stat-title {
+  font-size: 0.8125rem;
+  color: var(--aph-text-muted);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.aph-stat-value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--aph-text-main);
+  line-height: 1.1;
+}
+
+.aph-stat-sub {
+  font-size: 0.7188rem;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+.text-green {
+  color: var(--aph-accent-green);
+}
+
+.text-red {
+  color: var(--aph-text-muted);
+}
+
+/* Responsive Views */
+@media (max-width: 1100px) {
+  .aph-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .aph-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .aph-stat-card {
+    padding: 16px 18px;
+  }
+}

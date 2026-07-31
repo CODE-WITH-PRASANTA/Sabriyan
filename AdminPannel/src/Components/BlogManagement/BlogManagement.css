@@ -1,0 +1,600 @@
+/* ==========================================
+   REF COLOR MATCH: DEEP FOREST GREEN THEME
+   ========================================== */
+.BlogManagement.dark-forest-theme {
+  --ref-dark-green: #0e301d;      /* Reference dark forest green */
+  --ref-surface-green: #143d26;   /* Surface green */
+  --ref-card-bg: #1c4b31;        /* Card & table row inner background */
+  --ref-border-green: #296140;    /* Border green */
+  
+  --gold-accent: #d4af37;         /* Golden accent */
+  --gold-hover: #b89628;          /* Darker gold hover */
+  
+  --text-light: #eef7f2;          /* Main white/light text */
+  --text-subtle: #a8c8b4;         /* Secondary muted text */
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background-color: var(--ref-dark-green);
+  padding: 24px;
+  color: var(--text-light);
+  min-height: 100vh;
+}
+
+/* Header & Controls */
+.BlogManagement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.BlogManagement-viewToggle {
+  display: flex;
+  gap: 8px;
+}
+
+.BlogManagement-toggleBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ref-surface-green);
+  border: 1px solid var(--ref-border-green);
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-subtle);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.BlogManagement-toggleBtn.active {
+  background-color: var(--gold-accent);
+  color: var(--ref-dark-green);
+  border-color: var(--gold-accent);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.BlogManagement-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Dropdown Selects */
+.BlogManagement-selectWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.BlogManagement-selectWrapper select {
+  appearance: none;
+  padding: 8px 30px 8px 12px;
+  border: 1px solid var(--ref-border-green);
+  border-radius: 8px;
+  background: var(--ref-surface-green);
+  font-size: 14px;
+  color: var(--text-light);
+  cursor: pointer;
+  outline: none;
+}
+
+.BlogManagement-selectWrapper select:focus {
+  border-color: var(--gold-accent);
+}
+
+.BlogManagement-selectWrapper .select-arrow {
+  position: absolute;
+  right: 10px;
+  font-size: 10px;
+  color: var(--gold-accent);
+  pointer-events: none;
+}
+
+.BlogManagement-filterBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--gold-accent);
+  border: 1px solid var(--gold-accent);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--ref-dark-green);
+  transition: background 0.2s;
+}
+
+.BlogManagement-filterBtn:hover {
+  background: var(--gold-hover);
+}
+
+/* Category Badges */
+.category-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.cat-nature { background-color: #1e5235; color: #a3ebc1; border: 1px solid #2a734b; }
+.cat-honey { background-color: #4a3b10; color: #fce38a; border: 1px solid #735c18; }
+.cat-health { background-color: #1a3e5c; color: #9ecbfa; border: 1px solid #285880; }
+.cat-chocolate { background-color: #442240; color: #f3b8ed; border: 1px solid #693863; }
+.cat-recipes { background-color: #2b4737; color: #b7efcd; border: 1px solid #3d634e; }
+
+/* Status Badges */
+.status-pill {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.status-pill.published { background-color: #1e5235; color: #a3ebc1; }
+.status-pill.draft { background-color: #374151; color: #d1d5db; }
+
+/* Table View */
+.BlogManagement-tableContainer {
+  background: var(--ref-surface-green);
+  border-radius: 12px;
+  border: 1px solid var(--ref-border-green);
+  overflow-x: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.BlogManagement-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.BlogManagement-table th {
+  background-color: var(--ref-dark-green);
+  color: var(--gold-accent);
+  padding: 14px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--ref-border-green);
+}
+
+.BlogManagement-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ref-border-green);
+  font-size: 13px;
+  vertical-align: middle;
+  color: var(--text-light);
+}
+
+.no-data {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-subtle);
+}
+
+.BlogManagement-thumb {
+  width: 60px;
+  height: 45px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--ref-border-green);
+}
+
+.title-cell {
+  max-width: 260px;
+}
+
+.title-cell .title-text {
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.title-cell .desc-text {
+  font-size: 12px;
+  color: var(--text-subtle);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.author-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.author-cell img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-accent);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-subtle);
+  font-size: 12px;
+}
+
+.feat-icon.active { color: var(--gold-accent); }
+.feat-icon.inactive { color: #4b5563; }
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.act-btn {
+  background: var(--ref-card-bg);
+  border: 1px solid var(--ref-border-green);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.act-btn.view { color: #a3ebc1; }
+.act-btn.edit { color: var(--gold-accent); }
+.act-btn.delete { color: #f87171; }
+
+.act-btn:hover {
+  background-color: var(--ref-border-green);
+}
+
+/* Pagination Controls */
+.BlogManagement-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  font-size: 13px;
+  color: var(--text-subtle);
+  background: var(--ref-dark-green);
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.page-btn {
+  border: 1px solid var(--ref-border-green);
+  background: var(--ref-surface-green);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-light);
+  transition: all 0.2s;
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-btn.num.active {
+  background-color: var(--gold-accent);
+  color: var(--ref-dark-green);
+  border-color: var(--gold-accent);
+  font-weight: 700;
+}
+
+/* Grid View */
+.BlogManagement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 18px;
+}
+
+.BlogManagement-card {
+  background: var(--ref-surface-green);
+  border-radius: 12px;
+  border: 1px solid var(--ref-border-green);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.BlogManagement-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.card-top {
+  position: relative;
+  height: 150px;
+}
+
+.card-top img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-top .category-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.card-bookmark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(14, 48, 29, 0.85);
+  color: var(--gold-accent);
+  border: 1px solid var(--gold-accent);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.card-content {
+  padding: 14px;
+  flex-grow: 1;
+}
+
+.card-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-subtle);
+  margin-bottom: 8px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text-light);
+}
+
+.card-desc {
+  font-size: 12px;
+  color: var(--text-subtle);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.card-footer {
+  padding: 10px 14px;
+  border-top: 1px solid var(--ref-border-green);
+  background: var(--ref-card-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.BlogManagement-loadMore {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.load-more-btn {
+  background: var(--ref-surface-green);
+  border: 2px solid var(--gold-accent);
+  color: var(--gold-accent);
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.load-more-btn:hover {
+  background: var(--gold-accent);
+  color: var(--ref-dark-green);
+}
+
+/* MODALS & PROPER CLOSE BUTTON STYLING */
+.BlogManagement-modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.BlogManagement-modal {
+  background: var(--ref-surface-green);
+  color: var(--text-light);
+  width: 90%;
+  max-width: 500px;
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  border-top: 6px solid var(--gold-accent);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* PROPER CROSS (×) BUTTON STYLING */
+.close-modal-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--ref-dark-green);
+  border: 1px solid var(--gold-accent);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-accent);
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+  background: var(--gold-accent);
+  color: var(--ref-dark-green);
+}
+
+.modal-banner-wrap {
+  position: relative;
+  height: 180px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.modal-banner-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-banner-wrap .category-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.modal-meta-row {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0;
+  font-size: 12px;
+  color: var(--text-subtle);
+}
+
+.modal-full-text {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.modal-author-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--ref-border-green);
+  padding-top: 12px;
+}
+
+.modal-author-box img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-accent);
+}
+
+.edit-form .form-group {
+  margin-bottom: 12px;
+}
+
+.edit-form label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--gold-accent);
+}
+
+.edit-form input,
+.edit-form textarea,
+.edit-form select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--ref-border-green);
+  border-radius: 6px;
+  font-size: 13px;
+  background: var(--ref-dark-green);
+  color: var(--text-light);
+  box-sizing: border-box;
+}
+
+.edit-form input:focus,
+.edit-form textarea:focus,
+.edit-form select:focus {
+  border-color: var(--gold-accent);
+  outline: none;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.save-btn {
+  background: var(--gold-accent);
+  color: var(--ref-dark-green);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.save-btn:hover { background: var(--gold-hover); }
+
+.cancel-btn {
+  background: var(--ref-card-bg);
+  color: var(--text-light);
+  border: 1px solid var(--ref-border-green);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .BlogManagement-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .BlogManagement-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .BlogManagement-selectWrapper select {
+    width: 100%;
+  }
+}
