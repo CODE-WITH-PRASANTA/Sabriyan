@@ -458,7 +458,7 @@ const PremiumCollection = () => {
                 <label>Description (Rich Text)</label>
                 <div className="editor-wrapper">
                   <Editor
-                    apiKey="no-api-key"
+                    apiKey="8hswbe7bfeeneui9eb9gjgsym8ku30nx5gwre9808ajdzniu"
                     value={formData.description}
                     onEditorChange={handleEditorChange}
                     init={{

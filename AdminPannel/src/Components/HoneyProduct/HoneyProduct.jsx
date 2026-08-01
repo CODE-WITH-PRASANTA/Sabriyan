@@ -441,7 +441,7 @@ const HoneyProduct = () => {
                 <label>Short Description <span className="honey-product-req">*</span></label>
                 <div className="honey-product-editor-box">
                   <Editor
-                    apiKey="no-api-key"
+                    apiKey="8hswbe7bfeeneui9eb9gjgsym8ku30nx5gwre9808ajdzniu"
                     value={formData.shortDescription}
                     onEditorChange={handleEditorChange}
                     init={{
