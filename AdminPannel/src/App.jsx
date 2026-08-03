@@ -1,14 +1,13 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Layout
 import MainLayout from "./Layout/MainLayout/MainLayout";
-import AddnewProduct from "./Pages/AddnewProduct/AddnewProduct";
-import AllProduct from "./Pages/AllProduct/AllProduct";
-import AllOrder from "./Pages/AllOrder/AllOrder";
 
-// Pages
-import Dashboard from "./Pages/Dashboard/Dashboard";
+// Components
+import Dashboard from "./Components/Dashboard/Dashboard";
+import RefundManagement from "./Components/RefundManagement/RefundManagement";
+import PendingOrders from "./Components/PendingOrders/PendingOrders";
+import ProcessingOrder from "./Components/ProcessingOrder/ProcessingOrder";
 import Catagories from "./Components/Catagories/Catagories";
 import ManageBrands from "./Components/ManageBrands/ManageBrands";
 import Attributes from "./Components/Attributes/Attributes";
@@ -19,19 +18,23 @@ import PremiumCollection from "./Components/PremiumCollection/PremiumCollection"
 import Testimonial from "./Components/Testimonial/Testimonial";
 import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
 
+// Import these if they exist
+// import AddnewProduct from "./Components/AddnewProduct/AddnewProduct";
+// import AllProduct from "./Components/AllProduct/AllProduct";
+
+
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-
-        {/* All admin pages use MainLayout */}
         <Route path="/" element={<MainLayout />}>
-
           <Route index element={<Dashboard />} />
+
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="/products/add" element={<AddnewProduct/>}/>
-          <Route path="/products/all"element={<AllProduct/>}/>
-          <Route path="/orders/all"element={<AllOrder/>}/>
+
+          {/* <Route path="products/add" element={<AddnewProduct />} /> */}
+          {/* <Route path="products/all" element={<AllProduct />} /> */}
+          {/* <Route path="orders/all" element={<AllOrder />} /> */}
 
           <Route path="products/categories" element={<Catagories />} />
           <Route path="products/brands" element={<ManageBrands />} />
@@ -41,14 +44,16 @@ function App() {
           <Route path="orders/cancel" element={<CancelOrders />} />
 
           <Route path="customers" element={<Customers />} />
-          <Route path="/premium-collection" element={<PremiumCollection/>} />
-          <Route path="/testimonials" element={<Testimonial/>} />
-          <Route path="/honey-product" element={<HoneyProduct/>} />
+          <Route path="premium-collection" element={<PremiumCollection />} />
+          <Route path="testimonials" element={<Testimonial />} />
+          <Route path="honey-product" element={<HoneyProduct />} />
 
+          <Route path="refund" element={<RefundManagement />} />
+          <Route path="pending" element={<PendingOrders />} />
+          <Route path="processing" element={<ProcessingOrder />} />
         </Route>
-
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

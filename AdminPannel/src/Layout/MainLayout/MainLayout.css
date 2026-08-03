@@ -53,7 +53,7 @@ body {
 }
 
 .main-layout-body {
-  padding: 24px;
+  padding: 2px;
   flex: 1;
   background-color: var(--bg-dark);
   width: 100%;

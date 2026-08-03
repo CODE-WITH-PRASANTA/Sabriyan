@@ -1,0 +1,449 @@
+/* --- Dashboard Layout & Styles --- */
+.dashboard-wrapper {
+  background-color: #0b130e;
+  color: #f3f4f6;
+  padding: 24px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* KPI Grid */
+.dashboard-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dashboard-kpi-card {
+  background-color: #111d15;
+  border: 1px solid #1f3325;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dashboard-kpi-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.dashboard-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dashboard-green-glow { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.dashboard-yellow-glow { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+.dashboard-purple-glow { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+.dashboard-blue-glow { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.dashboard-red-glow { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+.dashboard-kpi-title {
+  font-size: 13px;
+  color: #9ca3af;
+  display: block;
+}
+
+.dashboard-kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 4px 0;
+}
+
+.dashboard-kpi-subtitle {
+  font-size: 12px;
+  margin: 0;
+}
+
+.dashboard-green-text { color: #10b981; }
+.dashboard-muted-text { color: #6b7280; }
+
+.dashboard-kpi-chart {
+  margin-top: 8px;
+}
+
+/* Main Grid */
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-main-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-card {
+  background-color: #111d15;
+  border: 1px solid #1f3325;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dashboard-card-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.dashboard-link-green {
+  font-size: 13px;
+  color: #10b981;
+  text-decoration: none;
+}
+
+.dashboard-link-green:hover {
+  text-decoration: underline;
+}
+
+/* Sales Overview Box */
+.dashboard-sales-overview {
+  grid-column: span 1;
+}
+
+.dashboard-header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-sales-total {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.dashboard-total-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.dashboard-text-sm { font-size: 12px; }
+
+.dashboard-dropdown-select {
+  background-color: #1a2c20;
+  color: #d1d5db;
+  border: 1px solid #274430;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Order Status / Donut Layout */
+.dashboard-donut-chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.dashboard-pie-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-donut-center {
+  position: absolute;
+  text-align: center;
+}
+
+.dashboard-donut-center h3 {
+  font-size: 20px;
+  margin: 0;
+  color: #ffffff;
+}
+
+.dashboard-donut-center span {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.dashboard-total-sales-text {
+  font-size: 14px;
+  color: #10b981;
+  margin: 2px 0 0 0;
+}
+
+.dashboard-chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dashboard-legend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.dashboard-legend-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dashboard-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dashboard-legend-label {
+  color: #d1d5db;
+}
+
+.dashboard-legend-value {
+  color: #9ca3af;
+}
+
+/* Recent Orders */
+.dashboard-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.dashboard-order-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1a2c20;
+}
+
+.dashboard-item-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.dashboard-order-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dashboard-order-id {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.dashboard-order-name {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.dashboard-status-badge {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.dashboard-status-delivered { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+.dashboard-status-processing { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.dashboard-status-shipped { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.dashboard-status-pending { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+.dashboard-view-all-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #10b981;
+  text-decoration: none;
+}
+
+/* Products Table */
+.dashboard-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.dashboard-products-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.dashboard-products-table th {
+  color: #6b7280;
+  font-weight: 500;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1a2c20;
+}
+
+.dashboard-products-table td {
+  padding: 10px 0;
+  border-bottom: 1px solid #1a2c20;
+  color: #d1d5db;
+}
+
+.dashboard-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-progress-bar {
+  width: 80px;
+  height: 4px;
+  background-color: #1a2c20;
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.dashboard-progress-fill {
+  height: 100%;
+  background-color: #10b981;
+}
+
+.dashboard-bold-text {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.dashboard-action-icon {
+  color: #6b7280;
+  cursor: pointer;
+}
+
+/* Low Stock Alert List */
+.dashboard-stock-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dashboard-stock-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #16261c;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #1f3325;
+}
+
+.dashboard-stock-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-stock-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.dashboard-stock-count {
+  font-size: 11px;
+  color: #ef4444;
+}
+
+.dashboard-restock-btn {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.dashboard-restock-btn:hover {
+  background-color: rgba(239, 68, 68, 0.25);
+}
+
+/* Quick Actions Footer Toolbar */
+.dashboard-quick-actions-bar {
+  background-color: #111d15;
+  border: 1px solid #1f3325;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.dashboard-quick-actions-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+}
+
+.dashboard-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.dashboard-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-btn-green { background: rgba(16, 185, 129, 0.1); color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
+.dashboard-btn-orange { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
+.dashboard-btn-blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
+.dashboard-btn-purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.2); }
+.dashboard-btn-cyan { background: rgba(6, 182, 212, 0.1); color: #06b6d4; border-color: rgba(6, 182, 212, 0.2); }
+.dashboard-btn-emerald { background: rgba(52, 211, 153, 0.1); color: #34d399; border-color: rgba(52, 211, 153, 0.2); }
+.dashboard-btn-amber { background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-color: rgba(251, 191, 36, 0.2); }
+.dashboard-btn-slate { background: rgba(148, 163, 184, 0.1); color: #94a3b8; border-color: rgba(148, 163, 184, 0.2); }
+
+.dashboard-action-btn:hover {
+  filter: brightness(1.2);
+}

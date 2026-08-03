@@ -1,0 +1,514 @@
+/* Container CSS for 50/50 Grid Split */
+.BlogPost-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 50% / 50% split */
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #060d08;
+  color: #e2f1e8;
+  min-height: 100vh;
+}
+
+.BlogPost-column {
+  width: 100%;
+  min-width: 0; /* Prevents flex/grid overflow bugs */
+}
+
+.BlogPost-card {
+  background-color: #0e1a12;
+  border: 1px solid #1a2e21;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Headers */
+.BlogPost-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.BlogPost-headerBadge {
+  background-color: #1a3824;
+  color: #2ecc71;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.BlogPost-header h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Form Styles */
+.BlogPost-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.BlogPost-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.BlogPost-labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.BlogPost-field label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #a3c2af;
+}
+
+.BlogPost-required {
+  color: #e74c3c;
+}
+
+.BlogPost-charCount {
+  font-size: 0.75rem;
+  color: #64826f;
+}
+
+.BlogPost-field input[type="text"],
+.BlogPost-field input[type="date"],
+.BlogPost-field select,
+.BlogPost-field textarea {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #09130d;
+  border: 1px solid #1c3324;
+  border-radius: 6px;
+  color: #e2f1e8;
+  font-size: 0.85rem;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.BlogPost-field input:focus,
+.BlogPost-field select:focus,
+.BlogPost-field textarea:focus {
+  border-color: #2ecc71;
+}
+
+/* Multi-column Form Grids */
+.BlogPost-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.BlogPost-grid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+/* Upload Box */
+.BlogPost-uploadBox {
+  border: 1px dashed #274732;
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+  background-color: #09130d;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+}
+
+.BlogPost-uploadIcon {
+  font-size: 1.4rem;
+  color: #2ecc71;
+  margin-bottom: 4px;
+}
+
+.BlogPost-uploadBox span {
+  font-size: 0.78rem;
+  color: #a3c2af;
+}
+
+.BlogPost-uploadBox small {
+  font-size: 0.68rem;
+  color: #557360;
+}
+
+.BlogPost-imgPreview {
+  max-width: 100%;
+  max-height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Switch / Toggle */
+.BlogPost-toggleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+}
+
+.BlogPost-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+}
+
+.BlogPost-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.BlogPost-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #1f3829;
+  transition: .3s;
+  border-radius: 20px;
+}
+
+.BlogPost-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .BlogPost-slider {
+  background-color: #2ecc71;
+}
+
+input:checked + .BlogPost-slider:before {
+  transform: translateX(18px);
+}
+
+.BlogPost-toggleText {
+  font-size: 0.8rem;
+}
+
+/* Buttons */
+.BlogPost-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.BlogPost-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.BlogPost-btn:hover {
+  opacity: 0.9;
+}
+
+.BlogPost-btnPrimary {
+  background-color: #2ecc71;
+  color: #060d08;
+}
+
+.BlogPost-btnOutline {
+  background-color: transparent;
+  border: 1px solid #274732;
+  color: #a3c2af;
+}
+
+.BlogPost-btnReset {
+  background-color: #1a2e21;
+  color: #e2f1e8;
+}
+
+/* Table Column Controls */
+.BlogPost-listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.BlogPost-searchFilter {
+  display: flex;
+  gap: 6px;
+}
+
+.BlogPost-searchBox {
+  position: relative;
+}
+
+.BlogPost-searchBox input {
+  padding: 6px 10px 6px 28px;
+  background-color: #09130d;
+  border: 1px solid #1c3324;
+  border-radius: 6px;
+  color: #e2f1e8;
+  font-size: 0.8rem;
+  width: 120px;
+}
+
+.BlogPost-searchIcon {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: #557360;
+}
+
+.BlogPost-btnFilter {
+  background-color: #09130d;
+  border: 1px solid #1c3324;
+  color: #a3c2af;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.BlogPost-btnFilter.active {
+  background-color: #1a3824;
+  color: #2ecc71;
+  border-color: #2ecc71;
+}
+
+.BlogPost-filterRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background-color: #09130d;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.BlogPost-filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.BlogPost-filterGroup label {
+  font-size: 0.7rem;
+  color: #64826f;
+}
+
+.BlogPost-filterGroup select {
+  padding: 4px 6px;
+  font-size: 0.75rem;
+  background-color: #0e1a12;
+  border: 1px solid #1c3324;
+  color: #e2f1e8;
+  border-radius: 4px;
+}
+
+/* =================================================== */
+/* TABLE WRAPPER WITH HIDDEN SCROLLBAR                */
+/* =================================================== */
+.BlogPost-tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #1c3324;
+  border-radius: 8px;
+  
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  
+  /* Hide scrollbar for IE/Edge */
+  -ms-overflow-style: none;
+}
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.BlogPost-tableWrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.BlogPost-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+.BlogPost-table th {
+  background-color: #09130d;
+  color: #7a9e87;
+  padding: 10px 8px;
+  font-weight: 500;
+  border-bottom: 1px solid #1c3324;
+  white-space: nowrap;
+}
+
+.BlogPost-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #142419;
+  vertical-align: middle;
+}
+
+.BlogPost-table tr.editingRow {
+  background-color: #13291b;
+}
+
+.BlogPost-tableImg {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.BlogPost-titleBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.BlogPost-fullTitle {
+  color: #e2f1e8;
+  font-size: 0.82rem;
+}
+
+.BlogPost-fullSubtitle {
+  font-size: 0.72rem;
+  color: #64826f;
+  margin: 2px 0 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.BlogPost-tag {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  background-color: #192d20;
+  color: #a3c2af;
+}
+
+.BlogPost-dateCell div {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+}
+
+.BlogPost-dateCell small {
+  color: #557360;
+  font-size: 0.68rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.BlogPost-badge {
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.68rem;
+}
+
+.BlogPost-badge-published {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.BlogPost-badge-draft {
+  background-color: rgba(241, 196, 15, 0.15);
+  color: #f1c40f;
+}
+
+.BlogPost-featuredIcon.active {
+  color: #2ecc71;
+}
+
+.BlogPost-tableActions {
+  display: flex;
+  gap: 4px;
+}
+
+.BlogPost-actionBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.BlogPost-editBtn {
+  color: #3498db;
+}
+
+.BlogPost-deleteBtn {
+  color: #e74c3c;
+}
+
+/* Pagination */
+.BlogPost-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  font-size: 0.75rem;
+  color: #64826f;
+}
+
+.BlogPost-pageButtons {
+  display: flex;
+  gap: 4px;
+}
+
+.BlogPost-pageBtn {
+  background-color: #09130d;
+  border: 1px solid #1c3324;
+  color: #a3c2af;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.BlogPost-pageBtn.active {
+  background-color: #2ecc71;
+  color: #060d08;
+  border-color: #2ecc71;
+}
+
+.BlogPost-pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Responsive fallback */
+@media (max-width: 1024px) {
+  .BlogPost-container {
+    grid-template-columns: 1fr;
+  }
+}
