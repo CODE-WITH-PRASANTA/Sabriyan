@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import API from '../../api/axios'
 import { 
   User, 
   Mail, 
@@ -7,7 +8,8 @@ import {
   Send, 
   Leaf, 
   ShieldCheck, 
-  Sparkles 
+  Sparkles,
+  Loader2
 } from 'lucide-react'
 import bgImage from '../../assets/faq.png'
 import './MainContact.css'
@@ -21,6 +23,10 @@ const MainContact = () => {
     subject: '',
     message: ''
   })
+
+  // Submit Feedback & Loading States
+  const [loading, setLoading] = useState(false)
+  const [feedback, setFeedback] = useState({ type: null, message: '' })
 
   const [focusedInput, setFocusedInput] = useState(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
@@ -39,9 +45,74 @@ const MainContact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  // Email validation regex helper
+  const isValidEmail = (email) => {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
+  }
+
+  // Handle API Submission
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    alert('Thank you! Your message has been submitted successfully.')
+    setLoading(true)
+    setFeedback({ type: null, message: '' })
+
+    const sanitizedData = {
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      subject: formData.subject.trim() || 'General Inquiry',
+      message: formData.message.trim()
+    }
+
+    // Client-side validations
+    if (!sanitizedData.fullName || !sanitizedData.email || !sanitizedData.message) {
+      setLoading(false)
+      setFeedback({
+        type: 'error',
+        message: 'Please fill in all required fields (Name, Email, Message).'
+      })
+      return
+    }
+
+    if (!isValidEmail(sanitizedData.email)) {
+      setLoading(false)
+      setFeedback({
+        type: 'error',
+        message: 'Please enter a valid email address (e.g. name@example.com).'
+      })
+      return
+    }
+
+    try {
+      const response = await API.post('/contact', sanitizedData)
+
+      if (response.data && response.data.success) {
+        setFeedback({
+          type: 'success',
+          message: response.data.message || 'Thank you! Your message has been submitted successfully.'
+        })
+        
+        // Reset Form Fields
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: ''
+        })
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error.response?.data || error)
+      
+      const serverMessage = error.response?.data?.message || 'Failed to submit your message. Please verify your inputs.'
+      
+      setFeedback({
+        type: 'error',
+        message: serverMessage
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -49,8 +120,10 @@ const MainContact = () => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       className="main-contact-container"
+      itemScope
+      itemType="https://schema.org/ContactPage"
     >
-      {/* 1. Background Layer with Animations */}
+      {/* 1. Background Layer with Parallax */}
       <div 
         className="main-contact-bg-wrapper"
         style={{
@@ -113,6 +186,26 @@ const MainContact = () => {
             We'd love to hear from you! Fill out the form below and we'll get back to you as soon as possible.
           </p>
         </div>
+
+        {/* Feedback Banner */}
+        {feedback.message && (
+          <div 
+            className={`main-contact-alert ${feedback.type}`}
+            style={{
+              padding: '12px 16px',
+              borderRadius: '8px',
+              marginBottom: '20px',
+              textAlign: 'center',
+              fontSize: '0.95rem',
+              fontWeight: '500',
+              backgroundColor: feedback.type === 'success' ? 'rgba(46, 204, 113, 0.15)' : 'rgba(231, 76, 60, 0.15)',
+              color: feedback.type === 'success' ? '#2ecc71' : '#e74c3c',
+              border: `1px solid ${feedback.type === 'success' ? '#2ecc71' : '#e74c3c'}`
+            }}
+          >
+            {feedback.message}
+          </div>
+        )}
 
         {/* Contact Form */}
         <form onSubmit={handleSubmit} className="main-contact-form">
@@ -227,9 +320,18 @@ const MainContact = () => {
           </div>
 
           {/* CTA Submit Button */}
-          <button type="submit" className="main-contact-btn">
-            <Send size={20} />
-            <span>Send Message</span>
+          <button type="submit" className="main-contact-btn" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} />
+                <span>Sending...</span>
+              </>
+            ) : (
+              <>
+                <Send size={20} />
+                <span>Send Message</span>
+              </>
+            )}
             <div className="main-contact-btn-shimmer" />
           </button>
         </form>

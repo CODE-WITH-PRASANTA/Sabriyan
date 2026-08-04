@@ -8,6 +8,10 @@ const path = require("path");
 const app = express();
 const honeyProductRoutes = require("./routes/honeyProductRoutes");
 const testimonialRoutes = require("./routes/testimonialRoutes");
+const customerRoutes = require("./routes/customerRoutes");
+const premiumCollectionRoutes = require("./routes/premiumCollectionRoutes");
+const contactRoutes = require("./routes/contactRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 // ======================
 // Middleware
@@ -51,7 +55,10 @@ connectDB();
 
  app.use("/api/honey-products", honeyProductRoutes);
  app.use("/api/testimonials", testimonialRoutes);
-
+ app.use("/api/customers", customerRoutes);
+app.use("/api/premium-collection", premiumCollectionRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/categories", categoryRoutes);
 // ======================
 // Start Server
 // ======================

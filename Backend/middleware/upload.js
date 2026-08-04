@@ -22,11 +22,11 @@ const upload = multer({
  * Middleware to convert memory buffers to WebP and save to disk
  * @param {Object} options - Quality, custom target folder, or custom prefix
  */
-const convertToWebp = (options = { quality: 80, folder: "honey", prefix: "img" }) => {
+const convertToWebp = (options = { quality: 80, folder: "products", prefix: "product" }) => {
   return async (req, res, next) => {
     try {
       // Dynamic target directory based on passed folder name
-      const targetFolder = options.folder || "honey";
+      const targetFolder = options.folder || "products";
       const targetDir = path.join(__dirname, `../public/uploads/${targetFolder}`);
 
       // Ensure directory exists dynamically
@@ -47,20 +47,21 @@ const convertToWebp = (options = { quality: 80, folder: "honey", prefix: "img" }
         // Assign filename and paths so controllers can read them
         file.filename = uniqueName;
         file.mimetype = "image/webp";
+        file.path = `/uploads/${targetFolder}/${uniqueName}`;
         file.destinationPath = `/uploads/${targetFolder}/${uniqueName}`;
       };
 
-      // Process single file
+      // Process single file (req.file)
       if (req.file) {
         await saveFileToDisk(req.file);
       }
 
-      // Process array of files
+      // Process array of files (req.files as array)
       if (Array.isArray(req.files) && req.files.length > 0) {
         await Promise.all(req.files.map((file) => saveFileToDisk(file)));
       }
 
-      // Process named fields (e.g. image & galleryImages)
+      // Process named fields (req.files as object, e.g. image, bgImage & galleryImages)
       if (req.files && !Array.isArray(req.files) && typeof req.files === "object") {
         for (const fieldName of Object.keys(req.files)) {
           await Promise.all(

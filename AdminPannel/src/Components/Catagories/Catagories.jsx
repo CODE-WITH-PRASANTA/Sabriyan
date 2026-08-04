@@ -1,46 +1,75 @@
 import React, { useState, useEffect, useRef } from 'react';
+import API, { IMG_URL } from "../../api/axios";
 import './Catagories.css';
 
-// Using proper standard string paths for images to prevent module-loading errors
+// Standard background banner
 const bannerImg = "https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=1200&auto=format&fit=crop";
-const darkChocImg = "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?q=80&w=200&auto=format&fit=crop";
-const milkChocImg = "https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=200&auto=format&fit=crop";
-const honeyImg = "https://images.unsplash.com/photo-1587049352847-4a222e784d38?q=80&w=200&auto=format&fit=crop";
-const chocGiftsImg = "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=200&auto=format&fit=crop";
-const comboPacksImg = "https://images.unsplash.com/photo-1579888944782-cb5d265e094d?q=80&w=200&auto=format&fit=crop";
-const honeyGiftsImg = "https://images.unsplash.com/photo-1471943311424-646960669fbc?q=80&w=200&auto=format&fit=crop";
-
-const initialCategories = [
-  { id: 1, name: 'Dark Chocolate', description: 'Delicious dark chocolate products', products: '18 Products', status: 'Active', image: darkChocImg },
-  { id: 2, name: 'Milk Chocolate', description: 'Smooth and creamy milk chocolate', products: '22 Products', status: 'Active', image: milkChocImg },
-  { id: 3, name: 'Honey', description: 'Pure and natural honey products', products: '15 Products', status: 'Active', image: honeyImg },
-  { id: 4, name: 'Chocolate Gifts', description: 'Perfect gift packs for all occasions', products: '8 Products', status: 'Active', image: chocGiftsImg },
-  { id: 5, name: 'Combo Packs', description: 'Best combination of chocolates & more', products: '12 Products', status: 'Active', image: comboPacksImg },
-  { id: 6, name: 'Honey Gifts', description: 'Premium honey gift collections', products: '6 Products', status: 'Inactive', image: honeyGiftsImg },
-];
 
 const Catagories = () => {
-  const [categories, setCategories] = useState(initialCategories);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Search and Filter States
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [sortOrder, setSortOrder] = useState('Newest');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [openMenuId, setOpenMenuId] = useState(null);
   
-  // Modal State
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [activeCount, setActiveCount] = useState(0);
+  
+  // Dropdown & Modal State
+  const [openMenuId, setOpenMenuId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
   const [newCatData, setNewCatData] = useState({
     name: '',
     slug: '',
     description: '',
     displayOrder: 0,
-    status: 'Active',
-    image: ''
+    status: 'Active'
   });
 
   const itemsPerPage = 6;
   const menuRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  // 1. Fetch Categories from Express Backend API
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await API.get('/categories', {
+        params: {
+          search: searchTerm,
+          status: statusFilter,
+          sort: sortOrder,
+          page: currentPage,
+          limit: itemsPerPage
+        }
+      });
+
+      if (response.data && response.data.success) {
+        setCategories(response.data.data);
+        setTotalPages(response.data.totalPages || 1);
+        setTotalCount(response.data.total || 0);
+
+        // Count active categories from current response
+        const activeList = response.data.data.filter(c => c.status === 'Active').length;
+        setActiveCount(activeList);
+      }
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, [searchTerm, statusFilter, sortOrder, currentPage]);
 
   // Close dropdown menu when clicking outside
   useEffect(() => {
@@ -53,76 +82,79 @@ const Catagories = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Handle image selection and preview
+  // Handle local image file selection
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewCatData(prev => ({ ...prev, image: reader.result }));
-      };
-      reader.readAsDataURL(file);
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
-  // Toggle status handler for the 3-dot menu
-  const handleToggleStatus = (id) => {
-    setCategories(prev =>
-      prev.map(cat =>
-        cat.id === id ? { ...cat, status: cat.status === 'Active' ? 'Inactive' : 'Active' } : cat
-      )
-    );
+  // 2. Toggle Status Handler via API (PUT)
+  const handleToggleStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
+    try {
+      const response = await API.put(`/categories/${id}`, { status: newStatus });
+      if (response.data && response.data.success) {
+        setCategories(prev =>
+          prev.map(cat => (cat._id === id ? { ...cat, status: newStatus } : cat))
+        );
+      }
+    } catch (err) {
+      console.error('Failed to toggle category status:', err);
+      alert('Failed to update category status.');
+    }
     setOpenMenuId(null);
   };
 
-  // Handle Save New Category Form Submission
-  const handleSaveCategory = (e) => {
+  // 3. Save New Category Submission via FormData (POST)
+  const handleSaveCategory = async (e) => {
     e.preventDefault();
-    if (!newCatData.name.trim()) return;
+    if (!newCatData.name.trim()) return alert('Category name is required');
+    if (!selectedFile) return alert('Category image file is required');
 
-    const newCategoryItem = {
-      id: categories.length + 1,
-      name: newCatData.name,
-      description: newCatData.description || 'Brief description about this category',
-      products: '0 Products',
-      status: newCatData.status,
-      image: newCatData.image || darkChocImg
-    };
+    try {
+      const formData = new FormData();
+      formData.append('name', newCatData.name.trim());
+      formData.append('slug', newCatData.slug || newCatData.name.toLowerCase().replace(/\s+/g, '-'));
+      formData.append('description', newCatData.description);
+      formData.append('displayOrder', newCatData.displayOrder);
+      formData.append('status', newCatData.status);
+      formData.append('image', selectedFile);
 
-    setCategories([newCategoryItem, ...categories]);
-    setIsModalOpen(false);
-    // Reset form
-    setNewCatData({
-      name: '',
-      slug: '',
-      description: '',
-      displayOrder: 0,
-      status: 'Active',
-      image: ''
-    });
+      const response = await API.post('/categories', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (response.data && response.data.success) {
+        setIsModalOpen(false);
+        // Reset Form State
+        setNewCatData({
+          name: '',
+          slug: '',
+          description: '',
+          displayOrder: 0,
+          status: 'Active'
+        });
+        setSelectedFile(null);
+        setPreviewUrl('');
+        fetchCategories();
+      }
+    } catch (err) {
+      console.error('Failed to save category:', err);
+      alert(err.response?.data?.message || 'Failed to save category');
+    }
   };
 
-  // Filter logic
-  const filteredCategories = categories.filter((cat) => {
-    const matchesSearch = cat.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'All' || cat.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
-
-  // Sort logic
-  const sortedCategories = [...filteredCategories].sort((a, b) => {
-    if (sortOrder === 'Newest') {
-      return b.id - a.id;
-    } else {
-      return a.id - b.id;
+  // Resolves backend relative image paths to full URLs
+  const resolveImgUrl = (path) => {
+    if (!path) return "https://via.placeholder.com/200?text=No+Image";
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:')) {
+      return path;
     }
-  });
-
-  // Pagination logic
-  const totalPages = Math.ceil(sortedCategories.length / itemsPerPage) || 1;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedCategories.slice(indexOfFirstItem, indexOfLastItem);
+    return `${IMG_URL || 'http://localhost:5000'}${path.startsWith('/') ? path : `/${path}`}`;
+  };
 
   const handlePageChange = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
@@ -151,7 +183,7 @@ const Catagories = () => {
           </div>
           <div>
             <span className="catagories-stat-label">Total Categories</span>
-            <h3 className="catagories-stat-value">{categories.length}</h3>
+            <h3 className="catagories-stat-value">{totalCount}</h3>
           </div>
         </div>
         <div className="catagories-stat-card">
@@ -160,14 +192,12 @@ const Catagories = () => {
           </div>
           <div>
             <span className="catagories-stat-label">Active Categories</span>
-            <h3 className="catagories-stat-value">
-              {categories.filter(c => c.status === 'Active').length}
-            </h3>
+            <h3 className="catagories-stat-value">{activeCount}</h3>
           </div>
         </div>
       </div>
 
-      {/* Filter and Search Table Controls */}
+      {/* Filter and Search Controls */}
       <div className="catagories-controls">
         <div className="catagories-table-search">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -199,35 +229,37 @@ const Catagories = () => {
 
       {/* Categories List View */}
       <div className="catagories-list">
-        {currentItems.length > 0 ? (
-          currentItems.map((category) => (
-            <div className="catagories-card-item" key={category.id}>
+        {loading ? (
+          <p className="catagories-no-data">Loading categories...</p>
+        ) : categories.length > 0 ? (
+          categories.map((category) => (
+            <div className="catagories-card-item" key={category._id || category.id}>
               <div className="catagories-card-left">
-                <img src={category.image} alt={category.name} className="catagories-item-img" />
+                <img src={resolveImgUrl(category.image)} alt={category.name} className="catagories-item-img" />
                 <div className="catagories-item-info">
                   <h4>{category.name}</h4>
-                  <p>{category.description}</p>
-                  <span className="catagories-product-count">{category.products}</span>
+                  <p>{category.description || 'No description provided'}</p>
+                  <span className="catagories-product-count">{category.productCount || 0} Products</span>
                 </div>
               </div>
               <div className="catagories-card-right">
-                <span className={`catagories-status-badge ${category.status.toLowerCase()}`}>
+                <span className={`catagories-status-badge ${(category.status || 'Active').toLowerCase()}`}>
                   {category.status}
                 </span>
                 
                 {/* 3-Dot Options Button with Dropdown */}
-                <div className="catagories-action-wrapper" ref={openMenuId === category.id ? menuRef : null}>
+                <div className="catagories-action-wrapper" ref={openMenuId === category._id ? menuRef : null}>
                   <button 
                     className="catagories-options-btn" 
                     aria-label="More options"
-                    onClick={() => setOpenMenuId(openMenuId === category.id ? null : category.id)}
+                    onClick={() => setOpenMenuId(openMenuId === category._id ? null : category._id)}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
                   </button>
 
-                  {openMenuId === category.id && (
+                  {openMenuId === category._id && (
                     <div className="catagories-dropdown-menu">
-                      <button onClick={() => handleToggleStatus(category.id)}>
+                      <button onClick={() => handleToggleStatus(category._id, category.status)}>
                         Mark as {category.status === 'Active' ? 'Inactive' : 'Active'}
                       </button>
                     </div>
@@ -245,7 +277,7 @@ const Catagories = () => {
       {/* Pagination Footer */}
       <footer className="catagories-footer">
         <span className="catagories-pagination-info">
-          Showing {filteredCategories.length > 0 ? indexOfFirstItem + 1 : 0} to {Math.min(indexOfLastItem, filteredCategories.length)} of {filteredCategories.length} categories
+          Showing page {currentPage} of {totalPages} ({totalCount} total categories)
         </span>
         <div className="catagories-pagination-controls">
           <button 
@@ -341,7 +373,7 @@ const Catagories = () => {
 
                 {/* Right Column Upload & Status Cards */}
                 <div className="catagories-form-col">
-                  <label className="catagories-form-label">Category Image</label>
+                  <label className="catagories-form-label">Category Image *</label>
                   
                   {/* Hidden file input */}
                   <input 
@@ -357,9 +389,9 @@ const Catagories = () => {
                     className="catagories-upload-box"
                     onClick={() => fileInputRef.current.click()}
                   >
-                    {newCatData.image ? (
+                    {previewUrl ? (
                       <div className="catagories-preview-wrapper">
-                        <img src={newCatData.image} alt="Preview" className="catagories-preview-img" />
+                        <img src={previewUrl} alt="Preview" className="catagories-preview-img" />
                         <span className="catagories-change-text">Click to change image</span>
                       </div>
                     ) : (
