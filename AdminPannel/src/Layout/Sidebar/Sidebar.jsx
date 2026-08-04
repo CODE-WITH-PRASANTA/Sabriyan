@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
+  Crown,
   ShoppingBag,
   Package,
   Boxes,
@@ -12,6 +13,8 @@ import {
   Globe,
   Settings,
   HelpCircle,
+  MessageSquareQuote,
+  Flame, // Honey Product के लिए आइकॉन जोड़ा गया
   ChevronDown,
   ChevronRight,
   Sparkles,
@@ -26,6 +29,8 @@ import { FaPeopleArrows } from 'react-icons/fa';
 
 const sidebarConfig = [
   { title: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+  { title: 'Premium Collection', path: '/premium-collection', icon: Crown }, 
+  { title: 'Honey Product', path: '/honey-product', icon: Flame }, // Premium Collection के बाद जोड़ा गया
   {
     title: 'Orders',
     path: '/orders',
@@ -37,6 +42,7 @@ const sidebarConfig = [
       { title: 'Cancel Orders', path: '/orders/cancel' },
     ],
   },
+  { title: 'Testimonial', path: '/testimonials', icon: MessageSquareQuote },
   {
     title: 'Products',
     path: '/products',
@@ -110,9 +116,6 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
             <X size={20} />
           </button>
         </div>
-
-        {/* Profile Info Card */}
-       
 
         {/* Navigation Menu */}
         <nav className="sidebar-nav">

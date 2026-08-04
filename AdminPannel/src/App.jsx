@@ -8,12 +8,12 @@ import "./App.css";
 import MainLayout from "./Layout/MainLayout/MainLayout";
 
 // Pages
-
 import AddnewProduct from "./Pages/AddnewProduct/AddnewProduct";
 import AllProduct from "./Pages/AllProduct/AllProduct";
 import AllOrder from "./Pages/AllOrder/AllOrder";
 
 // Components
+import Dashboard from "./Components/Dashboard/Dashboard";
 import Catagories from "./Components/Catagories/Catagories";
 import ManageBrands from "./Components/ManageBrands/ManageBrands";
 import Attributes from "./Components/Attributes/Attributes";
@@ -26,7 +26,9 @@ import ColdLeads from "./Components/ColdLeads/ColdLeads";
 import RefundManagement from "./Components/RefundManagement/RefundManagement";
 import PendingOrders from "./Components/PendingOrders/PendingOrders";
 import ProcessingOrder from "./Components/ProcessingOrder/ProcessingOrder";
-import Dashboard from "./Components/Dashboard/Dashboard";
+import PremiumCollection from "./Components/PremiumCollection/PremiumCollection";
+import Testimonial from "./Components/Testimonial/Testimonial";
+import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
 
 function App() {
   return (
@@ -34,6 +36,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout />}>
+
             {/* Dashboard */}
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
@@ -44,6 +47,8 @@ function App() {
             <Route path="products/categories" element={<Catagories />} />
             <Route path="products/brands" element={<ManageBrands />} />
             <Route path="products/attributes" element={<Attributes />} />
+            <Route path="premium-collection" element={<PremiumCollection />} />
+            <Route path="honey-product" element={<HoneyProduct />} />
 
             {/* Orders */}
             <Route path="orders/all" element={<AllOrder />} />
@@ -57,11 +62,15 @@ function App() {
             <Route path="customers" element={<Customers />} />
 
             {/* Blog */}
-            <Route path="blogpost" element={<BlogPost />} />
-            <Route path="blogmanagement" element={<BlogManagement />} />
+            <Route path="blog/post" element={<BlogPost />} />
+            <Route path="blog/management" element={<BlogManagement />} />
 
             {/* Leads */}
             <Route path="coldleads" element={<ColdLeads />} />
+
+            {/* Testimonials */}
+            <Route path="testimonials" element={<Testimonial />} />
+
           </Route>
         </Routes>
       </BrowserRouter>
