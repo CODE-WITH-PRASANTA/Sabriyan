@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Global Styles
 import "./App.css";
@@ -8,7 +8,7 @@ import "./App.css";
 import MainLayout from "./Layout/MainLayout/MainLayout";
 
 // Pages
-import Dashboard from "./Pages/Dashboard/Dashboard";
+
 import AddnewProduct from "./Pages/AddnewProduct/AddnewProduct";
 import AllProduct from "./Pages/AllProduct/AllProduct";
 import AllOrder from "./Pages/AllOrder/AllOrder";
@@ -23,13 +23,18 @@ import Customers from "./Components/Customers/Customers";
 import BlogPost from "./Components/BlogPost/BlogPost";
 import BlogManagement from "./Components/BlogManagement/BlogManagement";
 import ColdLeads from "./Components/ColdLeads/ColdLeads";
+import RefundManagement from "./Components/RefundManagement/RefundManagement";
+import PendingOrders from "./Components/PendingOrders/PendingOrders";
+import ProcessingOrder from "./Components/ProcessingOrder/ProcessingOrder";
+import Dashboard from "./Components/Dashboard/Dashboard";
 
 function App() {
   return (
     <div className="App-theme-wrapper">
-      <Router>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout />}>
+            {/* Dashboard */}
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
 
@@ -44,6 +49,9 @@ function App() {
             <Route path="orders/all" element={<AllOrder />} />
             <Route path="orders/complete" element={<CompletedOrders />} />
             <Route path="orders/cancel" element={<CancelOrders />} />
+            <Route path="orders/pending" element={<PendingOrders />} />
+            <Route path="orders/processing" element={<ProcessingOrder />} />
+            <Route path="orders/refund" element={<RefundManagement />} />
 
             {/* Customers */}
             <Route path="customers" element={<Customers />} />
@@ -56,7 +64,7 @@ function App() {
             <Route path="coldleads" element={<ColdLeads />} />
           </Route>
         </Routes>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }
