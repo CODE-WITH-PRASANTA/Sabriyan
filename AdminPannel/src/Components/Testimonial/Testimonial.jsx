@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import API, { IMG_URL } from "../../api/axios";
 import {
   MessageSquareQuote,
   Star,
@@ -9,62 +10,10 @@ import {
   Trash2,
   Check,
   X,
-  ChevronLeft,
-  ChevronRight,
   RotateCcw,
-  RefreshCw,
-  Send,
-  UserCheck
+  Send
 } from 'lucide-react';
 import './Testimonial.css';
-
-// Default Mock Data matching reference image
-const INITIAL_TESTIMONIALS = [
-  {
-    id: 1,
-    customerName: 'Saurav Sharma',
-    designation: 'Mumbai, India',
-    image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-    review: 'The best dark chocolate I have ever had! Pure, rich and absolutely delicious.',
-    rating: 5,
-    status: 'Active',
-    displayOrder: 1,
-    featured: true
-  },
-  {
-    id: 2,
-    customerName: 'Priya Verma',
-    designation: 'Bangalore, India',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-    review: 'Truly exceptional chocolates. You can taste the premium quality!',
-    rating: 5,
-    status: 'Active',
-    displayOrder: 2,
-    featured: true
-  },
-  {
-    id: 3,
-    customerName: 'Rahul Kapoor',
-    designation: 'Delhi, India',
-    image: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80',
-    review: 'I love the smooth texture and deep flavor. Perfect for every occasion.',
-    rating: 5,
-    status: 'Active',
-    displayOrder: 3,
-    featured: true
-  },
-  {
-    id: 4,
-    customerName: 'Vikram Singh',
-    designation: 'Pune, India',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    review: 'The taste is out of this world. Definitely my favourite chocolate brand!',
-    rating: 5,
-    status: 'Active',
-    displayOrder: 4,
-    featured: true
-  }
-];
 
 const INITIAL_FORM_STATE = {
   id: null,
@@ -78,22 +27,79 @@ const INITIAL_FORM_STATE = {
   featured: true
 };
 
+const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80';
+
 const Testimonial = () => {
-  const [testimonials, setTestimonials] = useState(INITIAL_TESTIMONIALS);
+  const [testimonials, setTestimonials] = useState([]);
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
-  // Hidden File Input Ref
+  // Pagination State (Managed by Backend)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const itemsPerPage = 4;
+
+  // Ref for File Input
   const fileInputRef = useRef(null);
 
-  // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  // Helper to resolve clean backend server origin (e.g., http://localhost:5000)
+  const SERVER_ORIGIN = (IMG_URL || 'http://localhost:5000').replace(/\/api\/?$/, '');
+
+  // ================= ENHANCED WEBP & IMAGE RESOLVER =================
+  const getImageUrl = (imgPath) => {
+    if (!imgPath) return DEFAULT_AVATAR;
+    
+    // Return direct blob previews or external HTTP/HTTPS URLs as-is
+    if (imgPath.startsWith('blob:') || imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+
+    // Clean up backend upload directory prefixes cleanly
+    let cleanPath = imgPath.replace(/^public\//, '');
+    cleanPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+
+    return `${SERVER_ORIGIN}${cleanPath}`;
+  };
+
+  // ================= 1. FETCH TESTIMONIALS (API) =================
+  const fetchTestimonials = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: currentPage,
+        limit: itemsPerPage,
+      });
+
+      if (searchQuery.trim()) params.append('search', searchQuery.trim());
+      if (statusFilter !== 'All') params.append('status', statusFilter);
+
+      const response = await API.get(`/testimonials?${params.toString()}`);
+
+      if (response.data && response.data.success) {
+        setTestimonials(response.data.data || []);
+        setTotalPages(response.data.totalPages || 1);
+        setTotalCount(response.data.total || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching testimonials:', error?.response?.data || error.message);
+      setTestimonials([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, [currentPage, searchQuery, statusFilter]);
 
   // Handle Input Changes
   const handleChange = (e) => {
@@ -104,66 +110,115 @@ const Testimonial = () => {
     }));
   };
 
-  // Handle Image Upload
+  // Handle File Selection
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        alert('File size exceeds 2MB limits');
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size exceeds 10MB limit');
         return;
       }
-      const imageUrl = URL.createObjectURL(file);
-      setFormData((prev) => ({ ...prev, image: imageUrl }));
+      setSelectedFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setFormData((prev) => ({ ...prev, image: previewUrl }));
     }
-  };
-
-  // Submit / Publish Testimonial
-  const handlePublish = (e) => {
-    e.preventDefault();
-    if (!formData.customerName.trim()) return alert('Please enter customer name');
-    if (!formData.review.trim()) return alert('Please enter review message');
-
-    if (isEditing) {
-      setTestimonials((prev) =>
-        prev.map((t) => (t.id === formData.id ? { ...formData } : t))
-      );
-      setIsEditing(false);
-      alert('Testimonial updated successfully!');
-    } else {
-      const newTestimonial = {
-        ...formData,
-        id: Date.now(),
-        image: formData.image || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-        displayOrder: Number(formData.displayOrder) || testimonials.length + 1
-      };
-      setTestimonials([newTestimonial, ...testimonials]);
-      alert('Testimonial published successfully!');
-    }
-    handleReset();
   };
 
   // Reset Form
   const handleReset = () => {
     setFormData(INITIAL_FORM_STATE);
+    setSelectedFile(null);
     setIsEditing(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // Edit action
+  // ================= 2. CREATE / UPDATE TESTIMONIAL =================
+  const handlePublish = async (e) => {
+    e.preventDefault();
+    if (!formData.customerName.trim()) return alert('Please enter customer name');
+    if (!formData.review.trim()) return alert('Please enter review message');
+
+    if (!isEditing && !selectedFile && !formData.image) {
+      return alert('Please select a customer image');
+    }
+
+    setSubmitting(true);
+    try {
+      const payload = new FormData();
+      payload.append('customerName', formData.customerName);
+      payload.append('designation', formData.designation || '');
+      payload.append('review', formData.review);
+      payload.append('rating', formData.rating);
+      payload.append('status', formData.status);
+      payload.append('displayOrder', formData.displayOrder || 1);
+      payload.append('featured', formData.featured);
+
+      // Append binary file if selected, or existing image path string
+      if (selectedFile) {
+        payload.append('image', selectedFile);
+      } else if (formData.image && !formData.image.startsWith('blob:')) {
+        payload.append('image', formData.image);
+      }
+
+      if (isEditing) {
+        const targetId = formData._id || formData.id;
+        const response = await API.put(`/testimonials/${targetId}`, payload, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+
+        if (response.data && response.data.success) {
+          alert('Testimonial updated successfully!');
+          fetchTestimonials();
+          handleReset();
+        }
+      } else {
+        const response = await API.post('/testimonials', payload, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+
+        if (response.data && response.data.success) {
+          alert('Testimonial published successfully!');
+          fetchTestimonials();
+          handleReset();
+        }
+      }
+    } catch (error) {
+      console.error('Error saving testimonial:', error?.response?.data || error.message);
+      alert(error?.response?.data?.message || 'Failed to save testimonial');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Edit Action
   const handleEdit = (item) => {
-    setFormData({ ...item });
+    setFormData({
+      ...item,
+      id: item._id || item.id,
+      image: item.image || ''
+    });
+    setSelectedFile(null);
     setIsEditing(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Delete action
-  const handleDelete = (id) => {
+  // ================= 3. DELETE TESTIMONIAL =================
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this testimonial?')) {
-      setTestimonials((prev) => prev.filter((t) => t.id !== id));
+      try {
+        const response = await API.delete(`/testimonials/${id}`);
+        if (response.data && response.data.success) {
+          alert('Testimonial deleted successfully!');
+          fetchTestimonials();
+        }
+      } catch (error) {
+        console.error('Error deleting testimonial:', error?.response?.data || error.message);
+        alert(error?.response?.data?.message || 'Failed to delete testimonial');
+      }
     }
   };
 
-  // Render Star Rating Picker or Static Display
+  // Render Star Rating
   const renderStars = (rating, interactive = false) => {
     return (
       <div className="star-rating-box">
@@ -182,28 +237,6 @@ const Testimonial = () => {
       </div>
     );
   };
-
-  // Filtered Testimonials
-  const filteredTestimonials = useMemo(() => {
-    return testimonials.filter((item) => {
-      const matchesSearch =
-        item.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.designation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.review.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesStatus =
-        statusFilter === 'All' || item.status === statusFilter;
-
-      return matchesSearch && matchesStatus;
-    });
-  }, [testimonials, searchQuery, statusFilter]);
-
-  // Pagination Logic
-  const totalPages = Math.ceil(filteredTestimonials.length / itemsPerPage) || 1;
-  const paginatedTestimonials = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredTestimonials.slice(start, start + itemsPerPage);
-  }, [filteredTestimonials, currentPage]);
 
   return (
     <div className="testimonial-container">
@@ -246,14 +279,21 @@ const Testimonial = () => {
                 >
                   {formData.image ? (
                     <div className="upload-preview">
-                      <img src={formData.image} alt="Customer Preview" />
+                      <img 
+                        src={getImageUrl(formData.image)} 
+                        alt="Customer Preview" 
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = DEFAULT_AVATAR;
+                        }}
+                      />
                       <span>Change Image</span>
                     </div>
                   ) : (
                     <div className="upload-placeholder">
                       <Upload size={22} className="upload-icon" />
                       <p><strong>Click to upload image</strong></p>
-                      <span>JPG, PNG (Max 2MB)</span>
+                      <span>JPG, PNG, WebP (Max 10MB)</span>
                     </div>
                   )}
                 </div>
@@ -277,13 +317,13 @@ const Testimonial = () => {
               <textarea
                 name="review"
                 rows="4"
-                maxLength={250}
+                maxLength={500}
                 placeholder="Enter customer review or message..."
                 value={formData.review}
                 onChange={handleChange}
                 required
               ></textarea>
-              <span className="char-count">Maximum 250 characters</span>
+              <span className="char-count">Maximum 500 characters</span>
             </div>
 
             {/* Rating */}
@@ -348,15 +388,12 @@ const Testimonial = () => {
 
             {/* Form Buttons */}
             <div className="form-actions-row mt-20">
-              <button type="submit" className="btn-action btn-publish">
-                <Send size={15} /> {isEditing ? 'Update Testimonial' : 'Publish Testimonial'}
-              </button>
-              <button
-                type="button"
-                className="btn-action btn-update"
-                onClick={() => alert('Draft updated!')}
+              <button 
+                type="submit" 
+                className="btn-action btn-publish"
+                disabled={submitting}
               >
-                <RefreshCw size={15} /> Update
+                <Send size={15} /> {submitting ? 'Saving...' : isEditing ? 'Update Testimonial' : 'Publish Testimonial'}
               </button>
               <button
                 type="button"
@@ -383,7 +420,10 @@ const Testimonial = () => {
                   type="text"
                   placeholder="Search testimonials..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 />
                 <Search size={15} className="search-icon" />
               </div>
@@ -399,19 +439,19 @@ const Testimonial = () => {
                   <div className="filter-menu">
                     <div
                       className={`filter-option ${statusFilter === 'All' ? 'active' : ''}`}
-                      onClick={() => { setStatusFilter('All'); setShowFilterDropdown(false); }}
+                      onClick={() => { setStatusFilter('All'); setCurrentPage(1); setShowFilterDropdown(false); }}
                     >
                       All Status
                     </div>
                     <div
                       className={`filter-option ${statusFilter === 'Active' ? 'active' : ''}`}
-                      onClick={() => { setStatusFilter('Active'); setShowFilterDropdown(false); }}
+                      onClick={() => { setStatusFilter('Active'); setCurrentPage(1); setShowFilterDropdown(false); }}
                     >
                       Active Only
                     </div>
                     <div
                       className={`filter-option ${statusFilter === 'Inactive' ? 'active' : ''}`}
-                      onClick={() => { setStatusFilter('Inactive'); setShowFilterDropdown(false); }}
+                      onClick={() => { setStatusFilter('Inactive'); setCurrentPage(1); setShowFilterDropdown(false); }}
                     >
                       Inactive Only
                     </div>
@@ -437,22 +477,32 @@ const Testimonial = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedTestimonials.length > 0 ? (
-                  paginatedTestimonials.map((item, idx) => (
-                    <tr key={item.id}>
+                {loading ? (
+                  <tr>
+                    <td colSpan="8" className="no-data" style={{ padding: '30px 0', color: '#f59e0b' }}>
+                      Loading testimonials...
+                    </td>
+                  </tr>
+                ) : testimonials.length > 0 ? (
+                  testimonials.map((item, idx) => (
+                    <tr key={item._id || item.id || idx}>
                       <td className="row-num">
                         {(currentPage - 1) * itemsPerPage + idx + 1}
                       </td>
                       <td className="row-customer">
                         <div className="customer-cell">
                           <img
-                            src={item.image}
-                            alt={item.customerName}
+                            src={getImageUrl(item.image)}
+                            alt={item.customerName || 'Customer'}
                             className="avatar-img"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = DEFAULT_AVATAR;
+                            }}
                           />
                           <div className="customer-info">
                             <span className="c-name">{item.customerName}</span>
-                            <span className="c-location">{item.designation}</span>
+                            <span className="c-location">{item.designation || '—'}</span>
                           </div>
                         </div>
                       </td>
@@ -499,7 +549,7 @@ const Testimonial = () => {
                           <button
                             className="btn-icon btn-delete"
                             title="Delete Testimonial"
-                            onClick={() => handleDelete(item.id)}
+                            onClick={() => handleDelete(item._id || item.id)}
                           >
                             <Trash2 size={14} />
                           </button>
@@ -521,9 +571,9 @@ const Testimonial = () => {
           {/* Footer & Pagination */}
           <div className="pagination-wrapper mt-20">
             <span className="showing-text">
-              Showing {paginatedTestimonials.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to{' '}
-              {Math.min(currentPage * itemsPerPage, filteredTestimonials.length)} of{' '}
-              {filteredTestimonials.length} testimonials
+              Showing {testimonials.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to{' '}
+              {Math.min(currentPage * itemsPerPage, totalCount)} of{' '}
+              {totalCount} testimonials
             </span>
 
             <div className="pagination-controls">
@@ -553,7 +603,7 @@ const Testimonial = () => {
 
               <button
                 className="btn-page"
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() =>
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
