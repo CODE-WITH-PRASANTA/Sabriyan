@@ -1,21 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import './Product.css';
+import API from '../../api/axios';
 
 const Product = () => {
-  const initialProducts = [
-    { id: 1, image: '🍫', name: 'Dark Classic 55% Cocoa', desc: 'Rich & Intense Chocolate', sku: 'CHO-001', brand: 'Chocolate', category: 'Dark Chocolate', price: 899, stock: 45, status: 'Active' },
-    { id: 2, image: '🍫', name: 'Milk Delight', desc: 'Smooth & Creamy Chocolate', sku: 'CHO-002', brand: 'Chocolate', category: 'Milk Chocolate', price: 650, stock: 32, status: 'Active' },
-    { id: 3, image: '🍫', name: 'Nut Fusion', desc: 'Almond & Pistachio', sku: 'CHO-003', brand: 'Chocolate', category: 'Nut Chocolate', price: 749, stock: 18, status: 'Active' },
-    { id: 4, image: '🎁', name: 'Gift Box Collection', desc: 'Premium Chocolate Box', sku: 'CHO-004', brand: 'Chocolate', category: 'Gift Packs', price: 1299, stock: 20, status: 'Active' },
-    { id: 5, image: '🍯', name: 'Wild Forest Honey', desc: '100% Pure & Natural', sku: 'HON-001', brand: 'Honey', category: 'Raw Honey', price: 499, stock: 50, status: 'Active' },
-    { id: 6, image: '🍯', name: 'Tulsi Honey', desc: 'Immunity Booster', sku: 'HON-002', brand: 'Honey', category: 'Flavoured Honey', price: 549, stock: 15, status: 'Active' },
-    { id: 7, image: '🍯', name: 'Acacia Honey', desc: 'Light & Mild Honey', sku: 'HON-003', brand: 'Honey', category: 'Raw Honey', price: 599, stock: 28, status: 'Active' },
-    { id: 8, image: '🍯', name: 'Honey & Chocolate Combo', desc: 'Perfect Gift Combo', sku: 'COM-001', brand: 'Combo', category: 'Combo Packs', price: 1199, stock: 10, status: 'Active' },
-    { id: 9, image: '🍫', name: 'Belgian Dark 70%', desc: 'Bittersweet Premium', sku: 'CHO-005', brand: 'Chocolate', category: 'Dark Chocolate', price: 999, stock: 12, status: 'Active' },
-    { id: 10, image: '🍯', name: 'Eucalyptus Honey', desc: 'Herbal & Aromatic', sku: 'HON-004', brand: 'Honey', category: 'Raw Honey', price: 620, stock: 22, status: 'Active' }
-  ];
+  // Products & Meta Data States
+  const [products, setProducts] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [brandsList, setBrandsList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [products, setProducts] = useState(initialProducts);
+  // Filter & Search States
   const [activeTab, setActiveTab] = useState('All Products');
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
@@ -32,67 +27,181 @@ const Product = () => {
   // Modals State
   const [modalType, setModalType] = useState(null); // 'add' | 'edit' | 'view'
   const [selectedItem, setSelectedItem] = useState(null);
-  const [formData, setFormData] = useState({ name: '', sku: '', desc: '', brand: 'Chocolate', category: 'Dark Chocolate', price: '', stock: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    sku: '',
+    desc: '',
+    brand: 'Chocolate',
+    category: 'Dark Chocolate',
+    price: '',
+    stock: '',
+  });
+
+  // 1. FETCH PRODUCTS FROM BACKEND API
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await API.get('/products');
+      if (response.data && response.data.success) {
+        setProducts(response.data.data || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // 2. FETCH DYNAMIC CATEGORIES FOR FILTER DROPDOWNS
+  const fetchCategories = useCallback(async () => {
+    try {
+      const response = await API.get('/categories', { params: { status: 'Active', limit: 100 } });
+      if (response.data && response.data.success) {
+        setCategoriesList(response.data.data || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  }, []);
+
+  // 3. FETCH DYNAMIC BRANDS FOR FILTER CHECKBOXES & DROPDOWNS
+  const fetchBrands = useCallback(async () => {
+    try {
+      const response = await API.get('/brands', { params: { status: 'Active', limit: 100 } });
+      if (response.data && response.data.success) {
+        const fetchedBrands = response.data.data || [];
+        setBrandsList(fetchedBrands);
+
+        // Dynamically initialize brand checkbox filters
+        const initialBrandState = {};
+        fetchedBrands.forEach((b) => {
+          initialBrandState[b.name] = true;
+        });
+        if (fetchedBrands.length > 0) {
+          setBrandsFilter((prev) => ({ ...initialBrandState, ...prev }));
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch brands:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+    fetchBrands();
+  }, [fetchProducts, fetchCategories, fetchBrands]);
 
   // Real-time Filtering Engine
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
-      if (activeTab === 'Chocolate' && p.brand !== 'Chocolate') return false;
-      if (activeTab === 'Honey' && p.brand !== 'Honey') return false;
+    return products
+      .filter((p) => {
+        // Tab Navigation Filter
+        if (activeTab === 'Chocolate' && p.brand !== 'Chocolate') return false;
+        if (activeTab === 'Honey' && p.brand !== 'Honey') return false;
 
-      const q = search.toLowerCase();
-      if (q && !p.name.toLowerCase().includes(q) && !p.sku.toLowerCase().includes(q)) return false;
+        // Search Filter (Name or SKU)
+        const q = search.toLowerCase();
+        if (q && !p.name.toLowerCase().includes(q) && !p.sku.toLowerCase().includes(q)) return false;
 
-      if (category !== 'All' && p.category !== category) return false;
-      if (brand !== 'All' && p.brand !== brand) return false;
-      if (!brandsFilter[p.brand]) return false;
-      if (p.price > priceRange) return false;
+        // Category Filter
+        if (category !== 'All' && p.category !== category) return false;
 
-      const isLow = p.stock <= 20;
-      if (!stockFilter.inStock && !isLow) return false;
-      if (!stockFilter.lowStock && isLow) return false;
+        // Brand Dropdown Filter
+        if (brand !== 'All' && p.brand !== brand) return false;
 
-      return true;
-    }).sort((a, b) => sortBy === 'Price Low-High' ? a.price - b.price : sortBy === 'Price High-Low' ? b.price - a.price : 0);
+        // Sidebar Brand Checkbox Filter
+        if (brandsFilter[p.brand] === false) return false;
+
+        // Price Range Slider Filter
+        if (p.price > priceRange) return false;
+
+        // Stock Status Checkboxes
+        const isLow = p.stock <= 20;
+        if (!stockFilter.inStock && !isLow) return false;
+        if (!stockFilter.lowStock && isLow) return false;
+
+        return true;
+      })
+      .sort((a, b) =>
+        sortBy === 'Price Low-High'
+          ? a.price - b.price
+          : sortBy === 'Price High-Low'
+          ? b.price - a.price
+          : new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+      );
   }, [products, activeTab, search, category, brand, brandsFilter, priceRange, stockFilter, sortBy]);
 
   // Dynamic Pagination
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
-  const paginatedItems = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedItems = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
-  // Reset Filters Handler
+  // Reset All Filters Handler
   const resetFilters = () => {
     setSearch('');
     setCategory('All');
     setBrand('All');
     setPriceRange(5000);
-    setBrandsFilter({ Chocolate: true, Honey: true, Combo: true });
+
+    const resetBrands = {};
+    brandsList.forEach((b) => { resetBrands[b.name] = true; });
+    setBrandsFilter({ Chocolate: true, Honey: true, Combo: true, ...resetBrands });
+
     setStockFilter({ inStock: true, lowStock: true });
     setActiveTab('All Products');
     setCurrentPage(1);
   };
 
-  // Add / Edit Form Submit Handler
-  const handleFormSubmit = (e) => {
+  // 4. ADD & EDIT FORM SUBMIT HANDLER
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (modalType === 'add') {
-      const newItem = {
-        id: Date.now(),
-        image: formData.brand === 'Honey' ? '🍯' : formData.brand === 'Combo' ? '🎁' : '🍫',
-        name: formData.name,
-        desc: formData.desc || 'Fresh product listing',
-        sku: formData.sku,
-        brand: formData.brand,
-        category: formData.category,
+    if (!formData.name.trim() || !formData.sku.trim() || !formData.price) return;
+
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        ...formData,
         price: Number(formData.price),
         stock: Number(formData.stock || 0),
-        status: 'Active'
       };
-      setProducts([newItem, ...products]);
-    } else if (modalType === 'edit') {
-      setProducts(products.map((p) => p.id === selectedItem.id ? { ...p, ...formData, price: Number(formData.price), stock: Number(formData.stock) } : p));
+
+      if (modalType === 'add') {
+        const response = await API.post('/products', payload);
+        if (response.data && response.data.success) {
+          fetchProducts();
+          setModalType(null);
+        }
+      } else if (modalType === 'edit') {
+        const productId = selectedItem._id || selectedItem.id;
+        const response = await API.put(`/products/${productId}`, payload);
+        if (response.data && response.data.success) {
+          fetchProducts();
+          setModalType(null);
+        }
+      }
+    } catch (error) {
+      console.error('Error saving product:', error.response?.data || error);
+      alert(error.response?.data?.message || 'Failed to save product');
+    } finally {
+      setIsSubmitting(false);
     }
-    setModalType(null);
+  };
+
+  // 5. DELETE PRODUCT HANDLER
+  const handleDeleteProduct = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      const response = await API.delete(`/products/${id}`);
+      if (response.data && response.data.success) {
+        fetchProducts();
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Failed to delete product.');
+    }
   };
 
   return (
@@ -104,14 +213,37 @@ const Product = () => {
           <div className="prd-tab-bar">
             <div className="prd-tabs">
               {['All Products', 'Chocolate', 'Honey'].map((tab) => (
-                <button key={tab} className={`prd-tab-btn ${activeTab === tab ? 'active' : ''}`} onClick={() => { setActiveTab(tab); setCurrentPage(1); }}>
+                <button
+                  key={tab}
+                  className={`prd-tab-btn ${activeTab === tab ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    setCurrentPage(1);
+                  }}
+                >
                   {tab}
                 </button>
               ))}
             </div>
             <div className="prd-top-actions">
-              <button className="prd-btn-export" onClick={() => alert('Exporting dataset...')}>📥 Export</button>
-              <button className="prd-btn-add" onClick={() => { setFormData({ name: '', sku: '', desc: '', brand: 'Chocolate', category: 'Dark Chocolate', price: '', stock: '' }); setModalType('add'); }}>
+              <button className="prd-btn-export" onClick={() => alert('Exporting dataset...')}>
+                📥 Export
+              </button>
+              <button
+                className="prd-btn-add"
+                onClick={() => {
+                  setFormData({
+                    name: '',
+                    sku: '',
+                    desc: '',
+                    brand: brandsList[0]?.name || 'Chocolate',
+                    category: categoriesList[0]?.name || 'Dark Chocolate',
+                    price: '',
+                    stock: '',
+                  });
+                  setModalType('add');
+                }}
+              >
                 + Add New Product
               </button>
             </div>
@@ -121,28 +253,59 @@ const Product = () => {
           <div className="prd-filter-bar">
             <div className="prd-search-input-box">
               <span className="prd-search-icon">🔍</span>
-              <input type="text" placeholder="Search by name, SKU..." value={search} onChange={(e) => setSearch(e.target.value)} />
+              <input
+                type="text"
+                placeholder="Search by name, SKU..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
             </div>
             <div className="prd-dropdown-group">
-              <select value={category} onChange={(e) => setCategory(e.target.value)}>
+              {/* Dynamic Categories Dropdown */}
+              <select
+                value={category}
+                onChange={(e) => {
+                  setCategory(e.target.value);
+                  setCurrentPage(1);
+                }}
+              >
                 <option value="All">All Categories</option>
-                <option value="Dark Chocolate">Dark Chocolate</option>
-                <option value="Milk Chocolate">Milk Chocolate</option>
-                <option value="Nut Chocolate">Nut Chocolate</option>
-                <option value="Raw Honey">Raw Honey</option>
+                {categoriesList.map((cat) => (
+                  <option key={cat._id || cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
-              <select value={brand} onChange={(e) => setBrand(e.target.value)}>
+
+              {/* Dynamic Brands Dropdown */}
+              <select
+                value={brand}
+                onChange={(e) => {
+                  setBrand(e.target.value);
+                  setCurrentPage(1);
+                }}
+              >
                 <option value="All">All Brands</option>
-                <option value="Chocolate">Chocolate</option>
-                <option value="Honey">Honey</option>
-                <option value="Combo">Combo</option>
+                {brandsList.map((b) => (
+                  <option key={b._id || b.id} value={b.name}>
+                    {b.name}
+                  </option>
+                ))}
               </select>
+
+              {/* Sort Order Dropdown */}
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                 <option value="Newest First">Sort: Newest First</option>
                 <option value="Price Low-High">Price: Low to High</option>
                 <option value="Price High-Low">Price: High to Low</option>
               </select>
-              <button className="prd-btn-filter-icon" onClick={resetFilters}>⚙️ Reset</button>
+
+              <button className="prd-btn-filter-icon" onClick={resetFilters}>
+                ⚙️ Reset
+              </button>
             </div>
           </div>
 
@@ -163,41 +326,105 @@ const Product = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedItems.length > 0 ? paginatedItems.map((item) => {
-                    const isLow = item.stock <= 20;
-                    return (
-                      <tr key={item.id}>
-                        <td>
-                          <div className="prd-product-cell">
-                            <div className="prd-thumb">{item.image}</div>
-                            <div className="prd-product-info">
-                              <strong>{item.name}</strong>
-                              <span className="prd-product-desc">{item.desc}</span>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="8" className="prd-empty-row">
+                        Loading products...
+                      </td>
+                    </tr>
+                  ) : paginatedItems.length > 0 ? (
+                    paginatedItems.map((item) => {
+                      const productId = item._id || item.id;
+                      const isLow = item.stock <= 20;
+                      return (
+                        <tr key={productId}>
+                          <td>
+                            <div className="prd-product-cell">
+                              <div className="prd-thumb">{item.image}</div>
+                              <div className="prd-product-info">
+                                <strong>{item.name}</strong>
+                                <span className="prd-product-desc">{item.desc}</span>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td><span className="prd-sku-tag">{item.sku}</span></td>
-                        <td><span className={`prd-brand-badge brand-${item.brand.toLowerCase()}`}>{item.brand}</span></td>
-                        <td className="prd-text-muted">{item.category}</td>
-                        <td className="prd-price-bold">₹{item.price}</td>
-                        <td>
-                          <div className="prd-stock-cell">
-                            <span className={`prd-stock-num ${isLow ? 'low' : 'good'}`}>{item.stock}</span>
-                            <span className={`prd-stock-label ${isLow ? 'low' : 'good'}`}>{isLow ? 'Low Stock' : 'In Stock'}</span>
-                          </div>
-                        </td>
-                        <td><span className="prd-status-badge active">{item.status}</span></td>
-                        <td>
-                          <div className="prd-action-btns">
-                            <button className="prd-act-btn view" title="View" onClick={() => { setSelectedItem(item); setModalType('view'); }}>👁️</button>
-                            <button className="prd-act-btn edit" title="Edit" onClick={() => { setSelectedItem(item); setFormData(item); setModalType('edit'); }}>✏️</button>
-                            <button className="prd-act-btn delete" title="Delete" onClick={() => setProducts(products.filter(p => p.id !== item.id))}>🗑️</button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  }) : (
-                    <tr><td colSpan="8" className="prd-empty-row">No products match your selected filters.</td></tr>
+                          </td>
+                          <td>
+                            <span className="prd-sku-tag">{item.sku}</span>
+                          </td>
+                          <td>
+                            <span
+                              className={`prd-brand-badge brand-${(
+                                item.brand || 'chocolate'
+                              ).toLowerCase()}`}
+                            >
+                              {item.brand}
+                            </span>
+                          </td>
+                          <td className="prd-text-muted">{item.category}</td>
+                          <td className="prd-price-bold">₹{item.price}</td>
+                          <td>
+                            <div className="prd-stock-cell">
+                              <span className={`prd-stock-num ${isLow ? 'low' : 'good'}`}>
+                                {item.stock}
+                              </span>
+                              <span className={`prd-stock-label ${isLow ? 'low' : 'good'}`}>
+                                {isLow ? 'Low Stock' : 'In Stock'}
+                              </span>
+                            </div>
+                          </td>
+                          <td>
+                            <span className="prd-status-badge active">
+                              {item.status || 'Active'}
+                            </span>
+                          </td>
+                          <td>
+                            <div className="prd-action-btns">
+                              <button
+                                className="prd-act-btn view"
+                                title="View"
+                                onClick={() => {
+                                  setSelectedItem(item);
+                                  setModalType('view');
+                                }}
+                              >
+                                👁️
+                              </button>
+                              <button
+                                className="prd-act-btn edit"
+                                title="Edit"
+                                onClick={() => {
+                                  setSelectedItem(item);
+                                  setFormData({
+                                    name: item.name || '',
+                                    sku: item.sku || '',
+                                    desc: item.desc || '',
+                                    brand: item.brand || 'Chocolate',
+                                    category: item.category || 'Dark Chocolate',
+                                    price: item.price || '',
+                                    stock: item.stock || '',
+                                  });
+                                  setModalType('edit');
+                                }}
+                              >
+                                ✏️
+                              </button>
+                              <button
+                                className="prd-act-btn delete"
+                                title="Delete"
+                                onClick={() => handleDeleteProduct(productId)}
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="8" className="prd-empty-row">
+                        No products match your selected filters.
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
@@ -206,16 +433,35 @@ const Product = () => {
             {/* Pagination Controls */}
             <div className="prd-pagination">
               <span className="prd-pagination-info">
-                Showing {filteredProducts.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to {Math.min(currentPage * itemsPerPage, filteredProducts.length)} of {filteredProducts.length} entries
+                Showing{' '}
+                {filteredProducts.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to{' '}
+                {Math.min(currentPage * itemsPerPage, filteredProducts.length)} of{' '}
+                {filteredProducts.length} entries
               </span>
               <div className="prd-page-btns">
-                <button className="prd-page-nav" disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>‹</button>
+                <button
+                  className="prd-page-nav"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                >
+                  ‹
+                </button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => (
-                  <button key={pg} className={`prd-page-num ${currentPage === pg ? 'active' : ''}`} onClick={() => setCurrentPage(pg)}>
+                  <button
+                    key={pg}
+                    className={`prd-page-num ${currentPage === pg ? 'active' : ''}`}
+                    onClick={() => setCurrentPage(pg)}
+                  >
                     {pg}
                   </button>
                 ))}
-                <button className="prd-page-nav" disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>›</button>
+                <button
+                  className="prd-page-nav"
+                  disabled={currentPage === totalPages || totalPages === 0}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                >
+                  ›
+                </button>
               </div>
             </div>
           </div>
@@ -225,60 +471,120 @@ const Product = () => {
         <div className="prd-sidebar-filter">
           <div className="prd-sidebar-header">
             <h3>Filter Products</h3>
-            <button className="prd-clear-link" onClick={resetFilters}>Clear All</button>
+            <button className="prd-clear-link" onClick={resetFilters}>
+              Clear All
+            </button>
           </div>
 
           <div className="prd-filter-section">
             <label className="prd-filter-label">Search</label>
-            <input type="text" className="prd-sidebar-input" placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input
+              type="text"
+              className="prd-sidebar-input"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
           </div>
 
+          {/* Dynamic Brands Checkbox Section */}
           <div className="prd-filter-section">
             <label className="prd-filter-label">Brand</label>
             <div className="prd-checkbox-group">
-              {['Chocolate', 'Honey', 'Combo'].map((b) => (
-                <label key={b} className="prd-checkbox-item">
-                  <input type="checkbox" checked={brandsFilter[b]} onChange={(e) => setBrandsFilter({ ...brandsFilter, [b]: e.target.checked })} />
-                  <span>{b} ({products.filter(p => p.brand === b).length})</span>
-                </label>
-              ))}
+              {(brandsList.length > 0 ? brandsList.map((b) => b.name) : ['Chocolate', 'Honey', 'Combo']).map(
+                (b) => (
+                  <label key={b} className="prd-checkbox-item">
+                    <input
+                      type="checkbox"
+                      checked={brandsFilter[b] ?? true}
+                      onChange={(e) =>
+                        setBrandsFilter({ ...brandsFilter, [b]: e.target.checked })
+                      }
+                    />
+                    <span>
+                      {b} ({products.filter((p) => p.brand === b).length})
+                    </span>
+                  </label>
+                )
+              )}
             </div>
           </div>
 
+          {/* Dynamic Categories Sidebar Selection */}
           <div className="prd-filter-section">
             <label className="prd-filter-label">Category</label>
-            <select className="prd-sidebar-select" value={category} onChange={(e) => setCategory(e.target.value)}>
+            <select
+              className="prd-sidebar-select"
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
               <option value="All">Select Category</option>
-              <option value="Dark Chocolate">Dark Chocolate</option>
-              <option value="Milk Chocolate">Milk Chocolate</option>
-              <option value="Nut Chocolate">Nut Chocolate</option>
-              <option value="Raw Honey">Raw Honey</option>
+              {categoriesList.map((cat) => (
+                <option key={cat._id || cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
             </select>
           </div>
 
           <div className="prd-filter-section">
-            <label className="prd-filter-label">Price Range (Up to ₹{priceRange})</label>
-            <input type="range" min="0" max="5000" step="100" value={priceRange} className="prd-range-slider" onChange={(e) => setPriceRange(Number(e.target.value))} />
-            <div className="prd-range-values"><span>₹0</span><span>₹5000+</span></div>
+            <label className="prd-filter-label">
+              Price Range (Up to ₹{priceRange})
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="5000"
+              step="100"
+              value={priceRange}
+              className="prd-range-slider"
+              onChange={(e) => setPriceRange(Number(e.target.value))}
+            />
+            <div className="prd-range-values">
+              <span>₹0</span>
+              <span>₹5000+</span>
+            </div>
           </div>
 
           <div className="prd-filter-section">
             <label className="prd-filter-label">Stock Status</label>
             <div className="prd-checkbox-group">
               <label className="prd-checkbox-item">
-                <input type="checkbox" checked={stockFilter.inStock} onChange={(e) => setStockFilter({ ...stockFilter, inStock: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={stockFilter.inStock}
+                  onChange={(e) =>
+                    setStockFilter({ ...stockFilter, inStock: e.target.checked })
+                  }
+                />
                 <span>In Stock</span>
               </label>
               <label className="prd-checkbox-item">
-                <input type="checkbox" checked={stockFilter.lowStock} onChange={(e) => setStockFilter({ ...stockFilter, lowStock: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={stockFilter.lowStock}
+                  onChange={(e) =>
+                    setStockFilter({ ...stockFilter, lowStock: e.target.checked })
+                  }
+                />
                 <span>Low Stock</span>
               </label>
             </div>
           </div>
 
           <div className="prd-sidebar-buttons">
-            <button className="prd-btn-reset" onClick={resetFilters}>Reset</button>
-            <button className="prd-btn-apply" onClick={() => alert('Filter applied!')}>Apply Filters</button>
+            <button className="prd-btn-reset" onClick={resetFilters}>
+              Reset
+            </button>
+            <button className="prd-btn-apply" onClick={() => setCurrentPage(1)}>
+              Apply Filters
+            </button>
           </div>
         </div>
       </div>
@@ -288,8 +594,16 @@ const Product = () => {
         <div className="prd-modal-overlay">
           <div className="prd-modal-content">
             <div className="prd-modal-header">
-              <h3>{modalType === 'add' ? '✨ Add New Product' : modalType === 'edit' ? `✏️ Edit Product (${selectedItem?.sku})` : '👁️ Product Overview'}</h3>
-              <button className="prd-modal-close" onClick={() => setModalType(null)}>✕</button>
+              <h3>
+                {modalType === 'add'
+                  ? '✨ Add New Product'
+                  : modalType === 'edit'
+                  ? `✏️ Edit Product (${selectedItem?.sku})`
+                  : '👁️ Product Overview'}
+              </h3>
+              <button className="prd-modal-close" onClick={() => setModalType(null)}>
+                ✕
+              </button>
             </div>
 
             {modalType === 'view' ? (
@@ -298,42 +612,159 @@ const Product = () => {
                 <h4>{selectedItem?.name}</h4>
                 <p className="prd-view-desc">{selectedItem?.desc}</p>
                 <div className="prd-view-grid">
-                  <div><span className="prd-view-label">SKU</span><strong>{selectedItem?.sku}</strong></div>
-                  <div><span className="prd-view-label">Brand</span><strong>{selectedItem?.brand}</strong></div>
-                  <div><span className="prd-view-label">Category</span><strong>{selectedItem?.category}</strong></div>
-                  <div><span className="prd-view-label">Price</span><strong className="text-green">₹{selectedItem?.price}</strong></div>
-                  <div><span className="prd-view-label">Stock</span><strong>{selectedItem?.stock} units</strong></div>
-                  <div><span className="prd-view-label">Status</span><strong>{selectedItem?.status}</strong></div>
+                  <div>
+                    <span className="prd-view-label">SKU</span>
+                    <strong>{selectedItem?.sku}</strong>
+                  </div>
+                  <div>
+                    <span className="prd-view-label">Brand</span>
+                    <strong>{selectedItem?.brand}</strong>
+                  </div>
+                  <div>
+                    <span className="prd-view-label">Category</span>
+                    <strong>{selectedItem?.category}</strong>
+                  </div>
+                  <div>
+                    <span className="prd-view-label">Price</span>
+                    <strong className="text-green">₹{selectedItem?.price}</strong>
+                  </div>
+                  <div>
+                    <span className="prd-view-label">Stock</span>
+                    <strong>{selectedItem?.stock} units</strong>
+                  </div>
+                  <div>
+                    <span className="prd-view-label">Status</span>
+                    <strong>{selectedItem?.status || 'Active'}</strong>
+                  </div>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleFormSubmit} className="prd-modal-form">
                 <div className="prd-form-row">
-                  <div className="prd-form-group"><label>Product Name *</label><input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} /></div>
-                  <div className="prd-form-group"><label>SKU *</label><input type="text" required value={formData.sku} onChange={(e) => setFormData({ ...formData, sku: e.target.value })} /></div>
+                  <div className="prd-form-group">
+                    <label>Product Name *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="prd-form-group">
+                    <label>SKU *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.sku}
+                      onChange={(e) =>
+                        setFormData({ ...formData, sku: e.target.value })
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="prd-form-group"><label>Description</label><input type="text" value={formData.desc} onChange={(e) => setFormData({ ...formData, desc: e.target.value })} /></div>
+                <div className="prd-form-group">
+                  <label>Description</label>
+                  <input
+                    type="text"
+                    value={formData.desc}
+                    onChange={(e) =>
+                      setFormData({ ...formData, desc: e.target.value })
+                    }
+                  />
+                </div>
                 <div className="prd-form-row">
                   <div className="prd-form-group">
                     <label>Brand</label>
-                    <select value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })}>
-                      <option value="Chocolate">Chocolate</option><option value="Honey">Honey</option><option value="Combo">Combo</option>
+                    <select
+                      value={formData.brand}
+                      onChange={(e) =>
+                        setFormData({ ...formData, brand: e.target.value })
+                      }
+                    >
+                      {brandsList.length > 0 ? (
+                        brandsList.map((b) => (
+                          <option key={b._id || b.id} value={b.name}>
+                            {b.name}
+                          </option>
+                        ))
+                      ) : (
+                        <>
+                          <option value="Chocolate">Chocolate</option>
+                          <option value="Honey">Honey</option>
+                          <option value="Combo">Combo</option>
+                        </>
+                      )}
                     </select>
                   </div>
                   <div className="prd-form-group">
                     <label>Category</label>
-                    <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
-                      <option value="Dark Chocolate">Dark Chocolate</option><option value="Milk Chocolate">Milk Chocolate</option><option value="Nut Chocolate">Nut Chocolate</option><option value="Raw Honey">Raw Honey</option>
+                    <select
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
+                    >
+                      {categoriesList.length > 0 ? (
+                        categoriesList.map((cat) => (
+                          <option key={cat._id || cat.id} value={cat.name}>
+                            {cat.name}
+                          </option>
+                        ))
+                      ) : (
+                        <>
+                          <option value="Dark Chocolate">Dark Chocolate</option>
+                          <option value="Milk Chocolate">Milk Chocolate</option>
+                          <option value="Nut Chocolate">Nut Chocolate</option>
+                          <option value="Raw Honey">Raw Honey</option>
+                        </>
+                      )}
                     </select>
                   </div>
                 </div>
                 <div className="prd-form-row">
-                  <div className="prd-form-group"><label>Price (₹) *</label><input type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} /></div>
-                  <div className="prd-form-group"><label>Stock Quantity</label><input type="number" value={formData.stock} onChange={(e) => setFormData({ ...formData, stock: e.target.value })} /></div>
+                  <div className="prd-form-group">
+                    <label>Price (₹) *</label>
+                    <input
+                      type="number"
+                      required
+                      value={formData.price}
+                      onChange={(e) =>
+                        setFormData({ ...formData, price: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="prd-form-group">
+                    <label>Stock Quantity</label>
+                    <input
+                      type="number"
+                      value={formData.stock}
+                      onChange={(e) =>
+                        setFormData({ ...formData, stock: e.target.value })
+                      }
+                    />
+                  </div>
                 </div>
                 <div className="prd-modal-actions">
-                  <button type="button" className="prd-btn-reset" onClick={() => setModalType(null)}>Cancel</button>
-                  <button type="submit" className="prd-btn-apply">{modalType === 'add' ? 'Add Product' : 'Save Changes'}</button>
+                  <button
+                    type="button"
+                    className="prd-btn-reset"
+                    onClick={() => setModalType(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="prd-btn-apply"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting
+                      ? 'Saving...'
+                      : modalType === 'add'
+                      ? 'Add Product'
+                      : 'Save Changes'}
+                  </button>
                 </div>
               </form>
             )}
