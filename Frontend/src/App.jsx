@@ -12,7 +12,7 @@ import Faq from "./Pages/Faq/Faq";
 import Contact from "./Pages/Contact/Contact";
 import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
 import BlogDetails from "./Pages/BlogDetails/BlogDetails";
-// import Login from "./Component/Login/Login";
+
 
 
 
@@ -31,8 +31,7 @@ const App = () => {
         <Route path="/faq" element={<Faq />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/blogDetails" element={<BlogDetails />} />
-        {/* <Route path="/login" element={<Login/>}/> */}
-        
+       
 
       </Routes>
       <Footer />

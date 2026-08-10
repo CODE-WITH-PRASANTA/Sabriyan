@@ -7,6 +7,10 @@ import "./App.css";
 // Layout
 import MainLayout from "./Layout/MainLayout/MainLayout";
 
+// Auth Components
+
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+
 // Pages
 import AddnewProduct from "./Pages/AddnewProduct/AddnewProduct";
 import AllProduct from "./Pages/AllProduct/AllProduct";
@@ -29,14 +33,26 @@ import ProcessingOrder from "./Components/ProcessingOrder/ProcessingOrder";
 import PremiumCollection from "./Components/PremiumCollection/PremiumCollection";
 import Testimonial from "./Components/Testimonial/Testimonial";
 import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
+import Login from "./Components/Login/Login";
 
 function App() {
   return (
     <div className="App-theme-wrapper">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<MainLayout />}>
-
+          {/* Public Login Route */}
+         <Route path="/login" element={<Login/>} />
+        
+         
+          {/* Protected Routes wrapped with MainLayout */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }
+          >
             {/* Dashboard */}
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
@@ -70,7 +86,6 @@ function App() {
 
             {/* Testimonials */}
             <Route path="testimonials" element={<Testimonial />} />
-
           </Route>
         </Routes>
       </BrowserRouter>
