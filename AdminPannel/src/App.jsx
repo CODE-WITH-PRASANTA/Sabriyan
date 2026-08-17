@@ -17,6 +17,8 @@ import Customers from "./Components/Customers/Customers";
 import PremiumCollection from "./Components/PremiumCollection/PremiumCollection";
 import Testimonial from "./Components/Testimonial/Testimonial";
 import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
+import BlogPost from "./Components/BlogPost/BlogPost";
+import BlogManagement from "./Components/BlogManagement/BlogManagement";
 
 // Import these if they exist
 // import AddnewProduct from "./Components/AddnewProduct/AddnewProduct";
@@ -51,6 +53,9 @@ function App() {
           <Route path="refund" element={<RefundManagement />} />
           <Route path="pending" element={<PendingOrders />} />
           <Route path="processing" element={<ProcessingOrder />} />
+          <Route path="blogpost" element={<BlogPost/>} />
+          <Route path="blogmanagement" element={<BlogManagement/>} />
+
         </Route>
       </Routes>
     </BrowserRouter>
