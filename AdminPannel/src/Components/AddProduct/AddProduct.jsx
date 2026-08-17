@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './AddProduct.css';
 import API from '../../api/axios';
 
@@ -42,7 +42,46 @@ const AddProduct = ({ onProductAdded }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Dynamic Categories & Brands State
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [brandsList, setBrandsList] = useState([]);
+  const [isFetchingOptions, setIsFetchingOptions] = useState(false);
+
   const fileInputRef = useRef(null);
+
+  // 1. Fetch Categories and Brands from Backend API
+  useEffect(() => {
+    const fetchDropdownData = async () => {
+      setIsFetchingOptions(true);
+      try {
+        const [catRes, brandRes] = await Promise.all([
+          API.get('/categories', { params: { status: 'Active', limit: 100 } }),
+          API.get('/brands', { params: { status: 'Active', limit: 100 } }),
+        ]);
+
+        // Process Categories
+        if (catRes.data?.success && Array.isArray(catRes.data.data)) {
+          setCategoriesList(catRes.data.data);
+        } else if (Array.isArray(catRes.data)) {
+          setCategoriesList(catRes.data);
+        }
+
+        // Process Brands
+        if (brandRes.data?.success && Array.isArray(brandRes.data.data)) {
+          setBrandsList(brandRes.data.data);
+        } else if (Array.isArray(brandRes.data)) {
+          setBrandsList(brandRes.data);
+        }
+      } catch (error) {
+        console.error('Failed to load categories or brands for dropdown:', error);
+      } finally {
+        setIsFetchingOptions(false);
+      }
+    };
+
+    fetchDropdownData();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -100,7 +139,14 @@ const AddProduct = ({ onProductAdded }) => {
   };
 
   const submitProduct = async (status = 'published') => {
-    if (!formData.name || !formData.regularPrice || !formData.category || !formData.brand || !formData.shortDesc || !formData.detailedDesc) {
+    if (
+      !formData.name ||
+      !formData.regularPrice ||
+      !formData.category ||
+      !formData.brand ||
+      !formData.shortDesc ||
+      !formData.detailedDesc
+    ) {
       alert('Please fill in required fields: Name, Short Description, Detailed Description, Price, Category, and Brand.');
       return;
     }
@@ -123,10 +169,9 @@ const AddProduct = ({ onProductAdded }) => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      alert(res.data.message || 'Product published successfully!');
+      alert(res.data?.message || 'Product published successfully!');
       resetForm();
 
-      // Trigger table refresh in parent
       if (onProductAdded) {
         onProductAdded();
       }
@@ -160,7 +205,9 @@ const AddProduct = ({ onProductAdded }) => {
             <h3 className="ap-card-title">Basic Information</h3>
             <div className="ap-form-row">
               <div className="ap-form-group">
-                <label>Product Name <span className="ap-required">*</span></label>
+                <label>
+                  Product Name <span className="ap-required">*</span>
+                </label>
                 <input
                   type="text"
                   name="name"
@@ -183,7 +230,9 @@ const AddProduct = ({ onProductAdded }) => {
             </div>
 
             <div className="ap-form-group">
-              <label>Short Description <span className="ap-required">*</span></label>
+              <label>
+                Short Description <span className="ap-required">*</span>
+              </label>
               <textarea
                 rows="2"
                 name="shortDesc"
@@ -196,7 +245,9 @@ const AddProduct = ({ onProductAdded }) => {
             </div>
 
             <div className="ap-form-group">
-              <label>Detailed Description <span className="ap-required">*</span></label>
+              <label>
+                Detailed Description <span className="ap-required">*</span>
+              </label>
               <textarea
                 className="ap-editor-area"
                 rows="4"
@@ -210,7 +261,9 @@ const AddProduct = ({ onProductAdded }) => {
           </div>
 
           <div className="ap-card">
-            <h3 className="ap-card-title">Product Type <span className="ap-required">*</span></h3>
+            <h3 className="ap-card-title">
+              Product Type <span className="ap-required">*</span>
+            </h3>
             <div className="ap-type-grid">
               <div
                 className={`ap-type-card ${formData.productType === 'Chocolate' ? 'active' : ''}`}
@@ -254,7 +307,9 @@ const AddProduct = ({ onProductAdded }) => {
                   style={{ display: 'none' }}
                 />
                 <div className="ap-upload-icon">☁️</div>
-                <p><strong>Click to upload</strong></p>
+                <p>
+                  <strong>Click to upload</strong>
+                </p>
                 <span className="ap-upload-note">PNG, JPG, WEBP up to 5MB</span>
               </label>
 
@@ -281,7 +336,9 @@ const AddProduct = ({ onProductAdded }) => {
             <h3 className="ap-card-title">Pricing & Inventory</h3>
             <div className="ap-form-row three-cols">
               <div className="ap-form-group">
-                <label>Regular Price <span className="ap-required">*</span></label>
+                <label>
+                  Regular Price <span className="ap-required">*</span>
+                </label>
                 <div className="ap-input-prefix">
                   <span>₹</span>
                   <input
@@ -327,7 +384,9 @@ const AddProduct = ({ onProductAdded }) => {
 
             <div className="ap-form-row three-cols">
               <div className="ap-form-group">
-                <label>Stock Quantity <span className="ap-required">*</span></label>
+                <label>
+                  Stock Quantity <span className="ap-required">*</span>
+                </label>
                 <input
                   type="number"
                   name="stockQuantity"
@@ -363,33 +422,73 @@ const AddProduct = ({ onProductAdded }) => {
           <div className="ap-card">
             <h3 className="ap-card-title">Categories & Brand</h3>
             <div className="ap-form-row three-cols">
+              
+              {/* DYNAMIC CATEGORY DROPDOWN */}
               <div className="ap-form-group">
-                <label>Category <span className="ap-required">*</span></label>
-                <select name="category" value={formData.category} onChange={handleInputChange} required>
-                  <option value="" disabled>Select Category</option>
-                  <option value="Dark Chocolate">Dark Chocolate</option>
-                  <option value="Milk Chocolate">Milk Chocolate</option>
-                  <option value="Nut Chocolate">Nut Chocolate</option>
-                  <option value="Raw Honey">Raw Honey</option>
+                <label>
+                  Category <span className="ap-required">*</span>
+                </label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  required
+                  disabled={isFetchingOptions}
+                >
+                  <option value="" disabled>
+                    {isFetchingOptions ? 'Loading Categories...' : 'Select Category'}
+                  </option>
+                  {categoriesList.length > 0 ? (
+                    categoriesList.map((cat) => (
+                      <option key={cat._id || cat.id} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))
+                  ) : (
+                    !isFetchingOptions && <option value="" disabled>No Categories Available</option>
+                  )}
                 </select>
               </div>
+
+              {/* OPTIONAL SUB CATEGORY */}
               <div className="ap-form-group">
                 <label>Sub Category</label>
-                <select name="subCategory" value={formData.subCategory} onChange={handleInputChange}>
-                  <option value="">Select Sub Category</option>
-                  <option value="Organic Dark">Organic Dark</option>
-                  <option value="Flavoured">Flavoured</option>
-                </select>
+                <input
+                  type="text"
+                  name="subCategory"
+                  value={formData.subCategory}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Organic, Flavoured"
+                />
               </div>
+
+              {/* DYNAMIC BRAND DROPDOWN */}
               <div className="ap-form-group">
-                <label>Brand <span className="ap-required">*</span></label>
-                <select name="brand" value={formData.brand} onChange={handleInputChange} required>
-                  <option value="" disabled>Select Brand</option>
-                  <option value="Chocolate">Chocolate</option>
-                  <option value="Honey">Honey</option>
-                  <option value="Combo">Combo</option>
+                <label>
+                  Brand <span className="ap-required">*</span>
+                </label>
+                <select
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleInputChange}
+                  required
+                  disabled={isFetchingOptions}
+                >
+                  <option value="" disabled>
+                    {isFetchingOptions ? 'Loading Brands...' : 'Select Brand'}
+                  </option>
+                  {brandsList.length > 0 ? (
+                    brandsList.map((b) => (
+                      <option key={b._id || b.id} value={b.name}>
+                        {b.name}
+                      </option>
+                    ))
+                  ) : (
+                    !isFetchingOptions && <option value="" disabled>No Brands Available</option>
+                  )}
                 </select>
               </div>
+
             </div>
           </div>
 
@@ -404,9 +503,15 @@ const AddProduct = ({ onProductAdded }) => {
                 onChange={(e) => setNewTagName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAddTag(e)}
               />
-              <select className="ap-tag-color-select" value={newTagColor} onChange={(e) => setNewTagColor(e.target.value)}>
+              <select
+                className="ap-tag-color-select"
+                value={newTagColor}
+                onChange={(e) => setNewTagColor(e.target.value)}
+              >
                 {AVAILABLE_COLORS.map((c) => (
-                  <option key={c} value={c}>{c.toUpperCase()}</option>
+                  <option key={c} value={c}>
+                    {c.toUpperCase()}
+                  </option>
                 ))}
               </select>
               <button type="button" className="ap-btn-add-tag" onClick={handleAddTag}>
@@ -416,7 +521,10 @@ const AddProduct = ({ onProductAdded }) => {
             <div className="ap-tags-container">
               {tags.map((t) => (
                 <span key={t.id} className={`ap-tag tag-${t.color}`}>
-                  {t.name} <b onClick={() => handleRemoveTag(t.id)} className="ap-tag-close">✕</b>
+                  {t.name}{' '}
+                  <b onClick={() => handleRemoveTag(t.id)} className="ap-tag-close">
+                    ✕
+                  </b>
                 </span>
               ))}
             </div>
@@ -426,7 +534,12 @@ const AddProduct = ({ onProductAdded }) => {
             <button type="button" className="ap-btn-cancel" onClick={resetForm} disabled={loading}>
               Reset
             </button>
-            <button type="button" className="ap-btn-draft" onClick={() => submitProduct('draft')} disabled={loading}>
+            <button
+              type="button"
+              className="ap-btn-draft"
+              onClick={() => submitProduct('draft')}
+              disabled={loading}
+            >
               {loading ? 'Saving...' : 'Save as Draft'}
             </button>
             <button type="submit" className="ap-btn-publish" disabled={loading}>
