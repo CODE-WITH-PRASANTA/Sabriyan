@@ -1,27 +1,37 @@
 /* ==========================================
-   REF COLOR MATCH: DEEP FOREST GREEN THEME
+   BLOG MANAGEMENT
+   MATCHED WITH BLOG POST DARK GREEN THEME
    ========================================== */
+
 .BlogManagement.dark-forest-theme {
-  --ref-dark-green: #0e301d;      /* Reference dark forest green */
-  --ref-surface-green: #143d26;   /* Surface green */
-  --ref-card-bg: #1c4b31;        /* Card & table row inner background */
-  --ref-border-green: #296140;    /* Border green */
-  
-  --gold-accent: #d4af37;         /* Golden accent */
-  --gold-hover: #b89628;          /* Darker gold hover */
-  
-  --text-light: #eef7f2;          /* Main white/light text */
-  --text-subtle: #a8c8b4;         /* Secondary muted text */
+  --ref-dark-green: #060d08;
+  --ref-surface-green: #0e1a12;
+  --ref-card-bg: #09130d;
+  --ref-border-green: #1c3324;
+
+  --green-accent: #2ecc71;
+  --green-hover: #27ae60;
+  --green-soft: #1a3824;
+
+  --text-light: #e2f1e8;
+  --text-subtle: #a3c2af;
+  --text-muted: #64826f;
 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
+
   background-color: var(--ref-dark-green);
   padding: 24px;
   color: var(--text-light);
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* Header & Controls */
+
+/* ==========================================
+   HEADER & CONTROLS
+   ========================================== */
+
 .BlogManagement-header {
   display: flex;
   justify-content: space-between;
@@ -40,22 +50,32 @@
   display: flex;
   align-items: center;
   gap: 8px;
+
   background: var(--ref-surface-green);
   border: 1px solid var(--ref-border-green);
+
   padding: 9px 16px;
   border-radius: 8px;
+
   font-size: 14px;
   font-weight: 600;
   color: var(--text-subtle);
+
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
+.BlogManagement-toggleBtn:hover {
+  border-color: var(--green-accent);
+  color: var(--text-light);
+}
+
 .BlogManagement-toggleBtn.active {
-  background-color: var(--gold-accent);
-  color: var(--ref-dark-green);
-  border-color: var(--gold-accent);
-  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+  background-color: var(--green-accent);
+  color: #060d08;
+  border-color: var(--green-accent);
+
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.25);
 }
 
 .BlogManagement-controls {
@@ -65,7 +85,11 @@
   flex-wrap: wrap;
 }
 
-/* Dropdown Selects */
+
+/* ==========================================
+   DROPDOWN SELECTS
+   ========================================== */
+
 .BlogManagement-selectWrapper {
   position: relative;
   display: flex;
@@ -74,80 +98,182 @@
 
 .BlogManagement-selectWrapper select {
   appearance: none;
-  padding: 8px 30px 8px 12px;
+
+  padding: 8px 32px 8px 12px;
+
   border: 1px solid var(--ref-border-green);
   border-radius: 8px;
-  background: var(--ref-surface-green);
+
+  background: var(--ref-card-bg);
+
   font-size: 14px;
   color: var(--text-light);
+
   cursor: pointer;
   outline: none;
+
+  transition: border-color 0.2s ease,
+              background-color 0.2s ease;
+}
+
+.BlogManagement-selectWrapper select:hover {
+  border-color: #274732;
 }
 
 .BlogManagement-selectWrapper select:focus {
-  border-color: var(--gold-accent);
+  border-color: var(--green-accent);
 }
 
 .BlogManagement-selectWrapper .select-arrow {
   position: absolute;
   right: 10px;
+
   font-size: 10px;
-  color: var(--gold-accent);
+  color: var(--text-subtle);
+
   pointer-events: none;
 }
+
+
+/* ==========================================
+   FILTER BUTTON
+   ========================================== */
 
 .BlogManagement-filterBtn {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: var(--gold-accent);
-  border: 1px solid var(--gold-accent);
+
+  background: var(--green-accent);
+  border: 1px solid var(--green-accent);
+
   padding: 8px 14px;
   border-radius: 8px;
+
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
+
   cursor: pointer;
-  color: var(--ref-dark-green);
-  transition: background 0.2s;
+  color: #060d08;
+
+  transition: all 0.2s ease;
 }
 
 .BlogManagement-filterBtn:hover {
-  background: var(--gold-hover);
+  background: var(--green-hover);
+  border-color: var(--green-hover);
 }
 
-/* Category Badges */
+
+/* ==========================================
+   CATEGORY BADGES
+   ========================================== */
+
 .category-badge {
   padding: 4px 10px;
   border-radius: 6px;
+
   font-size: 12px;
   font-weight: 600;
+
   display: inline-block;
 }
 
-.cat-nature { background-color: #1e5235; color: #a3ebc1; border: 1px solid #2a734b; }
-.cat-honey { background-color: #4a3b10; color: #fce38a; border: 1px solid #735c18; }
-.cat-health { background-color: #1a3e5c; color: #9ecbfa; border: 1px solid #285880; }
-.cat-chocolate { background-color: #442240; color: #f3b8ed; border: 1px solid #693863; }
-.cat-recipes { background-color: #2b4737; color: #b7efcd; border: 1px solid #3d634e; }
 
-/* Status Badges */
+/* Nature */
+
+.cat-nature {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.25);
+}
+
+
+/* Honey */
+
+.cat-honey {
+  background-color: rgba(241, 196, 15, 0.15);
+  color: #f1c40f;
+  border: 1px solid rgba(241, 196, 15, 0.25);
+}
+
+
+/* Health */
+
+.cat-health {
+  background-color: rgba(52, 152, 219, 0.15);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.25);
+}
+
+
+/* Chocolate */
+
+.cat-chocolate {
+  background-color: rgba(155, 89, 182, 0.15);
+  color: #bb86fc;
+  border: 1px solid rgba(155, 89, 182, 0.25);
+}
+
+
+/* Recipes */
+
+.cat-recipes {
+  background-color: rgba(46, 204, 113, 0.12);
+  color: #7ee2a8;
+  border: 1px solid rgba(46, 204, 113, 0.22);
+}
+
+
+/* ==========================================
+   STATUS BADGES
+   ========================================== */
+
 .status-pill {
   padding: 4px 12px;
   border-radius: 20px;
+
   font-size: 12px;
   font-weight: 600;
 }
-.status-pill.published { background-color: #1e5235; color: #a3ebc1; }
-.status-pill.draft { background-color: #374151; color: #d1d5db; }
 
-/* Table View */
+.status-pill.published {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.status-pill.draft {
+  background-color: rgba(241, 196, 15, 0.15);
+  color: #f1c40f;
+}
+
+
+/* ==========================================
+   TABLE CONTAINER
+   ========================================== */
+
 .BlogManagement-tableContainer {
   background: var(--ref-surface-green);
+
   border-radius: 12px;
   border: 1px solid var(--ref-border-green);
+
   overflow-x: auto;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.BlogManagement-tableContainer::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ==========================================
+   TABLE
+   ========================================== */
 
 .BlogManagement-table {
   width: 100%;
@@ -156,21 +282,46 @@
 }
 
 .BlogManagement-table th {
-  background-color: var(--ref-dark-green);
-  color: var(--gold-accent);
+  background-color: var(--ref-card-bg);
+
+  color: #7a9e87;
+
   padding: 14px 16px;
+
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
+
   letter-spacing: 0.5px;
+
   border-bottom: 1px solid var(--ref-border-green);
+
+  white-space: nowrap;
 }
 
 .BlogManagement-table td {
   padding: 14px 16px;
-  border-bottom: 1px solid var(--ref-border-green);
+
+  border-bottom: 1px solid #142419;
+
   font-size: 13px;
+
   vertical-align: middle;
+
   color: var(--text-light);
+}
+
+.BlogManagement-table tbody tr {
+  background-color: var(--ref-surface-green);
+
+  transition: background-color 0.2s ease;
+}
+
+.BlogManagement-table tbody tr:hover {
+  background-color: #13291b;
+}
+
+.BlogManagement-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .no-data {
@@ -179,31 +330,51 @@
   color: var(--text-subtle);
 }
 
+
+/* ==========================================
+   THUMBNAIL
+   ========================================== */
+
 .BlogManagement-thumb {
   width: 60px;
   height: 45px;
+
   border-radius: 6px;
+
   object-fit: cover;
+
   border: 1px solid var(--ref-border-green);
 }
+
+
+/* ==========================================
+   TITLE CELL
+   ========================================== */
 
 .title-cell {
   max-width: 260px;
 }
 
 .title-cell .title-text {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-light);
 }
 
 .title-cell .desc-text {
   font-size: 12px;
-  color: var(--text-subtle);
+  color: var(--text-muted);
+
   margin-top: 3px;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+/* ==========================================
+   AUTHOR
+   ========================================== */
 
 .author-cell {
   display: flex;
@@ -214,22 +385,42 @@
 .author-cell img {
   width: 26px;
   height: 26px;
+
   border-radius: 50%;
-  border: 1px solid var(--gold-accent);
+
+  border: 1px solid #274732;
+
+  object-fit: cover;
 }
+
+
+/* ==========================================
+   META
+   ========================================== */
 
 .meta-item {
   display: flex;
   align-items: center;
   gap: 6px;
+
   color: var(--text-subtle);
+
   font-size: 12px;
 }
 
-.feat-icon.active { color: var(--gold-accent); }
-.feat-icon.inactive { color: #4b5563; }
+.feat-icon.active {
+  color: var(--green-accent);
+}
 
-/* Action Buttons */
+.feat-icon.inactive {
+  color: #557360;
+}
+
+
+/* ==========================================
+   ACTION BUTTONS
+   ========================================== */
+
 .action-buttons {
   display: flex;
   gap: 6px;
@@ -237,34 +428,67 @@
 
 .act-btn {
   background: var(--ref-card-bg);
+
   border: 1px solid var(--ref-border-green);
+
   border-radius: 6px;
-  width: 30px;
-  height: 30px;
+
+  width: 34px;
+  height: 34px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
-  transition: all 0.2s;
+
+  transition: all 0.2s ease;
 }
 
-.act-btn.view { color: #a3ebc1; }
-.act-btn.edit { color: var(--gold-accent); }
-.act-btn.delete { color: #f87171; }
+.act-btn.view {
+  color: #a3c2af;
+}
+
+.act-btn.edit {
+  color: var(--green-accent);
+}
+
+.act-btn.delete {
+  color: #e74c3c;
+}
 
 .act-btn:hover {
-  background-color: var(--ref-border-green);
+  background-color: #1a3824;
+  border-color: #274732;
 }
 
-/* Pagination Controls */
+.act-btn.edit:hover {
+  color: #2ecc71;
+}
+
+.act-btn.delete:hover {
+  color: #ff6b5f;
+}
+
+
+/* ==========================================
+   PAGINATION
+   ========================================== */
+
 .BlogManagement-pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   padding: 16px;
+
   font-size: 13px;
+
   color: var(--text-subtle);
-  background: var(--ref-dark-green);
+
+  background: var(--ref-surface-green);
+
+  border-top: 1px solid var(--ref-border-green);
 }
 
 .pagination-controls {
@@ -274,13 +498,25 @@
 
 .page-btn {
   border: 1px solid var(--ref-border-green);
-  background: var(--ref-surface-green);
+
+  background: var(--ref-card-bg);
+
   padding: 6px 12px;
+
   border-radius: 6px;
+
   cursor: pointer;
+
   font-size: 13px;
+
+  color: var(--text-subtle);
+
+  transition: all 0.2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: var(--green-accent);
   color: var(--text-light);
-  transition: all 0.2s;
 }
 
 .page-btn:disabled {
@@ -289,33 +525,67 @@
 }
 
 .page-btn.num.active {
-  background-color: var(--gold-accent);
-  color: var(--ref-dark-green);
-  border-color: var(--gold-accent);
+  background-color: var(--green-accent);
+
+  color: #060d08;
+
+  border-color: var(--green-accent);
+
   font-weight: 700;
 }
 
-/* Grid View */
+
+/* ==========================================
+   GRID VIEW
+   ========================================== */
+
 .BlogManagement-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(230px, 1fr)
+  );
+
   gap: 18px;
 }
 
+
+/* ==========================================
+   BLOG CARD
+   ========================================== */
+
 .BlogManagement-card {
   background: var(--ref-surface-green);
+
   border-radius: 12px;
+
   border: 1px solid var(--ref-border-green);
+
   overflow: hidden;
+
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .BlogManagement-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+
+  border-color: #274732;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.35);
 }
+
+
+/* ==========================================
+   CARD TOP
+   ========================================== */
 
 .card-top {
   position: relative;
@@ -325,30 +595,57 @@
 .card-top img {
   width: 100%;
   height: 100%;
+
   object-fit: cover;
 }
 
 .card-top .category-badge {
   position: absolute;
+
   top: 10px;
   left: 10px;
 }
 
+
+/* ==========================================
+   CARD BOOKMARK
+   ========================================== */
+
 .card-bookmark {
   position: absolute;
+
   top: 10px;
   right: 10px;
-  background: rgba(14, 48, 29, 0.85);
-  color: var(--gold-accent);
-  border: 1px solid var(--gold-accent);
+
+  background: rgba(9, 19, 13, 0.9);
+
+  color: var(--green-accent);
+
+  border: 1px solid var(--ref-border-green);
+
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+
+  width: 30px;
+  height: 30px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
+
+  transition: all 0.2s ease;
 }
+
+.card-bookmark:hover {
+  background: var(--green-soft);
+  border-color: var(--green-accent);
+}
+
+
+/* ==========================================
+   CARD CONTENT
+   ========================================== */
 
 .card-content {
   padding: 14px;
@@ -358,36 +655,59 @@
 .card-meta {
   display: flex;
   gap: 12px;
+
   font-size: 11px;
-  color: var(--text-subtle);
+
+  color: var(--text-muted);
+
   margin-bottom: 8px;
 }
 
 .card-title {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
+
   margin-bottom: 6px;
+
   color: var(--text-light);
 }
 
 .card-desc {
   font-size: 12px;
+
   color: var(--text-subtle);
+
   display: -webkit-box;
+
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+
   overflow: hidden;
+
   line-height: 1.4;
 }
 
+
+/* ==========================================
+   CARD FOOTER
+   ========================================== */
+
 .card-footer {
   padding: 10px 14px;
+
   border-top: 1px solid var(--ref-border-green);
+
   background: var(--ref-card-bg);
+
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
+
+/* ==========================================
+   LOAD MORE
+   ========================================== */
 
 .BlogManagement-loadMore {
   text-align: center;
@@ -395,124 +715,209 @@
 }
 
 .load-more-btn {
-  background: var(--ref-surface-green);
-  border: 2px solid var(--gold-accent);
-  color: var(--gold-accent);
+  background: transparent;
+
+  border: 1px solid var(--green-accent);
+
+  color: var(--green-accent);
+
   padding: 8px 20px;
+
   border-radius: 8px;
-  font-weight: 700;
+
+  font-weight: 600;
+
   cursor: pointer;
+
   display: inline-flex;
   align-items: center;
+
   gap: 8px;
-  transition: all 0.2s;
+
+  transition: all 0.2s ease;
 }
 
 .load-more-btn:hover {
-  background: var(--gold-accent);
-  color: var(--ref-dark-green);
+  background: var(--green-accent);
+  color: #060d08;
 }
 
-/* MODALS & PROPER CLOSE BUTTON STYLING */
+
+/* ==========================================
+   MODAL OVERLAY
+   ========================================== */
+
 .BlogManagement-modalOverlay {
   position: fixed;
+
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+
   background: rgba(0, 0, 0, 0.75);
+
   display: flex;
+
   justify-content: center;
   align-items: center;
+
   z-index: 9999;
 }
 
+
+/* ==========================================
+   MODAL
+   ========================================== */
+
 .BlogManagement-modal {
   background: var(--ref-surface-green);
+
   color: var(--text-light);
+
   width: 90%;
   max-width: 500px;
+
   border-radius: 12px;
+
   padding: 24px;
+
   position: relative;
-  border-top: 6px solid var(--gold-accent);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+
+  border: 1px solid var(--ref-border-green);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.6);
 }
 
-/* PROPER CROSS (×) BUTTON STYLING */
+
+/* ==========================================
+   CLOSE BUTTON
+   ========================================== */
+
 .close-modal-btn {
   position: absolute;
+
   top: 14px;
   right: 14px;
-  background: var(--ref-dark-green);
-  border: 1px solid var(--gold-accent);
+
+  background: var(--ref-card-bg);
+
+  border: 1px solid var(--ref-border-green);
+
   border-radius: 50%;
+
   width: 32px;
   height: 32px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gold-accent);
+
+  color: var(--text-subtle);
+
   font-size: 14px;
+
   cursor: pointer;
+
   z-index: 10;
+
   transition: all 0.2s ease;
 }
 
 .close-modal-btn:hover {
-  background: var(--gold-accent);
-  color: var(--ref-dark-green);
+  background: var(--green-accent);
+  color: #060d08;
+  border-color: var(--green-accent);
 }
+
+
+/* ==========================================
+   MODAL BANNER
+   ========================================== */
 
 .modal-banner-wrap {
   position: relative;
+
   height: 180px;
+
   margin-bottom: 12px;
+
   border-radius: 8px;
+
   overflow: hidden;
+
+  border: 1px solid var(--ref-border-green);
 }
 
 .modal-banner-wrap img {
   width: 100%;
   height: 100%;
+
   object-fit: cover;
 }
 
 .modal-banner-wrap .category-badge {
   position: absolute;
+
   bottom: 10px;
   left: 10px;
 }
 
+
+/* ==========================================
+   MODAL META
+   ========================================== */
+
 .modal-meta-row {
   display: flex;
+
   gap: 12px;
+
   margin: 10px 0;
+
   font-size: 12px;
+
   color: var(--text-subtle);
 }
 
 .modal-full-text {
   font-size: 13px;
+
   color: var(--text-light);
+
   line-height: 1.5;
+
   margin-bottom: 16px;
 }
 
 .modal-author-box {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
+
   border-top: 1px solid var(--ref-border-green);
+
   padding-top: 12px;
 }
 
 .modal-author-box img {
   width: 36px;
   height: 36px;
+
   border-radius: 50%;
-  border: 1px solid var(--gold-accent);
+
+  border: 1px solid var(--ref-border-green);
+
+  object-fit: cover;
 }
+
+
+/* ==========================================
+   EDIT FORM
+   ========================================== */
 
 .edit-form .form-group {
   margin-bottom: 12px;
@@ -520,29 +925,45 @@
 
 .edit-form label {
   display: block;
+
   font-size: 12px;
+
   font-weight: 600;
+
   margin-bottom: 4px;
-  color: var(--gold-accent);
+
+  color: var(--text-subtle);
 }
 
 .edit-form input,
 .edit-form textarea,
 .edit-form select {
   width: 100%;
+
   padding: 8px 12px;
+
   border: 1px solid var(--ref-border-green);
+
   border-radius: 6px;
+
   font-size: 13px;
-  background: var(--ref-dark-green);
+
+  background: var(--ref-card-bg);
+
   color: var(--text-light);
+
   box-sizing: border-box;
+
+  outline: none;
+
+  transition: border-color 0.2s ease;
 }
 
 .edit-form input:focus,
 .edit-form textarea:focus,
 .edit-form select:focus {
-  border-color: var(--gold-accent);
+  border-color: var(--green-accent);
+
   outline: none;
 }
 
@@ -555,35 +976,74 @@
   flex: 1;
 }
 
+
+/* ==========================================
+   MODAL ACTIONS
+   ========================================== */
+
 .modal-actions {
   display: flex;
+
   gap: 8px;
+
   margin-top: 16px;
 }
 
 .save-btn {
-  background: var(--gold-accent);
-  color: var(--ref-dark-green);
+  background: var(--green-accent);
+
+  color: #060d08;
+
   border: none;
+
   padding: 8px 16px;
+
   border-radius: 6px;
-  font-weight: 700;
+
+  font-weight: 600;
+
   cursor: pointer;
+
+  transition: background 0.2s ease;
 }
 
-.save-btn:hover { background: var(--gold-hover); }
+.save-btn:hover {
+  background: var(--green-hover);
+}
 
 .cancel-btn {
   background: var(--ref-card-bg);
+
   color: var(--text-light);
+
   border: 1px solid var(--ref-border-green);
+
   padding: 8px 16px;
+
   border-radius: 6px;
+
   cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
-/* Responsiveness */
+.cancel-btn:hover {
+  background: var(--green-soft);
+
+  border-color: #274732;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
 @media (max-width: 768px) {
+
+  .BlogManagement.dark-forest-theme {
+    padding: 16px;
+  }
+
   .BlogManagement-header {
     flex-direction: column;
     align-items: stretch;
@@ -594,7 +1054,26 @@
     align-items: stretch;
   }
 
+  .BlogManagement-selectWrapper {
+    width: 100%;
+  }
+
   .BlogManagement-selectWrapper select {
     width: 100%;
+  }
+
+  .BlogManagement-filterBtn {
+    justify-content: center;
+  }
+
+  .BlogManagement-pagination {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
   }
 }
