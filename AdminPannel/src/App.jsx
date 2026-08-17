@@ -1,64 +1,222 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+// Global Styles
+import "./App.css";
+
+// Layout
 import MainLayout from "./Layout/MainLayout/MainLayout";
+
+// Auth
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+
+// Pages
+import AddnewProduct from "./Pages/AddnewProduct/AddnewProduct";
+import AllProduct from "./Pages/AllProduct/AllProduct";
+import AllOrder from "./Pages/AllOrder/AllOrder";
 
 // Components
 import Dashboard from "./Components/Dashboard/Dashboard";
-import RefundManagement from "./Components/RefundManagement/RefundManagement";
-import PendingOrders from "./Components/PendingOrders/PendingOrders";
-import ProcessingOrder from "./Components/ProcessingOrder/ProcessingOrder";
 import Catagories from "./Components/Catagories/Catagories";
 import ManageBrands from "./Components/ManageBrands/ManageBrands";
 import Attributes from "./Components/Attributes/Attributes";
 import CompletedOrders from "./Components/CompletedOrders/CompletedOrders";
 import CancelOrders from "./Components/CancelOrders/CancelOrders";
 import Customers from "./Components/Customers/Customers";
+import BlogPost from "./Components/BlogPost/BlogPost";
+import BlogManagement from "./Components/BlogManagement/BlogManagement";
+import ColdLeads from "./Components/ColdLeads/ColdLeads";
+import RefundManagement from "./Components/RefundManagement/RefundManagement";
+import PendingOrders from "./Components/PendingOrders/PendingOrders";
+import ProcessingOrder from "./Components/ProcessingOrder/ProcessingOrder";
 import PremiumCollection from "./Components/PremiumCollection/PremiumCollection";
 import Testimonial from "./Components/Testimonial/Testimonial";
 import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
-import BlogPost from "./Components/BlogPost/BlogPost";
-import BlogManagement from "./Components/BlogManagement/BlogManagement";
 
-// Import these if they exist
-// import AddnewProduct from "./Components/AddnewProduct/AddnewProduct";
-// import AllProduct from "./Components/AllProduct/AllProduct";
-
+// Login
+import Login from "./Components/Login/Login";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Dashboard />} />
+    <div className="App-theme-wrapper">
+      <BrowserRouter>
+        <Routes>
 
-          <Route path="dashboard" element={<Dashboard />} />
+          {/* =========================
+              PUBLIC ROUTE
+          ========================== */}
+          <Route
+            path="/login"
+            element={<Login />}
+          />
 
-          {/* <Route path="products/add" element={<AddnewProduct />} /> */}
-          {/* <Route path="products/all" element={<AllProduct />} /> */}
-          {/* <Route path="orders/all" element={<AllOrder />} /> */}
+          {/* =========================
+              PROTECTED ROUTES
+          ========================== */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }
+          >
 
-          <Route path="products/categories" element={<Catagories />} />
-          <Route path="products/brands" element={<ManageBrands />} />
-          <Route path="products/attributes" element={<Attributes />} />
+            {/* =========================
+                DASHBOARD
+            ========================== */}
+            <Route
+              index
+              element={<Dashboard />}
+            />
 
-          <Route path="orders/complete" element={<CompletedOrders />} />
-          <Route path="orders/cancel" element={<CancelOrders />} />
+            <Route
+              path="dashboard"
+              element={<Dashboard />}
+            />
 
-          <Route path="customers" element={<Customers />} />
-          <Route path="premium-collection" element={<PremiumCollection />} />
-          <Route path="testimonials" element={<Testimonial />} />
-          <Route path="honey-product" element={<HoneyProduct />} />
+            {/* =========================
+                PRODUCTS
+            ========================== */}
+            <Route
+              path="products/add"
+              element={<AddnewProduct />}
+            />
 
-          <Route path="refund" element={<RefundManagement />} />
-          <Route path="pending" element={<PendingOrders />} />
-          <Route path="processing" element={<ProcessingOrder />} />
-          <Route path="blogpost" element={<BlogPost/>} />
-          <Route path="blogmanagement" element={<BlogManagement/>} />
+            <Route
+              path="products/all"
+              element={<AllProduct />}
+            />
 
-        </Route>
-      </Routes>
-    </BrowserRouter>
+            <Route
+              path="products/categories"
+              element={<Catagories />}
+            />
+
+            <Route
+              path="products/brands"
+              element={<ManageBrands />}
+            />
+
+            <Route
+              path="products/attributes"
+              element={<Attributes />}
+            />
+
+            <Route
+              path="premium-collection"
+              element={<PremiumCollection />}
+            />
+
+            <Route
+              path="honey-product"
+              element={<HoneyProduct />}
+            />
+
+            {/* =========================
+                ORDERS
+            ========================== */}
+            <Route
+              path="orders/all"
+              element={<AllOrder />}
+            />
+
+            <Route
+              path="orders/complete"
+              element={<CompletedOrders />}
+            />
+
+            <Route
+              path="orders/cancel"
+              element={<CancelOrders />}
+            />
+
+            <Route
+              path="orders/pending"
+              element={<PendingOrders />}
+            />
+
+            <Route
+              path="orders/processing"
+              element={<ProcessingOrder />}
+            />
+
+            <Route
+              path="orders/refund"
+              element={<RefundManagement />}
+            />
+
+            {/* =========================
+                CUSTOMERS
+            ========================== */}
+            <Route
+              path="customers"
+              element={<Customers />}
+            />
+
+            {/* =========================
+                BLOG
+            ========================== */}
+            <Route
+              path="blog/post"
+              element={<BlogPost />}
+            />
+
+            <Route
+              path="blog/management"
+              element={<BlogManagement />}
+            />
+
+            {/* Backward-compatible blog routes */}
+            <Route
+              path="blogpost"
+              element={<BlogPost />}
+            />
+
+            <Route
+              path="blogmanagement"
+              element={<BlogManagement />}
+            />
+
+            {/* =========================
+                LEADS
+            ========================== */}
+            <Route
+              path="coldleads"
+              element={<ColdLeads />}
+            />
+
+            {/* =========================
+                ADDITIONAL ORDER ROUTES
+            ========================== */}
+            <Route
+              path="refund"
+              element={<RefundManagement />}
+            />
+
+            <Route
+              path="pending"
+              element={<PendingOrders />}
+            />
+
+            <Route
+              path="processing"
+              element={<ProcessingOrder />}
+            />
+
+            {/* =========================
+                TESTIMONIALS
+            ========================== */}
+            <Route
+              path="testimonials"
+              element={<Testimonial />}
+            />
+
+          </Route>
+
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 

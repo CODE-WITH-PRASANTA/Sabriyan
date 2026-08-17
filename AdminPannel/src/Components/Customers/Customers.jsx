@@ -1,26 +1,22 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import './Customers.css';
-
-const initialCustomers = [
-  { id: 1, name: 'John Doe', email: 'john.doe@email.com', phone: '+91 98765 43210', totalOrders: 18, totalSpent: '₹24,850.00', status: 'Active', lastOrder: 'May 28, 2025', vip: true, group: 'VIP Customers', joined: 'May 10, 2024', dob: '15 Aug 1990', gender: 'Male', address: '221B Baker Street, London, UK, NW1 6XE', rewards: 14, category: ['Dark Chocolate', 'Honey'] },
-  { id: 2, name: 'Priya Sharma', email: 'priya.sharma@email.com', phone: '+91 91234 56789', totalOrders: 12, totalSpent: '₹18,650.00', status: 'Active', lastOrder: 'May 27, 2025', vip: true, group: 'VIP Customers', joined: 'Jan 12, 2024', dob: '22 Feb 1992', gender: 'Female', address: '12 Park Street, Mumbai, India', rewards: 9, category: ['Organic Tea'] },
-  { id: 3, name: 'Rahul Verma', email: 'rahul.verma@email.com', phone: '+91 99887 66554', totalOrders: 8, totalSpent: '₹9,450.00', status: 'Active', lastOrder: 'May 26, 2025', vip: false, group: 'Regular', joined: 'Mar 05, 2024', dob: '10 Jul 1995', gender: 'Male', address: '45 MG Road, Bangalore, India', rewards: 4, category: ['Coffee Beans'] },
-  { id: 4, name: 'Anita Patel', email: 'anita.patel@email.com', phone: '+91 98701 23456', totalOrders: 15, totalSpent: '₹21,230.00', status: 'Active', lastOrder: 'May 25, 2025', vip: false, group: 'Regular', joined: 'Feb 18, 2024', dob: '05 Dec 1988', gender: 'Female', address: '78 Ashram Road, Ahmedabad, India', rewards: 11, category: ['Spices'] },
-  { id: 5, name: 'Vikash Kumar', email: 'vikash.kumar@email.com', phone: '+91 91234 00011', totalOrders: 5, totalSpent: '₹6,780.00', status: 'Inactive', lastOrder: 'May 20, 2025', vip: false, group: 'Regular', joined: 'Apr 20, 2024', dob: '14 Nov 1993', gender: 'Male', address: '90 Boring Road, Patna, India', rewards: 2, category: ['Snacks'] },
-  { id: 6, name: 'Sneha Reddy', email: 'sneha.reddy@email.com', phone: '+91 90000 11122', totalOrders: 9, totalSpent: '₹11,350.00', status: 'Active', lastOrder: 'May 19, 2025', vip: false, group: 'Regular', joined: 'May 01, 2024', dob: '30 Jan 1994', gender: 'Female', address: '56 Banjara Hills, Hyderabad, India', rewards: 6, category: ['Skincare'] },
-  { id: 7, name: 'Amit Kumar', email: 'amit.kumar@email.com', phone: '+91 90000 22233', totalOrders: 7, totalSpent: '₹7,890.00', status: 'Active', lastOrder: 'May 18, 2025', vip: false, group: 'Regular', joined: 'Jun 11, 2024', dob: '12 Sep 1991', gender: 'Male', address: '12 Civil Lines, Delhi, India', rewards: 3, category: ['Books'] },
-  { id: 8, name: 'Kavita Singh', email: 'kavita.singh@email.com', phone: '+91 90000 33344', totalOrders: 11, totalSpent: '₹15,600.00', status: 'Active', lastOrder: 'May 17, 2025', vip: false, group: 'Regular', joined: 'Jul 22, 2024', dob: '03 Oct 1990', gender: 'Female', address: '89 Mall Road, Kanpur, India', rewards: 8, category: ['Apparel'] },
-  { id: 9, name: 'Siddharth Roy', email: 'siddharth.roy@email.com', phone: '+91 90000 44455', totalOrders: 4, totalSpent: '₹4,200.00', status: 'Active', lastOrder: 'May 15, 2025', vip: false, group: 'Regular', joined: 'Aug 14, 2024', dob: '19 Jun 1996', gender: 'Male', address: '10 Park Street, Kolkata, India', rewards: 1, category: ['Electronics'] },
-  { id: 10, name: 'Neha Gupta', email: 'neha.gupta@email.com', phone: '+91 90000 55566', totalOrders: 14, totalSpent: '₹19,400.00', status: 'Active', lastOrder: 'May 12, 2025', vip: true, group: 'VIP Customers', joined: 'Sep 09, 2024', dob: '25 Mar 1989', gender: 'Female', address: '34 Civil Lines, Jaipur, India', rewards: 12, category: ['Home Decor'] },
-  { id: 11, name: 'Manoj Bajpayee', email: 'manoj.b@email.com', phone: '+91 90000 66677', totalOrders: 3, totalSpent: '₹3,100.00', status: 'Inactive', lastOrder: 'Apr 30, 2025', vip: false, group: 'Regular', joined: 'Oct 01, 2024', dob: '11 Apr 1985', gender: 'Male', address: '77 Gomti Nagar, Lucknow, India', rewards: 0, category: ['Groceries'] }
-];
+import API from "../../api/axios";
 
 const Customers = () => {
-  const [customers, setCustomers] = useState(initialCustomers);
+  // State for dynamic backend data
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Search & Filters State
   const [searchTerm, setSearchTerm] = useState('');
   const [groupFilter, setGroupFilter] = useState('All Groups');
   const [statusFilter, setStatusFilter] = useState('All');
+  
+  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCustomersCount, setTotalCustomersCount] = useState(0);
   const itemsPerPage = 10;
 
   // Dropdown open states
@@ -45,6 +41,38 @@ const Customers = () => {
   const filterRef = useRef(null);
   const exportRef = useRef(null);
 
+  // Fetch Customers from Backend API
+  const fetchCustomers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await API.get('/customers', {
+        params: {
+          search: searchTerm,
+          group: groupFilter,
+          status: statusFilter,
+          page: currentPage,
+          limit: itemsPerPage
+        }
+      });
+
+      if (response.data && response.data.success) {
+        setCustomers(response.data.data);
+        setTotalPages(response.data.totalPages || 1);
+        setTotalCustomersCount(response.data.total || 0);
+      }
+    } catch (err) {
+      console.error('Failed to fetch customers:', err);
+      setError('Unable to load customer records.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [searchTerm, groupFilter, statusFilter, currentPage]);
+
   // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -56,72 +84,108 @@ const Customers = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filter & Search logic
-  const filteredCustomers = customers.filter((c) => {
-    const matchesSearch = 
-      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.phone.includes(searchTerm);
-
-    const matchesGroup = 
-      groupFilter === 'All Groups' || c.group === groupFilter;
-
-    const matchesStatus = 
-      statusFilter === 'All' || c.status === statusFilter;
-
-    return matchesSearch && matchesGroup && matchesStatus;
-  });
-
-  // Pagination logic
-  const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage) || 1;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentCustomers = filteredCustomers.slice(indexOfFirstItem, indexOfLastItem);
-
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
-  // Toggle Status (Active / Inactive)
-  const toggleStatus = (id, e) => {
-    e.stopPropagation();
-    setCustomers(customers.map(c => c.id === id ? { ...c, status: c.status === 'Active' ? 'Inactive' : 'Active' } : c));
+  // Dynamic AOV Calculation for overall metric card
+  const overallAvgOrderValue = useMemo(() => {
+    if (!customers || customers.length === 0) return 0;
+    
+    let grandTotalSpent = 0;
+    let grandTotalOrders = 0;
+
+    customers.forEach((c) => {
+      const spent = typeof c.totalSpent === 'number' ? c.totalSpent : parseFloat(c.totalSpent) || 0;
+      const orders = Number(c.totalOrders) || 0;
+      grandTotalSpent += spent;
+      grandTotalOrders += orders;
+    });
+
+    return grandTotalOrders > 0 ? grandTotalSpent / grandTotalOrders : 0;
+  }, [customers]);
+
+  // Dynamic AOV Calculation for selected drawer customer
+  const getCustomerAvgOrderValue = (customer) => {
+    if (!customer) return 0;
+    const spent = typeof customer.totalSpent === 'number' ? customer.totalSpent : parseFloat(customer.totalSpent) || 0;
+    const orders = Number(customer.totalOrders) || 0;
+    return orders > 0 ? spent / orders : 0;
+  };
+
+  // Toggle Status (Active / Inactive) via Backend API
+  const toggleStatus = async (id, currentStatus, e) => {
+    if (e) e.stopPropagation();
+    const targetStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
+    try {
+      const response = await API.put(`/customers/${id}`, { status: targetStatus });
+      if (response.data && response.data.success) {
+        setCustomers(prev => prev.map(c => c._id === id ? { ...c, status: targetStatus } : c));
+        if (selectedCustomer && selectedCustomer._id === id) {
+          setSelectedCustomer(prev => ({ ...prev, status: targetStatus }));
+        }
+      }
+    } catch (err) {
+      console.error('Failed to update status:', err);
+      alert('Failed to update customer status.');
+    }
     setActiveMenuId(null);
-    if (selectedCustomer && selectedCustomer.id === id) {
-      setSelectedCustomer(prev => ({ ...prev, status: prev.status === 'Active' ? 'Inactive' : 'Active' }));
+  };
+
+  // Add Customer Form Submit Handler
+  const handleAddCustomerSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await API.post('/customers', newCustomer);
+      if (response.data && response.data.success) {
+        setIsAddModalOpen(false);
+        setNewCustomer({ name: '', email: '', phone: '', group: 'Regular' });
+        fetchCustomers(); // Reload list
+      }
+    } catch (err) {
+      console.error('Failed to create customer:', err);
+      alert(err.response?.data?.message || 'Failed to add customer.');
     }
   };
 
-  // Add Customer Handler
-  const handleAddCustomerSubmit = (e) => {
+  // Edit Customer Submission Handler
+  const handleEditCustomerSubmit = async (e) => {
     e.preventDefault();
-    const created = {
-      id: customers.length + 1,
-      name: newCustomer.name,
-      email: newCustomer.email,
-      phone: newCustomer.phone,
-      totalOrders: 0,
-      totalSpent: '₹0.00',
-      status: 'Active',
-      lastOrder: 'New',
-      vip: newCustomer.group === 'VIP Customers',
-      group: newCustomer.group,
-      joined: 'Just now',
-      dob: '01 Jan 2000',
-      gender: 'Other',
-      address: 'Not Provided',
-      rewards: 0,
-      category: ['General']
-    };
-    setCustomers([created, ...customers]);
-    setIsAddModalOpen(false);
-    setNewCustomer({ name: '', email: '', phone: '', group: 'Regular' });
+    try {
+      const response = await API.put(`/customers/${editingCustomer._id}`, editingCustomer);
+      if (response.data && response.data.success) {
+        setEditingCustomer(null);
+        if (selectedCustomer && selectedCustomer._id === editingCustomer._id) {
+          setSelectedCustomer(response.data.data);
+        }
+        fetchCustomers();
+      }
+    } catch (err) {
+      console.error('Failed to update customer:', err);
+      alert(err.response?.data?.message || 'Failed to update customer details.');
+    }
   };
 
   // Export handler
   const handleExport = (type) => {
     alert(`Exporting customer data as ${type}...`);
     setIsExportOpen(false);
+  };
+
+  // Helper formatting methods
+  const formatMoney = (val) => {
+    const num = typeof val === 'number' ? val : parseFloat(val) || 0;
+    return `₹${num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr || dateStr === 'New') return dateStr || 'N/A';
+    try {
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    } catch {
+      return dateStr;
+    }
   };
 
   return (
@@ -135,8 +199,8 @@ const Customers = () => {
           <div className="customers-metric-info">
             <span className="customers-metric-title">Total Customers</span>
             <div className="customers-metric-row">
-              <h2>2,845</h2>
-              <span className="customers-badge positive">↑ 11.2% vs last month</span>
+              <h2>{totalCustomersCount}</h2>
+              <span className="customers-badge positive">Live Backend</span>
             </div>
           </div>
         </div>
@@ -161,8 +225,8 @@ const Customers = () => {
           <div className="customers-metric-info">
             <span className="customers-metric-title">Active Customers</span>
             <div className="customers-metric-row">
-              <h2>2,354</h2>
-              <span className="customers-subtext">82.7% of total</span>
+              <h2>{customers.filter(c => c.status === 'Active').length}</h2>
+              <span className="customers-subtext">Active on page</span>
             </div>
           </div>
         </div>
@@ -172,10 +236,10 @@ const Customers = () => {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           </div>
           <div className="customers-metric-info">
-            <span className="customers-metric-title">Repeat Customers</span>
+            <span className="customers-metric-title">VIP Customers</span>
             <div className="customers-metric-row">
-              <h2>1,678</h2>
-              <span className="customers-subtext">59.0% of total</span>
+              <h2>{customers.filter(c => c.vip).length}</h2>
+              <span className="customers-subtext">VIP Status</span>
             </div>
           </div>
         </div>
@@ -187,8 +251,8 @@ const Customers = () => {
           <div className="customers-metric-info">
             <span className="customers-metric-title">Avg. Order Value</span>
             <div className="customers-metric-row">
-              <h2>₹678.57</h2>
-              <span className="customers-badge positive">↑ 6.4% vs last month</span>
+              <h2>{formatMoney(overallAvgOrderValue)}</h2>
+              <span className="customers-badge positive">Live Calc</span>
             </div>
           </div>
         </div>
@@ -281,18 +345,26 @@ const Customers = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentCustomers.length > 0 ? (
-                  currentCustomers.map((c) => (
+                {loading ? (
+                  <tr>
+                    <td colSpan="8" className="no-data">Loading customer data...</td>
+                  </tr>
+                ) : error ? (
+                  <tr>
+                    <td colSpan="8" className="no-data" style={{ color: '#e74c3c' }}>{error}</td>
+                  </tr>
+                ) : customers.length > 0 ? (
+                  customers.map((c) => (
                     <tr 
-                      key={c.id} 
+                      key={c._id || c.id} 
                       onClick={() => setSelectedCustomer(c)}
-                      className={selectedCustomer?.id === c.id ? 'selected-row' : ''}
+                      className={selectedCustomer?._id === c._id ? 'selected-row' : ''}
                     >
                       <td onClick={(e) => e.stopPropagation()}><input type="checkbox" /></td>
                       <td>
                         <div className="customers-user-cell">
                           <div className="customers-avatar">
-                            {c.name.charAt(0)}
+                            {c.name ? c.name.charAt(0).toUpperCase() : 'U'}
                           </div>
                           <div className="customers-user-details">
                             <span className="customers-name">
@@ -307,14 +379,14 @@ const Customers = () => {
                           <span className="phone">{c.phone}</span>
                         </div>
                       </td>
-                      <td><strong>{c.totalOrders}</strong></td>
-                      <td><strong className="spent">{c.totalSpent}</strong></td>
+                      <td><strong>{c.totalOrders || 0}</strong></td>
+                      <td><strong className="spent">{formatMoney(c.totalSpent)}</strong></td>
                       <td>
-                        <span className={`customers-status-badge ${c.status.toLowerCase()}`}>
-                          {c.status}
+                        <span className={`customers-status-badge ${(c.status || 'Active').toLowerCase()}`}>
+                          {c.status || 'Active'}
                         </span>
                       </td>
-                      <td><span className="date">{c.lastOrder}</span></td>
+                      <td><span className="date">{formatDate(c.lastOrder || c.createdAt)}</span></td>
                       <td onClick={(e) => e.stopPropagation()}>
                         <div className="customers-action-buttons">
                           <button 
@@ -334,13 +406,13 @@ const Customers = () => {
                           <div className="customers-menu-wrapper">
                             <button 
                               className="action-icon-btn more"
-                              onClick={() => setActiveMenuId(activeMenuId === c.id ? null : c.id)}
+                              onClick={() => setActiveMenuId(activeMenuId === c._id ? null : c._id)}
                             >
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
                             </button>
-                            {activeMenuId === c.id && (
+                            {activeMenuId === c._id && (
                               <div className="customers-row-dropdown">
-                                <div onClick={(e) => toggleStatus(c.id, e)}>
+                                <div onClick={(e) => toggleStatus(c._id, c.status, e)}>
                                   Set {c.status === 'Active' ? 'Inactive' : 'Active'}
                                 </div>
                                 <div onClick={() => { setSelectedCustomer(c); setActiveMenuId(null); }}>
@@ -365,7 +437,7 @@ const Customers = () => {
           {/* Pagination Footer */}
           <div className="customers-pagination-footer">
             <span className="pagination-info">
-              Showing {filteredCustomers.length > 0 ? indexOfFirstItem + 1 : 0} to {Math.min(indexOfLastItem, filteredCustomers.length)} of {filteredCustomers.length} customers
+              Showing page {currentPage} of {totalPages} ({totalCustomersCount} total customers)
             </span>
             <div className="pagination-controls">
               <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className="page-arrow">&lt;</button>
@@ -389,7 +461,9 @@ const Customers = () => {
           <div className="customers-right-drawer">
             <div className="drawer-header">
               <div className="drawer-user-info">
-                <div className="drawer-avatar">{selectedCustomer.name.charAt(0)}</div>
+                <div className="drawer-avatar">
+                  {selectedCustomer.name ? selectedCustomer.name.charAt(0).toUpperCase() : 'U'}
+                </div>
                 <div>
                   <div className="drawer-name-row">
                     <h3>{selectedCustomer.name}</h3>
@@ -400,31 +474,29 @@ const Customers = () => {
                 </div>
               </div>
               <div className="drawer-top-actions">
-                <span className={`drawer-status-badge ${selectedCustomer.status.toLowerCase()}`}>
-                  {selectedCustomer.status}
+                <span className={`drawer-status-badge ${(selectedCustomer.status || 'Active').toLowerCase()}`}>
+                  {selectedCustomer.status || 'Active'}
                 </span>
                 <button className="drawer-close-btn" onClick={() => setSelectedCustomer(null)}>✕</button>
               </div>
             </div>
 
             <div className="drawer-id-row">
-              <span>Customer ID: CUS-2025-{String(selectedCustomer.id).padStart(4, '0')}</span>
-              <span>Joined on {selectedCustomer.joined} | 1 Year</span>
+              <span>Customer ID: {selectedCustomer._id ? `CUS-${selectedCustomer._id.slice(-6).toUpperCase()}` : 'N/A'}</span>
+              <span>Joined on {formatDate(selectedCustomer.createdAt || selectedCustomer.joined)}</span>
             </div>
 
             <div className="drawer-metrics-bar">
-              <div><strong>{selectedCustomer.totalOrders}</strong><span>Total Orders</span></div>
-              <div><strong>{selectedCustomer.totalSpent}</strong><span>Total Spent</span></div>
-              <div><strong>₹1,380.56</strong><span>Avg. Order Value</span></div>
-              <div><strong>{selectedCustomer.rewards}</strong><span>Reward Points</span></div>
+              <div><strong>{selectedCustomer.totalOrders || 0}</strong><span>Total Orders</span></div>
+              <div><strong>{formatMoney(selectedCustomer.totalSpent)}</strong><span>Total Spent</span></div>
+              <div><strong>{formatMoney(getCustomerAvgOrderValue(selectedCustomer))}</strong><span>Avg. Order Value</span></div>
+              <div><strong>{selectedCustomer.rewards || 0}</strong><span>Reward Points</span></div>
             </div>
 
             <div className="drawer-tabs">
               <span className="active-tab">Overview</span>
-              <span>Orders ({selectedCustomer.totalOrders})</span>
-              <span>Addresses (2)</span>
-              <span>Wishlist (6)</span>
-              <span>Notes</span>
+              <span>Orders ({selectedCustomer.totalOrders || 0})</span>
+              <span>Addresses</span>
             </div>
 
             <div className="drawer-body-grid">
@@ -437,8 +509,8 @@ const Customers = () => {
                   <div><span>Full Name</span><strong>{selectedCustomer.name}</strong></div>
                   <div><span>Email Address</span><strong>{selectedCustomer.email}</strong></div>
                   <div><span>Phone Number</span><strong>{selectedCustomer.phone}</strong></div>
-                  <div><span>Date of Birth</span><strong>{selectedCustomer.dob}</strong></div>
-                  <div><span>Gender</span><strong>{selectedCustomer.gender}</strong></div>
+                  <div><span>Date of Birth</span><strong>{selectedCustomer.dob || 'Not Provided'}</strong></div>
+                  <div><span>Gender</span><strong>{selectedCustomer.gender || 'Other'}</strong></div>
                 </div>
               </div>
 
@@ -447,18 +519,18 @@ const Customers = () => {
                   <h4>Customer Group</h4>
                 </div>
                 <div className="group-badge-box">
-                  👥 {selectedCustomer.group}
+                  👥 {selectedCustomer.group || 'Regular'}
                 </div>
-                <h4 style={{marginTop: '15px'}}>Preferred Category</h4>
-                <div className="category-tags">
-                  {selectedCustomer.category.map((cat, idx) => (
-                    <span key={idx} className="cat-tag">{cat}</span>
-                  ))}
-                </div>
-                <div className="info-grid" style={{marginTop: '15px'}}>
-                  <div><span>Registration Source</span><strong>Website</strong></div>
-                  <div><span>Marketing Consent</span><strong className="subscribed">✓ Subscribed</strong></div>
-                </div>
+                {selectedCustomer.category && selectedCustomer.category.length > 0 && (
+                  <>
+                    <h4 style={{marginTop: '15px'}}>Preferred Category</h4>
+                    <div className="category-tags">
+                      {selectedCustomer.category.map((cat, idx) => (
+                        <span key={idx} className="cat-tag">{cat}</span>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -466,26 +538,15 @@ const Customers = () => {
               <div className="drawer-panel">
                 <div className="panel-title-row">
                   <h4>Default Address</h4>
-                  <span className="edit-link">Edit</span>
                 </div>
-                <p className="address-text">{selectedCustomer.address}</p>
-                <button className="add-address-btn">+ Add Address</button>
-              </div>
-
-              <div className="drawer-panel">
-                <h4>Recent Activity</h4>
-                <ul className="activity-list">
-                  <li>🟢 Order #ORD-2025-3541 <br/><small>May 28, 2025</small></li>
-                  <li>🟢 Earned 120 Reward Points <br/><small>May 28, 2025</small></li>
-                  <li>🟢 Newsletter Subscription <br/><small>{selectedCustomer.joined}</small></li>
-                </ul>
+                <p className="address-text">{selectedCustomer.address || 'Not Provided'}</p>
               </div>
             </div>
 
             <div className="drawer-footer-actions">
               <button 
                 className="drawer-block-btn"
-                onClick={(e) => toggleStatus(selectedCustomer.id, e)}
+                onClick={(e) => toggleStatus(selectedCustomer._id, selectedCustomer.status, e)}
               >
                 🔒 {selectedCustomer.status === 'Active' ? 'Block Customer' : 'Unblock Customer'}
               </button>
@@ -546,6 +607,58 @@ const Customers = () => {
               <div className="modal-actions">
                 <button type="button" className="btn-cancel" onClick={() => setIsAddModalOpen(false)}>Cancel</button>
                 <button type="submit" className="btn-submit">Save Customer</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Customer Modal */}
+      {editingCustomer && (
+        <div className="customers-modal-overlay">
+          <div className="customers-modal">
+            <h3>Edit Customer</h3>
+            <form onSubmit={handleEditCustomerSubmit}>
+              <div className="modal-field">
+                <label>Full Name</label>
+                <input 
+                  type="text" 
+                  required 
+                  value={editingCustomer.name || ''}
+                  onChange={(e) => setEditingCustomer({...editingCustomer, name: e.target.value})}
+                />
+              </div>
+              <div className="modal-field">
+                <label>Email Address</label>
+                <input 
+                  type="email" 
+                  required 
+                  value={editingCustomer.email || ''}
+                  onChange={(e) => setEditingCustomer({...editingCustomer, email: e.target.value})}
+                />
+              </div>
+              <div className="modal-field">
+                <label>Phone Number</label>
+                <input 
+                  type="text" 
+                  required 
+                  value={editingCustomer.phone || ''}
+                  onChange={(e) => setEditingCustomer({...editingCustomer, phone: e.target.value})}
+                />
+              </div>
+              <div className="modal-field">
+                <label>Customer Group</label>
+                <select 
+                  value={editingCustomer.group || 'Regular'}
+                  onChange={(e) => setEditingCustomer({...editingCustomer, group: e.target.value})}
+                >
+                  <option value="Regular">Regular</option>
+                  <option value="VIP Customers">VIP Customers</option>
+                </select>
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => setEditingCustomer(null)}>Cancel</button>
+                <button type="submit" className="btn-submit">Update Customer</button>
               </div>
             </form>
           </div>
