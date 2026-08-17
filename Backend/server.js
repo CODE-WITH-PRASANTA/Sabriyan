@@ -15,6 +15,8 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const brandRoutes = require("./routes/brandRoutes");
 const attributeRoutes = require("./routes/attributeRoutes");
 const productRoutes = require("./routes/productRoutes");
+const storeArticleRoutes = require("./routes/storeArticleRoutes");
+
 
 // ======================
 // Middleware
@@ -65,6 +67,8 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/attributes", attributeRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/store-articles", storeArticleRoutes);
+
 // ======================
 // Start Server
 // ======================
