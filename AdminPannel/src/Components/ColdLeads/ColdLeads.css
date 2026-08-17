@@ -1,114 +1,174 @@
 /* ==========================================
-   REF GREEN THEME PALETTE
-   Base Dark Forest Green: #0b2e1a
-   Header Green: #0c331d
-   Inner Surface Green: #123e25
-   Golden Highlight Accent: #d4af37
+   COLD LEADS
+   MATCHED WITH BLOG MANAGEMENT DARK GREEN THEME
    ========================================== */
+
 .ColdLeads.green-dark-theme {
-  --green-dark-bg: #0b2e1a;
-  --green-header: #0c331d;
-  --green-surface: #123e25;
-  --green-border: #235438;
-  
-  --gold-accent: #d4af37;
-  --gold-hover: #b89628;
-  
-  --text-light: #f0f7f2;
-  --text-subtle: #9eb8a7;
+  --green-dark-bg: #060d08;
+  --green-header: #09130d;
+  --green-surface: #0e1a12;
+  --green-card: #09130d;
+  --green-border: #1c3324;
+
+  --green-accent: #2ecc71;
+  --green-hover: #27ae60;
+  --green-soft: #1a3824;
+
+  --text-light: #e2f1e8;
+  --text-subtle: #a3c2af;
+  --text-muted: #64826f;
 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
+
   background-color: var(--green-dark-bg);
   padding: 24px;
   min-height: 100vh;
   color: var(--text-light);
+  box-sizing: border-box;
 }
+
+
+/* ==========================================
+   CONTAINER
+   ========================================== */
 
 .ColdLeads-container {
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
 }
 
-/* Header Title */
+
+/* ==========================================
+   HEADER TITLE
+   ========================================== */
+
 .ColdLeads-headerTitle {
   display: flex;
   align-items: center;
   gap: 10px;
+
   margin-bottom: 16px;
-  color: var(--gold-accent);
+
+  color: var(--green-accent);
 }
 
 .ColdLeads-headerTitle h2 {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 600;
+
   margin: 0;
+
   color: var(--text-light);
 }
 
 .ColdLeads-headerTitle .title-icon {
   font-size: 16px;
-  color: var(--gold-accent);
+  color: var(--green-accent);
 }
 
-/* Top Filters Bar */
+
+/* ==========================================
+   TOP FILTER BAR
+   ========================================== */
+
 .ColdLeads-topBar {
   display: flex;
+
   align-items: center;
   flex-wrap: wrap;
+
   gap: 12px;
+
   margin-bottom: 20px;
+
   background: var(--green-surface);
+
   padding: 16px;
+
   border-radius: 10px;
+
   border: 1px solid var(--green-border);
+
+  box-sizing: border-box;
 }
 
-/* Search Box with Centered Icon Button */
+
+/* ==========================================
+   SEARCH BOX
+   ========================================== */
+
 .ColdLeads-searchBox {
   position: relative;
+
   display: flex;
   align-items: center;
-  background: var(--green-dark-bg);
+
+  background: var(--green-card);
+
   border: 1px solid var(--green-border);
+
   border-radius: 6px;
+
   overflow: hidden;
+
   min-width: 200px;
+
   flex: 1;
+}
+
+.ColdLeads-searchBox:focus-within {
+  border-color: var(--green-accent);
 }
 
 .ColdLeads-searchBox input {
   width: 100%;
+
   padding: 9px 36px 9px 12px;
+
   border: none;
-  font-size: 13px;
   outline: none;
+
+  font-size: 13px;
+
   background: transparent;
+
   color: var(--text-light);
+
   box-sizing: border-box;
 }
 
 .ColdLeads-searchBox input::placeholder {
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .search-icon-btn {
   position: absolute;
+
   right: 0;
   top: 0;
   bottom: 0;
+
   background: transparent;
+
   border: none;
+
   padding: 0 12px;
+
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
 }
 
 .search-icon-btn .search-icon {
   font-size: 13px;
-  color: var(--gold-accent);
+
+  color: var(--green-accent);
+
   transition: transform 0.2s ease;
 }
 
@@ -116,451 +176,964 @@
   transform: scale(1.1);
 }
 
-/* Dropdowns & Date Inputs */
+
+/* ==========================================
+   SELECT & DATE WRAPPERS
+   ========================================== */
+
 .ColdLeads-selectWrapper,
 .ColdLeads-dateWrapper {
   position: relative;
+
   min-width: 140px;
 }
 
+
+/* ==========================================
+   SELECT
+   ========================================== */
+
 .ColdLeads-selectWrapper select {
   appearance: none;
+
   width: 100%;
+
   padding: 9px 30px 9px 12px;
+
   border: 1px solid var(--green-border);
+
   border-radius: 6px;
+
   font-size: 13px;
-  background: var(--green-dark-bg);
+
+  background: var(--green-card);
+
   color: var(--text-light);
+
   outline: none;
+
   cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition: border-color 0.2s ease;
+}
+
+.ColdLeads-selectWrapper select:hover {
+  border-color: #274732;
 }
 
 .ColdLeads-selectWrapper select:focus {
-  border-color: var(--gold-accent);
+  border-color: var(--green-accent);
 }
 
 .ColdLeads-selectWrapper .arrow-icon {
   position: absolute;
+
   right: 10px;
+
   top: 50%;
+
   transform: translateY(-50%);
+
   font-size: 10px;
-  color: var(--gold-accent);
+
+  color: var(--green-accent);
+
   pointer-events: none;
 }
 
+
+/* ==========================================
+   DATE INPUT
+   ========================================== */
+
 .ColdLeads-dateWrapper input {
   width: 100%;
+
   padding: 9px 34px 9px 12px;
+
   border: 1px solid var(--green-border);
+
   border-radius: 6px;
+
   font-size: 13px;
-  background: var(--green-dark-bg);
+
+  background: var(--green-card);
+
   color: var(--text-light);
+
   outline: none;
+
   box-sizing: border-box;
+
+  transition: border-color 0.2s ease;
+}
+
+.ColdLeads-dateWrapper input:hover {
+  border-color: #274732;
+}
+
+.ColdLeads-dateWrapper input:focus {
+  border-color: var(--green-accent);
 }
 
 .ColdLeads-dateWrapper input::placeholder {
-  color: var(--text-subtle);
+  color: var(--text-muted);
 }
 
 .ColdLeads-dateWrapper .date-icon {
   position: absolute;
+
   right: 10px;
+
   top: 50%;
+
   transform: translateY(-50%);
+
   font-size: 13px;
-  color: var(--gold-accent);
+
+  color: var(--green-accent);
+
   pointer-events: none;
 }
 
-/* Top Buttons */
+
+/* ==========================================
+   FILTER SUBMIT BUTTON
+   ========================================== */
+
 .btn-filter-submit {
-  background-color: var(--gold-accent);
-  color: var(--green-dark-bg);
-  border: 1px solid var(--gold-accent);
+  background-color: var(--green-accent);
+
+  color: #060d08;
+
+  border: 1px solid var(--green-accent);
+
   padding: 9px 20px;
+
   border-radius: 6px;
-  font-weight: 700;
+
+  font-weight: 600;
+
   font-size: 13px;
+
   display: flex;
+
   align-items: center;
+
   gap: 8px;
+
   cursor: pointer;
-  transition: background 0.2s;
+
+  transition: all 0.2s ease;
 }
 
 .btn-filter-submit:hover {
-  background-color: var(--gold-hover);
+  background-color: var(--green-hover);
+
+  border-color: var(--green-hover);
+
+  transform: translateY(-1px);
 }
 
+.btn-filter-submit:active {
+  transform: translateY(0);
+}
+
+
+/* ==========================================
+   RESET BUTTON
+   ========================================== */
+
 .btn-filter-reset {
-  background-color: var(--green-dark-bg);
+  background-color: var(--green-card);
+
   border: 1px solid var(--green-border);
-  color: var(--text-light);
+
+  color: var(--text-subtle);
+
   padding: 9px 16px;
+
   border-radius: 6px;
+
   font-weight: 600;
+
   font-size: 13px;
+
   display: flex;
+
   align-items: center;
+
   gap: 8px;
+
   cursor: pointer;
-  transition: background 0.2s;
+
+  transition: all 0.2s ease;
 }
 
 .btn-filter-reset:hover {
-  background-color: var(--green-border);
-}
+  background-color: var(--green-soft);
 
-/* Table Card */
-.ColdLeads-tableCard {
-  background: var(--green-surface);
-  border-radius: 12px;
-  border: 1px solid var(--green-border);
-  overflow: hidden;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-}
+  border-color: #274732;
 
-.ColdLeads-tableWrapper {
-  overflow-x: auto;
-}
-
-.ColdLeads-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.ColdLeads-table th {
-  background-color: var(--green-header);
-  color: var(--gold-accent);
-  padding: 14px 12px;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--green-border);
-}
-
-.ColdLeads-table td {
-  padding: 12px;
-  border-bottom: 1px solid var(--green-border);
-  font-size: 13px;
-  vertical-align: middle;
   color: var(--text-light);
 }
 
-.ColdLeads-table tr.selected-row {
-  background-color: #1a4d31;
+
+/* ==========================================
+   TABLE CARD
+   ========================================== */
+
+.ColdLeads-tableCard {
+  background: var(--green-surface);
+
+  border-radius: 12px;
+
+  border: 1px solid var(--green-border);
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
+
+
+/* ==========================================
+   TABLE WRAPPER
+   ========================================== */
+
+.ColdLeads-tableWrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  scrollbar-width: none;
+
+  -ms-overflow-style: none;
+}
+
+.ColdLeads-tableWrapper::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ==========================================
+   TABLE
+   ========================================== */
+
+.ColdLeads-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  text-align: left;
+
+  min-width: 900px;
+}
+
+
+/* ==========================================
+   TABLE HEADER
+   ========================================== */
+
+.ColdLeads-table th {
+  background-color: var(--green-card);
+
+  color: #7a9e87;
+
+  padding: 14px 12px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid var(--green-border);
+}
+
+
+/* ==========================================
+   TABLE DATA
+   ========================================== */
+
+.ColdLeads-table td {
+  padding: 14px 12px;
+
+  border-bottom: 1px solid #142419;
+
+  font-size: 13px;
+
+  vertical-align: middle;
+
+  color: var(--text-light);
+}
+
+.ColdLeads-table tbody tr {
+  background-color: var(--green-surface);
+
+  transition: background-color 0.2s ease;
+}
+
+.ColdLeads-table tbody tr:hover {
+  background-color: #13291b;
+}
+
+.ColdLeads-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ColdLeads-table tr.selected-row {
+  background-color: var(--green-soft);
+}
+
+
+/* ==========================================
+   ROW NUMBER
+   ========================================== */
 
 .row-num {
   font-weight: 600;
-  color: var(--text-subtle);
+
+  color: var(--text-muted);
 }
+
+
+/* ==========================================
+   USER PROFILE
+   ========================================== */
 
 .user-profile {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
 }
 
 .user-profile img {
   width: 32px;
+
   height: 32px;
+
   border-radius: 50%;
+
   object-fit: cover;
-  border: 1px solid var(--gold-accent);
+
+  border: 1px solid var(--green-border);
 }
 
 .user-profile .user-name {
-  font-weight: 700;
+  font-weight: 600;
+
   color: var(--text-light);
 }
+
+
+/* ==========================================
+   TEXT MUTED
+   ========================================== */
 
 .text-muted {
   color: var(--text-subtle);
 }
 
+
+/* ==========================================
+   ADDED ON
+   ========================================== */
+
 .added-on {
   font-size: 12px;
+
   line-height: 1.3;
+
+  color: var(--text-light);
 }
 
 .added-on .time {
-  color: var(--text-subtle);
+  color: var(--text-muted);
+
   font-size: 11px;
 }
+
+
+/* ==========================================
+   NO DATA
+   ========================================== */
 
 .no-data {
   text-align: center;
+
   padding: 30px;
+
   color: var(--text-subtle);
 }
 
-/* Badges */
+
+/* ==========================================
+   COMMON BADGE
+   ========================================== */
+
 .badge {
   padding: 4px 10px;
-  border-radius: 4px;
+
+  border-radius: 6px;
+
   font-size: 11px;
+
   font-weight: 600;
+
   display: inline-block;
 }
 
-.source-website { background-color: #1a4d31; color: #a2f0c7; border: 1px solid #236942; }
-.source-referral { background-color: #3f2a52; color: #e9cbfd; border: 1px solid #5d3d82; }
-.source-social { background-color: #4a3418; color: #fedaa6; border: 1px solid #734e23; }
-.source-ad { background-color: #1e3a5f; color: #b0d3fe; border: 1px solid #2a5382; }
 
-.status-new { background-color: #1a4d31; color: #a2f0c7; }
-.status-contacted { background-color: #1e3a5f; color: #b0d3fe; }
-.status-followup { background-color: #4a3418; color: #fedaa6; }
-.status-closed { background-color: #374151; color: #d1d5db; }
+/* ==========================================
+   SOURCE BADGES
+   ========================================== */
 
-/* Action Buttons */
+.source-website {
+  background-color: rgba(46, 204, 113, 0.15);
+
+  color: #2ecc71;
+
+  border: 1px solid rgba(46, 204, 113, 0.25);
+}
+
+.source-referral {
+  background-color: rgba(155, 89, 182, 0.15);
+
+  color: #bb86fc;
+
+  border: 1px solid rgba(155, 89, 182, 0.25);
+}
+
+.source-social {
+  background-color: rgba(241, 196, 15, 0.15);
+
+  color: #f1c40f;
+
+  border: 1px solid rgba(241, 196, 15, 0.25);
+}
+
+.source-ad {
+  background-color: rgba(52, 152, 219, 0.15);
+
+  color: #3498db;
+
+  border: 1px solid rgba(52, 152, 219, 0.25);
+}
+
+
+/* ==========================================
+   STATUS BADGES
+   ========================================== */
+
+.status-new {
+  background-color: rgba(46, 204, 113, 0.15);
+
+  color: #2ecc71;
+
+  border: 1px solid rgba(46, 204, 113, 0.2);
+}
+
+.status-contacted {
+  background-color: rgba(52, 152, 219, 0.15);
+
+  color: #3498db;
+
+  border: 1px solid rgba(52, 152, 219, 0.2);
+}
+
+.status-followup {
+  background-color: rgba(241, 196, 15, 0.15);
+
+  color: #f1c40f;
+
+  border: 1px solid rgba(241, 196, 15, 0.2);
+}
+
+.status-closed {
+  background-color: rgba(107, 114, 128, 0.15);
+
+  color: #9ca3af;
+
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+
+/* ==========================================
+   ACTION BUTTONS
+   ========================================== */
+
 .action-btns {
   display: flex;
+
   gap: 6px;
+
   justify-content: center;
 }
 
 .act-btn {
-  background: var(--green-dark-bg);
+  background: var(--green-card);
+
   border: 1px solid var(--green-border);
+
   border-radius: 6px;
-  width: 30px;
-  height: 30px;
+
+  width: 34px;
+
+  height: 34px;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   cursor: pointer;
+
   font-size: 12px;
-  transition: all 0.2s;
+
+  transition: all 0.2s ease;
 }
 
-.act-btn.view { color: #a2f0c7; }
-.act-btn.edit { color: var(--gold-accent); }
-.act-btn.delete { color: #f87171; }
+.act-btn.view {
+  color: #a3c2af;
+}
+
+.act-btn.edit {
+  color: var(--green-accent);
+}
+
+.act-btn.delete {
+  color: #e74c3c;
+}
 
 .act-btn:hover {
-  background-color: var(--green-border);
+  background-color: var(--green-soft);
+
+  border-color: #274732;
 }
 
-/* Table Footer Controls */
+.act-btn.view:hover {
+  color: #e2f1e8;
+}
+
+.act-btn.edit:hover {
+  color: #2ecc71;
+}
+
+.act-btn.delete:hover {
+  color: #ff6b5f;
+}
+
+
+/* ==========================================
+   TABLE FOOTER
+   ========================================== */
+
 .ColdLeads-footer {
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
   padding: 16px;
+
   flex-wrap: wrap;
+
   gap: 16px;
-  background: var(--green-header);
+
+  background: var(--green-card);
+
+  border-top: 1px solid var(--green-border);
 }
+
+
+/* ==========================================
+   LEFT BUTTONS
+   ========================================== */
 
 .ColdLeads-leftButtons {
   display: flex;
+
   gap: 10px;
+
+  flex-wrap: wrap;
 }
 
+
+/* ==========================================
+   BULK DELETE
+   ========================================== */
+
 .btn-bulk-delete {
-  background: #451a1a;
-  border: 1px solid #7f1d1d;
-  color: #fca5a5;
+  background: rgba(231, 76, 60, 0.12);
+
+  border: 1px solid rgba(231, 76, 60, 0.35);
+
+  color: #e74c3c;
+
   padding: 8px 14px;
+
   border-radius: 6px;
+
   font-weight: 600;
+
   font-size: 13px;
+
   display: flex;
+
   align-items: center;
+
   gap: 6px;
+
   cursor: pointer;
-  transition: background 0.2s;
+
+  transition: all 0.2s ease;
 }
 
 .btn-bulk-delete:hover {
   background: #7f1d1d;
+
+  border-color: #7f1d1d;
+
   color: #ffffff;
 }
 
+
+/* ==========================================
+   EXPORT BUTTON
+   ========================================== */
+
 .btn-export {
-  background: var(--green-dark-bg);
-  border: 1px solid var(--gold-accent);
-  color: var(--gold-accent);
+  background: var(--green-card);
+
+  border: 1px solid var(--green-accent);
+
+  color: var(--green-accent);
+
   padding: 8px 14px;
+
   border-radius: 6px;
+
   font-weight: 600;
+
   font-size: 13px;
+
   display: flex;
+
   align-items: center;
+
   gap: 6px;
+
   cursor: pointer;
-  transition: all 0.2s;
+
+  transition: all 0.2s ease;
 }
 
 .btn-export:hover {
-  background: var(--gold-accent);
-  color: var(--green-dark-bg);
+  background: var(--green-accent);
+
+  color: #060d08;
 }
+
+
+/* ==========================================
+   PAGINATION
+   ========================================== */
 
 .ColdLeads-pagination {
   display: flex;
+
   align-items: center;
+
   gap: 20px;
 }
 
 .pagination-text {
   font-size: 13px;
+
   color: var(--text-subtle);
 }
 
 .pagination-buttons {
   display: flex;
+
   gap: 4px;
 }
 
 .page-btn {
   border: 1px solid var(--green-border);
-  background: var(--green-surface);
+
+  background: var(--green-card);
+
   padding: 6px 12px;
+
   border-radius: 6px;
+
   font-size: 13px;
-  color: var(--text-light);
+
+  color: var(--text-subtle);
+
   cursor: pointer;
-  transition: all 0.2s;
+
+  transition: all 0.2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: var(--green-accent);
+
+  color: var(--text-light);
 }
 
 .page-btn.num-btn.active {
-  background-color: var(--gold-accent);
-  color: var(--green-dark-bg);
-  border-color: var(--gold-accent);
+  background-color: var(--green-accent);
+
+  color: #060d08;
+
+  border-color: var(--green-accent);
+
   font-weight: 700;
 }
 
 .page-btn:disabled {
   opacity: 0.4;
+
   cursor: not-allowed;
 }
 
-/* Modals & Popups */
+
+/* ==========================================
+   MODAL OVERLAY
+   ========================================== */
+
 .ColdLeads-modalOverlay {
   position: fixed;
+
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+
   background: rgba(0, 0, 0, 0.75);
+
   display: flex;
+
   justify-content: center;
+
   align-items: center;
+
   z-index: 9999;
+
+  padding: 20px;
+
+  box-sizing: border-box;
 }
+
+
+/* ==========================================
+   MODAL
+   ========================================== */
 
 .ColdLeads-modal {
   background: var(--green-surface);
+
   color: var(--text-light);
+
   width: 90%;
+
   max-width: 480px;
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
   border-radius: 12px;
+
   padding: 24px;
+
   position: relative;
-  border-top: 6px solid var(--gold-accent);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+
+  border: 1px solid var(--green-border);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+
+  box-sizing: border-box;
 }
 
-/* Close Modal Button */
+
+/* ==========================================
+   MODAL CLOSE BUTTON
+   ========================================== */
+
 .modal-close {
   position: absolute;
+
   top: 14px;
+
   right: 14px;
-  background: var(--green-dark-bg);
-  border: 1px solid var(--gold-accent);
+
+  background: var(--green-card);
+
+  border: 1px solid var(--green-border);
+
   border-radius: 50%;
+
   width: 32px;
+
   height: 32px;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
-  color: var(--gold-accent);
+
+  color: var(--text-subtle);
+
   font-size: 14px;
+
   cursor: pointer;
+
   transition: all 0.2s ease;
 }
 
 .modal-close:hover {
-  background: var(--gold-accent);
-  color: var(--green-dark-bg);
+  background: var(--green-accent);
+
+  color: #060d08;
+
+  border-color: var(--green-accent);
 }
+
+
+/* ==========================================
+   MODAL HEADER
+   ========================================== */
 
 .modal-header-banner {
   text-align: center;
+
   padding-bottom: 16px;
+
   border-bottom: 1px solid var(--green-border);
+
   margin-bottom: 16px;
 }
 
 .modal-avatar {
   width: 64px;
+
   height: 64px;
+
   border-radius: 50%;
+
   object-fit: cover;
-  border: 2px solid var(--gold-accent);
+
+  border: 2px solid var(--green-border);
+
   margin-bottom: 8px;
 }
 
 .modal-header-banner h3 {
   margin: 4px 0 8px 0;
+
   font-size: 18px;
+
   color: var(--text-light);
 }
 
 .modal-badges {
   display: flex;
+
   gap: 8px;
+
   justify-content: center;
+
+  flex-wrap: wrap;
 }
+
+
+/* ==========================================
+   MODAL DETAILS
+   ========================================== */
 
 .modal-details-grid {
   display: flex;
+
   flex-direction: column;
+
   gap: 12px;
 }
 
 .detail-box {
   display: flex;
+
   align-items: center;
+
   gap: 12px;
-  background: var(--green-dark-bg);
+
+  background: var(--green-card);
+
   padding: 10px 14px;
+
   border-radius: 8px;
+
   border: 1px solid var(--green-border);
 }
 
 .detail-box .icon {
-  color: var(--gold-accent);
+  color: var(--green-accent);
+
   font-size: 16px;
 }
 
 .detail-box label {
   font-size: 11px;
-  color: var(--text-subtle);
+
+  color: var(--text-muted);
+
   display: block;
+
   text-transform: uppercase;
-  font-weight: 700;
+
+  font-weight: 600;
 }
 
 .detail-box p {
   margin: 2px 0 0 0;
+
   font-size: 13px;
+
+  font-weight: 600;
+
+  color: var(--text-light);
+}
+
+
+/* ==========================================
+   EDIT TITLE
+   ========================================== */
+
+.edit-title {
+  margin: 0 0 16px 0;
+
+  color: var(--text-light);
+
+  font-size: 18px;
+
   font-weight: 600;
 }
 
-/* Edit Form */
-.edit-title {
-  margin: 0 0 16px 0;
-  color: var(--gold-accent);
-}
+
+/* ==========================================
+   EDIT FORM
+   ========================================== */
 
 .edit-form .form-group {
   margin-bottom: 12px;
@@ -568,32 +1141,54 @@
 
 .edit-form label {
   display: block;
+
   font-size: 12px;
+
   font-weight: 600;
+
   margin-bottom: 4px;
-  color: var(--gold-accent);
+
+  color: var(--text-subtle);
 }
 
 .edit-form input,
 .edit-form select {
   width: 100%;
+
   padding: 8px 12px;
+
   border: 1px solid var(--green-border);
+
   border-radius: 6px;
+
   font-size: 13px;
-  background: var(--green-dark-bg);
+
+  background: var(--green-card);
+
   color: var(--text-light);
+
   box-sizing: border-box;
+
   outline: none;
+
+  transition: border-color 0.2s ease;
+}
+
+.edit-form input:hover,
+.edit-form select:hover {
+  border-color: #274732;
 }
 
 .edit-form input:focus,
 .edit-form select:focus {
-  border-color: var(--gold-accent);
+  border-color: var(--green-accent);
+
+  outline: none;
 }
 
 .form-row {
   display: flex;
+
   gap: 12px;
 }
 
@@ -601,52 +1196,193 @@
   flex: 1;
 }
 
+
+/* ==========================================
+   MODAL ACTIONS
+   ========================================== */
+
 .modal-actions {
   display: flex;
+
   gap: 10px;
+
   margin-top: 16px;
 }
 
 .save-btn {
-  background: var(--gold-accent);
-  color: var(--green-dark-bg);
+  background: var(--green-accent);
+
+  color: #060d08;
+
   border: none;
+
   padding: 9px 18px;
+
   border-radius: 6px;
-  font-weight: 700;
+
+  font-weight: 600;
+
   font-size: 13px;
+
   cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
 .save-btn:hover {
-  background: var(--gold-hover);
+  background: var(--green-hover);
 }
 
 .cancel-btn {
-  background: var(--green-dark-bg);
+  background: var(--green-card);
+
   color: var(--text-light);
+
   border: 1px solid var(--green-border);
+
   padding: 9px 18px;
+
   border-radius: 6px;
+
   font-weight: 600;
+
   font-size: 13px;
+
   cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
-/* Responsive */
+.cancel-btn:hover {
+  background: var(--green-soft);
+
+  border-color: #274732;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .ColdLeads-topBar {
+    gap: 10px;
+  }
+
+  .ColdLeads-searchBox {
+    min-width: 180px;
+  }
+}
+
+
 @media (max-width: 768px) {
+  .ColdLeads.green-dark-theme {
+    padding: 16px;
+  }
+
   .ColdLeads-topBar {
     flex-direction: column;
+
     align-items: stretch;
+  }
+
+  .ColdLeads-searchBox {
+    width: 100%;
+
+    min-width: 100%;
+  }
+
+  .ColdLeads-selectWrapper,
+  .ColdLeads-dateWrapper {
+    width: 100%;
+
+    min-width: 100%;
+  }
+
+  .btn-filter-submit,
+  .btn-filter-reset {
+    width: 100%;
+
+    justify-content: center;
   }
 
   .ColdLeads-footer {
     flex-direction: column;
+
     align-items: stretch;
   }
 
+  .ColdLeads-leftButtons {
+    width: 100%;
+  }
+
+  .btn-bulk-delete,
+  .btn-export {
+    flex: 1;
+
+    justify-content: center;
+  }
+
   .ColdLeads-pagination {
+    width: 100%;
+
     flex-direction: column;
+
     align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .pagination-buttons {
+    width: 100%;
+
+    justify-content: flex-start;
+
+    flex-wrap: wrap;
+  }
+
+  .form-row {
+    flex-direction: column;
+
+    gap: 0;
+  }
+
+  .ColdLeads-modal {
+    width: 95%;
+
+    padding: 20px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .ColdLeads.green-dark-theme {
+    padding: 12px;
+  }
+
+  .ColdLeads-headerTitle h2 {
+    font-size: 16px;
+  }
+
+  .ColdLeads-footer {
+    padding: 12px;
+  }
+
+  .ColdLeads-leftButtons {
+    flex-direction: column;
+  }
+
+  .btn-bulk-delete,
+  .btn-export {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    width: 100%;
   }
 }
