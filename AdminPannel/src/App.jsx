@@ -35,6 +35,9 @@ import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
 
 // Login
 import Login from "./Components/Login/Login";
+import Reviews from "./Components/Reviews/Reviews";
+import Couponsoffers from "./Components/Couponsoffers/Couponsoffers";
+import ReportsandAnalytics from "./Pages/ReportsandAnalytics/ReportsandAnalytics";
 
 function App() {
   return (
@@ -98,6 +101,17 @@ function App() {
               element={<ManageBrands />}
             />
 
+
+         <Route
+         path="Products/reviews"
+         element={<Reviews/>}
+         />
+         
+         <Route
+         path="reports"
+         element={<ReportsandAnalytics/>}
+         />
+
             <Route
               path="products/attributes"
               element={<Attributes />}
@@ -153,6 +167,12 @@ function App() {
               path="customers"
               element={<Customers />}
             />
+            
+           <Route
+           path="coupons"
+           element={<Couponsoffers/>}
+           />
+
 
             {/* =========================
                 BLOG
