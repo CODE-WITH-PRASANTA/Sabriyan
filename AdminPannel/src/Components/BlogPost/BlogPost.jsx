@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import './BlogPost.css';
 import {
@@ -100,6 +100,40 @@ const initialBlogs = [
     metaTitle: 'Healthy Recipes with Honey',
     metaDescription: 'Honey breakfast recipes',
     metaKeywords: 'recipes, honey'
+  },
+  {
+    id: 6,
+    image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=150&auto=format&fit=crop&q=60',
+    title: 'Exploring Alpine Ecosystems',
+    excerpt: 'A comprehensive study on high-altitude flora and fauna resilience...',
+    category: 'Nature',
+    tags: 'Nature, Alpine',
+    date: '19 May 2025',
+    publishDate: '2025-05-19',
+    readTime: '6 min read',
+    status: 'Published',
+    featured: false,
+    content: '<p>High-altitude flora and fauna resilience...</p>',
+    metaTitle: 'Exploring Alpine Ecosystems',
+    metaDescription: 'Alpine nature study',
+    metaKeywords: 'alpine, nature'
+  },
+  {
+    id: 7,
+    image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=150&auto=format&fit=crop&q=60',
+    title: 'Organic Diet Fundamentals',
+    excerpt: 'Transitioning to clean whole foods without overcomplicating meal preps...',
+    category: 'Health',
+    tags: 'Health, Diet',
+    date: '18 May 2025',
+    publishDate: '2025-05-18',
+    readTime: '4 min read',
+    status: 'Draft',
+    featured: true,
+    content: '<p>Transitioning to clean whole foods...</p>',
+    metaTitle: 'Organic Diet Fundamentals',
+    metaDescription: 'Organic diet tips',
+    metaKeywords: 'diet, organic'
   }
 ];
 
@@ -124,11 +158,17 @@ const BlogPost = () => {
 
   const [blogs, setBlogs] = useState(initialBlogs);
   const [editingId, setEditingId] = useState(null);
+  
+  // Filtering states
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('All Categories');
   const [filterStatus, setFilterStatus] = useState('All Status');
   const [filterFeatured, setFilterFeatured] = useState('All');
   const [showFilterOptions, setShowFilterOptions] = useState(true);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const featuredInputRef = useRef(null);
   const thumbnailInputRef = useRef(null);
@@ -274,8 +314,10 @@ const BlogPost = () => {
     setShowFilterOptions(!showFilterOptions);
   };
 
+  // Filter Logic
   const filteredBlogs = blogs.filter((blog) => {
-    const matchesSearch = blog.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = filterCategory === 'All Categories' || blog.category === filterCategory;
     const matchesStatus = filterStatus === 'All Status' || blog.status === filterStatus;
     const matchesFeatured = 
@@ -286,11 +328,27 @@ const BlogPost = () => {
     return matchesSearch && matchesCategory && matchesStatus && matchesFeatured;
   });
 
+  // Reset page to 1 whenever filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterCategory, filterStatus, filterFeatured]);
+
+  // Pagination Calculations
+  const totalPages = Math.ceil(filteredBlogs.length / itemsPerPage) || 1;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedBlogs = filteredBlogs.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="BlogPost-container">
       {/* LEFT COLUMN: FORM (50%) */}
       <div className="BlogPost-column BlogPost-formColumn">
-        <div className="BlogPost-card">
+        <div className="BlogPost-card BlogPost-scrollableForm">
           <div className="BlogPost-header">
             <div className="BlogPost-headerBadge">
               <FaEdit className="BlogPost-headerIcon" />
@@ -525,7 +583,7 @@ const BlogPost = () => {
 
       {/* RIGHT COLUMN: TABLE (50%) */}
       <div className="BlogPost-column BlogPost-listColumn">
-        <div className="BlogPost-card">
+        <div className="BlogPost-card BlogPost-listCard">
           <div className="BlogPost-listHeader">
             <div className="BlogPost-header">
               <div className="BlogPost-headerBadge">
@@ -603,10 +661,10 @@ const BlogPost = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredBlogs.length > 0 ? (
-                  filteredBlogs.map((blog, index) => (
+                {paginatedBlogs.length > 0 ? (
+                  paginatedBlogs.map((blog, index) => (
                     <tr key={blog.id} className={editingId === blog.id ? 'editingRow' : ''}>
-                      <td>{index + 1}</td>
+                      <td>{startIndex + index + 1}</td>
                       <td>
                         <img src={blog.image} alt={blog.title} className="BlogPost-tableImg" />
                       </td>
@@ -669,12 +727,34 @@ const BlogPost = () => {
           </div>
 
           <div className="BlogPost-pagination">
-            <span>Showing 1 to {filteredBlogs.length} of {blogs.length}</span>
+            <span>
+              Showing {filteredBlogs.length === 0 ? 0 : startIndex + 1} to{' '}
+              {Math.min(startIndex + itemsPerPage, filteredBlogs.length)} of {filteredBlogs.length} entries
+            </span>
             <div className="BlogPost-pageButtons">
-              <button className="BlogPost-pageBtn" disabled>Prev</button>
-              <button className="BlogPost-pageBtn active">1</button>
-              <button className="BlogPost-pageBtn">2</button>
-              <button className="BlogPost-pageBtn">Next</button>
+              <button
+                className="BlogPost-pageBtn"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                Prev
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                <button
+                  key={pageNum}
+                  className={`BlogPost-pageBtn ${currentPage === pageNum ? 'active' : ''}`}
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </button>
+              ))}
+              <button
+                className="BlogPost-pageBtn"
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                Next
+              </button>
             </div>
           </div>
         </div>

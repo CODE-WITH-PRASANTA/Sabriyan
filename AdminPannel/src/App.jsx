@@ -62,8 +62,8 @@ function App() {
             <Route path="customers" element={<Customers />} />
 
             {/* Blog */}
-            <Route path="blog/post" element={<BlogPost />} />
-            <Route path="blog/management" element={<BlogManagement />} />
+            <Route path="/blogpost" element={<BlogPost />} />
+            <Route path="/blogmanagement" element={<BlogManagement />} />
 
             {/* Leads */}
             <Route path="coldleads" element={<ColdLeads />} />
