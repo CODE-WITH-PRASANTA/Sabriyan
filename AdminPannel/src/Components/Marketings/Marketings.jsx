@@ -6,19 +6,23 @@ const Marketings = () => {
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  
+  // Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState('create');
+  const [modalMode, setModalMode] = useState('create'); // 'create', 'edit', 'view'
   const [currentCampaign, setCurrentCampaign] = useState({
     id: null,
     name: '',
+    desc: '',
     type: 'Discount',
     channel: 'Instagram',
+    duration: '',
     startDate: '',
     endDate: '',
     budget: '',
-    audience: 'All Audience',
-    description: '',
-    status: 'Scheduled'
+    reach: '0',
+    status: 'Scheduled',
+    thumbnail: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80'
   });
 
   const [campaigns, setCampaigns] = useState([
@@ -108,8 +112,11 @@ const Marketings = () => {
     }
   ]);
 
+  // Action handlers
   const handleDelete = (id) => {
-    setCampaigns(campaigns.filter(c => c.id !== id));
+    if (window.confirm('Are you sure you want to delete this campaign?')) {
+      setCampaigns(campaigns.filter(c => c.id !== id));
+    }
   };
 
   const handleOpenCreate = () => {
@@ -117,14 +124,16 @@ const Marketings = () => {
     setCurrentCampaign({
       id: null,
       name: '',
+      desc: '',
       type: 'Discount',
       channel: 'Instagram',
+      duration: '',
       startDate: '',
       endDate: '',
       budget: '',
-      audience: 'All Audience',
-      description: '',
-      status: 'Scheduled'
+      reach: '0',
+      status: 'Scheduled',
+      thumbnail: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80'
     });
     setIsModalOpen(true);
   };
@@ -135,32 +144,67 @@ const Marketings = () => {
     setIsModalOpen(true);
   };
 
+  const handleOpenView = (camp) => {
+    setModalMode('view');
+    setCurrentCampaign(camp);
+    setIsModalOpen(true);
+  };
+
   const handleSaveCampaign = (e) => {
     e.preventDefault();
     if (modalMode === 'create') {
       const newEntry = {
         id: Date.now(),
         name: currentCampaign.name || 'New Campaign',
-        desc: currentCampaign.description || 'Marketing campaign description',
+        desc: currentCampaign.desc || 'Marketing campaign description',
         type: currentCampaign.type,
         channel: currentCampaign.channel,
-        duration: `${currentCampaign.startDate || 'May 20, 2025'} - ${currentCampaign.endDate || 'Jun 10, 2025'}`,
-        budget: currentCampaign.budget ? `₹${currentCampaign.budget}` : '₹2,000',
+        duration: currentCampaign.startDate && currentCampaign.endDate 
+          ? `${currentCampaign.startDate} - ${currentCampaign.endDate}` 
+          : 'May 20, 2025 - Jun 10, 2025',
+        budget: currentCampaign.budget.startsWith('₹') ? currentCampaign.budget : `₹${currentCampaign.budget || '2,000'}`,
         reach: '0',
-        status: currentCampaign.status,
-        thumbnail: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80'
+        status: currentCampaign.status || 'Scheduled',
+        thumbnail: currentCampaign.thumbnail
       };
       setCampaigns([newEntry, ...campaigns]);
-    } else {
+    } else if (modalMode === 'edit') {
       setCampaigns(campaigns.map(c => c.id === currentCampaign.id ? currentCampaign : c));
     }
     setIsModalOpen(false);
   };
 
+  // Export functionality (CSV download)
+  const handleExport = () => {
+    if (campaigns.length === 0) return;
+    const headers = ['ID', 'Name', 'Description', 'Type', 'Channel', 'Duration', 'Budget', 'Reach', 'Status'];
+    const csvRows = [
+      headers.join(','),
+      ...filteredCampaigns.map(c => [
+        c.id,
+        `"${c.name}"`,
+        `"${c.desc}"`,
+        c.type,
+        c.channel,
+        `"${c.duration}"`,
+        `"${c.budget}"`,
+        c.reach,
+        c.status
+      ].join(','))
+    ];
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'marketing_campaigns.csv');
+    a.click();
+  };
+
   // Filtering Logic
   const filteredCampaigns = campaigns.filter(camp => {
     const matchesSearch = camp.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          camp.desc.toLowerCase().includes(searchQuery.toLowerCase());
+                          camp.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          camp.channel.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'All Status' || camp.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -251,7 +295,7 @@ const Marketings = () => {
             </div>
           </div>
           <div className="marketings-action-buttons-group">
-            <button className="marketings-btn marketings-btn-outline">
+            <button className="marketings-btn marketings-btn-outline" onClick={handleExport}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               <span>Export</span>
             </button>
@@ -284,10 +328,6 @@ const Marketings = () => {
               <option>Completed</option>
               <option>Scheduled</option>
             </select>
-            <button className="marketings-filter-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-              <span>Filter</span>
-            </button>
           </div>
         </div>
 
@@ -339,7 +379,7 @@ const Marketings = () => {
                     </td>
                     <td className="marketings-text-right">
                       <div className="marketings-actions-cell">
-                        <button className="marketings-action-icon-btn marketings-view" title="View">
+                        <button className="marketings-action-icon-btn marketings-view" title="View" onClick={() => handleOpenView(camp)}>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
                         <button className="marketings-action-icon-btn marketings-edit" title="Edit" onClick={() => handleOpenEdit(camp)}>
@@ -395,7 +435,7 @@ const Marketings = () => {
         </div>
       </section>
 
-      {/* Modal Popup matching design */}
+      {/* Modal Popup (Create, Edit, View) */}
       {isModalOpen && (
         <div className="marketings-modal-overlay">
           <div className="marketings-modal-container">
@@ -405,8 +445,14 @@ const Marketings = () => {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 11l18-5v12L3 14v-3z"/></svg>
                 </div>
                 <div>
-                  <h3>{modalMode === 'create' ? 'Create Campaign' : 'Edit Campaign'}</h3>
-                  <p>Configure your marketing campaign details</p>
+                  <h3>
+                    {modalMode === 'create' && 'Create Campaign'}
+                    {modalMode === 'edit' && 'Edit Campaign'}
+                    {modalMode === 'view' && 'Campaign Details'}
+                  </h3>
+                  <p>
+                    {modalMode === 'view' ? 'Review campaign metrics and specs' : 'Configure your marketing campaign details'}
+                  </p>
                 </div>
               </div>
               <button className="marketings-close-modal-btn" onClick={() => setIsModalOpen(false)}>×</button>
@@ -420,6 +466,7 @@ const Marketings = () => {
                   placeholder="Enter campaign name" 
                   value={currentCampaign.name}
                   onChange={(e) => setCurrentCampaign({...currentCampaign, name: e.target.value})}
+                  disabled={modalMode === 'view'}
                   required 
                 />
               </div>
@@ -430,6 +477,7 @@ const Marketings = () => {
                   <select 
                     value={currentCampaign.type}
                     onChange={(e) => setCurrentCampaign({...currentCampaign, type: e.target.value})}
+                    disabled={modalMode === 'view'}
                   >
                     <option>Discount</option>
                     <option>Launch</option>
@@ -443,6 +491,7 @@ const Marketings = () => {
                   <select 
                     value={currentCampaign.channel}
                     onChange={(e) => setCurrentCampaign({...currentCampaign, channel: e.target.value})}
+                    disabled={modalMode === 'view'}
                   >
                     <option>Instagram</option>
                     <option>Facebook</option>
@@ -459,9 +508,10 @@ const Marketings = () => {
                   <div className="marketings-input-with-icon">
                     <input 
                       type="text" 
-                      placeholder="Select start date" 
+                      placeholder="e.g. May 20, 2025" 
                       value={currentCampaign.startDate}
                       onChange={(e) => setCurrentCampaign({...currentCampaign, startDate: e.target.value})}
+                      disabled={modalMode === 'view'}
                     />
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                   </div>
@@ -471,23 +521,39 @@ const Marketings = () => {
                   <div className="marketings-input-with-icon">
                     <input 
                       type="text" 
-                      placeholder="Select end date" 
+                      placeholder="e.g. Jun 10, 2025" 
                       value={currentCampaign.endDate}
                       onChange={(e) => setCurrentCampaign({...currentCampaign, endDate: e.target.value})}
+                      disabled={modalMode === 'view'}
                     />
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                   </div>
                 </div>
               </div>
 
-              <div className="marketings-form-group">
-                <label>Budget (₹)</label>
-                <input 
-                  type="text" 
-                  placeholder="Enter budget" 
-                  value={currentCampaign.budget}
-                  onChange={(e) => setCurrentCampaign({...currentCampaign, budget: e.target.value})}
-                />
+              <div className="marketings-form-row-2">
+                <div className="marketings-form-group">
+                  <label>Budget (₹)</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter budget" 
+                    value={currentCampaign.budget}
+                    onChange={(e) => setCurrentCampaign({...currentCampaign, budget: e.target.value})}
+                    disabled={modalMode === 'view'}
+                  />
+                </div>
+                <div className="marketings-form-group">
+                  <label>Status</label>
+                  <select 
+                    value={currentCampaign.status}
+                    onChange={(e) => setCurrentCampaign({...currentCampaign, status: e.target.value})}
+                    disabled={modalMode === 'view'}
+                  >
+                    <option>Scheduled</option>
+                    <option>Active</option>
+                    <option>Completed</option>
+                  </select>
+                </div>
               </div>
 
               <div className="marketings-form-group">
@@ -495,27 +561,32 @@ const Marketings = () => {
                 <textarea 
                   rows="3" 
                   placeholder="Enter campaign description"
-                  value={currentCampaign.description}
-                  onChange={(e) => setCurrentCampaign({...currentCampaign, description: e.target.value})}
+                  value={currentCampaign.desc || currentCampaign.description}
+                  onChange={(e) => setCurrentCampaign({...currentCampaign, desc: e.target.value, description: e.target.value})}
+                  disabled={modalMode === 'view'}
                 ></textarea>
               </div>
 
-              <div className="marketings-form-group">
-                <label>Banner / Image</label>
-                <div className="marketings-dropzone-area">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  <span>Click to upload or drag and drop</span>
-                  <span className="marketings-dropzone-sub">PNG, JPG, WEBP up to 5MB</span>
+              {modalMode !== 'view' && (
+                <div className="marketings-form-group">
+                  <label>Banner / Image</label>
+                  <div className="marketings-dropzone-area">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span>Click to upload or drag and drop</span>
+                    <span className="marketings-dropzone-sub">PNG, JPG, WEBP up to 5MB</span>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="marketings-modal-actions">
                 <button type="button" className="marketings-btn marketings-btn-outline marketings-reset-btn" onClick={() => setIsModalOpen(false)}>
-                  <span>Cancel</span>
+                  <span>{modalMode === 'view' ? 'Close' : 'Cancel'}</span>
                 </button>
-                <button type="submit" className="marketings-btn marketings-btn-primary marketings-save-btn">
-                  <span>Save Campaign</span>
-                </button>
+                {modalMode !== 'view' && (
+                  <button type="submit" className="marketings-btn marketings-btn-primary marketings-save-btn">
+                    <span>Save Campaign</span>
+                  </button>
+                )}
               </div>
             </form>
           </div>
