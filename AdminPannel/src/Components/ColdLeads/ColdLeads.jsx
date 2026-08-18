@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   FaFilter,
   FaSearch,
@@ -14,73 +14,22 @@ import {
   FaPhoneAlt,
   FaTag
 } from "react-icons/fa";
+import API from "../../api/axios";
 import "./ColdLeads.css";
 
-// 45 Dummy Lead Records for working Pagination
-const generateDummyData = () => {
-  const sources = ["Website", "Referral", "Social Media", "Advertisement"];
-  const statuses = ["New", "Contacted", "Follow Up", "Closed"];
-  const subjects = [
-    "Product Inquiry",
-    "Bulk Order",
-    "Franchise Inquiry",
-    "Become Distributor",
-    "Other Enquiry"
-  ];
-  const names = [
-    "Rahul Verma", "Priya Sharma", "Amit Patel", "Neha Iyer", "Sandeep Singh",
-    "Anjali Mehta", "Vikram Joshi", "Kavya Reddy", "Manish Kumar", "Pooja Nair",
-    "Rohan Das", "Simran Kaur", "Arjun Kapoor", "Sneha Rao", "Karan Malhotra",
-    "Ritu Sen", "Alok Mishra", "Divya Pillai", "Siddharth Roy", "Tanvi Bhatia",
-    "Gaurav Saxena", "Meera Joshi", "Aakash Gupta", "Isha Verma", "Varun Chopra",
-    "Nisha Agarwal", "Rajesh Khanna", "Swati Bose", "Nikhil Seth", "Aarti Pandey",
-    "Deepak Sharma", "Preeti Jain", "Sanjay Dutt", "Poonam Gill", "Tarun Bajaj",
-    "Shweta Sen", "Abhinav Shukla", "Roshni Patel", "Harsh Vardhan", "Nandini Rai",
-    "Vineet Garg", "Komal Yadav", "Yash Singhal", "Payal Biswas", "Mohit Suri"
-  ];
-
-  const avatars = [
-    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100",
-    "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100",
-    "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100",
-    "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100"
-  ];
-
-  return names.map((name, index) => {
-    const firstName = name.split(" ")[0].toLowerCase();
-    const lastName = name.split(" ")[1].toLowerCase();
-    const day = String((index % 20) + 1).padStart(2, "0");
-    return {
-      id: index + 1,
-      name: name,
-      avatar: avatars[index % avatars.length],
-      email: `${firstName}.${lastName}@email.com`,
-      phone: `+91 ${Math.floor(6000000000 + Math.random() * 3999999999)}`,
-      subject: subjects[index % subjects.length],
-      source: sources[index % sources.length],
-      status: statuses[index % statuses.length],
-      rawDate: `2025-05-${day}`,
-      addedOnDate: `${23 - (index % 5)} May 2025`,
-      addedOnTime: `${(index % 12) + 1}:${(index * 5) % 60 < 10 ? "0" : ""}${(index * 5) % 60} ${index % 2 === 0 ? "AM" : "PM"}`
-    };
-  });
-};
-
-const initialLeads = generateDummyData();
-
 const ColdLeads = () => {
-  const [leads, setLeads] = useState(initialLeads);
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedLeads, setSelectedLeads] = useState([]);
 
-  // Form Filter States
+  // Form Filter Inputs State
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [sourceFilter, setSourceFilter] = useState("All Sources");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  // Applied Filters State (Triggered when "Filter" button is clicked)
+  // Applied Filters State (Active parameters sent to API)
   const [appliedFilters, setAppliedFilters] = useState({
     search: "",
     status: "All Status",
@@ -91,13 +40,134 @@ const ColdLeads = () => {
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 10;
 
   // Modal States
   const [viewModalData, setViewModalData] = useState(null);
   const [editModalData, setEditModalData] = useState(null);
 
-  // Filter Button Trigger
+  // 1. Fetch Contact Inquiries from Backend API
+  const fetchInquiries = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const params = {
+        page: currentPage,
+        limit: itemsPerPage,
+      };
+
+      // Search parameter
+      if (appliedFilters.search.trim()) {
+        params.search = appliedFilters.search.trim();
+      }
+
+      // Status parameter
+      if (appliedFilters.status && appliedFilters.status !== "All Status") {
+        params.status = appliedFilters.status;
+      }
+
+      // Source parameter
+      if (appliedFilters.source && appliedFilters.source !== "All Sources") {
+        params.source = appliedFilters.source;
+      }
+
+      // Date Range parameters
+      if (appliedFilters.from) {
+        params.fromDate = appliedFilters.from;
+      }
+
+      if (appliedFilters.to) {
+        params.toDate = appliedFilters.to;
+      }
+
+      const response = await API.get("/contact", { params });
+
+      if (response.data && response.data.success) {
+        const mappedData = (response.data.data || []).map((item) => {
+          const createdAt = new Date(item.createdAt);
+          return {
+            id: item._id,
+            name: item.fullName || "N/A",
+            avatar: `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100`,
+            email: item.email || "N/A",
+            phone: item.phone || "N/A",
+            subject: item.subject || "General Inquiry",
+            source: item.source || "Website",
+            status: item.status || "New",
+            message: item.message || "",
+            rawDate: isNaN(createdAt.getTime()) ? "" : createdAt.toISOString().split("T")[0],
+            addedOnDate: isNaN(createdAt.getTime())
+              ? "N/A"
+              : createdAt.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric"
+                }),
+            addedOnTime: isNaN(createdAt.getTime())
+              ? "N/A"
+              : createdAt.toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true
+                })
+          };
+        });
+
+        // Additional client-side filtering for Name / Email / Phone / Subject / Date
+        let filtered = mappedData;
+
+        if (appliedFilters.search.trim()) {
+          const query = appliedFilters.search.toLowerCase().trim();
+          filtered = filtered.filter(
+            (l) =>
+              l.name.toLowerCase().includes(query) ||
+              l.email.toLowerCase().includes(query) ||
+              l.phone.toLowerCase().includes(query) ||
+              l.subject.toLowerCase().includes(query)
+          );
+        }
+
+        if (appliedFilters.source !== "All Sources") {
+          filtered = filtered.filter((l) => l.source === appliedFilters.source);
+        }
+
+        if (appliedFilters.from) {
+          filtered = filtered.filter((l) => l.rawDate >= appliedFilters.from);
+        }
+
+        if (appliedFilters.to) {
+          filtered = filtered.filter((l) => l.rawDate <= appliedFilters.to);
+        }
+
+        setLeads(filtered);
+        setTotalPages(response.data.totalPages || 1);
+        setTotalCount(response.data.total || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching contact inquiries:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, itemsPerPage, appliedFilters]);
+
+  useEffect(() => {
+    fetchInquiries();
+  }, [fetchInquiries]);
+
+  // Handle Real-time Search Input
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearchTerm(val);
+    setAppliedFilters((prev) => ({
+      ...prev,
+      search: val
+    }));
+    setCurrentPage(1);
+  };
+
+  // Filter Trigger Handler
   const handleApplyFilter = () => {
     setAppliedFilters({
       search: searchTerm,
@@ -109,7 +179,7 @@ const ColdLeads = () => {
     setCurrentPage(1);
   };
 
-  // Reset Button Handler
+  // Reset Filters Handler
   const handleResetFilters = () => {
     setSearchTerm("");
     setStatusFilter("All Status");
@@ -126,15 +196,15 @@ const ColdLeads = () => {
     setCurrentPage(1);
   };
 
-  // Export Button Handler (Exports filtered table data to CSV)
+  // Export Filtered Table Data to CSV
   const handleExport = () => {
-    if (filteredLeads.length === 0) {
+    if (leads.length === 0) {
       alert("No data available to export.");
       return;
     }
 
     const headers = "ID,Name,Email,Phone,Subject,Source,Status,Added Date,Added Time\n";
-    const rows = filteredLeads
+    const rows = leads
       .map(
         (lead) =>
           `"${lead.id}","${lead.name}","${lead.email}","${lead.phone}","${lead.subject}","${lead.source}","${lead.status}","${lead.addedOnDate}","${lead.addedOnTime}"`
@@ -145,16 +215,16 @@ const ColdLeads = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "ColdLeads_Export.csv");
+    link.setAttribute("download", "Contact_Inquiries_Export.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  // Checkbox Select Handlers
+  // Checkbox Selection
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedLeads(currentLeads.map((item) => item.id));
+      setSelectedLeads(leads.map((item) => item.id));
     } else {
       setSelectedLeads([]);
     }
@@ -168,62 +238,57 @@ const ColdLeads = () => {
     }
   };
 
-  // Actions
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this lead?")) {
-      setLeads((prev) => prev.filter((item) => item.id !== id));
-      setSelectedLeads((prev) => prev.filter((item) => item !== id));
+  // Delete Single Inquiry via API
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this inquiry?")) {
+      try {
+        await API.delete(`/contact/${id}`);
+        setLeads((prev) => prev.filter((item) => item.id !== id));
+        setSelectedLeads((prev) => prev.filter((item) => item !== id));
+      } catch (error) {
+        console.error("Failed to delete inquiry:", error);
+        alert("Failed to delete inquiry from server.");
+      }
     }
   };
 
-  const handleBulkDelete = () => {
+  // Bulk Delete Inquiries via API
+  const handleBulkDelete = async () => {
     if (selectedLeads.length === 0) {
       alert("Please select at least one lead to delete.");
       return;
     }
     if (window.confirm(`Delete ${selectedLeads.length} selected lead(s)?`)) {
-      setLeads((prev) => prev.filter((item) => !selectedLeads.includes(item.id)));
-      setSelectedLeads([]);
+      try {
+        await Promise.all(selectedLeads.map((id) => API.delete(`/contact/${id}`)));
+        setSelectedLeads([]);
+        fetchInquiries();
+      } catch (error) {
+        console.error("Bulk delete error:", error);
+        alert("Some items could not be deleted.");
+      }
     }
   };
 
-  const handleEditSave = (e) => {
+  // Update Inquiry Details / Status via API
+  const handleEditSave = async (e) => {
     e.preventDefault();
-    setLeads((prev) =>
-      prev.map((item) => (item.id === editModalData.id ? editModalData : item))
-    );
-    setEditModalData(null);
+    try {
+      await API.put(`/contact/${editModalData.id}`, {
+        fullName: editModalData.name,
+        email: editModalData.email,
+        phone: editModalData.phone,
+        subject: editModalData.subject,
+        status: editModalData.status
+      });
+
+      setEditModalData(null);
+      fetchInquiries();
+    } catch (error) {
+      console.error("Failed to update inquiry:", error);
+      alert("Failed to update inquiry.");
+    }
   };
-
-  // Filtering Calculation
-  const filteredLeads = leads.filter((lead) => {
-    const matchesSearch =
-      lead.name.toLowerCase().includes(appliedFilters.search.toLowerCase()) ||
-      lead.email.toLowerCase().includes(appliedFilters.search.toLowerCase()) ||
-      lead.phone.includes(appliedFilters.search) ||
-      lead.subject.toLowerCase().includes(appliedFilters.search.toLowerCase());
-
-    const matchesStatus =
-      appliedFilters.status === "All Status" || lead.status === appliedFilters.status;
-    const matchesSource =
-      appliedFilters.source === "All Sources" || lead.source === appliedFilters.source;
-
-    let matchesDate = true;
-    if (appliedFilters.from) {
-      matchesDate = matchesDate && lead.rawDate >= appliedFilters.from;
-    }
-    if (appliedFilters.to) {
-      matchesDate = matchesDate && lead.rawDate <= appliedFilters.to;
-    }
-
-    return matchesSearch && matchesStatus && matchesSource && matchesDate;
-  });
-
-  // Pagination Calculation
-  const totalPages = Math.ceil(filteredLeads.length / itemsPerPage) || 1;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentLeads = filteredLeads.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
@@ -232,24 +297,26 @@ const ColdLeads = () => {
     }
   };
 
-  // Badge Helper Classes
+  // Badge Style Helpers
   const getSourceBadgeClass = (source) => {
     switch (source) {
       case "Website": return "source-website";
       case "Referral": return "source-referral";
       case "Social Media": return "source-social";
       case "Advertisement": return "source-ad";
-      default: return "";
+      default: return "source-website";
     }
   };
 
   const getStatusBadgeClass = (status) => {
     switch (status) {
       case "New": return "status-new";
-      case "Contacted": return "status-contacted";
+      case "Contacted":
+      case "In Progress": return "status-contacted";
       case "Follow Up": return "status-followup";
-      case "Closed": return "status-closed";
-      default: return "";
+      case "Closed":
+      case "Resolved": return "status-closed";
+      default: return "status-new";
     }
   };
 
@@ -259,18 +326,18 @@ const ColdLeads = () => {
         {/* Header Title */}
         <div className="ColdLeads-headerTitle">
           <FaFilter className="title-icon" />
-          <h2>Filter Leads</h2>
+          <h2>Filter Leads & Inquiries</h2>
         </div>
 
         {/* Top Controls Bar */}
         <div className="ColdLeads-topBar">
-          {/* Centered Search Box & Icon */}
           <div className="ColdLeads-searchBox">
             <input
               type="text"
-              placeholder="Search Leads..."
+              placeholder="Search by Name, Email, Phone..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
+              onKeyDown={(e) => e.key === "Enter" && handleApplyFilter()}
             />
             <button
               type="button"
@@ -285,13 +352,16 @@ const ColdLeads = () => {
           <div className="ColdLeads-selectWrapper">
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setAppliedFilters((prev) => ({ ...prev, status: e.target.value }));
+                setCurrentPage(1);
+              }}
             >
               <option value="All Status">All Status</option>
               <option value="New">New</option>
-              <option value="Contacted">Contacted</option>
-              <option value="Follow Up">Follow Up</option>
-              <option value="Closed">Closed</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
             </select>
             <FaChevronDown className="arrow-icon" />
           </div>
@@ -299,7 +369,11 @@ const ColdLeads = () => {
           <div className="ColdLeads-selectWrapper">
             <select
               value={sourceFilter}
-              onChange={(e) => setSourceFilter(e.target.value)}
+              onChange={(e) => {
+                setSourceFilter(e.target.value);
+                setAppliedFilters((prev) => ({ ...prev, source: e.target.value }));
+                setCurrentPage(1);
+              }}
             >
               <option value="All Sources">All Sources</option>
               <option value="Website">Website</option>
@@ -353,8 +427,7 @@ const ColdLeads = () => {
                     <input
                       type="checkbox"
                       checked={
-                        currentLeads.length > 0 &&
-                        selectedLeads.length === currentLeads.length
+                        leads.length > 0 && selectedLeads.length === leads.length
                       }
                       onChange={handleSelectAll}
                     />
@@ -371,8 +444,14 @@ const ColdLeads = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentLeads.length > 0 ? (
-                  currentLeads.map((item, index) => (
+                {loading ? (
+                  <tr>
+                    <td colSpan="10" className="no-data">
+                      Loading inquiries...
+                    </td>
+                  </tr>
+                ) : leads.length > 0 ? (
+                  leads.map((item, index) => (
                     <tr
                       key={item.id}
                       className={
@@ -386,7 +465,9 @@ const ColdLeads = () => {
                           onChange={() => handleSelectOne(item.id)}
                         />
                       </td>
-                      <td className="row-num">{indexOfFirstItem + index + 1}</td>
+                      <td className="row-num">
+                        {(currentPage - 1) * itemsPerPage + index + 1}
+                      </td>
                       <td>
                         <div className="user-profile">
                           <img src={item.avatar} alt={item.name} />
@@ -446,7 +527,7 @@ const ColdLeads = () => {
                 ) : (
                   <tr>
                     <td colSpan="10" className="no-data">
-                      No leads found matching your search and filter criteria.
+                      No leads found matching your search criteria.
                     </td>
                   </tr>
                 )}
@@ -467,9 +548,7 @@ const ColdLeads = () => {
 
             <div className="ColdLeads-pagination">
               <span className="pagination-text">
-                Showing {filteredLeads.length > 0 ? indexOfFirstItem + 1 : 0} to{" "}
-                {Math.min(indexOfLastItem, filteredLeads.length)} of{" "}
-                {filteredLeads.length} leads
+                Showing page {currentPage} of {totalPages} ({totalCount} total inquiries)
               </span>
 
               <div className="pagination-buttons">
@@ -506,7 +585,7 @@ const ColdLeads = () => {
         </div>
       </div>
 
-      {/* VIEW MODAL (Eye Icon Click) */}
+      {/* VIEW MODAL */}
       {viewModalData && (
         <div className="ColdLeads-modalOverlay">
           <div className="ColdLeads-modal">
@@ -573,6 +652,17 @@ const ColdLeads = () => {
                 </div>
               </div>
             </div>
+
+            {viewModalData.message && (
+              <div className="detail-box full-width" style={{ marginTop: "15px" }}>
+                <div>
+                  <label>Message Content</label>
+                  <p style={{ marginTop: "5px", color: "#ddd", lineHeight: "1.5" }}>
+                    {viewModalData.message}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -628,7 +718,6 @@ const ColdLeads = () => {
                         phone: e.target.value
                       })
                     }
-                    required
                   />
                 </div>
               </div>
@@ -649,40 +738,21 @@ const ColdLeads = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Source</label>
+                  <label>Status</label>
                   <select
-                    value={editModalData.source}
+                    value={editModalData.status}
                     onChange={(e) =>
                       setEditModalData({
                         ...editModalData,
-                        source: e.target.value
+                        status: e.target.value
                       })
                     }
                   >
-                    <option value="Website">Website</option>
-                    <option value="Referral">Referral</option>
-                    <option value="Social Media">Social Media</option>
-                    <option value="Advertisement">Advertisement</option>
+                    <option value="New">New</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
                   </select>
                 </div>
-              </div>
-
-              <div className="form-group">
-                <label>Status</label>
-                <select
-                  value={editModalData.status}
-                  onChange={(e) =>
-                    setEditModalData({
-                      ...editModalData,
-                      status: e.target.value
-                    })
-                  }
-                >
-                  <option value="New">New</option>
-                  <option value="Contacted">Contacted</option>
-                  <option value="Follow Up">Follow Up</option>
-                  <option value="Closed">Closed</option>
-                </select>
               </div>
 
               <div className="modal-actions">

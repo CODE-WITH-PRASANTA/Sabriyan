@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
+  Crown,
   ShoppingBag,
   Package,
   Boxes,
@@ -12,6 +13,8 @@ import {
   Globe,
   Settings,
   HelpCircle,
+  MessageSquareQuote,
+  Flame,
   ChevronDown,
   ChevronRight,
   Sparkles,
@@ -22,10 +25,11 @@ import {
 } from 'lucide-react';
 import logo from '../../assets/logo.png';
 import './Sidebar.css';
-import { FaPeopleArrows } from 'react-icons/fa';
 
 const sidebarConfig = [
   { title: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+  { title: 'Premium Collection', path: '/premium-collection', icon: Crown }, 
+  { title: 'Honey Product', path: '/honey-product', icon: Flame },
   {
     title: 'Orders',
     path: '/orders',
@@ -37,6 +41,7 @@ const sidebarConfig = [
       { title: 'Cancel Orders', path: '/orders/cancel' },
     ],
   },
+  { title: 'Testimonial', path: '/testimonials', icon: MessageSquareQuote },
   {
     title: 'Products',
     path: '/products',
@@ -58,11 +63,9 @@ const sidebarConfig = [
   { title: 'Website Settings', path: '/website-settings', icon: Globe },
   { title: 'Settings', path: '/settings', icon: Settings },
   { title: 'Support', path: '/support', icon: HelpCircle },
-    { title: 'Blogpost', path: '/blogpost', icon: Book  },
-    { title: 'Blogmanagement', path: '/blogmanagement', icon: Notebook  },
-    { title: 'Cold leads', path: '/coldleads', icon: Group},
-
-
+  { title: 'Blogpost', path: '/blogpost', icon: Book },
+  { title: 'Blogmanagement', path: '/blogmanagement', icon: Notebook },
+  { title: 'Cold leads', path: '/coldleads', icon: Group },
 ];
 
 const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
@@ -110,9 +113,6 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
             <X size={20} />
           </button>
         </div>
-
-        {/* Profile Info Card */}
-       
 
         {/* Navigation Menu */}
         <nav className="sidebar-nav">

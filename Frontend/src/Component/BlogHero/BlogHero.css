@@ -1,0 +1,561 @@
+/* ==========================================
+   BLOG HERO COMPONENT STYLES
+   Color Palette:
+   Background: #041A0D
+   Primary Green: #63FF5E
+   Secondary Green: #8AE46C
+   Text: #FFFFFF
+   Description: #C7D8C8
+   ========================================== */
+
+/* Main Section Wrapper */
+.BlogHero {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #041A0D;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------
+   BACKGROUND LAYERS
+   ------------------------------------------ */
+.BlogHero-bgWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Layer 1: Base Gradient */
+.BlogHero-gradientBase {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #041A0D 0%, #082b17 50%, #020d07 100%);
+  opacity: 0.92;
+  z-index: 1;
+}
+
+/* Layer 2: Blurred Forest Image */
+.BlogHero-bgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(8px);
+  transform: scale(1.05);
+  opacity: 0.35;
+  z-index: 0;
+}
+
+/* Layer 5: Light Rays Overlay */
+.BlogHero-lightRays {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top left, rgba(99, 255, 94, 0.18), transparent 60%);
+  z-index: 2;
+}
+
+/* Layer 6: Glass Reflection Overlay */
+.BlogHero-glassOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+  z-index: 2;
+}
+
+/* Dynamic Pointer Cursor Glow Effect */
+.BlogHero-cursorGlow {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Hide desktop cursor glow on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .BlogHero-cursorGlow {
+    display: none;
+  }
+}
+
+/* ------------------------------------------
+   FLOATING LEAVES & PARTICLES LAYERS
+   ------------------------------------------ */
+.BlogHero-floatingLeavesLayer,
+.BlogHero-particlesLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.BlogHero-leafItem {
+  position: absolute;
+  color: rgba(99, 255, 94, 0.45);
+  filter: drop-shadow(0 0 5px rgba(99, 255, 94, 0.2));
+}
+
+.BlogHero-particleItem {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #63FF5E, #fcd34d);
+  box-shadow: 0 0 10px #63FF5E;
+}
+
+/* ------------------------------------------
+   GRID CONTAINER
+   ------------------------------------------ */
+.BlogHero-container {
+  position: relative;
+  z-index: 20;
+  max-width: 1280px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  padding-bottom: 2rem;
+}
+
+/* ------------------------------------------
+   LEFT CONTENT: 3D CARD
+   ------------------------------------------ */
+.BlogHero-leftContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.BlogHero-imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+}
+
+/* Glow behind card */
+.BlogHero-imageGlowBack {
+  position: absolute;
+  inset: 0;
+  margin: -0.75rem;
+  background: linear-gradient(45deg, rgba(99, 255, 94, 0.35), rgba(6, 78, 40, 0.5));
+  border-radius: 1.5rem;
+  filter: blur(30px);
+  opacity: 0.7;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.BlogHero-decorLeaf {
+  position: absolute;
+  top: -1.25rem;
+  left: -1.25rem;
+  font-size: 1.5rem;
+  z-index: 30;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(99, 255, 94, 0.8));
+}
+
+.BlogHero-decorSparkle {
+  position: absolute;
+  bottom: -1rem;
+  right: -1rem;
+  font-size: 1.25rem;
+  z-index: 30;
+  pointer-events: none;
+}
+
+/* Glass Card & Tilt */
+.BlogHero-tiltCard {
+  position: relative;
+  z-index: 20;
+  border-radius: 1.25rem;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  width: 100%;
+}
+
+.BlogHero-glassCardInner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.75rem;
+}
+
+.BlogHero-imageFrame {
+  position: relative;
+  height: 280px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0.85rem;
+  background: #082212;
+}
+
+.BlogHero-cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.BlogHero-glassCardInner:hover .BlogHero-cardImage {
+  transform: scale(1.08);
+}
+
+.BlogHero-cardReflection {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.5) 0%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
+  pointer-events: none;
+}
+
+/* ------------------------------------------
+   RIGHT CONTENT: TYPOGRAPHY & META
+   ------------------------------------------ */
+.BlogHero-rightContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+/* Category Badge Capsule */
+.BlogHero-categoryBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #63FF5E;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.BlogHero-categoryBadge:hover {
+  border-color: rgba(99, 255, 94, 0.5);
+  box-shadow: 0 0 15px rgba(99, 255, 94, 0.2);
+}
+
+.BlogHero-badgeIcon {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.BlogHero-categoryBadge:hover .BlogHero-badgeIcon {
+  transform: rotate(45deg);
+}
+
+/* Typography */
+.BlogHero-heading {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.BlogHero-headingItalic {
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(90deg, #63FF5E 0%, #8AE46C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.BlogHero-description {
+  font-size: 0.95rem;
+  color: #C7D8C8;
+  max-width: 32rem;
+  font-weight: 300;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Glass Meta Card */
+.BlogHero-metaCard {
+  width: 100%;
+  max-width: 36rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  padding: 0.85rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+  font-size: 0.8rem;
+  color: #C7D8C8;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.BlogHero-metaCard:hover {
+  border-color: rgba(110, 255, 90, 0.35);
+}
+
+.BlogHero-metaItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.BlogHero-metaIcon {
+  color: #63FF5E;
+}
+
+.BlogHero-metaAuthor {
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* CTA Read Button */
+.BlogHero-ctaWrapper {
+  padding-top: 0.25rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.BlogHero-readButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.85rem 2rem;
+  width: 100%;
+  max-width: 280px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #63FF5E 0%, #8AE46C 100%);
+  color: #041A0D;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(99, 255, 94, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.BlogHero-readButton:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 35px rgba(99, 255, 94, 0.7);
+}
+
+.BlogHero-buttonRipple {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  border-radius: 9999px;
+}
+
+.BlogHero-readButton:hover .BlogHero-buttonRipple {
+  transform: translateY(0);
+}
+
+.BlogHero-buttonText,
+.BlogHero-buttonIcon {
+  position: relative;
+  z-index: 10;
+}
+
+.BlogHero-buttonIcon {
+  font-size: 1.15rem;
+  transition: transform 0.3s ease;
+}
+
+.BlogHero-readButton:hover .BlogHero-buttonIcon {
+  transform: translateX(4px);
+}
+
+/* Scroll Down Indicator */
+.BlogHero-scrollIndicator {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.BlogHero-scrollIcon {
+  font-size: 1rem;
+  color: #63FF5E;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+/* 1. Mobile Extra Small (320px - 480px) */
+@media (max-width: 480px) {
+  .BlogHero {
+    padding: 2.5rem 0.75rem;
+  }
+
+  .BlogHero-imageFrame {
+    height: 240px;
+  }
+
+  .BlogHero-heading {
+    font-size: 2rem;
+  }
+
+  .BlogHero-description {
+    font-size: 0.875rem;
+  }
+
+  .BlogHero-metaCard {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .BlogHero-scrollIndicator {
+    display: none; /* Hidden on tiny screens to avoid layout overlap */
+  }
+}
+
+/* 2. Tablets & Mobile Landscape (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .BlogHero-imageFrame {
+    height: 320px;
+  }
+
+  .BlogHero-heading {
+    font-size: 2.75rem;
+  }
+
+  .BlogHero-metaCard {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .BlogHero-readButton {
+    width: auto;
+  }
+}
+
+/* 3. Tablets / Small Laptops (769px - 1023px) */
+@media (min-width: 769px) {
+  .BlogHero {
+    padding: 4rem 2rem;
+  }
+
+  .BlogHero-imageWrapper {
+    max-width: 420px;
+  }
+
+  .BlogHero-imageFrame {
+    height: 350px;
+  }
+
+  .BlogHero-heading {
+    font-size: 3.5rem;
+  }
+
+  .BlogHero-description {
+    font-size: 1.05rem;
+  }
+
+  .BlogHero-metaCard {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .BlogHero-metaAuthor {
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    padding-left: 0.85rem;
+  }
+
+  .BlogHero-readButton {
+    width: auto;
+  }
+}
+
+/* 4. Desktop & Laptops (1024px and up) */
+@media (min-width: 1024px) {
+  .BlogHero-container {
+    grid-template-columns: 5fr 7fr;
+    gap: 4rem;
+    padding-bottom: 0;
+  }
+
+  .BlogHero-rightContent {
+    align-items: flex-start;
+    text-align: left;
+    gap: 1.5rem;
+  }
+
+  .BlogHero-heading {
+    font-size: 70px;
+  }
+
+  .BlogHero-imageFrame {
+    height: 380px;
+  }
+
+  .BlogHero-ctaWrapper {
+    justify-content: flex-start;
+  }
+
+  .BlogHero-decorLeaf {
+    top: -2rem;
+    left: -2rem;
+    font-size: 2rem;
+  }
+
+  .BlogHero-decorSparkle {
+    bottom: -1.5rem;
+    right: -1.5rem;
+    font-size: 1.75rem;
+  }
+}
+
+/* 5. Ultra-Wide Displays (1440px and up) */
+@media (min-width: 1440px) {
+  .BlogHero-container {
+    max-width: 1380px;
+  }
+
+  .BlogHero-imageFrame {
+    height: 420px;
+  }
+}

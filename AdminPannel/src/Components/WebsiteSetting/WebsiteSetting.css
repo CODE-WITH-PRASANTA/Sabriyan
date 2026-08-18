@@ -1,0 +1,1322 @@
+/* =========================================================
+   WEBSITE SETTING
+   Exact dark green + gold dashboard style
+   ========================================================= */
+
+.WebsiteSetting {
+  --WebsiteSetting-bg: #010f0d;
+  --WebsiteSetting-bg2: #031611;
+  --WebsiteSetting-card: #0a1d18;
+  --WebsiteSetting-card2: #0c211b;
+  --WebsiteSetting-border: rgba(104, 145, 128, 0.13);
+  --WebsiteSetting-borderStrong: rgba(111, 154, 137, 0.2);
+
+  --WebsiteSetting-text: #f1f4f1;
+  --WebsiteSetting-textSoft: #d4dad6;
+  --WebsiteSetting-muted: #8d9993;
+  --WebsiteSetting-muted2: #69766f;
+
+  --WebsiteSetting-green: #13c978;
+  --WebsiteSetting-greenDark: #087c4a;
+
+  --WebsiteSetting-gold: #d4af37;
+  --WebsiteSetting-goldLight: #f2ca58;
+
+  --WebsiteSetting-input: #071814;
+
+  width: 100%;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(0, 105, 65, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 30%,
+      rgba(16, 91, 59, 0.05),
+      transparent 35%
+    ),
+    var(--WebsiteSetting-bg);
+
+  color: var(--WebsiteSetting-text);
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  box-sizing: border-box;
+}
+
+.WebsiteSetting *,
+.WebsiteSetting *::before,
+.WebsiteSetting *::after {
+  box-sizing: border-box;
+}
+
+.WebsiteSetting button,
+.WebsiteSetting input,
+.WebsiteSetting textarea,
+.WebsiteSetting select {
+  font: inherit;
+}
+
+.WebsiteSetting button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.WebsiteSetting-wrapper {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 12px 15px 20px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.WebsiteSetting-header {
+  min-height: 64px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.WebsiteSetting-headerLeft {
+  min-width: 0;
+}
+
+.WebsiteSetting-title {
+  margin: 0;
+  color: #f4f7f4;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.35px;
+}
+
+.WebsiteSetting-subtitle {
+  margin: 6px 0 0;
+  color: #77847e;
+  font-size: 10px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.WebsiteSetting-headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.WebsiteSetting-previewButton,
+.WebsiteSetting-saveButton {
+  height: 27px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 600;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.WebsiteSetting-previewButton {
+  color: #dfe7e2;
+  background: rgba(6, 23, 18, 0.8);
+  border: 1px solid #69736e;
+}
+
+.WebsiteSetting-previewButton:hover {
+  background: #0b241c;
+  border-color: #a6b0aa;
+}
+
+.WebsiteSetting-saveButton {
+  color: #f5fff9;
+  background: #09a95d;
+  border: 1px solid #10bd6b;
+  box-shadow: 0 4px 14px rgba(0, 185, 100, 0.1);
+}
+
+.WebsiteSetting-saveButton:hover {
+  background: #0cc36c;
+  transform: translateY(-1px);
+}
+
+.WebsiteSetting-saveButton:active,
+.WebsiteSetting-previewButton:active {
+  transform: translateY(0);
+}
+
+.WebsiteSetting-saveButtonSaved {
+  background: #087f49;
+}
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+.WebsiteSetting-tabs {
+  width: 100%;
+  min-height: 34px;
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  border-bottom: 1px solid rgba(103, 143, 128, 0.1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.WebsiteSetting-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.WebsiteSetting-tab {
+  position: relative;
+  height: 34px;
+  flex: 0 0 auto;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #8b9690;
+  font-size: 9px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.WebsiteSetting-tab:hover {
+  color: #dce4df;
+  background: rgba(17, 77, 51, 0.12);
+}
+
+.WebsiteSetting-tabActive {
+  color: #14c878;
+}
+
+.WebsiteSetting-tabActive::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #0fc573;
+  box-shadow: 0 0 8px rgba(15, 197, 115, 0.3);
+}
+
+.WebsiteSetting-tab .WebsiteSetting-icon {
+  opacity: 0.85;
+}
+
+
+/* =========================================================
+   MAIN GRID
+   ========================================================= */
+
+.WebsiteSetting-content {
+  padding-top: 12px;
+}
+
+.WebsiteSetting-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.97fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.WebsiteSetting-leftColumn,
+.WebsiteSetting-rightColumn {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.WebsiteSetting-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(16, 39, 31, 0.92),
+      rgba(8, 27, 21, 0.96)
+    );
+
+  border: 1px solid var(--WebsiteSetting-border);
+  border-radius: 5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.012),
+    0 3px 12px rgba(0, 0, 0, 0.12);
+
+  padding: 12px;
+}
+
+.WebsiteSetting-cardTitle {
+  margin: 0 0 10px;
+  color: #edf2ef;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 650;
+  letter-spacing: -0.05px;
+}
+
+
+/* =========================================================
+   STORE PROFILE
+   ========================================================= */
+
+.WebsiteSetting-storeProfile {
+  min-height: 294px;
+}
+
+.WebsiteSetting-storeProfileContent {
+  display: grid;
+  grid-template-columns: 129px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.WebsiteSetting-logoColumn {
+  min-width: 0;
+}
+
+.WebsiteSetting-logoBox {
+  height: 101px;
+  width: 129px;
+  border-radius: 4px;
+  background: #10241e;
+  border: 1px solid rgba(79, 110, 98, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.WebsiteSetting-defaultLogo {
+  width: 84px;
+  height: 84px;
+  border: 1px solid #c69b39;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(119, 74, 24, 0.55),
+      transparent 42%
+    ),
+    #21150c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 1px rgba(255, 205, 87, 0.08),
+    inset 0 0 15px rgba(212, 175, 55, 0.06);
+}
+
+.WebsiteSetting-chocolateIcon {
+  font-size: 22px;
+  line-height: 20px;
+  margin-bottom: 2px;
+  filter: saturate(0.7);
+}
+
+.WebsiteSetting-logoText {
+  color: #dcb84f;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.WebsiteSetting-logoSubText {
+  margin-top: 4px;
+  color: #bdb5a1;
+  font-size: 4px;
+  letter-spacing: 0.8px;
+}
+
+.WebsiteSetting-logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+}
+
+.WebsiteSetting-changeLogoButton {
+  width: 129px;
+  height: 25px;
+  margin-top: 5px;
+  border: 0;
+  border-radius: 3px;
+  background: #0d211b;
+  color: #d3dcd7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 8px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.WebsiteSetting-changeLogoButton:hover {
+  background: #14362a;
+  color: #ffffff;
+}
+
+.WebsiteSetting-logoHint {
+  display: block;
+  margin-top: 5px;
+  color: #66736d;
+  font-size: 7px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.WebsiteSetting-profileFields {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+
+/* =========================================================
+   FORM FIELDS
+   ========================================================= */
+
+.WebsiteSetting-field {
+  min-width: 0;
+}
+
+.WebsiteSetting-field label,
+.WebsiteSetting-seoRow > label {
+  display: block;
+  margin-bottom: 5px;
+  color: #aab5af;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.WebsiteSetting-field input,
+.WebsiteSetting-field textarea,
+.WebsiteSetting-contactRow input,
+.WebsiteSetting-socialRow input,
+.WebsiteSetting-seoRow input,
+.WebsiteSetting-seoRow textarea,
+.WebsiteSetting-normalSelect {
+  width: 100%;
+  color: #dce5e0;
+  background: var(--WebsiteSetting-input);
+  border: 1px solid #203a31;
+  border-radius: 3px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.WebsiteSetting-field input,
+.WebsiteSetting-contactRow input,
+.WebsiteSetting-socialRow input,
+.WebsiteSetting-seoRow input,
+.WebsiteSetting-normalSelect {
+  height: 27px;
+  padding: 0 8px;
+  font-size: 8px;
+}
+
+.WebsiteSetting-field input::placeholder,
+.WebsiteSetting-contactRow input::placeholder,
+.WebsiteSetting-socialRow input::placeholder,
+.WebsiteSetting-seoRow input::placeholder {
+  color: #59665f;
+}
+
+.WebsiteSetting-field input:focus,
+.WebsiteSetting-field textarea:focus,
+.WebsiteSetting-contactRow input:focus,
+.WebsiteSetting-socialRow input:focus,
+.WebsiteSetting-seoRow input:focus,
+.WebsiteSetting-seoRow textarea:focus,
+.WebsiteSetting-normalSelect:focus {
+  border-color: rgba(22, 190, 113, 0.55);
+  background: #081c16;
+  box-shadow: 0 0 0 2px rgba(14, 191, 112, 0.06);
+}
+
+.WebsiteSetting-descriptionField {
+  margin-top: 9px;
+}
+
+.WebsiteSetting-textareaWrapper {
+  position: relative;
+}
+
+.WebsiteSetting-field textarea {
+  display: block;
+  height: 69px;
+  resize: vertical;
+  min-height: 55px;
+  padding: 8px;
+  padding-bottom: 18px;
+  line-height: 1.45;
+  font-size: 8px;
+}
+
+.WebsiteSetting-characterCount {
+  position: absolute;
+  right: 7px;
+  bottom: 5px;
+  color: #727e78;
+  font-size: 7px;
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   BOTTOM GRID
+   ========================================================= */
+
+.WebsiteSetting-bottomGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.97fr);
+  gap: 10px;
+}
+
+
+/* =========================================================
+   APPEARANCE
+   ========================================================= */
+
+.WebsiteSetting-appearanceCard,
+.WebsiteSetting-featuresCard {
+  min-height: 275px;
+}
+
+.WebsiteSetting-colorRow {
+  min-height: 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(92px, 102px);
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.WebsiteSetting-colorRow > label {
+  color: #a8b2ad;
+  font-size: 8px;
+}
+
+.WebsiteSetting-selectColor {
+  height: 25px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 4px 0 5px;
+  border: 1px solid #213a31;
+  background: #071814;
+  border-radius: 3px;
+}
+
+.WebsiteSetting-colorPreview {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.WebsiteSetting-selectColor select {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #d7dfdb;
+  font-size: 8px;
+  cursor: pointer;
+}
+
+.WebsiteSetting-selectColor select option,
+.WebsiteSetting-normalSelect option {
+  background: #0b211a;
+  color: #ffffff;
+}
+
+.WebsiteSetting-normalSelect {
+  appearance: auto;
+  padding: 0 7px;
+}
+
+.WebsiteSetting-bannerHeading {
+  margin-top: 12px;
+  margin-bottom: 6px;
+  color: #aab5af;
+  font-size: 8px;
+}
+
+.WebsiteSetting-uploadArea {
+  width: 100%;
+}
+
+.WebsiteSetting-uploadPreview {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 5px;
+  border: 1px solid #203a31;
+  border-radius: 3px;
+  background: #071814;
+}
+
+.WebsiteSetting-defaultBanner {
+  width: 60px;
+  height: 34px;
+  flex: 0 0 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 2px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      120deg,
+      #2c190b,
+      #714214 45%,
+      #1e1108
+    );
+  color: #e2c267;
+}
+
+.WebsiteSetting-bannerChocolate {
+  font-size: 14px;
+}
+
+.WebsiteSetting-defaultBanner strong {
+  display: block;
+  font-size: 5px;
+  line-height: 1;
+}
+
+.WebsiteSetting-defaultBanner small {
+  display: block;
+  margin-top: 2px;
+  font-size: 3px;
+  letter-spacing: 0.4px;
+}
+
+.WebsiteSetting-uploadImage {
+  width: 60px;
+  height: 34px;
+  flex: 0 0 60px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.WebsiteSetting-uploadInfo {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.WebsiteSetting-uploadFileName {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #c4cec9;
+  font-size: 8px;
+}
+
+.WebsiteSetting-uploadActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.WebsiteSetting-uploadButton,
+.WebsiteSetting-deleteButton {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.WebsiteSetting-uploadButton {
+  color: #aeb9b3;
+  font-size: 7px;
+  gap: 4px;
+}
+
+.WebsiteSetting-uploadButton:hover {
+  color: #18c878;
+}
+
+.WebsiteSetting-deleteButton {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  color: #7f8b85;
+}
+
+.WebsiteSetting-deleteButton:hover {
+  color: #ed7368;
+  background: rgba(210, 65, 57, 0.08);
+}
+
+.WebsiteSetting-recommended {
+  display: block;
+  margin-top: 5px;
+  color: #68756e;
+  font-size: 7px;
+}
+
+
+/* =========================================================
+   FEATURES
+   ========================================================= */
+
+.WebsiteSetting-featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 2px;
+}
+
+.WebsiteSetting-featureRow {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.WebsiteSetting-featureRow > span {
+  color: #aab5af;
+  font-size: 8px;
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   TOGGLE
+   ========================================================= */
+
+.WebsiteSetting-toggle {
+  position: relative;
+  width: 25px;
+  height: 14px;
+  padding: 0;
+  flex: 0 0 25px;
+  border: 0;
+  border-radius: 20px;
+  background: #263831;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.WebsiteSetting-toggleKnob {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 2px;
+  left: 2px;
+  border-radius: 50%;
+  background: #aeb8b3;
+  transition:
+    left 0.2s ease,
+    background 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.WebsiteSetting-toggleActive {
+  background: #0dbd6a;
+}
+
+.WebsiteSetting-toggleActive .WebsiteSetting-toggleKnob {
+  left: 13px;
+  background: #e8fff3;
+}
+
+
+/* =========================================================
+   CONTACT DETAILS
+   ========================================================= */
+
+.WebsiteSetting-contactCard {
+  min-height: 225px;
+}
+
+.WebsiteSetting-contactList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.WebsiteSetting-contactRow {
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.WebsiteSetting-contactLabel {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #aab5af;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.WebsiteSetting-contactLabel .WebsiteSetting-icon {
+  color: #9ca7a1;
+  flex-shrink: 0;
+}
+
+.WebsiteSetting-whatsappLabel .WebsiteSetting-icon {
+  color: #11c977;
+}
+
+.WebsiteSetting-contactRow input {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   SOCIAL MEDIA
+   ========================================================= */
+
+.WebsiteSetting-socialCard {
+  min-height: 147px;
+}
+
+.WebsiteSetting-socialList {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.WebsiteSetting-socialRow {
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.WebsiteSetting-socialLabel {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #aab5af;
+  font-size: 8px;
+}
+
+.WebsiteSetting-socialIcon {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.WebsiteSetting-facebookLabel .WebsiteSetting-socialIcon {
+  background: #1877f2;
+}
+
+.WebsiteSetting-instagramLabel .WebsiteSetting-socialIcon {
+  background: linear-gradient(
+    135deg,
+    #7d3cff,
+    #f43b6d,
+    #ffbd48
+  );
+}
+
+.WebsiteSetting-youtubeLabel .WebsiteSetting-socialIcon {
+  background: #ff0000;
+}
+
+.WebsiteSetting-twitterLabel .WebsiteSetting-socialIcon {
+  background: #1598db;
+}
+
+.WebsiteSetting-socialRow input {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   SEO
+   ========================================================= */
+
+.WebsiteSetting-seoCard {
+  min-height: 183px;
+}
+
+.WebsiteSetting-seoList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.WebsiteSetting-seoRow {
+  display: grid;
+  grid-template-columns: 91px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.WebsiteSetting-seoRow > label {
+  margin: 0;
+}
+
+.WebsiteSetting-metaDescriptionRow {
+  align-items: start;
+}
+
+.WebsiteSetting-seoRow textarea {
+  width: 100%;
+  height: 50px;
+  resize: vertical;
+  min-height: 45px;
+  padding: 7px;
+  padding-bottom: 17px;
+  font-size: 8px;
+  line-height: 1.35;
+  background: var(--WebsiteSetting-input);
+  color: #dce5e0;
+  border: 1px solid #203a31;
+  border-radius: 3px;
+  outline: none;
+}
+
+.WebsiteSetting-faviconArea {
+  min-height: 36px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 3px 5px;
+  background: #071814;
+  border: 1px solid #203a31;
+  border-radius: 3px;
+}
+
+.WebsiteSetting-faviconPreview {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #10241d;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.WebsiteSetting-faviconDefault {
+  width: 21px;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #36210f;
+  border: 1px solid #c39a38;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.WebsiteSetting-faviconImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.WebsiteSetting-faviconFile {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.WebsiteSetting-faviconFile > span {
+  min-width: 0;
+  color: #c4cec9;
+  font-size: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.WebsiteSetting-faviconUpload {
+  border: 0;
+  background: transparent;
+  color: #8e9b94;
+  font-size: 7px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.WebsiteSetting-faviconUpload:hover {
+  color: #15c877;
+}
+
+.WebsiteSetting-faviconDelete {
+  flex: 0 0 22px;
+}
+
+
+/* =========================================================
+   HIDDEN INPUT
+   ========================================================= */
+
+.WebsiteSetting-hiddenInput {
+  display: none;
+}
+
+
+/* =========================================================
+   PLACEHOLDER TABS
+   ========================================================= */
+
+.WebsiteSetting-placeholderTab {
+  min-height: 430px;
+  margin-top: 12px;
+  border: 1px solid var(--WebsiteSetting-border);
+  border-radius: 5px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(16, 39, 31, 0.92),
+      rgba(8, 27, 21, 0.96)
+    );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+}
+
+.WebsiteSetting-placeholderIcon {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #11c977;
+  background: rgba(13, 190, 105, 0.08);
+  border: 1px solid rgba(13, 190, 105, 0.14);
+  margin-bottom: 16px;
+}
+
+.WebsiteSetting-placeholderTab h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #edf3ef;
+}
+
+.WebsiteSetting-placeholderTab p {
+  max-width: 400px;
+  margin: 8px 0 18px;
+  color: #7f8c85;
+  font-size: 10px;
+}
+
+.WebsiteSetting-backButton {
+  height: 31px;
+  padding: 0 14px;
+  border: 1px solid #234639;
+  border-radius: 4px;
+  color: #b9c4be;
+  background: #0a2018;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.WebsiteSetting-backButton:hover {
+  border-color: #0dbd6a;
+  color: #16c979;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* Large desktop */
+@media (min-width: 1400px) {
+  .WebsiteSetting-wrapper {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .WebsiteSetting-title {
+    font-size: 19px;
+  }
+
+  .WebsiteSetting-card {
+    padding: 13px;
+  }
+}
+
+
+/* Laptop */
+@media (max-width: 1100px) {
+  .WebsiteSetting-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .WebsiteSetting-leftColumn,
+  .WebsiteSetting-rightColumn {
+    width: 100%;
+  }
+
+  .WebsiteSetting-storeProfile {
+    min-height: auto;
+  }
+
+  .WebsiteSetting-contactCard,
+  .WebsiteSetting-socialCard,
+  .WebsiteSetting-seoCard {
+    min-height: auto;
+  }
+}
+
+
+/* Tablet */
+@media (max-width: 760px) {
+  .WebsiteSetting-wrapper {
+    padding: 12px;
+  }
+
+  .WebsiteSetting-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .WebsiteSetting-headerActions {
+    justify-content: flex-end;
+  }
+
+  .WebsiteSetting-tabs {
+    margin-top: 2px;
+  }
+
+  .WebsiteSetting-bottomGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .WebsiteSetting-storeProfileContent {
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .WebsiteSetting-logoBox,
+  .WebsiteSetting-changeLogoButton {
+    width: 110px;
+  }
+
+  .WebsiteSetting-contactRow,
+  .WebsiteSetting-socialRow {
+    grid-template-columns: 115px minmax(0, 1fr);
+  }
+
+  .WebsiteSetting-seoRow {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+}
+
+
+/* Mobile */
+@media (max-width: 560px) {
+  .WebsiteSetting-wrapper {
+    padding: 10px;
+  }
+
+  .WebsiteSetting-title {
+    font-size: 17px;
+  }
+
+  .WebsiteSetting-subtitle {
+    font-size: 9px;
+  }
+
+  .WebsiteSetting-headerActions {
+    width: 100%;
+  }
+
+  .WebsiteSetting-previewButton,
+  .WebsiteSetting-saveButton {
+    flex: 1;
+    height: 32px;
+    font-size: 9px;
+  }
+
+  .WebsiteSetting-card {
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .WebsiteSetting-cardTitle {
+    font-size: 10px;
+  }
+
+  .WebsiteSetting-storeProfileContent {
+    grid-template-columns: 1fr;
+  }
+
+  .WebsiteSetting-logoColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .WebsiteSetting-logoBox {
+    width: 130px;
+    height: 100px;
+  }
+
+  .WebsiteSetting-changeLogoButton {
+    width: 130px;
+  }
+
+  .WebsiteSetting-profileFields {
+    gap: 8px;
+  }
+
+  .WebsiteSetting-bottomGrid {
+    gap: 10px;
+  }
+
+  .WebsiteSetting-colorRow {
+    grid-template-columns: minmax(0, 1fr) 115px;
+  }
+
+  .WebsiteSetting-contactRow,
+  .WebsiteSetting-socialRow,
+  .WebsiteSetting-seoRow {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .WebsiteSetting-contactLabel {
+    height: 20px;
+  }
+
+  .WebsiteSetting-seoRow > label {
+    margin-bottom: 0;
+  }
+
+  .WebsiteSetting-metaDescriptionRow {
+    gap: 5px;
+  }
+
+  .WebsiteSetting-featureList {
+    gap: 13px;
+  }
+
+  .WebsiteSetting-featureRow > span {
+    font-size: 8px;
+  }
+
+  .WebsiteSetting-placeholderTab {
+    min-height: 350px;
+  }
+}
+
+
+/* Small mobile */
+@media (max-width: 380px) {
+  .WebsiteSetting-headerActions {
+    flex-direction: column;
+  }
+
+  .WebsiteSetting-previewButton,
+  .WebsiteSetting-saveButton {
+    width: 100%;
+  }
+
+  .WebsiteSetting-colorRow {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    margin-bottom: 9px;
+  }
+
+  .WebsiteSetting-selectColor {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / TOUCH
+   ========================================================= */
+
+.WebsiteSetting button:focus-visible,
+.WebsiteSetting input:focus-visible,
+.WebsiteSetting textarea:focus-visible,
+.WebsiteSetting select:focus-visible {
+  outline: 1px solid rgba(21, 201, 120, 0.65);
+  outline-offset: 1px;
+}
+
+.WebsiteSetting input,
+.WebsiteSetting textarea,
+.WebsiteSetting select {
+  caret-color: #12c877;
+}
+
+.WebsiteSetting-icon {
+  display: block;
+  flex-shrink: 0;
+}
