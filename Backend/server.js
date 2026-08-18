@@ -19,8 +19,14 @@ const brandRoutes = require("./routes/brandRoutes");
 const attributeRoutes = require("./routes/attributeRoutes");
 const productRoutes = require("./routes/productRoutes");
 const storeArticleRoutes = require("./routes/storeArticleRoutes");
+<<<<<<< HEAD
+const reviewRoutes = require('./routes/reviewRoutes');
+const inventoryRoutes = require('./routes/inventoryRoutes');
+const couponRoutes = require('./routes/couponRoutes');
+=======
 const supportRoutes = require("./routes/supportRoutes");
 
+>>>>>>> 2a5b8139b32a59cd30905b8c64d3487ef56fb76f
 
 // ======================
 // Ensure Uploads Directory Exists
@@ -85,7 +91,13 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/attributes", attributeRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/store-articles", storeArticleRoutes);
+<<<<<<< HEAD
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/coupons', require('./routes/couponRoutes'));
+=======
 app.use("/api/support", supportRoutes);
+>>>>>>> 2a5b8139b32a59cd30905b8c64d3487ef56fb76f
 
 // ======================
 // 404 Route Handler

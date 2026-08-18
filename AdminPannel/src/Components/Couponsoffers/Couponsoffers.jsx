@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   RiTicketLine, 
   RiCheckboxCircleLine, 
@@ -16,131 +16,11 @@ import {
   RiRefreshLine,
   RiCheckLine
 } from 'react-icons/ri';
+import API, { IMG_URL } from '../../api/axios';
 import './Couponsoffers.css';
 
 const Couponsoffers = () => {
-  const [coupons, setCoupons] = useState([
-    {
-      id: 1,
-      code: 'WELCOME5',
-      name: 'Welcome Offer',
-      description: '5% off for new customers',
-      discountType: 'Percentage (%)',
-      discountValue: '5%',
-      minOrder: '250',
-      maxDiscount: '50',
-      validFrom: '2025-03-01',
-      validTo: '2025-03-31',
-      applicableOn: 'All Products',
-      usageLimit: '100',
-      perUserLimit: '1',
-      usage: '78 times',
-      status: 'Expired'
-    },
-    {
-      id: 2,
-      code: 'FESTIVE25',
-      name: 'Festive Bonanza 25%',
-      description: 'Huge 25% off on festival sale',
-      discountType: 'Percentage (%)',
-      discountValue: '25%',
-      minOrder: '2,000',
-      maxDiscount: '500',
-      validFrom: '2024-10-01',
-      validTo: '2024-10-31',
-      applicableOn: 'Festival Category',
-      usageLimit: '200',
-      perUserLimit: '1',
-      usage: '134 times',
-      status: 'Expired'
-    },
-    {
-      id: 3,
-      code: 'SUMMER50',
-      name: 'Summer Super Sale',
-      description: 'Flat 50 off on summer collection',
-      discountType: 'Flat (₹)',
-      discountValue: '₹50',
-      minOrder: '500',
-      maxDiscount: '50',
-      validFrom: '2026-06-01',
-      validTo: '2026-06-30',
-      applicableOn: 'Summer Wear',
-      usageLimit: '500',
-      perUserLimit: '2',
-      usage: '210 times',
-      status: 'Active'
-    },
-    {
-      id: 4,
-      code: 'FLASH20',
-      name: 'Flash Hour Discount',
-      description: 'Instant 20% off during flash hours',
-      discountType: 'Percentage (%)',
-      discountValue: '20%',
-      minOrder: '1,000',
-      maxDiscount: '200',
-      validFrom: '2026-09-01',
-      validTo: '2026-09-10',
-      applicableOn: 'Electronics',
-      usageLimit: '150',
-      perUserLimit: '1',
-      usage: '0 times',
-      status: 'Scheduled'
-    },
-    {
-      id: 5,
-      code: 'NEWYEAR10',
-      name: 'New Year Bash',
-      description: 'Special 10% off for new year',
-      discountType: 'Percentage (%)',
-      discountValue: '10%',
-      minOrder: '1,500',
-      maxDiscount: '300',
-      validFrom: '2025-01-01',
-      validTo: '2025-01-05',
-      applicableOn: 'All Products',
-      usageLimit: '300',
-      perUserLimit: '1',
-      usage: '300 times',
-      status: 'Expired'
-    },
-    {
-      id: 6,
-      code: 'WEEKEND15',
-      name: 'Weekend Special',
-      description: 'Weekend shopping spree discount',
-      discountType: 'Percentage (%)',
-      discountValue: '15%',
-      minOrder: '800',
-      maxDiscount: '150',
-      validFrom: '2026-08-20',
-      validTo: '2026-08-25',
-      applicableOn: 'Apparel',
-      usageLimit: '250',
-      perUserLimit: '2',
-      usage: '45 times',
-      status: 'Active'
-    },
-    {
-      id: 7,
-      code: 'VIPCLUB30',
-      name: 'VIP Member Deal',
-      description: 'Exclusive 30% off for loyal VIPs',
-      discountType: 'Percentage (%)',
-      discountValue: '30%',
-      minOrder: '3,000',
-      maxDiscount: '1000',
-      validFrom: '2026-08-01',
-      validTo: '2026-08-31',
-      applicableOn: 'VIP Collection',
-      usageLimit: '100',
-      perUserLimit: '1',
-      usage: '81 times',
-      status: 'Active'
-    }
-  ]);
-
+  const [coupons, setCoupons] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -167,9 +47,26 @@ const Couponsoffers = () => {
   };
   const [formData, setFormData] = useState(initialFormState);
 
+  // Fetch Coupons using Axios API instance
+  const fetchCoupons = async () => {
+    try {
+      const response = await API.get('/coupons');
+      if (response.data.success) {
+        setCoupons(response.data.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch coupons:', err.response?.data || err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+
   const filteredCoupons = coupons.filter(coupon => {
-    const matchesSearch = coupon.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          coupon.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = 
+      (coupon.code || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (coupon.name || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'All Status' || coupon.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -181,27 +78,28 @@ const Couponsoffers = () => {
 
   const handleOpenAddModal = () => {
     setIsEditing(false);
+    setCurrentCouponId(null);
     setFormData(initialFormState);
     setIsModalOpen(true);
   };
 
   const handleOpenEditModal = (coupon) => {
     setIsEditing(true);
-    setCurrentCouponId(coupon.id);
+    setCurrentCouponId(coupon._id);
     setFormData({
       code: coupon.code,
       name: coupon.name,
       description: coupon.description || '',
       discountType: coupon.discountType || 'Percentage (%)',
-      discountValue: coupon.discountValue.replace(/[^0-9]/g, ''),
-      minOrder: coupon.minOrder.replace(/[^0-9]/g, ''),
-      maxDiscount: '',
+      discountValue: coupon.discountValue || '',
+      minOrder: coupon.minOrder || '',
+      maxDiscount: coupon.maxDiscount || '',
       validFrom: coupon.validFrom || '',
       validTo: coupon.validTo || '',
       applicableOn: coupon.applicableOn || 'All Products',
       usageLimit: coupon.usageLimit || '',
       perUserLimit: coupon.perUserLimit || '',
-      status: coupon.status
+      status: coupon.status || 'Active'
     });
     setIsModalOpen(true);
   };
@@ -218,50 +116,53 @@ const Couponsoffers = () => {
     }));
   };
 
-  const handleSaveCoupon = (e) => {
+  const handleSaveCoupon = async (e) => {
     e.preventDefault();
-    if (isEditing) {
-      setCoupons(coupons.map(c => c.id === currentCouponId ? {
-        ...c,
-        code: formData.code.toUpperCase(),
-        name: formData.name,
-        description: formData.description,
-        discountType: formData.discountType,
-        discountValue: formData.discountType.includes('Percentage') ? `${formData.discountValue}%` : `₹${formData.discountValue}`,
-        minOrder: formData.minOrder,
-        validFrom: formData.validFrom,
-        validTo: formData.validTo,
-        applicableOn: formData.applicableOn,
-        status: formData.status
-      } : c));
-    } else {
-      const newCoupon = {
-        id: Date.now(),
-        code: formData.code.toUpperCase() || 'NEWCOUPON',
-        name: formData.name || 'Untitled Coupon',
-        description: formData.description || 'No description provided',
-        discountType: formData.discountType,
-        discountValue: formData.discountType.includes('Percentage') ? `${formData.discountValue || 0}%` : `₹${formData.discountValue || 0}`,
-        minOrder: formData.minOrder || '0',
-        validFrom: formData.validFrom || '2026-01-01',
-        validTo: formData.validTo || '2026-12-31',
-        applicableOn: formData.applicableOn,
-        usageLimit: formData.usageLimit || '100',
-        perUserLimit: formData.perUserLimit || '1',
-        usage: '0 times',
-        status: formData.status
-      };
-      setCoupons([newCoupon, ...coupons]);
+
+    const payload = {
+      ...formData,
+      code: formData.code.toUpperCase(),
+      discountValue: Number(formData.discountValue) || 0,
+      minOrder: Number(formData.minOrder) || 0,
+      maxDiscount: formData.maxDiscount ? Number(formData.maxDiscount) : null,
+      usageLimit: Number(formData.usageLimit) || 100,
+      perUserLimit: Number(formData.perUserLimit) || 1
+    };
+
+    try {
+      if (isEditing) {
+        const response = await API.put(`/coupons/${currentCouponId}`, payload);
+        if (response.data.success) {
+          setCoupons(coupons.map(c => (c._id === currentCouponId ? response.data.data : c)));
+        }
+      } else {
+        const response = await API.post('/coupons', payload);
+        if (response.data.success) {
+          setCoupons([response.data.data, ...coupons]);
+        }
+      }
+      setIsModalOpen(false);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Error saving coupon');
+      console.error('Error saving coupon:', err);
     }
-    setIsModalOpen(false);
   };
 
   const handleResetForm = () => {
     setFormData(initialFormState);
   };
 
-  const handleDeleteCoupon = (id) => {
-    setCoupons(coupons.filter(c => c.id !== id));
+  const handleDeleteCoupon = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this coupon?')) return;
+    try {
+      const response = await API.delete(`/coupons/${id}`);
+      if (response.data.success) {
+        setCoupons(coupons.filter(c => c._id !== id));
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Error deleting coupon');
+      console.error('Error deleting coupon:', err);
+    }
   };
 
   const handleExport = () => {
@@ -278,7 +179,7 @@ const Couponsoffers = () => {
   const activeCouponsCount = coupons.filter(c => c.status === 'Active').length;
   const scheduledCouponsCount = coupons.filter(c => c.status === 'Scheduled').length;
   const expiredCouponsCount = coupons.filter(c => c.status === 'Expired').length;
-  const totalUsageCount = coupons.reduce((acc, curr) => acc + parseInt(curr.usage.replace(/[^0-9]/g, '') || 0), 0);
+  const totalUsageCount = coupons.reduce((acc, curr) => acc + (curr.usageCount || 0), 0);
 
   return (
     <div className="couponsoffers-container">
@@ -404,7 +305,7 @@ const Couponsoffers = () => {
             <tbody>
               {currentRows.length > 0 ? (
                 currentRows.map((coupon) => (
-                  <tr key={coupon.id}>
+                  <tr key={coupon._id}>
                     <td>
                       <span className="couponsoffers-code-badge">
                         <RiTicketLine /> {coupon.code}
@@ -416,12 +317,16 @@ const Couponsoffers = () => {
                         <span className="couponsoffers-cdesc">{coupon.description}</span>
                       </div>
                     </td>
-                    <td><span className="couponsoffers-bold-text">{coupon.discountValue}</span></td>
+                    <td>
+                      <span className="couponsoffers-bold-text">
+                        {coupon.discountType?.includes('Percentage') ? `${coupon.discountValue}%` : `₹${coupon.discountValue}`}
+                      </span>
+                    </td>
                     <td>₹{coupon.minOrder}</td>
                     <td>{coupon.validFrom} to {coupon.validTo}</td>
-                    <td>{coupon.usage}</td>
+                    <td>{coupon.usageCount || 0} times</td>
                     <td>
-                      <span className={`couponsoffers-status-badge ${coupon.status.toLowerCase()}`}>
+                      <span className={`couponsoffers-status-badge ${coupon.status?.toLowerCase()}`}>
                         {coupon.status}
                       </span>
                     </td>
@@ -430,7 +335,7 @@ const Couponsoffers = () => {
                         <button className="couponsoffers-action-btn edit" title="Edit Coupon" onClick={() => handleOpenEditModal(coupon)}>
                           <RiEditLine />
                         </button>
-                        <button className="couponsoffers-action-btn delete" title="Delete Coupon" onClick={() => handleDeleteCoupon(coupon.id)}>
+                        <button className="couponsoffers-action-btn delete" title="Delete Coupon" onClick={() => handleDeleteCoupon(coupon._id)}>
                           <RiDeleteBinLine />
                         </button>
                       </div>
@@ -475,7 +380,7 @@ const Couponsoffers = () => {
               Next &gt;
             </button>
             <select 
-              className="couponsoffers-rows-select"
+              className="couponsoffers-rows-select" 
               value={rowsPerPage}
               onChange={(e) => { setRowsPerPage(Number(e.target.value)); setCurrentPage(1); }}
             >
@@ -496,8 +401,8 @@ const Couponsoffers = () => {
                   <RiTicketLine />
                 </div>
                 <div>
-                  <h3>Add / Edit Coupon</h3>
-                  <p>Create a new coupon or offer for your customers.</p>
+                  <h3>{isEditing ? 'Edit Coupon' : 'Add New Coupon'}</h3>
+                  <p>{isEditing ? 'Update the details of your coupon.' : 'Create a new coupon or offer for your customers.'}</p>
                 </div>
               </div>
               <button className="couponsoffers-modal-close" onClick={handleCloseModal}>
@@ -544,7 +449,7 @@ const Couponsoffers = () => {
                 <div className="couponsoffers-form-group">
                   <label>Discount Value <span>*</span></label>
                   <input 
-                    type="text" 
+                    type="number" 
                     name="discountValue"
                     placeholder="Enter discount value" 
                     value={formData.discountValue}
@@ -556,7 +461,7 @@ const Couponsoffers = () => {
                 <div className="couponsoffers-form-group">
                   <label>Minimum Order Value (₹) <span>*</span></label>
                   <input 
-                    type="text" 
+                    type="number" 
                     name="minOrder"
                     placeholder="Enter minimum order value" 
                     value={formData.minOrder}
@@ -566,7 +471,7 @@ const Couponsoffers = () => {
                 <div className="couponsoffers-form-group">
                   <label>Maximum Discount (₹)</label>
                   <input 
-                    type="text" 
+                    type="number" 
                     name="maxDiscount"
                     placeholder="Enter max discount (optional)" 
                     value={formData.maxDiscount}
@@ -619,7 +524,7 @@ const Couponsoffers = () => {
                 <div className="couponsoffers-form-group">
                   <label>Usage Limit</label>
                   <input 
-                    type="text" 
+                    type="number" 
                     name="usageLimit"
                     placeholder="Enter total usage limit (optional)" 
                     value={formData.usageLimit}
@@ -630,7 +535,7 @@ const Couponsoffers = () => {
                 <div className="couponsoffers-form-group">
                   <label>Per User Limit</label>
                   <input 
-                    type="text" 
+                    type="number" 
                     name="perUserLimit"
                     placeholder="Enter per user limit (optional)" 
                     value={formData.perUserLimit}
@@ -642,7 +547,7 @@ const Couponsoffers = () => {
                   <input 
                     type="text" 
                     name="description"
-                    placeholder="Enter coupon description (optional)"
+                    placeholder="Enter coupon description (optional)" 
                     value={formData.description}
                     onChange={handleFormChange}
                   />
@@ -669,7 +574,7 @@ const Couponsoffers = () => {
                   <RiRefreshLine /> Reset
                 </button>
                 <button type="submit" className="couponsoffers-btn-save">
-                  <RiCheckLine /> Save Coupon
+                  <RiCheckLine /> {isEditing ? 'Update Coupon' : 'Save Coupon'}
                 </button>
               </div>
             </form>
