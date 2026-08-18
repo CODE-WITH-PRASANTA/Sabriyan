@@ -15,6 +15,7 @@ import BlogDetails from "./Pages/BlogDetails/BlogDetails";
 
 
 
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -29,10 +30,8 @@ const App = () => {
         <Route path="/blog" element={<Blog />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/contact" element={<Contact />} />
-
         <Route path="/blogDetails" element={<BlogDetails />} />
-
-        
+       
 
       </Routes>
       <Footer />

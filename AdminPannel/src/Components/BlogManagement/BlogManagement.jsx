@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
+import API, { IMG_URL } from '../../api/axios';
 import {
   FaThList,
   FaThLarge,
@@ -10,177 +11,127 @@ import {
   FaEye,
   FaEdit,
   FaTrash,
-  FaSync,
   FaBookmark,
   FaTimes,
   FaChevronDown
-} from "react-icons/fa";
-import "./BlogManagement.css";
+} from 'react-icons/fa';
+import './BlogManagement.css';
 
-// Initial blog data
-const initialBlogs = [
-  {
-    id: 1,
-    title: "The Healing Power of Nature",
-    description:
-      "Discover how spending time in deep forests can improve mood, reduce stress, and bring total balance to your mind.",
-    category: "Nature",
-    categoryClass: "cat-nature",
-    author: "Admin User",
-    authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-    date: "23 May 2025",
-    readTime: "5 min read",
-    status: "Published",
-    featured: true,
-    image: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=500"
-  },
-  {
-    id: 2,
-    title: "Benefits of Pure Forest Honey",
-    description:
-      "Unfiltered raw honey contains powerful antioxidants and enzymes. Here is how organic honey boosts your immunity.",
-    category: "Honey",
-    categoryClass: "cat-honey",
-    author: "Admin User",
-    authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-    date: "23 May 2025",
-    readTime: "3 min read",
-    status: "Published",
-    featured: true,
-    image: "https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=500"
-  },
-  {
-    id: 3,
-    title: "Daily Habits for a Better You",
-    description:
-      "Simple morning rituals, proper hydration, and herbal nutrition habits to elevate physical vitality and peace.",
-    category: "Health",
-    categoryClass: "cat-health",
-    author: "Admin User",
-    authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-    date: "22 May 2025",
-    readTime: "5 min read",
-    status: "Published",
-    featured: true,
-    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500"
-  },
-  {
-    id: 4,
-    title: "The Art of Chocolate Making",
-    description:
-      "From bean to bar - the journey of craft chocolate making and what makes it so special.",
-    category: "Chocolate",
-    categoryClass: "cat-chocolate",
-    author: "Admin User",
-    authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-    date: "21 May 2025",
-    readTime: "7 min read",
-    status: "Draft",
-    featured: false,
-    image: "https://images.unsplash.com/photo-1511381939415-e44015466834?w=500"
-  },
-  {
-    id: 5,
-    title: "Healthy Recipes with Honey",
-    description:
-      "Easy and delicious recipes made with natural honey that are perfect for your daily diet.",
-    category: "Recipes",
-    categoryClass: "cat-recipes",
-    author: "Admin User",
-    authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-    date: "20 May 2025",
-    readTime: "4 min read",
-    status: "Published",
-    featured: true,
-    image: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500"
-  },
-  {
-    id: 6,
-    title: "Understanding Green Tea Benefits",
-    description:
-      "A deep dive into antioxidant properties of high-grade organic green tea leaves.",
-    category: "Health",
-    categoryClass: "cat-health",
-    author: "Admin User",
-    authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-    date: "19 May 2025",
-    readTime: "6 min read",
-    status: "Published",
-    featured: false,
-    image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500"
-  },
-  {
-    id: 7,
-    title: "Organic Farm Life Essentials",
-    description:
-      "Exploring traditional sustainable farming methods and natural crop harvesting.",
-    category: "Nature",
-    categoryClass: "cat-nature",
-    author: "Admin User",
-    authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100",
-    date: "18 May 2025",
-    readTime: "4 min read",
-    status: "Draft",
-    featured: false,
-    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=500"
-  }
-];
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop';
 
-const BlogManagement = () => {
-  const [blogs, setBlogs] = useState(initialBlogs);
-  const [viewMode, setViewMode] = useState("list");
+const BlogManagement = ({ onNavigateToEdit }) => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [viewMode, setViewMode] = useState('list');
 
-  // Dropdown Filter States (Search Input removed)
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
-  const [selectedStatus, setSelectedStatus] = useState("All Status");
-  const [selectedAuthor, setSelectedAuthor] = useState("All Authors");
+  // Filters
+  const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [selectedStatus, setSelectedStatus] = useState('All Status');
+  const [selectedAuthor, setSelectedAuthor] = useState('All Authors');
 
-  // Pagination state
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 6;
 
-  // Modals state
+  // Modals
   const [viewModalData, setViewModalData] = useState(null);
   const [editModalData, setEditModalData] = useState(null);
 
-  // Delete Action
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this blog?")) {
-      setBlogs((prev) => prev.filter((blog) => blog.id !== id));
-      setCurrentPage(1);
+  // Dynamic Image Resolver
+  const getImageUrl = (item) => {
+    const rawImage = item?.featuredImage || item?.thumbnailImage || item?.image;
+    if (!rawImage) return FALLBACK_IMAGE;
+
+    if (rawImage.startsWith('http://') || rawImage.startsWith('https://') || rawImage.startsWith('data:')) {
+      return rawImage;
+    }
+
+    const baseUrl = IMG_URL || 'http://localhost:5000';
+    const cleanPath = rawImage.startsWith('/') ? rawImage : `/${rawImage}`;
+    return `${baseUrl}${cleanPath}`;
+  };
+
+  // Fetch blogs from API
+  const fetchBlogs = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await API.get('/blogs');
+      if (res.data?.success) {
+        setBlogs(res.data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching blogs:', error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this blog?')) return;
+
+    try {
+      const res = await API.delete(`/blogs/${id}`);
+      if (res.data?.success) {
+        setBlogs((prev) => prev.filter((blog) => (blog._id || blog.id) !== id));
+        alert('Blog deleted successfully!');
+      }
+    } catch (error) {
+      console.error('Error deleting blog:', error);
+      alert(error.response?.data?.message || 'Failed to delete blog.');
     }
   };
 
-  // Edit Action Save
-  const handleEditSave = (e) => {
+  const handleEditSave = async (e) => {
     e.preventDefault();
-    setBlogs((prev) =>
-      prev.map((item) => (item.id === editModalData.id ? editModalData : item))
-    );
-    setEditModalData(null);
+    const blogId = editModalData._id || editModalData.id;
+
+    try {
+      setSaving(true);
+      const res = await API.put(`/blogs/${blogId}`, {
+        title: editModalData.title,
+        excerpt: editModalData.description || editModalData.excerpt,
+        category: editModalData.category,
+        status: editModalData.status
+      });
+
+      if (res.data?.success) {
+        setBlogs((prev) =>
+          prev.map((item) => ((item._id || item.id) === blogId ? res.data.data : item))
+        );
+        setEditModalData(null);
+        alert('Blog updated successfully!');
+      }
+    } catch (error) {
+      console.error('Error saving edited blog:', error);
+      alert(error.response?.data?.message || 'Failed to update blog.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  // Filter Reset
   const handleFilterReset = () => {
-    setSelectedCategory("All Categories");
-    setSelectedStatus("All Status");
-    setSelectedAuthor("All Authors");
+    setSelectedCategory('All Categories');
+    setSelectedStatus('All Status');
+    setSelectedAuthor('All Authors');
     setCurrentPage(1);
   };
 
-  // Filtering Logic
   const filteredBlogs = blogs.filter((blog) => {
     const matchesCategory =
-      selectedCategory === "All Categories" || blog.category === selectedCategory;
+      selectedCategory === 'All Categories' || blog.category === selectedCategory;
     const matchesStatus =
-      selectedStatus === "All Status" || blog.status === selectedStatus;
+      selectedStatus === 'All Status' || blog.status === selectedStatus;
     const matchesAuthor =
-      selectedAuthor === "All Authors" || blog.author === selectedAuthor;
+      selectedAuthor === 'All Authors' || (blog.author || 'Admin User') === selectedAuthor;
 
     return matchesCategory && matchesStatus && matchesAuthor;
   });
 
-  // Pagination Logic
   const totalPages = Math.ceil(filteredBlogs.length / itemsPerPage) || 1;
   const indexOfLastBlog = currentPage * itemsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - itemsPerPage;
@@ -194,29 +145,26 @@ const BlogManagement = () => {
 
   return (
     <div className="BlogManagement dark-forest-theme">
-      {/* Top Header Controls */}
+      {/* Top Controls */}
       <div className="BlogManagement-header">
         <div className="BlogManagement-viewToggle">
           <button
-            className={`BlogManagement-toggleBtn ${
-              viewMode === "list" ? "active" : ""
-            }`}
-            onClick={() => setViewMode("list")}
+            type="button"
+            className={`BlogManagement-toggleBtn ${viewMode === 'list' ? 'active' : ''}`}
+            onClick={() => setViewMode('list')}
           >
             <FaThList className="btn-icon" /> List View
           </button>
           <button
-            className={`BlogManagement-toggleBtn ${
-              viewMode === "grid" ? "active" : ""
-            }`}
-            onClick={() => setViewMode("grid")}
+            type="button"
+            className={`BlogManagement-toggleBtn ${viewMode === 'grid' ? 'active' : ''}`}
+            onClick={() => setViewMode('grid')}
           >
             <FaThLarge className="btn-icon" /> Grid View
           </button>
         </div>
 
         <div className="BlogManagement-controls">
-          {/* Category Dropdown */}
           <div className="BlogManagement-selectWrapper">
             <select
               value={selectedCategory}
@@ -235,7 +183,6 @@ const BlogManagement = () => {
             <FaChevronDown className="select-arrow" />
           </div>
 
-          {/* Status Dropdown */}
           <div className="BlogManagement-selectWrapper">
             <select
               value={selectedStatus}
@@ -251,7 +198,6 @@ const BlogManagement = () => {
             <FaChevronDown className="select-arrow" />
           </div>
 
-          {/* Author Dropdown */}
           <div className="BlogManagement-selectWrapper">
             <select
               value={selectedAuthor}
@@ -266,8 +212,8 @@ const BlogManagement = () => {
             <FaChevronDown className="select-arrow" />
           </div>
 
-          {/* Reset Filter Button */}
           <button
+            type="button"
             className="BlogManagement-filterBtn"
             onClick={handleFilterReset}
             title="Reset All Filters"
@@ -277,8 +223,12 @@ const BlogManagement = () => {
         </div>
       </div>
 
-      {/* VIEW 1: List View */}
-      {viewMode === "list" ? (
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '40px', color: '#e2f1e8' }}>
+          Loading blog data...
+        </div>
+      ) : viewMode === 'list' ? (
+        /* LIST VIEW */
         <div className="BlogManagement-tableContainer">
           <table className="BlogManagement-table">
             <thead>
@@ -297,82 +247,122 @@ const BlogManagement = () => {
             </thead>
             <tbody>
               {currentBlogs.length > 0 ? (
-                currentBlogs.map((blog, index) => (
-                  <tr key={blog.id}>
-                    <td>{indexOfFirstBlog + index + 1}</td>
-                    <td>
-                      <img
-                        src={blog.image}
-                        alt={blog.title}
-                        className="BlogManagement-thumb"
-                      />
-                    </td>
-                    <td className="title-cell">
-                      <div className="title-text">{blog.title}</div>
-                      <div className="desc-text">{blog.description}</div>
-                    </td>
-                    <td>
-                      <span className={`category-badge ${blog.categoryClass}`}>
-                        {blog.category}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="author-cell">
-                        <img src={blog.authorAvatar} alt={blog.author} />
-                        <span>{blog.author}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="meta-item">
-                        <FaCalendarAlt /> {blog.date}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="meta-item">
-                        <FaClock /> {blog.readTime}
-                      </div>
-                    </td>
-                    <td>
-                      <span
-                        className={`status-pill ${blog.status.toLowerCase()}`}
-                      >
-                        {blog.status}
-                      </span>
-                    </td>
-                    <td>
-                      {blog.featured ? (
-                        <FaCheckCircle className="feat-icon active" />
-                      ) : (
-                        <FaTimesCircle className="feat-icon inactive" />
-                      )}
-                    </td>
-                    <td>
-                      <div className="action-buttons">
-                        <button
-                          className="act-btn view"
-                          onClick={() => setViewModalData(blog)}
-                          title="View Details"
-                        >
-                          <FaEye />
-                        </button>
-                        <button
-                          className="act-btn edit"
-                          onClick={() => setEditModalData(blog)}
-                          title="Edit Blog"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          className="act-btn delete"
-                          onClick={() => handleDelete(blog.id)}
-                          title="Delete Blog"
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                currentBlogs.map((blog, index) => {
+                  const blogId = blog._id || blog.id;
+                  const displayImage = getImageUrl(blog);
+
+                  return (
+                    <tr key={blogId}>
+                      <td>{indexOfFirstBlog + index + 1}</td>
+                      <td>
+                        <img
+                          src={displayImage}
+                          alt={blog.title}
+                          className="BlogManagement-thumb"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = FALLBACK_IMAGE;
+                          }}
+                        />
+                      </td>
+                      <td className="title-cell">
+                        <div className="title-text">{blog.title}</div>
+                        <div className="desc-text">{blog.excerpt || blog.description}</div>
+                      </td>
+                      <td>
+                        <span className={`category-badge cat-${(blog.category || 'general').toLowerCase()}`}>
+                          {blog.category}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="author-cell">
+                          <img
+                            src={
+                              blog.authorAvatar ||
+                              'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100'
+                            }
+                            alt={blog.author || 'Admin'}
+                          />
+                          <span>{blog.author || 'Admin User'}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="meta-item">
+                          <FaCalendarAlt />{' '}
+                          {blog.publishDate
+                            ? new Date(blog.publishDate).toLocaleDateString('en-GB', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                              })
+                            : 'N/A'}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="meta-item">
+                          <FaClock /> {blog.readTime || '5 min read'}
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`status-pill ${(blog.status || 'published').toLowerCase()}`}>
+                          {blog.status}
+                        </span>
+                      </td>
+                      <td>
+                        {blog.featured ? (
+                          <FaCheckCircle className="feat-icon active" />
+                        ) : (
+                          <FaTimesCircle className="feat-icon inactive" />
+                        )}
+                      </td>
+                      <td>
+                        <div className="action-buttons">
+                          <button
+                            type="button"
+                            className="act-btn view"
+                            onClick={() =>
+                              setViewModalData({
+                                ...blog,
+                                image: displayImage,
+                                description: blog.excerpt || blog.description,
+                                categoryClass: `cat-${(blog.category || 'general').toLowerCase()}`,
+                                date: blog.publishDate || 'N/A'
+                              })
+                            }
+                            title="View Details"
+                          >
+                            <FaEye />
+                          </button>
+                          <button
+                            type="button"
+                            className="act-btn edit"
+                            onClick={() => {
+                              if (onNavigateToEdit) {
+                                onNavigateToEdit(blog);
+                              } else {
+                                setEditModalData({
+                                  ...blog,
+                                  description: blog.excerpt || blog.description
+                                });
+                              }
+                            }}
+                            title="Edit Blog"
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            type="button"
+                            className="act-btn delete"
+                            onClick={() => handleDelete(blogId)}
+                            title="Delete Blog"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
                   <td colSpan="10" className="no-data">
@@ -383,15 +373,14 @@ const BlogManagement = () => {
             </tbody>
           </table>
 
-          {/* Pagination Footer */}
           <div className="BlogManagement-pagination">
             <span className="pagination-info">
-              Showing {filteredBlogs.length > 0 ? indexOfFirstBlog + 1 : 0} to{" "}
-              {Math.min(indexOfLastBlog, filteredBlogs.length)} of{" "}
-              {filteredBlogs.length} blogs
+              Showing {filteredBlogs.length > 0 ? indexOfFirstBlog + 1 : 0} to{' '}
+              {Math.min(indexOfLastBlog, filteredBlogs.length)} of {filteredBlogs.length} blogs
             </span>
             <div className="pagination-controls">
               <button
+                type="button"
                 className="page-btn text"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -401,13 +390,15 @@ const BlogManagement = () => {
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
                 <button
                   key={num}
-                  className={`page-btn num ${currentPage === num ? "active" : ""}`}
+                  type="button"
+                  className={`page-btn num ${currentPage === num ? 'active' : ''}`}
                   onClick={() => handlePageChange(num)}
                 >
                   {num}
                 </button>
               ))}
               <button
+                type="button"
                 className="page-btn text"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages || totalPages === 0}
@@ -418,86 +409,167 @@ const BlogManagement = () => {
           </div>
         </div>
       ) : (
-        /* VIEW 2: Grid View */
+        /* GRID VIEW */
         <div className="BlogManagement-gridContainer">
           <div className="BlogManagement-grid">
-            {filteredBlogs.map((blog) => (
-              <div key={blog.id} className="BlogManagement-card">
-                <div className="card-top">
-                  <img src={blog.image} alt={blog.title} />
-                  <span className={`category-badge ${blog.categoryClass}`}>
-                    {blog.category}
-                  </span>
-                  <button className="card-bookmark">
-                    <FaBookmark />
-                  </button>
-                </div>
+            {currentBlogs.map((blog) => {
+              const blogId = blog._id || blog.id;
+              const displayImage = getImageUrl(blog);
 
-                <div className="card-content">
-                  <div className="card-meta">
-                    <span>
-                      <FaCalendarAlt /> {blog.date}
+              return (
+                <div key={blogId} className="BlogManagement-card">
+                  <div className="card-top">
+                    <img
+                      src={displayImage}
+                      alt={blog.title}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = FALLBACK_IMAGE;
+                      }}
+                    />
+                    <span className={`category-badge cat-${(blog.category || 'general').toLowerCase()}`}>
+                      {blog.category}
                     </span>
-                    <span>
-                      <FaClock /> {blog.readTime}
-                    </span>
+                    <button type="button" className="card-bookmark">
+                      <FaBookmark />
+                    </button>
                   </div>
-                  <h3 className="card-title">{blog.title}</h3>
-                  <p className="card-desc">{blog.description}</p>
-                </div>
 
-                <div className="card-footer">
-                  <div className="author-cell">
-                    <img src={blog.authorAvatar} alt={blog.author} />
-                    <span>{blog.author}</span>
+                  <div className="card-content">
+                    <div className="card-meta">
+                      <span>
+                        <FaCalendarAlt />{' '}
+                        {blog.publishDate
+                          ? new Date(blog.publishDate).toLocaleDateString('en-GB', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric'
+                            })
+                          : 'N/A'}
+                      </span>
+                      <span>
+                        <FaClock /> {blog.readTime || '5 min read'}
+                      </span>
+                    </div>
+                    <h3 className="card-title">{blog.title}</h3>
+                    <p className="card-desc">{blog.excerpt || blog.description}</p>
                   </div>
-                  <div className="action-buttons">
-                    <button
-                      className="act-btn view"
-                      onClick={() => setViewModalData(blog)}
-                    >
-                      <FaEye />
-                    </button>
-                    <button
-                      className="act-btn edit"
-                      onClick={() => setEditModalData(blog)}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="act-btn delete"
-                      onClick={() => handleDelete(blog.id)}
-                    >
-                      <FaTrash />
-                    </button>
+
+                  <div className="card-footer">
+                    <div className="author-cell">
+                      <img
+                        src={
+                          blog.authorAvatar ||
+                          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100'
+                        }
+                        alt={blog.author || 'Admin'}
+                      />
+                      <span>{blog.author || 'Admin User'}</span>
+                    </div>
+                    <div className="action-buttons">
+                      <button
+                        type="button"
+                        className="act-btn view"
+                        onClick={() =>
+                          setViewModalData({
+                            ...blog,
+                            image: displayImage,
+                            description: blog.excerpt || blog.description,
+                            categoryClass: `cat-${(blog.category || 'general').toLowerCase()}`,
+                            date: blog.publishDate || 'N/A'
+                          })
+                        }
+                      >
+                        <FaEye />
+                      </button>
+                      <button
+                        type="button"
+                        className="act-btn edit"
+                        onClick={() => {
+                          if (onNavigateToEdit) {
+                            onNavigateToEdit(blog);
+                          } else {
+                            setEditModalData({
+                              ...blog,
+                              description: blog.excerpt || blog.description
+                            });
+                          }
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        type="button"
+                        className="act-btn delete"
+                        onClick={() => handleDelete(blogId)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          <div className="BlogManagement-loadMore">
-            <button className="load-more-btn">
-              Load More Blogs <FaSync />
-            </button>
+          <div className="BlogManagement-pagination">
+            <span className="pagination-info">
+              Showing {filteredBlogs.length > 0 ? indexOfFirstBlog + 1 : 0} to{' '}
+              {Math.min(indexOfLastBlog, filteredBlogs.length)} of {filteredBlogs.length} blogs
+            </span>
+            <div className="pagination-controls">
+              <button
+                type="button"
+                className="page-btn text"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  className={`page-btn num ${currentPage === num ? 'active' : ''}`}
+                  onClick={() => handlePageChange(num)}
+                >
+                  {num}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="page-btn text"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages || totalPages === 0}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* EYE ICON VIEW DETAIL MODAL */}
+      {/* VIEW DETAIL MODAL */}
       {viewModalData && (
         <div className="BlogManagement-modalOverlay">
           <div className="BlogManagement-modal detail-modal">
             <button
+              type="button"
               className="close-modal-btn"
               onClick={() => setViewModalData(null)}
               aria-label="Close modal"
-              title="Close"
             >
               <FaTimes />
             </button>
             <div className="modal-banner-wrap">
-              <img src={viewModalData.image} alt={viewModalData.title} />
+              <img
+                src={viewModalData.image}
+                alt={viewModalData.title}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = FALLBACK_IMAGE;
+                }}
+              />
               <span className={`category-badge ${viewModalData.categoryClass}`}>
                 {viewModalData.category}
               </span>
@@ -509,26 +581,13 @@ const BlogManagement = () => {
                   <FaCalendarAlt /> {viewModalData.date}
                 </span>
                 <span>
-                  <FaClock /> {viewModalData.readTime}
+                  <FaClock /> {viewModalData.readTime || '5 min read'}
                 </span>
-                <span
-                  className={`status-pill ${viewModalData.status.toLowerCase()}`}
-                >
+                <span className={`status-pill ${(viewModalData.status || 'published').toLowerCase()}`}>
                   {viewModalData.status}
                 </span>
               </div>
               <p className="modal-full-text">{viewModalData.description}</p>
-
-              <div className="modal-author-box">
-                <img
-                  src={viewModalData.authorAvatar}
-                  alt={viewModalData.author}
-                />
-                <div>
-                  <h4>{viewModalData.author}</h4>
-                  <span>Author & Content Creator</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -539,10 +598,10 @@ const BlogManagement = () => {
         <div className="BlogManagement-modalOverlay">
           <div className="BlogManagement-modal edit-modal">
             <button
+              type="button"
               className="close-modal-btn"
               onClick={() => setEditModalData(null)}
               aria-label="Close modal"
-              title="Close"
             >
               <FaTimes />
             </button>
@@ -552,12 +611,9 @@ const BlogManagement = () => {
                 <label>Blog Title</label>
                 <input
                   type="text"
-                  value={editModalData.title}
+                  value={editModalData.title || ''}
                   onChange={(e) =>
-                    setEditModalData({
-                      ...editModalData,
-                      title: e.target.value
-                    })
+                    setEditModalData({ ...editModalData, title: e.target.value })
                   }
                   required
                 />
@@ -567,12 +623,9 @@ const BlogManagement = () => {
                 <label>Description</label>
                 <textarea
                   rows="4"
-                  value={editModalData.description}
+                  value={editModalData.description || ''}
                   onChange={(e) =>
-                    setEditModalData({
-                      ...editModalData,
-                      description: e.target.value
-                    })
+                    setEditModalData({ ...editModalData, description: e.target.value })
                   }
                   required
                 />
@@ -582,12 +635,9 @@ const BlogManagement = () => {
                 <div className="form-group">
                   <label>Category</label>
                   <select
-                    value={editModalData.category}
+                    value={editModalData.category || 'Nature'}
                     onChange={(e) =>
-                      setEditModalData({
-                        ...editModalData,
-                        category: e.target.value
-                      })
+                      setEditModalData({ ...editModalData, category: e.target.value })
                     }
                   >
                     <option value="Nature">Nature</option>
@@ -601,12 +651,9 @@ const BlogManagement = () => {
                 <div className="form-group">
                   <label>Status</label>
                   <select
-                    value={editModalData.status}
+                    value={editModalData.status || 'Published'}
                     onChange={(e) =>
-                      setEditModalData({
-                        ...editModalData,
-                        status: e.target.value
-                      })
+                      setEditModalData({ ...editModalData, status: e.target.value })
                     }
                   >
                     <option value="Published">Published</option>
@@ -616,13 +663,14 @@ const BlogManagement = () => {
               </div>
 
               <div className="modal-actions">
-                <button type="submit" className="save-btn">
-                  Save Changes
+                <button type="submit" className="save-btn" disabled={saving}>
+                  {saving ? 'Saving...' : 'Save Changes'}
                 </button>
                 <button
                   type="button"
                   className="cancel-btn"
                   onClick={() => setEditModalData(null)}
+                  disabled={saving}
                 >
                   Cancel
                 </button>

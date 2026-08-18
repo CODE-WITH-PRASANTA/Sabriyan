@@ -12,7 +12,10 @@ const customerRoutes = require("./routes/customerRoutes");
 const premiumCollectionRoutes = require("./routes/premiumCollectionRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
-
+const brandRoutes = require("./routes/brandRoutes");
+const attributeRoutes = require("./routes/attributeRoutes");
+const productRoutes = require("./routes/productRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 // ======================
 // Middleware
 // ======================
@@ -59,6 +62,10 @@ connectDB();
 app.use("/api/premium-collection", premiumCollectionRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/brands", brandRoutes);
+app.use("/api/attributes", attributeRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/blogs", blogRoutes);
 // ======================
 // Start Server
 // ======================

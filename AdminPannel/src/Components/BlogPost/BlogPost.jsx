@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import './BlogPost.css';
+import API, { IMG_URL } from '../../api/axios';
 import {
   FaEdit,
   FaCloudUploadAlt,
@@ -15,130 +16,10 @@ import {
   FaRedo
 } from 'react-icons/fa';
 
-const initialBlogs = [
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=150&auto=format&fit=crop&q=60',
-    title: 'The Healing Power of Nature',
-    excerpt: 'Discover how spending time in deep forests can improve mental health and overall well-being...',
-    category: 'Nature',
-    tags: 'Nature, Healing',
-    date: '23 May 2025',
-    publishDate: '2025-05-23',
-    readTime: '5 min read',
-    status: 'Published',
-    featured: true,
-    content: '<p>Discover how spending time in deep forests can improve mental health and overall well-being...</p>',
-    metaTitle: 'The Healing Power of Nature',
-    metaDescription: 'Forest healing and well-being',
-    metaKeywords: 'nature, forest, health'
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=150&auto=format&fit=crop&q=60',
-    title: 'Benefits of Pure Forest Honey',
-    excerpt: 'Unfiltered raw honey contains powerful antioxidants, enzymes, and natural healing properties...',
-    category: 'Honey',
-    tags: 'Honey, Organic',
-    date: '23 May 2025',
-    publishDate: '2025-05-23',
-    readTime: '3 min read',
-    status: 'Published',
-    featured: true,
-    content: '<p>Unfiltered raw honey contains powerful antioxidants...</p>',
-    metaTitle: 'Benefits of Pure Forest Honey',
-    metaDescription: 'Raw honey health benefits',
-    metaKeywords: 'honey, organic'
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=150&auto=format&fit=crop&q=60',
-    title: 'Daily Habits for a Better You',
-    excerpt: 'Simple morning rituals, proper hydration, and herbal intake to elevate your energy levels...',
-    category: 'Health',
-    tags: 'Habits, Health',
-    date: '22 May 2025',
-    publishDate: '2025-05-22',
-    readTime: '5 min read',
-    status: 'Published',
-    featured: true,
-    content: '<p>Simple morning rituals...</p>',
-    metaTitle: 'Daily Habits for a Better You',
-    metaDescription: 'Morning routines and health tips',
-    metaKeywords: 'habits, fitness'
-  },
-  {
-    id: 4,
-    image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=150&auto=format&fit=crop&q=60',
-    title: 'The Art of Chocolate Making',
-    excerpt: 'From bean to bar – the detailed journey of craft chocolate production and roasting...',
-    category: 'Chocolate',
-    tags: 'Chocolate, Craft',
-    date: '21 May 2025',
-    publishDate: '2025-05-21',
-    readTime: '7 min read',
-    status: 'Draft',
-    featured: false,
-    content: '<p>From bean to bar...</p>',
-    metaTitle: 'The Art of Chocolate Making',
-    metaDescription: 'Craft chocolate production',
-    metaKeywords: 'chocolate, craft'
-  },
-  {
-    id: 5,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=150&auto=format&fit=crop&q=60',
-    title: 'Healthy Recipes with Honey',
-    excerpt: 'Easy and delicious breakfast and dessert recipes made with organic natural honey...',
-    category: 'Recipes',
-    tags: 'Food, Honey',
-    date: '20 May 2025',
-    publishDate: '2025-05-20',
-    readTime: '4 min read',
-    status: 'Published',
-    featured: true,
-    content: '<p>Easy and delicious recipes...</p>',
-    metaTitle: 'Healthy Recipes with Honey',
-    metaDescription: 'Honey breakfast recipes',
-    metaKeywords: 'recipes, honey'
-  },
-  {
-    id: 6,
-    image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=150&auto=format&fit=crop&q=60',
-    title: 'Exploring Alpine Ecosystems',
-    excerpt: 'A comprehensive study on high-altitude flora and fauna resilience...',
-    category: 'Nature',
-    tags: 'Nature, Alpine',
-    date: '19 May 2025',
-    publishDate: '2025-05-19',
-    readTime: '6 min read',
-    status: 'Published',
-    featured: false,
-    content: '<p>High-altitude flora and fauna resilience...</p>',
-    metaTitle: 'Exploring Alpine Ecosystems',
-    metaDescription: 'Alpine nature study',
-    metaKeywords: 'alpine, nature'
-  },
-  {
-    id: 7,
-    image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=150&auto=format&fit=crop&q=60',
-    title: 'Organic Diet Fundamentals',
-    excerpt: 'Transitioning to clean whole foods without overcomplicating meal preps...',
-    category: 'Health',
-    tags: 'Health, Diet',
-    date: '18 May 2025',
-    publishDate: '2025-05-18',
-    readTime: '4 min read',
-    status: 'Draft',
-    featured: true,
-    content: '<p>Transitioning to clean whole foods...</p>',
-    metaTitle: 'Organic Diet Fundamentals',
-    metaDescription: 'Organic diet tips',
-    metaKeywords: 'diet, organic'
-  }
-];
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop';
 
 const BlogPost = () => {
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     title: '',
     category: '',
     tags: '',
@@ -150,23 +31,26 @@ const BlogPost = () => {
     content: '',
     status: true,
     featured: true,
-    publishDate: '2025-05-23',
+    publishDate: new Date().toISOString().split('T')[0],
     metaTitle: '',
     metaDescription: '',
     metaKeywords: ''
-  });
+  };
 
-  const [blogs, setBlogs] = useState(initialBlogs);
+  const [formData, setFormData] = useState(initialFormState);
+  const [blogs, setBlogs] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  
-  // Filtering states
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('All Categories');
   const [filterStatus, setFilterStatus] = useState('All Status');
   const [filterFeatured, setFilterFeatured] = useState('All');
   const [showFilterOptions, setShowFilterOptions] = useState(true);
 
-  // Pagination states
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -174,67 +58,91 @@ const BlogPost = () => {
   const thumbnailInputRef = useRef(null);
   const editorRef = useRef(null);
 
+  // Precise image resolver for individual blog posts
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return FALLBACK_IMAGE;
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('blob:')) {
+      return imagePath;
+    }
+    const baseUrl = IMG_URL || 'http://localhost:5000';
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${baseUrl}${cleanPath}`;
+  };
+
+  // Fetch blogs from API
+  const fetchBlogs = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await API.get('/blogs');
+      if (res.data?.success) {
+        setBlogs(res.data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching blogs:', error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
+
   const handleTitleChange = (e) => {
     const val = e.target.value;
     if (val.length <= 100) {
-      setFormData((prev) => ({
-        ...prev,
-        title: val
-      }));
+      setFormData((prev) => ({ ...prev, title: val }));
     }
   };
 
+  // Keep featured and thumbnail uploads isolated
   const handleImageUpload = (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
+      const previewUrl = URL.createObjectURL(file);
       if (type === 'featured') {
-        setFormData((prev) => ({ ...prev, featuredImage: file, featuredImagePreview: imageUrl }));
-      } else {
-        setFormData((prev) => ({ ...prev, thumbnailImage: file, thumbnailPreview: imageUrl }));
+        setFormData((prev) => ({
+          ...prev,
+          featuredImage: file,
+          featuredImagePreview: previewUrl
+        }));
+      } else if (type === 'thumbnail') {
+        setFormData((prev) => ({
+          ...prev,
+          thumbnailImage: file,
+          thumbnailPreview: previewUrl
+        }));
       }
     }
   };
 
   const handleReset = () => {
     setEditingId(null);
-    setFormData({
-      title: '',
-      category: '',
-      tags: '',
-      featuredImage: null,
-      featuredImagePreview: '',
-      thumbnailImage: null,
-      thumbnailPreview: '',
-      excerpt: '',
-      content: '',
-      status: true,
-      featured: true,
-      publishDate: '2025-05-23',
-      metaTitle: '',
-      metaDescription: '',
-      metaKeywords: ''
-    });
+    setFormData(initialFormState);
     if (editorRef.current) {
       editorRef.current.setContent('<p>Write full blog content here...</p>');
     }
+    if (featuredInputRef.current) featuredInputRef.current.value = '';
+    if (thumbnailInputRef.current) thumbnailInputRef.current.value = '';
   };
 
   const handleEdit = (blog) => {
-    setEditingId(blog.id);
+    const targetId = blog._id || blog.id;
+    setEditingId(targetId);
+
     setFormData({
       title: blog.title || '',
       category: blog.category || '',
       tags: blog.tags || '',
       featuredImage: null,
-      featuredImagePreview: blog.image || '',
+      featuredImagePreview: blog.featuredImage ? getImageUrl(blog.featuredImage) : '',
       thumbnailImage: null,
-      thumbnailPreview: blog.image || '',
-      excerpt: blog.excerpt || '',
-      content: blog.content || '',
+      thumbnailPreview: blog.thumbnailImage ? getImageUrl(blog.thumbnailImage) : '',
+      excerpt: blog.excerpt || blog.description || '',
+      content: blog.content || '<p>Write full blog content here...</p>',
       status: blog.status === 'Published',
       featured: Boolean(blog.featured),
-      publishDate: blog.publishDate || '2025-05-23',
+      publishDate: blog.publishDate || new Date().toISOString().split('T')[0],
       metaTitle: blog.metaTitle || '',
       metaDescription: blog.metaDescription || '',
       metaKeywords: blog.metaKeywords || ''
@@ -243,97 +151,111 @@ const BlogPost = () => {
     if (editorRef.current) {
       editorRef.current.setContent(blog.content || '<p>Write full blog content here...</p>');
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handlePublish = (statusType = 'Published') => {
+  const handlePublish = async (statusType = 'Published') => {
     if (!formData.title.trim()) {
       alert('Please enter a Blog Title');
+      return;
+    }
+    if (!formData.category.trim()) {
+      alert('Please select a Category');
+      return;
+    }
+    if (!formData.excerpt.trim()) {
+      alert('Please enter an Excerpt / Short Description');
       return;
     }
 
     const editorContent = editorRef.current ? editorRef.current.getContent() : formData.content;
 
-    if (editingId) {
-      setBlogs((prevBlogs) =>
-        prevBlogs.map((b) =>
-          b.id === editingId
-            ? {
-                ...b,
-                title: formData.title,
-                category: formData.category || 'General',
-                tags: formData.tags,
-                image: formData.featuredImagePreview || b.image,
-                excerpt: formData.excerpt || 'No description provided.',
-                content: editorContent,
-                status: statusType,
-                featured: formData.featured,
-                publishDate: formData.publishDate,
-                date: formData.publishDate
-                  ? new Date(formData.publishDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-                  : b.date,
-                metaTitle: formData.metaTitle,
-                metaDescription: formData.metaDescription,
-                metaKeywords: formData.metaKeywords
-              }
-            : b
-        )
-      );
-    } else {
-      const newBlog = {
-        id: Date.now(),
-        image: formData.featuredImagePreview || 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=150&auto=format&fit=crop&q=60',
-        title: formData.title,
-        excerpt: formData.excerpt || 'No description provided.',
-        category: formData.category || 'General',
-        tags: formData.tags,
-        date: formData.publishDate ? new Date(formData.publishDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '23 May 2025',
-        publishDate: formData.publishDate,
-        readTime: '4 min read',
-        status: statusType,
-        featured: formData.featured,
-        content: editorContent,
-        metaTitle: formData.metaTitle,
-        metaDescription: formData.metaDescription,
-        metaKeywords: formData.metaKeywords
-      };
+    const payload = new FormData();
+    payload.append('title', formData.title.trim());
+    payload.append('category', formData.category);
+    payload.append('tags', formData.tags || '');
+    payload.append('excerpt', formData.excerpt.trim());
+    payload.append('content', editorContent);
+    payload.append('status', statusType);
+    payload.append('featured', formData.featured);
+    payload.append('publishDate', formData.publishDate);
+    payload.append('metaTitle', formData.metaTitle || '');
+    payload.append('metaDescription', formData.metaDescription || '');
+    payload.append('metaKeywords', formData.metaKeywords || '');
 
-      setBlogs([newBlog, ...blogs]);
+    if (formData.featuredImage instanceof File) {
+      payload.append('featuredImage', formData.featuredImage);
+    }
+    if (formData.thumbnailImage instanceof File) {
+      payload.append('thumbnailImage', formData.thumbnailImage);
     }
 
-    handleReset();
-  };
-
-  const handleDelete = (id) => {
-    setBlogs(blogs.filter((b) => b.id !== id));
-    if (editingId === id) {
+    try {
+      setSubmitting(true);
+      if (editingId) {
+        const res = await API.put(`/blogs/${editingId}`, payload, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        if (res.data?.success) {
+          setBlogs((prev) =>
+            prev.map((b) => ((b._id || b.id) === editingId ? res.data.data : b))
+          );
+          alert('Blog post updated successfully!');
+        }
+      } else {
+        const res = await API.post('/blogs', payload, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        if (res.data?.success) {
+          setBlogs((prev) => [res.data.data, ...prev]);
+          alert('Blog post published successfully!');
+        }
+      }
       handleReset();
+    } catch (error) {
+      console.error('Error saving blog post:', error);
+      alert(error.response?.data?.message || 'Error occurred while saving blog post.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleToggleFilter = () => {
-    setShowFilterOptions(!showFilterOptions);
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this blog post?')) return;
+
+    try {
+      const res = await API.delete(`/blogs/${id}`);
+      if (res.data?.success) {
+        setBlogs((prev) => prev.filter((b) => (b._id || b.id) !== id));
+        if (editingId === id) {
+          handleReset();
+        }
+        alert('Blog post deleted successfully!');
+      }
+    } catch (error) {
+      console.error('Error deleting blog post:', error);
+      alert(error.response?.data?.message || 'Failed to delete blog post.');
+    }
   };
 
-  // Filter Logic
   const filteredBlogs = blogs.filter((blog) => {
-    const matchesSearch = blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      (blog.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (blog.excerpt || blog.description || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = filterCategory === 'All Categories' || blog.category === filterCategory;
     const matchesStatus = filterStatus === 'All Status' || blog.status === filterStatus;
-    const matchesFeatured = 
-      filterFeatured === 'All' || 
-      (filterFeatured === 'Yes' && blog.featured) || 
+    const matchesFeatured =
+      filterFeatured === 'All' ||
+      (filterFeatured === 'Yes' && blog.featured) ||
       (filterFeatured === 'No' && !blog.featured);
 
     return matchesSearch && matchesCategory && matchesStatus && matchesFeatured;
   });
 
-  // Reset page to 1 whenever filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, filterCategory, filterStatus, filterFeatured]);
 
-  // Pagination Calculations
   const totalPages = Math.ceil(filteredBlogs.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedBlogs = filteredBlogs.slice(startIndex, startIndex + itemsPerPage);
@@ -346,7 +268,7 @@ const BlogPost = () => {
 
   return (
     <div className="BlogPost-container">
-      {/* LEFT COLUMN: FORM (50%) */}
+      {/* FORM COLUMN */}
       <div className="BlogPost-column BlogPost-formColumn">
         <div className="BlogPost-card BlogPost-scrollableForm">
           <div className="BlogPost-header">
@@ -359,7 +281,9 @@ const BlogPost = () => {
           <form onSubmit={(e) => e.preventDefault()} className="BlogPost-form">
             <div className="BlogPost-field">
               <div className="BlogPost-labelRow">
-                <label>Blog Title <span className="BlogPost-required">*</span></label>
+                <label>
+                  Blog Title <span className="BlogPost-required">*</span>
+                </label>
                 <span className="BlogPost-charCount">{formData.title.length}/100</span>
               </div>
               <input
@@ -372,7 +296,9 @@ const BlogPost = () => {
 
             <div className="BlogPost-grid2">
               <div className="BlogPost-field">
-                <label>Category <span className="BlogPost-required">*</span></label>
+                <label>
+                  Category <span className="BlogPost-required">*</span>
+                </label>
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -389,19 +315,20 @@ const BlogPost = () => {
                 <label>Tags</label>
                 <input
                   type="text"
-                  placeholder="Enter tags"
+                  placeholder="e.g. Nature, Healing"
                   value={formData.tags}
                   onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                 />
               </div>
             </div>
 
+            {/* FEATURED & THUMBNAIL UPLOAD FIELDS */}
             <div className="BlogPost-grid2">
               <div className="BlogPost-field">
-                <label>Featured Image <span className="BlogPost-required">*</span></label>
+                <label>Featured Image</label>
                 <div
                   className="BlogPost-uploadBox"
-                  onClick={() => featuredInputRef.current.click()}
+                  onClick={() => featuredInputRef.current && featuredInputRef.current.click()}
                 >
                   <input
                     type="file"
@@ -411,12 +338,20 @@ const BlogPost = () => {
                     onChange={(e) => handleImageUpload(e, 'featured')}
                   />
                   {formData.featuredImagePreview ? (
-                    <img src={formData.featuredImagePreview} alt="Preview" className="BlogPost-imgPreview" />
+                    <img
+                      src={formData.featuredImagePreview}
+                      alt="Featured Preview"
+                      className="BlogPost-imgPreview"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = FALLBACK_IMAGE;
+                      }}
+                    />
                   ) : (
                     <>
                       <FaCloudUploadAlt className="BlogPost-uploadIcon" />
-                      <span>Upload Image</span>
-                      <small>Max 2MB</small>
+                      <span>Upload Featured</span>
+                      <small>Max 5MB</small>
                     </>
                   )}
                 </div>
@@ -426,7 +361,7 @@ const BlogPost = () => {
                 <label>Thumbnail Image</label>
                 <div
                   className="BlogPost-uploadBox"
-                  onClick={() => thumbnailInputRef.current.click()}
+                  onClick={() => thumbnailInputRef.current && thumbnailInputRef.current.click()}
                 >
                   <input
                     type="file"
@@ -436,12 +371,20 @@ const BlogPost = () => {
                     onChange={(e) => handleImageUpload(e, 'thumbnail')}
                   />
                   {formData.thumbnailPreview ? (
-                    <img src={formData.thumbnailPreview} alt="Preview" className="BlogPost-imgPreview" />
+                    <img
+                      src={formData.thumbnailPreview}
+                      alt="Thumbnail Preview"
+                      className="BlogPost-imgPreview"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = FALLBACK_IMAGE;
+                      }}
+                    />
                   ) : (
                     <>
                       <FaCloudUploadAlt className="BlogPost-uploadIcon" />
                       <span>Upload Thumbnail</span>
-                      <small>Max 2MB</small>
+                      <small>Max 5MB</small>
                     </>
                   )}
                 </div>
@@ -450,7 +393,9 @@ const BlogPost = () => {
 
             <div className="BlogPost-field">
               <div className="BlogPost-labelRow">
-                <label>Excerpt / Short Description <span className="BlogPost-required">*</span></label>
+                <label>
+                  Excerpt / Short Description <span className="BlogPost-required">*</span>
+                </label>
                 <span className="BlogPost-charCount">{formData.excerpt.length}/160</span>
               </div>
               <textarea
@@ -463,10 +408,12 @@ const BlogPost = () => {
             </div>
 
             <div className="BlogPost-field">
-              <label>Content / Description <span className="BlogPost-required">*</span></label>
+              <label>
+                Content / Description <span className="BlogPost-required">*</span>
+              </label>
               <div className="BlogPost-tinymceWrapper">
                 <Editor
-                  apiKey="no-api-key"
+                  apiKey="8hswbe7bfeeneui9eb9gjgsym8ku30nx5gwre9808ajdzniu"
                   onInit={(evt, editor) => (editorRef.current = editor)}
                   initialValue="<p>Write full blog content here...</p>"
                   init={{
@@ -476,7 +423,8 @@ const BlogPost = () => {
                     content_css: 'dark',
                     plugins: ['advlist', 'autolink', 'lists', 'link', 'image', 'code'],
                     toolbar: 'undo redo | blocks | bold italic | bullist numlist | link image code',
-                    content_style: 'body { font-family:Inter,sans-serif; font-size:13px; color:#e2f1e8; background-color:#09130d; }'
+                    content_style:
+                      'body { font-family:Inter,sans-serif; font-size:13px; color:#e2f1e8; background-color:#09130d; }'
                   }}
                 />
               </div>
@@ -514,7 +462,9 @@ const BlogPost = () => {
               </div>
 
               <div className="BlogPost-field">
-                <label>Publish Date <span className="BlogPost-required">*</span></label>
+                <label>
+                  Publish Date <span className="BlogPost-required">*</span>
+                </label>
                 <input
                   type="date"
                   value={formData.publishDate}
@@ -558,13 +508,15 @@ const BlogPost = () => {
               <button
                 type="button"
                 className="BlogPost-btn BlogPost-btnPrimary"
+                disabled={submitting}
                 onClick={() => handlePublish('Published')}
               >
-                <FaPaperPlane /> {editingId ? 'Update' : 'Publish'}
+                <FaPaperPlane /> {submitting ? 'Saving...' : editingId ? 'Update' : 'Publish'}
               </button>
               <button
                 type="button"
                 className="BlogPost-btn BlogPost-btnOutline"
+                disabled={submitting}
                 onClick={() => handlePublish('Draft')}
               >
                 <FaSave /> Save Draft
@@ -581,7 +533,7 @@ const BlogPost = () => {
         </div>
       </div>
 
-      {/* RIGHT COLUMN: TABLE (50%) */}
+      {/* TABLE COLUMN */}
       <div className="BlogPost-column BlogPost-listColumn">
         <div className="BlogPost-card BlogPost-listCard">
           <div className="BlogPost-listHeader">
@@ -602,9 +554,10 @@ const BlogPost = () => {
                 />
                 <FaSearch className="BlogPost-searchIcon" />
               </div>
-              <button 
+              <button
                 className={`BlogPost-btnFilter ${showFilterOptions ? 'active' : ''}`}
-                onClick={handleToggleFilter}
+                onClick={() => setShowFilterOptions(!showFilterOptions)}
+                type="button"
               >
                 <FaFilter />
               </button>
@@ -645,7 +598,6 @@ const BlogPost = () => {
             </div>
           )}
 
-          {/* Table Container with Horizontal Custom Scrollbar */}
           <div className="BlogPost-tableWrapper BlogPost-horizontalScroll">
             <table className="BlogPost-table">
               <thead>
@@ -661,60 +613,94 @@ const BlogPost = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedBlogs.length > 0 ? (
-                  paginatedBlogs.map((blog, index) => (
-                    <tr key={blog.id} className={editingId === blog.id ? 'editingRow' : ''}>
-                      <td>{startIndex + index + 1}</td>
-                      <td>
-                        <img src={blog.image} alt={blog.title} className="BlogPost-tableImg" />
-                      </td>
-                      <td className="BlogPost-titleCell">
-                        <div className="BlogPost-titleBlock">
-                          <strong className="BlogPost-fullTitle">{blog.title}</strong>
-                          <p className="BlogPost-fullSubtitle">{blog.excerpt}</p>
-                        </div>
-                      </td>
-                      <td>
-                        <span className={`BlogPost-tag BlogPost-tag-${blog.category.toLowerCase()}`}>
-                          {blog.category}
-                        </span>
-                      </td>
-                      <td className="BlogPost-dateCell">
-                        <div><FaCalendarAlt /> {blog.date}</div>
-                        <small><FaClock /> {blog.readTime}</small>
-                      </td>
-                      <td>
-                        <span className={`BlogPost-badge BlogPost-badge-${blog.status.toLowerCase()}`}>
-                          {blog.status}
-                        </span>
-                      </td>
-                      <td>
-                        {blog.featured ? (
-                          <span className="BlogPost-featuredIcon active"><FaCheck /></span>
-                        ) : (
-                          <span className="BlogPost-featuredIcon">—</span>
-                        )}
-                      </td>
-                      <td>
-                        <div className="BlogPost-tableActions">
-                          <button 
-                            className="BlogPost-actionBtn BlogPost-editBtn" 
-                            title="Edit"
-                            onClick={() => handleEdit(blog)}
-                          >
-                            <FaEdit />
-                          </button>
-                          <button
-                            className="BlogPost-actionBtn BlogPost-deleteBtn"
-                            title="Delete"
-                            onClick={() => handleDelete(blog.id)}
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                {loading ? (
+                  <tr>
+                    <td colSpan="8" style={{ textAlign: 'center', padding: '24px' }}>
+                      Loading blogs...
+                    </td>
+                  </tr>
+                ) : paginatedBlogs.length > 0 ? (
+                  paginatedBlogs.map((blog, index) => {
+                    const blogId = blog._id || blog.id;
+                    const blogImageSrc = getImageUrl(blog.thumbnailImage || blog.featuredImage || blog.image);
+
+                    return (
+                      <tr key={blogId} className={editingId === blogId ? 'editingRow' : ''}>
+                        <td>{startIndex + index + 1}</td>
+                        <td>
+                          <img
+                            src={blogImageSrc}
+                            alt={blog.title}
+                            className="BlogPost-tableImg"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = FALLBACK_IMAGE;
+                            }}
+                          />
+                        </td>
+                        <td className="BlogPost-titleCell">
+                          <div className="BlogPost-titleBlock">
+                            <strong className="BlogPost-fullTitle">{blog.title}</strong>
+                            <p className="BlogPost-fullSubtitle">{blog.excerpt || blog.description}</p>
+                          </div>
+                        </td>
+                        <td>
+                          <span className={`BlogPost-tag BlogPost-tag-${(blog.category || 'default').toLowerCase()}`}>
+                            {blog.category}
+                          </span>
+                        </td>
+                        <td className="BlogPost-dateCell">
+                          <div>
+                            <FaCalendarAlt />{' '}
+                            {blog.publishDate
+                              ? new Date(blog.publishDate).toLocaleDateString('en-GB', {
+                                  day: '2-digit',
+                                  month: 'short',
+                                  year: 'numeric'
+                                })
+                              : 'N/A'}
+                          </div>
+                          <small>
+                            <FaClock /> {blog.readTime || '5 min read'}
+                          </small>
+                        </td>
+                        <td>
+                          <span className={`BlogPost-badge BlogPost-badge-${(blog.status || 'published').toLowerCase()}`}>
+                            {blog.status}
+                          </span>
+                        </td>
+                        <td>
+                          {blog.featured ? (
+                            <span className="BlogPost-featuredIcon active">
+                              <FaCheck />
+                            </span>
+                          ) : (
+                            <span className="BlogPost-featuredIcon">—</span>
+                          )}
+                        </td>
+                        <td>
+                          <div className="BlogPost-tableActions">
+                            <button
+                              type="button"
+                              className="BlogPost-actionBtn BlogPost-editBtn"
+                              title="Edit"
+                              onClick={() => handleEdit(blog)}
+                            >
+                              <FaEdit />
+                            </button>
+                            <button
+                              type="button"
+                              className="BlogPost-actionBtn BlogPost-deleteBtn"
+                              title="Delete"
+                              onClick={() => handleDelete(blogId)}
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td colSpan="8" style={{ textAlign: 'center', padding: '24px' }}>
@@ -733,6 +719,7 @@ const BlogPost = () => {
             </span>
             <div className="BlogPost-pageButtons">
               <button
+                type="button"
                 className="BlogPost-pageBtn"
                 disabled={currentPage === 1}
                 onClick={() => handlePageChange(currentPage - 1)}
@@ -742,6 +729,7 @@ const BlogPost = () => {
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
                 <button
                   key={pageNum}
+                  type="button"
                   className={`BlogPost-pageBtn ${currentPage === pageNum ? 'active' : ''}`}
                   onClick={() => handlePageChange(pageNum)}
                 >
@@ -749,6 +737,7 @@ const BlogPost = () => {
                 </button>
               ))}
               <button
+                type="button"
                 className="BlogPost-pageBtn"
                 disabled={currentPage === totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}

@@ -3,7 +3,7 @@ const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
 
-// Memory Storage to hold buffers for Sharp processing
+// Memory Storage for Sharp processing
 const storage = multer.memoryStorage();
 
 const upload = multer({
@@ -20,16 +20,13 @@ const upload = multer({
 
 /**
  * Middleware to convert memory buffers to WebP and save to disk
- * @param {Object} options - Quality, custom target folder, or custom prefix
  */
 const convertToWebp = (options = { quality: 80, folder: "products", prefix: "product" }) => {
   return async (req, res, next) => {
     try {
-      // Dynamic target directory based on passed folder name
       const targetFolder = options.folder || "products";
       const targetDir = path.join(__dirname, `../public/uploads/${targetFolder}`);
 
-      // Ensure directory exists dynamically
       if (!fs.existsSync(targetDir)) {
         fs.mkdirSync(targetDir, { recursive: true });
       }
@@ -39,29 +36,24 @@ const convertToWebp = (options = { quality: 80, folder: "products", prefix: "pro
         const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
         const outputPath = path.join(targetDir, uniqueName);
 
-        // Convert memory buffer and save directly to disk
         await sharp(file.buffer)
           .webp({ quality: options.quality || 80 })
           .toFile(outputPath);
 
-        // Assign filename and paths so controllers can read them
         file.filename = uniqueName;
         file.mimetype = "image/webp";
         file.path = `/uploads/${targetFolder}/${uniqueName}`;
         file.destinationPath = `/uploads/${targetFolder}/${uniqueName}`;
       };
 
-      // Process single file (req.file)
       if (req.file) {
         await saveFileToDisk(req.file);
       }
 
-      // Process array of files (req.files as array)
       if (Array.isArray(req.files) && req.files.length > 0) {
         await Promise.all(req.files.map((file) => saveFileToDisk(file)));
       }
 
-      // Process named fields (req.files as object, e.g. image, bgImage & galleryImages)
       if (req.files && !Array.isArray(req.files) && typeof req.files === "object") {
         for (const fieldName of Object.keys(req.files)) {
           await Promise.all(
