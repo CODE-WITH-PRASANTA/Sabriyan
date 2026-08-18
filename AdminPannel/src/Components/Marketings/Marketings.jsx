@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Marketings.css';
+import API, { IMG_URL } from "../../api/axios";
 
 const Marketings = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,128 +11,63 @@ const Marketings = () => {
   // Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('create'); // 'create', 'edit', 'view'
+  const [selectedFile, setSelectedFile] = useState(null);
+  
   const [currentCampaign, setCurrentCampaign] = useState({
-    id: null,
+    _id: null,
     name: '',
     desc: '',
     type: 'Discount',
     channel: 'Instagram',
-    duration: '',
     startDate: '',
     endDate: '',
     budget: '',
-    reach: '0',
     status: 'Scheduled',
     thumbnail: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80'
   });
 
-  const [campaigns, setCampaigns] = useState([
-    {
-      id: 1,
-      name: 'Summer Bonanza',
-      desc: '20% off on all chocolates',
-      type: 'Discount',
-      channel: 'Instagram',
-      duration: 'May 20, 2025 - Jun 10, 2025',
-      budget: '₹5,000',
-      reach: '12,450',
-      status: 'Active',
-      thumbnail: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80'
-    },
-    {
-      id: 2,
-      name: 'New Product Launch',
-      desc: 'Introducing Honey Truffle',
-      type: 'Launch',
-      channel: 'Facebook',
-      duration: 'May 15, 2025 - May 30, 2025',
-      budget: '₹3,500',
-      reach: '8,230',
-      status: 'Active',
-      thumbnail: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=100&auto=format&fit=crop&q=80'
-    },
-    {
-      id: 3,
-      name: 'Festive Offer',
-      desc: 'Flat 25% off on gift boxes',
-      type: 'Offer',
-      channel: 'Email',
-      duration: 'May 01, 2025 - May 15, 2025',
-      budget: '₹2,000',
-      reach: '6,785',
-      status: 'Completed',
-      thumbnail: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=100&auto=format&fit=crop&q=80'
-    },
-    {
-      id: 4,
-      name: "Valentine's Special",
-      desc: 'Share love with chocolate',
-      type: 'Seasonal',
-      channel: 'Website',
-      duration: 'Feb 05, 2025 - Feb 14, 2025',
-      budget: '₹4,000',
-      reach: '9,120',
-      status: 'Completed',
-      thumbnail: 'https://images.unsplash.com/photo-1526657782461-9fe13402a841?w=100&auto=format&fit=crop&q=80'
-    },
-    {
-      id: 5,
-      name: 'Referral Program',
-      desc: 'Refer & earn rewards',
-      type: 'Referral',
-      channel: 'All Channels',
-      duration: 'Apr 10, 2025 - Apr 30, 2025',
-      budget: '₹1,500',
-      reach: '4,980',
-      status: 'Scheduled',
-      thumbnail: 'https://images.unsplash.com/photo-1575444758702-4a6b9222336e?w=100&auto=format&fit=crop&q=80'
-    },
-    {
-      id: 6,
-      name: 'Chocolate Day Offer',
-      desc: 'Special offer on Chocolate Day',
-      type: 'Offer',
-      channel: 'Instagram',
-      duration: 'Jul 07, 2025 - Jul 09, 2025',
-      budget: '₹2,500',
-      reach: '—',
-      status: 'Scheduled',
-      thumbnail: 'https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=100&auto=format&fit=crop&q=80'
-    },
-    {
-      id: 7,
-      name: 'Winter Warmers',
-      desc: 'Warm up with hot chocolates',
-      type: 'Seasonal',
-      channel: 'Facebook',
-      duration: 'Dec 10, 2024 - Dec 31, 2024',
-      budget: '₹2,800',
-      reach: '3,665',
-      status: 'Completed',
-      thumbnail: 'https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=100&auto=format&fit=crop&q=80'
+  const [campaigns, setCampaigns] = useState([]);
+
+  // Fetch Campaigns on Load
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await API.get('/campaigns');
+      setCampaigns(response.data);
+    } catch (error) {
+      console.error('Error fetching campaigns:', error);
     }
-  ]);
+  };
 
   // Action handlers
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this campaign?')) {
-      setCampaigns(campaigns.filter(c => c.id !== id));
+      try {
+        const response = await API.delete(`/campaigns/${id}`);
+        if (response.status === 200 || response.status === 204) {
+          setCampaigns(campaigns.filter(c => c._id !== id));
+        }
+      } catch (error) {
+        console.error('Error deleting campaign:', error);
+      }
     }
   };
 
   const handleOpenCreate = () => {
     setModalMode('create');
+    setSelectedFile(null);
     setCurrentCampaign({
-      id: null,
+      _id: null,
       name: '',
       desc: '',
       type: 'Discount',
       channel: 'Instagram',
-      duration: '',
       startDate: '',
       endDate: '',
       budget: '',
-      reach: '0',
       status: 'Scheduled',
       thumbnail: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80'
     });
@@ -140,56 +76,71 @@ const Marketings = () => {
 
   const handleOpenEdit = (camp) => {
     setModalMode('edit');
+    setSelectedFile(null);
     setCurrentCampaign(camp);
     setIsModalOpen(true);
   };
 
   const handleOpenView = (camp) => {
     setModalMode('view');
+    setSelectedFile(null);
     setCurrentCampaign(camp);
     setIsModalOpen(true);
   };
 
-  const handleSaveCampaign = (e) => {
+  const handleSaveCampaign = async (e) => {
     e.preventDefault();
-    if (modalMode === 'create') {
-      const newEntry = {
-        id: Date.now(),
-        name: currentCampaign.name || 'New Campaign',
-        desc: currentCampaign.desc || 'Marketing campaign description',
-        type: currentCampaign.type,
-        channel: currentCampaign.channel,
-        duration: currentCampaign.startDate && currentCampaign.endDate 
-          ? `${currentCampaign.startDate} - ${currentCampaign.endDate}` 
-          : 'May 20, 2025 - Jun 10, 2025',
-        budget: currentCampaign.budget.startsWith('₹') ? currentCampaign.budget : `₹${currentCampaign.budget || '2,000'}`,
-        reach: '0',
-        status: currentCampaign.status || 'Scheduled',
-        thumbnail: currentCampaign.thumbnail
-      };
-      setCampaigns([newEntry, ...campaigns]);
-    } else if (modalMode === 'edit') {
-      setCampaigns(campaigns.map(c => c.id === currentCampaign.id ? currentCampaign : c));
+    const formData = new FormData();
+    formData.append('name', currentCampaign.name);
+    formData.append('desc', currentCampaign.desc);
+    formData.append('type', currentCampaign.type);
+    formData.append('channel', currentCampaign.channel);
+    formData.append('startDate', currentCampaign.startDate);
+    formData.append('endDate', currentCampaign.endDate);
+    formData.append('budget', currentCampaign.budget);
+    formData.append('status', currentCampaign.status);
+    
+    if (selectedFile) {
+      formData.append('thumbnail', selectedFile);
+    } else {
+      formData.append('thumbnail', currentCampaign.thumbnail);
     }
-    setIsModalOpen(false);
+
+    try {
+      if (modalMode === 'create') {
+        const response = await API.post('/campaigns', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        setCampaigns([response.data, ...campaigns]);
+      } else if (modalMode === 'edit') {
+        const response = await API.put(`/campaigns/${currentCampaign._id}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        setCampaigns(campaigns.map(c => c._id === response.data._id ? response.data : c));
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error saving campaign:', error);
+    }
   };
 
   // Export functionality (CSV download)
   const handleExport = () => {
     if (campaigns.length === 0) return;
-    const headers = ['ID', 'Name', 'Description', 'Type', 'Channel', 'Duration', 'Budget', 'Reach', 'Status'];
+    const headers = ['ID', 'Name', 'Description', 'Type', 'Channel', 'Start Date', 'End Date', 'Budget', 'Reach', 'Status'];
     const csvRows = [
       headers.join(','),
       ...filteredCampaigns.map(c => [
-        c.id,
-        `"${c.name}"`,
-        `"${c.desc}"`,
-        c.type,
-        c.channel,
-        `"${c.duration}"`,
-        `"${c.budget}"`,
-        c.reach,
-        c.status
+        c._id,
+        `"${c.name || ''}"`,
+        `"${c.desc || ''}"`,
+        c.type || '',
+        c.channel || '',
+        `"${c.startDate || ''}"`,
+        `"${c.endDate || ''}"`,
+        `"${c.budget || ''}"`,
+        c.reach || 0,
+        c.status || ''
       ].join(','))
     ];
     const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
@@ -202,9 +153,9 @@ const Marketings = () => {
 
   // Filtering Logic
   const filteredCampaigns = campaigns.filter(camp => {
-    const matchesSearch = camp.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          camp.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          camp.channel.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (camp.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || 
+                          (camp.desc?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+                          (camp.channel?.toLowerCase() || '').includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'All Status' || camp.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -221,9 +172,10 @@ const Marketings = () => {
     }
   };
 
+  const totalReachCount = campaigns.reduce((acc, curr) => acc + (parseInt(curr.reach) || 0), 0);
+
   return (
     <div className="marketings-container">
-
       {/* KPI Cards Row */}
       <section className="marketings-kpi-grid">
         <div className="marketings-kpi-card">
@@ -276,7 +228,7 @@ const Marketings = () => {
           </div>
           <div className="marketings-kpi-content">
             <span className="marketings-kpi-title">Total Reach</span>
-            <h3 className="marketings-kpi-value">45,230</h3>
+            <h3 className="marketings-kpi-value">{totalReachCount.toLocaleString()}</h3>
             <span className="marketings-kpi-subtitle">People Reached</span>
           </div>
         </div>
@@ -349,10 +301,14 @@ const Marketings = () => {
             <tbody>
               {currentItems.length > 0 ? (
                 currentItems.map((camp) => (
-                  <tr key={camp.id}>
+                  <tr key={camp._id}>
                     <td>
                       <div className="marketings-cell-info">
-                        <img src={camp.thumbnail} alt={camp.name} className="marketings-thumb" />
+                        <img 
+                          src={camp.thumbnail?.startsWith('http') ? camp.thumbnail : `${IMG_URL}/${camp.thumbnail}`} 
+                          alt={camp.name} 
+                          className="marketings-thumb" 
+                        />
                         <div>
                           <div className="marketings-camp-name">{camp.name}</div>
                           <div className="marketings-camp-desc">{camp.desc}</div>
@@ -360,7 +316,7 @@ const Marketings = () => {
                       </div>
                     </td>
                     <td>
-                      <span className={`marketings-badge-type marketings-type-${camp.type.toLowerCase()}`}>
+                      <span className={`marketings-badge-type marketings-type-${(camp.type || '').toLowerCase()}`}>
                         {camp.type}
                       </span>
                     </td>
@@ -369,11 +325,11 @@ const Marketings = () => {
                         <span>{camp.channel}</span>
                       </div>
                     </td>
-                    <td className="marketings-duration-cell">{camp.duration}</td>
+                    <td className="marketings-duration-cell">{camp.duration || `${camp.startDate} - ${camp.endDate}`}</td>
                     <td>{camp.budget}</td>
-                    <td>{camp.reach}</td>
+                    <td>{camp.reach || 0}</td>
                     <td>
-                      <span className={`marketings-badge-status marketings-status-${camp.status.toLowerCase()}`}>
+                      <span className={`marketings-badge-status marketings-status-${(camp.status || '').toLowerCase()}`}>
                         {camp.status}
                       </span>
                     </td>
@@ -385,7 +341,7 @@ const Marketings = () => {
                         <button className="marketings-action-icon-btn marketings-edit" title="Edit" onClick={() => handleOpenEdit(camp)}>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </button>
-                        <button className="marketings-action-icon-btn marketings-delete" title="Delete" onClick={() => handleDelete(camp.id)}>
+                        <button className="marketings-action-icon-btn marketings-delete" title="Delete" onClick={() => handleDelete(camp._id)}>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                         </button>
                       </div>
@@ -512,6 +468,7 @@ const Marketings = () => {
                       value={currentCampaign.startDate}
                       onChange={(e) => setCurrentCampaign({...currentCampaign, startDate: e.target.value})}
                       disabled={modalMode === 'view'}
+                      required
                     />
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                   </div>
@@ -525,6 +482,7 @@ const Marketings = () => {
                       value={currentCampaign.endDate}
                       onChange={(e) => setCurrentCampaign({...currentCampaign, endDate: e.target.value})}
                       disabled={modalMode === 'view'}
+                      required
                     />
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                   </div>
@@ -540,6 +498,7 @@ const Marketings = () => {
                     value={currentCampaign.budget}
                     onChange={(e) => setCurrentCampaign({...currentCampaign, budget: e.target.value})}
                     disabled={modalMode === 'view'}
+                    required
                   />
                 </div>
                 <div className="marketings-form-group">
@@ -561,18 +520,24 @@ const Marketings = () => {
                 <textarea 
                   rows="3" 
                   placeholder="Enter campaign description"
-                  value={currentCampaign.desc || currentCampaign.description}
-                  onChange={(e) => setCurrentCampaign({...currentCampaign, desc: e.target.value, description: e.target.value})}
+                  value={currentCampaign.desc}
+                  onChange={(e) => setCurrentCampaign({...currentCampaign, desc: e.target.value})}
                   disabled={modalMode === 'view'}
                 ></textarea>
               </div>
 
               {modalMode !== 'view' && (
                 <div className="marketings-form-group">
-                  <label>Banner / Image</label>
-                  <div className="marketings-dropzone-area">
+                  <label>Banner / Image (Converts automatically to WebP)</label>
+                  <div className="marketings-dropzone-area" style={{ position: 'relative' }}>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                      onChange={(e) => setSelectedFile(e.target.files[0])}
+                    />
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                    <span>Click to upload or drag and drop</span>
+                    <span>{selectedFile ? selectedFile.name : 'Click to upload or drag and drop'}</span>
                     <span className="marketings-dropzone-sub">PNG, JPG, WEBP up to 5MB</span>
                   </div>
                 </div>
