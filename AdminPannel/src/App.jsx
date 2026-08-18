@@ -38,6 +38,7 @@ import Login from "./Components/Login/Login";
 import Reviews from "./Components/Reviews/Reviews";
 import Couponsoffers from "./Components/Couponsoffers/Couponsoffers";
 import ReportsandAnalytics from "./Pages/ReportsandAnalytics/ReportsandAnalytics";
+import Support from "./Components/Support/Support";
 
 function App() {
   return (
@@ -172,7 +173,8 @@ function App() {
            path="coupons"
            element={<Couponsoffers/>}
            />
-
+            
+          <Route path="support"element={<Support/>}/>
 
             {/* =========================
                 BLOG
