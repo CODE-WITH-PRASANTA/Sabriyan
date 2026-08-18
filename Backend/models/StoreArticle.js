@@ -4,7 +4,7 @@ const articleTagSchema = new mongoose.Schema(
   {
     id: { type: Number },
     name: { type: String, required: true },
-    color: { type: String, default: 'blue' },
+    color: { type: String, default: 'green' },
   },
   { _id: false }
 );
@@ -19,6 +19,7 @@ const storeArticleSchema = new mongoose.Schema(
     slug: {
       type: String,
       unique: true,
+      sparse: true,
       lowercase: true,
       trim: true,
     },
@@ -62,6 +63,7 @@ const storeArticleSchema = new mongoose.Schema(
     sku: {
       type: String,
       trim: true,
+      unique: true,
       sparse: true,
     },
     lowStockAlert: {
@@ -131,14 +133,16 @@ const storeArticleSchema = new mongoose.Schema(
 );
 
 // Auto-generate URL-safe slug before saving if not supplied
-storeArticleSchema.pre('save', function (next) {
+storeArticleSchema.pre('save', function () {
   if (!this.slug && this.name) {
-    this.slug = this.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-');
+    this.slug =
+      this.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') +
+      '-' +
+      Date.now().toString().slice(-4);
   }
-  next();
 });
 
 module.exports = mongoose.model('StoreArticle', storeArticleSchema);
