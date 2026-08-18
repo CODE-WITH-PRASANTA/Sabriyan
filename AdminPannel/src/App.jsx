@@ -35,6 +35,7 @@ import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
 
 // Login
 import Login from "./Components/Login/Login";
+import WebsiteSetting from "./Components/WebsiteSetting/WebsiteSetting";
 
 function App() {
   return (
@@ -153,6 +154,12 @@ function App() {
               path="customers"
               element={<Customers />}
             />
+
+
+            <Route
+               path="website-settings"
+               element={<WebsiteSetting/>}
+               />
 
             {/* =========================
                 BLOG
