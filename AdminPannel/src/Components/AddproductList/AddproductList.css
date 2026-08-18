@@ -31,7 +31,7 @@ body {
   background-color: var(--apl-card-bg);
   border: 1px solid var(--apl-border-color);
   border-radius: 16px;
-  padding: 26px;
+  padding: 24px;
   position: relative;
   box-sizing: border-box;
 }
@@ -159,19 +159,21 @@ body {
 .apl-table-card {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .apl-table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .apl-table-header h3 {
   margin: 0;
-  font-size: 1.2rem;
-  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--apl-text-main);
 }
 
 .apl-view-all-link {
@@ -179,41 +181,49 @@ body {
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 700;
+  transition: color 0.2s ease;
 }
 
 .apl-view-all-link:hover {
+  color: var(--apl-accent-hover);
   text-decoration: underline;
 }
 
 .apl-table-wrapper {
+  width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .apl-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  min-width: 650px;
 }
 
 .apl-table th {
-  padding: 12px 14px;
-  font-size: 0.85rem;
+  padding: 14px 16px;
+  font-size: 0.82rem;
   color: var(--apl-text-muted);
   border-bottom: 1px solid var(--apl-border-color);
   text-transform: uppercase;
+  letter-spacing: 0.05em;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .apl-table td {
-  padding: 12px 14px;
-  font-size: 1rem;
+  padding: 14px 16px;
+  font-size: 0.95rem;
   border-bottom: 1px solid #142419;
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .apl-table-thumb {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   background: var(--apl-input-bg);
   border: 1px solid var(--apl-border-color);
   border-radius: 8px;
@@ -231,8 +241,8 @@ body {
 }
 
 .apl-table-title {
-  color: #fff;
-  font-size: 1.05rem;
+  color: var(--apl-text-main);
+  font-size: 1rem;
 }
 
 .apl-text-muted {
@@ -241,17 +251,22 @@ body {
 
 .apl-price-text {
   font-weight: 700;
-  color: #fff;
+  color: var(--apl-text-main);
 }
 
 .apl-badge-stock {
+  display: inline-block;
   color: var(--apl-accent-green);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .apl-badge-stock.out {
   color: #ef4444;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .apl-table-actions {
@@ -264,35 +279,35 @@ body {
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
 .apl-btn-act.edit {
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(59, 130, 246, 0.15);
   color: #60a5fa;
-  border-color: rgba(59, 130, 246, 0.4);
+  border-color: rgba(59, 130, 246, 0.35);
 }
 
 .apl-btn-act.edit:hover {
-  background: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.3);
 }
 
 .apl-btn-act.delete {
-  background: rgba(239, 68, 68, 0.2);
+  background: rgba(239, 68, 68, 0.15);
   color: #f87171;
-  border-color: rgba(239, 68, 68, 0.4);
+  border-color: rgba(239, 68, 68, 0.35);
 }
 
 .apl-btn-act.delete:hover {
-  background: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.3);
 }
 
 .apl-empty-td {
   text-align: center;
-  padding: 24px;
+  padding: 32px 16px;
   color: var(--apl-text-muted);
 }
 
@@ -303,15 +318,32 @@ body {
   }
 }
 
+/* Mobile & Tablet Adjustments */
 @media (max-width: 768px) {
   .apl-container {
-    padding: 16px;
+    padding: 16px 12px;
   }
+
   .apl-preview-content {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .apl-preview-price {
     text-align: left;
+  }
+
+  .apl-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .apl-table-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .apl-table th,
+  .apl-table td {
+    padding: 10px 12px;
   }
 }

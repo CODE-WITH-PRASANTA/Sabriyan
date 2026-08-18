@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AddproductList.css';
+import API from '../../api/axios';
 
-const AddproductList = () => {
+const AddproductList = ({ refreshTrigger }) => {
   // Preview & Form State
   const [formData] = useState({
     name: 'Dark Chocolate 55%',
@@ -14,50 +15,72 @@ const AddproductList = () => {
   });
 
   const [imagePreview] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Recently Added Products Table State
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      image: '🍫',
-      name: 'Dark Chocolate 55%',
-      category: 'Chocolate',
-      price: '₹240.00',
-      status: 'In Stock',
-      stock: 45,
-    },
-    {
-      id: 2,
-      image: '🍯',
-      name: 'Organic Honey 500g',
-      category: 'Honey',
-      price: '₹350.00',
-      status: 'In Stock',
-      stock: 20,
-    },
-    {
-      id: 3,
-      image: '🍫',
-      name: 'Milk Chocolate Bar',
-      category: 'Chocolate',
-      price: '₹180.00',
-      status: 'In Stock',
-      stock: 12,
-    },
-  ]);
-
-  // Table Action: Delete Item
-  const handleDeleteProduct = (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter((item) => item.id !== id));
+  // Fetch products from backend
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const res = await API.get('/store-articles');
+      const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
+      setProducts(data);
+    } catch (error) {
+      console.error('Failed to load products:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, [refreshTrigger]);
+
+  // Delete product handler
+  const handleDeleteProduct = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await API.delete(`/store-articles/${id}`);
+      setProducts((prev) => prev.filter((item) => (item._id || item.id) !== id));
+    } catch (error) {
+      alert(error.response?.data?.message || 'Failed to delete product.');
+    }
+  };
+
+  // Resolve correct image URL handling relative/absolute/backend paths
+  const getImageSrc = (item) => {
+    const rawImage = item.imageUrl || item.image || item.productImage;
+    if (!rawImage) return null;
+
+    if (typeof rawImage === 'string') {
+      // 1. Direct full HTTP/HTTPS URL or Data URI
+      if (
+        rawImage.startsWith('http://') ||
+        rawImage.startsWith('https://') ||
+        rawImage.startsWith('data:image/')
+      ) {
+        return rawImage;
+      }
+
+      // 2. Relative backend path
+      const backendBase = (API.defaults.baseURL || 'http://localhost:5000').replace(/\/api\/?$/, '');
+      const cleanPath = rawImage.startsWith('/') ? rawImage : `/${rawImage}`;
+      return `${backendBase}${cleanPath}`;
+    }
+
+    // 3. Object-based structure (e.g., Cloudinary/Multer)
+    if (typeof rawImage === 'object' && rawImage.url) {
+      return rawImage.url;
+    }
+
+    return null;
   };
 
   return (
     <div className="apl-container">
-      {/* Bottom Section: Product Preview & Recently Added List */}
+      {/* Top/Bottom Preview Section */}
       <div className="apl-bottom-preview-grid">
-        {/* Realtime Live Product Preview Card */}
+        {/* Live Product Preview Card */}
         <div className="apl-card apl-preview-card">
           <h3 className="apl-card-title">Product Preview</h3>
           <div className="apl-preview-content">
@@ -125,58 +148,74 @@ const AddproductList = () => {
                 </tr>
               </thead>
               <tbody>
-                {products.length > 0 ? (
-                  products.map((item) => (
-                    <tr key={item.id}>
-                      <td>
-                        <div className="apl-table-thumb">
-                          {typeof item.image === 'string' &&
-                          item.image.startsWith('data:image') ? (
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="apl-thumb-img"
-                            />
-                          ) : (
-                            <span>{item.image}</span>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <strong className="apl-table-title">{item.name}</strong>
-                      </td>
-                      <td className="apl-text-muted">{item.category}</td>
-                      <td className="apl-price-text">{item.price}</td>
-                      <td>
-                        <span
-                          className={`apl-badge-stock ${
-                            item.status === 'Out of Stock' ? 'out' : ''
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="apl-table-actions">
-                          <button
-                            type="button"
-                            className="apl-btn-act edit"
-                            title="Edit Item"
-                          >
-                            ✏️ Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="apl-btn-act delete"
-                            onClick={() => handleDeleteProduct(item.id)}
-                            title="Delete Item"
-                          >
-                            🗑️ Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                {loading ? (
+                  <tr>
+                    <td colSpan="6" className="apl-empty-td">
+                      Loading products...
+                    </td>
+                  </tr>
+                ) : products.length > 0 ? (
+                  products.map((item) => {
+                    const itemId = item._id || item.id;
+                    const imgSrc = getImageSrc(item);
+                    const isOutOfStock = parseInt(item.stockQuantity || '0', 10) <= 0;
+
+                    return (
+                      <tr key={itemId}>
+                        <td>
+                          <div className="apl-table-thumb">
+                            {imgSrc ? (
+                              <img
+                                src={imgSrc}
+                                alt={item.name}
+                                className="apl-thumb-img"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  if (e.target.nextSibling) {
+                                    e.target.nextSibling.style.display = 'inline';
+                                  }
+                                }}
+                              />
+                            ) : null}
+                            <span style={{ display: imgSrc ? 'none' : 'inline' }}>
+                              {item.productType === 'Honey' ? '🍯' : '🍫'}
+                            </span>
+                          </div>
+                        </td>
+                        <td>
+                          <strong className="apl-table-title">{item.name}</strong>
+                        </td>
+                        <td className="apl-text-muted">{item.category}</td>
+                        <td className="apl-price-text">
+                          ₹{item.salePrice || item.regularPrice}
+                        </td>
+                        <td>
+                          <span className={`apl-badge-stock ${isOutOfStock ? 'out' : ''}`}>
+                            {isOutOfStock ? 'Out of Stock' : 'In Stock'}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="apl-table-actions">
+                            <button
+                              type="button"
+                              className="apl-btn-act edit"
+                              title="Edit Item"
+                            >
+                              ✏️ Edit
+                            </button>
+                            <button
+                              type="button"
+                              className="apl-btn-act delete"
+                              onClick={() => handleDeleteProduct(itemId)}
+                              title="Delete Item"
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td colSpan="6" className="apl-empty-td">
