@@ -35,6 +35,8 @@ import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
 
 // Login
 import Login from "./Components/Login/Login";
+import Inventory from "./Components/Inventory/Inventory";
+import Marketings from "./Components/Marketings/Marketings";
 
 function App() {
   return (
@@ -211,7 +213,15 @@ function App() {
               path="testimonials"
               element={<Testimonial />}
             />
-
+            <Route
+              path="inventory"
+              element={<Inventory/>}
+            />
+            <Route
+              path="marketing"
+              element={<Marketings/>}
+            />
+            
           </Route>
 
         </Routes>
