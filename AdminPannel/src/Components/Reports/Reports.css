@@ -1,0 +1,320 @@
+.reports-container {
+  background-color: #0b1310;
+  color: #d1d5db;
+  padding: 24px;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+.reports-container * {
+  box-sizing: border-box;
+}
+
+/* Top Metrics Grid */
+.reports-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.reports-metric-card {
+  background-color: #111f18;
+  border: 1px solid #1a3327;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.reports-metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.reports-metric-title {
+  font-size: 14px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.reports-metric-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.reports-metric-icon.green-bg { background-color: #0f291e; color: #10b981; }
+.reports-metric-icon.orange-bg { background-color: #332314; color: #f97316; }
+.reports-metric-icon.purple-bg { background-color: #221733; color: #a855f7; }
+.reports-metric-icon.blue-bg { background-color: #142833; color: #3b82f6; }
+
+.reports-metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.reports-metric-trend {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.reports-metric-trend.positive { color: #10b981; }
+.reports-metric-trend.negative { color: #ef4444; }
+
+.reports-trend-period {
+  font-weight: 400;
+  color: #6b7280;
+  margin-left: 4px;
+}
+
+/* Charts Grid */
+.reports-charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.reports-card {
+  background-color: #111f18;
+  border: 1px solid #1a3327;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.reports-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.reports-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.reports-card-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.reports-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.reports-legend-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+}
+
+.reports-card-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.reports-dropdown {
+  background-color: #0b1310;
+  border: 1px solid #1a3327;
+  color: #d1d5db;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.reports-dropdown:hover {
+  border-color: #234837;
+}
+
+/* Sales Overview Chart Body */
+.reports-chart-body {
+  display: flex;
+  height: 180px;
+  position: relative;
+}
+
+.reports-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #6b7280;
+  padding-right: 10px;
+  text-align: right;
+  min-width: 32px;
+}
+
+.reports-svg-container {
+  flex: 1;
+  position: relative;
+  height: 100%;
+}
+
+.reports-line-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.reports-chart-pulse-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 8px #10b981;
+}
+
+.reports-x-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #6b7280;
+  padding-top: 10px;
+  padding-left: 32px;
+}
+
+/* Sales by Channel Donut Chart */
+.reports-channel-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.reports-donut-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reports-donut-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.reports-donut-center {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #111f18;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.reports-donut-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.reports-donut-label {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.reports-channel-legend {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reports-legend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.reports-legend-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reports-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.reports-dot.website { background-color: #10b981; }
+.reports-dot.mobile { background-color: #3b82f6; }
+.reports-dot.marketplace { background-color: #f97316; }
+
+.reports-channel-name {
+  color: #d1d5db;
+  font-weight: 500;
+}
+
+.reports-channel-stats {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.reports-channel-percent {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.reports-channel-amount {
+  color: #6b7280;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .reports-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .reports-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .reports-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

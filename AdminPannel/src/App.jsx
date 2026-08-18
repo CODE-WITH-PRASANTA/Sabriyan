@@ -35,6 +35,12 @@ import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
 
 // Login
 import Login from "./Components/Login/Login";
+import Inventory from "./Components/Inventory/Inventory";
+import Marketings from "./Components/Marketings/Marketings";
+import WebsiteSetting from "./Components/WebsiteSetting/WebsiteSetting";
+import Reviews from "./Components/Reviews/Reviews";
+import Couponsoffers from "./Components/Couponsoffers/Couponsoffers";
+import ReportsandAnalytics from "./Pages/ReportsandAnalytics/ReportsandAnalytics";
 
 function App() {
   return (
@@ -101,6 +107,17 @@ function App() {
               element={<ManageBrands />}
             />
 
+
+         <Route
+         path="Products/reviews"
+         element={<Reviews/>}
+         />
+         
+         <Route
+         path="reports"
+         element={<ReportsandAnalytics/>}
+         />
+
             <Route
               path="products/attributes"
               element={<Attributes />}
@@ -156,6 +173,18 @@ function App() {
               path="customers"
               element={<Customers />}
             />
+            
+           <Route
+           path="coupons"
+           element={<Couponsoffers/>}
+           />
+
+
+
+            <Route
+               path="website-settings"
+               element={<WebsiteSetting/>}
+               />
 
             {/* =========================
                 BLOG
@@ -213,6 +242,14 @@ function App() {
             <Route
               path="testimonials"
               element={<Testimonial />}
+            />
+            <Route
+              path="inventory"
+              element={<Inventory/>}
+            />
+            <Route
+              path="marketing"
+              element={<Marketings/>}
             />
 
           </Route>
