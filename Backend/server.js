@@ -18,7 +18,6 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const brandRoutes = require("./routes/brandRoutes");
 const attributeRoutes = require("./routes/attributeRoutes");
 const productRoutes = require("./routes/productRoutes");
-const blogRoutes = require("./routes/blogRoutes");
 const storeArticleRoutes = require("./routes/storeArticleRoutes");
 
 // ======================
@@ -45,6 +44,9 @@ app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 
 // Static Folder for Uploads
 app.use("/uploads", express.static(uploadsPath));
+
+
+
 
 // ======================
 // Test Route
@@ -83,7 +85,6 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/attributes", attributeRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/blogs", blogRoutes);
 app.use("/api/store-articles", storeArticleRoutes);
 
 // ======================
