@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import './BlogPost.css';
-import API, { IMG_URL } from '../../api/axios';
 import {
   FaEdit,
   FaCloudUploadAlt,
@@ -17,6 +16,31 @@ import {
 } from 'react-icons/fa';
 
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop';
+
+const MOCK_BLOGS = [
+  {
+    _id: '1',
+    title: 'The Healing Power of Nature',
+    excerpt: 'Explore how spending time in nature improves mental health and overall well-being.',
+    category: 'Nature',
+    publishDate: '2026-06-01',
+    readTime: '5 min read',
+    status: 'Published',
+    featured: true,
+    thumbnailImage: FALLBACK_IMAGE
+  },
+  {
+    _id: '2',
+    title: 'Benefits of Raw Honey',
+    excerpt: 'Discover why raw honey is a powerful superfood loaded with antioxidants.',
+    category: 'Honey',
+    publishDate: '2026-06-05',
+    readTime: '4 min read',
+    status: 'Draft',
+    featured: false,
+    thumbnailImage: FALLBACK_IMAGE
+  }
+];
 
 const BlogPost = () => {
   const initialFormState = {
@@ -38,10 +62,8 @@ const BlogPost = () => {
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  const [blogs, setBlogs] = useState([]);
+  const [blogs] = useState(MOCK_BLOGS);
   const [editingId, setEditingId] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,36 +80,6 @@ const BlogPost = () => {
   const thumbnailInputRef = useRef(null);
   const editorRef = useRef(null);
 
-  // Precise image resolver for individual blog posts
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return FALLBACK_IMAGE;
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('blob:')) {
-      return imagePath;
-    }
-    const baseUrl = IMG_URL || 'http://localhost:5000';
-    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-    return `${baseUrl}${cleanPath}`;
-  };
-
-  // Fetch blogs from API
-  const fetchBlogs = useCallback(async () => {
-    try {
-      setLoading(true);
-      const res = await API.get('/blogs');
-      if (res.data?.success) {
-        setBlogs(res.data.data || []);
-      }
-    } catch (error) {
-      console.error('Error fetching blogs:', error.response?.data?.message || error.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchBlogs();
-  }, [fetchBlogs]);
-
   const handleTitleChange = (e) => {
     const val = e.target.value;
     if (val.length <= 100) {
@@ -95,7 +87,6 @@ const BlogPost = () => {
     }
   };
 
-  // Keep featured and thumbnail uploads isolated
   const handleImageUpload = (e, type) => {
     const file = e.target.files[0];
     if (file) {
@@ -127,18 +118,16 @@ const BlogPost = () => {
   };
 
   const handleEdit = (blog) => {
-    const targetId = blog._id || blog.id;
-    setEditingId(targetId);
-
+    setEditingId(blog._id);
     setFormData({
       title: blog.title || '',
       category: blog.category || '',
       tags: blog.tags || '',
       featuredImage: null,
-      featuredImagePreview: blog.featuredImage ? getImageUrl(blog.featuredImage) : '',
+      featuredImagePreview: blog.thumbnailImage || '',
       thumbnailImage: null,
-      thumbnailPreview: blog.thumbnailImage ? getImageUrl(blog.thumbnailImage) : '',
-      excerpt: blog.excerpt || blog.description || '',
+      thumbnailPreview: blog.thumbnailImage || '',
+      excerpt: blog.excerpt || '',
       content: blog.content || '<p>Write full blog content here...</p>',
       status: blog.status === 'Published',
       featured: Boolean(blog.featured),
@@ -147,101 +136,13 @@ const BlogPost = () => {
       metaDescription: blog.metaDescription || '',
       metaKeywords: blog.metaKeywords || ''
     });
-
-    if (editorRef.current) {
-      editorRef.current.setContent(blog.content || '<p>Write full blog content here...</p>');
-    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handlePublish = async (statusType = 'Published') => {
-    if (!formData.title.trim()) {
-      alert('Please enter a Blog Title');
-      return;
-    }
-    if (!formData.category.trim()) {
-      alert('Please select a Category');
-      return;
-    }
-    if (!formData.excerpt.trim()) {
-      alert('Please enter an Excerpt / Short Description');
-      return;
-    }
-
-    const editorContent = editorRef.current ? editorRef.current.getContent() : formData.content;
-
-    const payload = new FormData();
-    payload.append('title', formData.title.trim());
-    payload.append('category', formData.category);
-    payload.append('tags', formData.tags || '');
-    payload.append('excerpt', formData.excerpt.trim());
-    payload.append('content', editorContent);
-    payload.append('status', statusType);
-    payload.append('featured', formData.featured);
-    payload.append('publishDate', formData.publishDate);
-    payload.append('metaTitle', formData.metaTitle || '');
-    payload.append('metaDescription', formData.metaDescription || '');
-    payload.append('metaKeywords', formData.metaKeywords || '');
-
-    if (formData.featuredImage instanceof File) {
-      payload.append('featuredImage', formData.featuredImage);
-    }
-    if (formData.thumbnailImage instanceof File) {
-      payload.append('thumbnailImage', formData.thumbnailImage);
-    }
-
-    try {
-      setSubmitting(true);
-      if (editingId) {
-        const res = await API.put(`/blogs/${editingId}`, payload, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        if (res.data?.success) {
-          setBlogs((prev) =>
-            prev.map((b) => ((b._id || b.id) === editingId ? res.data.data : b))
-          );
-          alert('Blog post updated successfully!');
-        }
-      } else {
-        const res = await API.post('/blogs', payload, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        if (res.data?.success) {
-          setBlogs((prev) => [res.data.data, ...prev]);
-          alert('Blog post published successfully!');
-        }
-      }
-      handleReset();
-    } catch (error) {
-      console.error('Error saving blog post:', error);
-      alert(error.response?.data?.message || 'Error occurred while saving blog post.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this blog post?')) return;
-
-    try {
-      const res = await API.delete(`/blogs/${id}`);
-      if (res.data?.success) {
-        setBlogs((prev) => prev.filter((b) => (b._id || b.id) !== id));
-        if (editingId === id) {
-          handleReset();
-        }
-        alert('Blog post deleted successfully!');
-      }
-    } catch (error) {
-      console.error('Error deleting blog post:', error);
-      alert(error.response?.data?.message || 'Failed to delete blog post.');
-    }
   };
 
   const filteredBlogs = blogs.filter((blog) => {
     const matchesSearch =
       (blog.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (blog.excerpt || blog.description || '').toLowerCase().includes(searchQuery.toLowerCase());
+      (blog.excerpt || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = filterCategory === 'All Categories' || blog.category === filterCategory;
     const matchesStatus = filterStatus === 'All Status' || blog.status === filterStatus;
     const matchesFeatured =
@@ -251,10 +152,6 @@ const BlogPost = () => {
 
     return matchesSearch && matchesCategory && matchesStatus && matchesFeatured;
   });
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, filterCategory, filterStatus, filterFeatured]);
 
   const totalPages = Math.ceil(filteredBlogs.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -342,10 +239,6 @@ const BlogPost = () => {
                       src={formData.featuredImagePreview}
                       alt="Featured Preview"
                       className="BlogPost-imgPreview"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = FALLBACK_IMAGE;
-                      }}
                     />
                   ) : (
                     <>
@@ -375,10 +268,6 @@ const BlogPost = () => {
                       src={formData.thumbnailPreview}
                       alt="Thumbnail Preview"
                       className="BlogPost-imgPreview"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = FALLBACK_IMAGE;
-                      }}
                     />
                   ) : (
                     <>
@@ -505,27 +394,13 @@ const BlogPost = () => {
             </div>
 
             <div className="BlogPost-actions">
-              <button
-                type="button"
-                className="BlogPost-btn BlogPost-btnPrimary"
-                disabled={submitting}
-                onClick={() => handlePublish('Published')}
-              >
-                <FaPaperPlane /> {submitting ? 'Saving...' : editingId ? 'Update' : 'Publish'}
+              <button type="button" className="BlogPost-btn BlogPost-btnPrimary">
+                <FaPaperPlane /> {editingId ? 'Update' : 'Publish'}
               </button>
-              <button
-                type="button"
-                className="BlogPost-btn BlogPost-btnOutline"
-                disabled={submitting}
-                onClick={() => handlePublish('Draft')}
-              >
+              <button type="button" className="BlogPost-btn BlogPost-btnOutline">
                 <FaSave /> Save Draft
               </button>
-              <button
-                type="button"
-                className="BlogPost-btn BlogPost-btnReset"
-                onClick={handleReset}
-              >
+              <button type="button" className="BlogPost-btn BlogPost-btnReset" onClick={handleReset}>
                 <FaRedo /> Reset
               </button>
             </div>
@@ -613,94 +488,71 @@ const BlogPost = () => {
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="8" style={{ textAlign: 'center', padding: '24px' }}>
-                      Loading blogs...
-                    </td>
-                  </tr>
-                ) : paginatedBlogs.length > 0 ? (
-                  paginatedBlogs.map((blog, index) => {
-                    const blogId = blog._id || blog.id;
-                    const blogImageSrc = getImageUrl(blog.thumbnailImage || blog.featuredImage || blog.image);
-
-                    return (
-                      <tr key={blogId} className={editingId === blogId ? 'editingRow' : ''}>
-                        <td>{startIndex + index + 1}</td>
-                        <td>
-                          <img
-                            src={blogImageSrc}
-                            alt={blog.title}
-                            className="BlogPost-tableImg"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = FALLBACK_IMAGE;
-                            }}
-                          />
-                        </td>
-                        <td className="BlogPost-titleCell">
-                          <div className="BlogPost-titleBlock">
-                            <strong className="BlogPost-fullTitle">{blog.title}</strong>
-                            <p className="BlogPost-fullSubtitle">{blog.excerpt || blog.description}</p>
-                          </div>
-                        </td>
-                        <td>
-                          <span className={`BlogPost-tag BlogPost-tag-${(blog.category || 'default').toLowerCase()}`}>
-                            {blog.category}
+                {paginatedBlogs.length > 0 ? (
+                  paginatedBlogs.map((blog, index) => (
+                    <tr key={blog._id} className={editingId === blog._id ? 'editingRow' : ''}>
+                      <td>{startIndex + index + 1}</td>
+                      <td>
+                        <img
+                          src={blog.thumbnailImage}
+                          alt={blog.title}
+                          className="BlogPost-tableImg"
+                        />
+                      </td>
+                      <td className="BlogPost-titleCell">
+                        <div className="BlogPost-titleBlock">
+                          <strong className="BlogPost-fullTitle">{blog.title}</strong>
+                          <p className="BlogPost-fullSubtitle">{blog.excerpt}</p>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`BlogPost-tag BlogPost-tag-${(blog.category || 'default').toLowerCase()}`}>
+                          {blog.category}
+                        </span>
+                      </td>
+                      <td className="BlogPost-dateCell">
+                        <div>
+                          <FaCalendarAlt /> {blog.publishDate}
+                        </div>
+                        <small>
+                          <FaClock /> {blog.readTime}
+                        </small>
+                      </td>
+                      <td>
+                        <span className={`BlogPost-badge BlogPost-badge-${(blog.status || 'published').toLowerCase()}`}>
+                          {blog.status}
+                        </span>
+                      </td>
+                      <td>
+                        {blog.featured ? (
+                          <span className="BlogPost-featuredIcon active">
+                            <FaCheck />
                           </span>
-                        </td>
-                        <td className="BlogPost-dateCell">
-                          <div>
-                            <FaCalendarAlt />{' '}
-                            {blog.publishDate
-                              ? new Date(blog.publishDate).toLocaleDateString('en-GB', {
-                                  day: '2-digit',
-                                  month: 'short',
-                                  year: 'numeric'
-                                })
-                              : 'N/A'}
-                          </div>
-                          <small>
-                            <FaClock /> {blog.readTime || '5 min read'}
-                          </small>
-                        </td>
-                        <td>
-                          <span className={`BlogPost-badge BlogPost-badge-${(blog.status || 'published').toLowerCase()}`}>
-                            {blog.status}
-                          </span>
-                        </td>
-                        <td>
-                          {blog.featured ? (
-                            <span className="BlogPost-featuredIcon active">
-                              <FaCheck />
-                            </span>
-                          ) : (
-                            <span className="BlogPost-featuredIcon">—</span>
-                          )}
-                        </td>
-                        <td>
-                          <div className="BlogPost-tableActions">
-                            <button
-                              type="button"
-                              className="BlogPost-actionBtn BlogPost-editBtn"
-                              title="Edit"
-                              onClick={() => handleEdit(blog)}
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              type="button"
-                              className="BlogPost-actionBtn BlogPost-deleteBtn"
-                              title="Delete"
-                              onClick={() => handleDelete(blogId)}
-                            >
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
+                        ) : (
+                          <span className="BlogPost-featuredIcon">—</span>
+                        )}
+                      </td>
+                      <td>
+                        <div className="BlogPost-tableActions">
+                          <button
+                            type="button"
+                            className="BlogPost-actionBtn BlogPost-editBtn"
+                            title="Edit"
+                            onClick={() => handleEdit(blog)}
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            type="button"
+                            className="BlogPost-actionBtn BlogPost-deleteBtn"
+                            title="Delete"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
                 ) : (
                   <tr>
                     <td colSpan="8" style={{ textAlign: 'center', padding: '24px' }}>

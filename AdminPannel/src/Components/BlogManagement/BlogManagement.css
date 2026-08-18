@@ -78,6 +78,10 @@
   box-shadow: 0 2px 8px rgba(46, 204, 113, 0.25);
 }
 
+.BlogManagement-toggleBtn .btn-icon {
+  font-size: 14px;
+}
+
 .BlogManagement-controls {
   display: flex;
   align-items: center;
@@ -179,49 +183,46 @@
   display: inline-block;
 }
 
-
 /* Nature */
-
 .cat-nature {
   background-color: rgba(46, 204, 113, 0.15);
   color: #2ecc71;
   border: 1px solid rgba(46, 204, 113, 0.25);
 }
 
-
 /* Honey */
-
 .cat-honey {
   background-color: rgba(241, 196, 15, 0.15);
   color: #f1c40f;
   border: 1px solid rgba(241, 196, 15, 0.25);
 }
 
-
 /* Health */
-
 .cat-health {
   background-color: rgba(52, 152, 219, 0.15);
   color: #3498db;
   border: 1px solid rgba(52, 152, 219, 0.25);
 }
 
-
 /* Chocolate */
-
 .cat-chocolate {
   background-color: rgba(155, 89, 182, 0.15);
   color: #bb86fc;
   border: 1px solid rgba(155, 89, 182, 0.25);
 }
 
-
 /* Recipes */
-
 .cat-recipes {
   background-color: rgba(46, 204, 113, 0.12);
   color: #7ee2a8;
   border: 1px solid rgba(46, 204, 113, 0.22);
+}
+
+/* General Fallback */
+.cat-general {
+  background-color: rgba(163, 194, 175, 0.15);
+  color: var(--text-subtle);
+  border: 1px solid rgba(163, 194, 175, 0.25);
 }
 
 
@@ -235,6 +236,7 @@
 
   font-size: 12px;
   font-weight: 600;
+  display: inline-block;
 }
 
 .status-pill.published {
@@ -410,10 +412,12 @@
 
 .feat-icon.active {
   color: var(--green-accent);
+  font-size: 15px;
 }
 
 .feat-icon.inactive {
   color: #557360;
+  font-size: 15px;
 }
 
 
@@ -539,12 +543,18 @@
    GRID VIEW
    ========================================== */
 
+.BlogManagement-gridContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .BlogManagement-grid {
   display: grid;
 
   grid-template-columns: repeat(
     auto-fill,
-    minmax(230px, 1fr)
+    minmax(260px, 1fr)
   );
 
   gap: 18px;
@@ -706,44 +716,6 @@
 
 
 /* ==========================================
-   LOAD MORE
-   ========================================== */
-
-.BlogManagement-loadMore {
-  text-align: center;
-  margin-top: 24px;
-}
-
-.load-more-btn {
-  background: transparent;
-
-  border: 1px solid var(--green-accent);
-
-  color: var(--green-accent);
-
-  padding: 8px 20px;
-
-  border-radius: 8px;
-
-  font-weight: 600;
-
-  cursor: pointer;
-
-  display: inline-flex;
-  align-items: center;
-
-  gap: 8px;
-
-  transition: all 0.2s ease;
-}
-
-.load-more-btn:hover {
-  background: var(--green-accent);
-  color: #060d08;
-}
-
-
-/* ==========================================
    MODAL OVERLAY
    ========================================== */
 
@@ -866,58 +838,41 @@
 
 
 /* ==========================================
-   MODAL META
+   MODAL BODY & META
    ========================================== */
+
+.modal-body h2 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: var(--text-light);
+}
 
 .modal-meta-row {
   display: flex;
-
   gap: 12px;
-
   margin: 10px 0;
-
   font-size: 12px;
-
   color: var(--text-subtle);
+  align-items: center;
 }
 
 .modal-full-text {
   font-size: 13px;
-
   color: var(--text-light);
-
   line-height: 1.5;
-
-  margin-bottom: 16px;
-}
-
-.modal-author-box {
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  border-top: 1px solid var(--ref-border-green);
-
-  padding-top: 12px;
-}
-
-.modal-author-box img {
-  width: 36px;
-  height: 36px;
-
-  border-radius: 50%;
-
-  border: 1px solid var(--ref-border-green);
-
-  object-fit: cover;
+  margin-top: 12px;
 }
 
 
 /* ==========================================
    EDIT FORM
    ========================================== */
+
+.edit-modal h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
 
 .edit-form .form-group {
   margin-bottom: 12px;
@@ -963,8 +918,6 @@
 .edit-form textarea:focus,
 .edit-form select:focus {
   border-color: var(--green-accent);
-
-  outline: none;
 }
 
 .form-row {
