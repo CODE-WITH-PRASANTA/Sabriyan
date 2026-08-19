@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import './Inventory.css';
+import API, { IMG_URL } from '../../api/axios';
+
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=60';
 
 const Inventory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [inventoryItems, setInventoryItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [inventoryItems, setInventoryItems] = useState([
-    { id: 1, name: 'Dark Chocolate 70%', sku: 'CH0001', category: 'Dark Chocolate', stock: 120, unit: 'pcs', lowStock: 20, cost: '45.00', expiry: '30 Jun 2025', status: 'In Stock', img: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=60' },
-    { id: 2, name: 'Milk Chocolate Almond', sku: 'CH0002', category: 'Milk Chocolate', stock: 85, unit: 'pcs', lowStock: 15, cost: '55.00', expiry: '25 Aug 2025', status: 'In Stock', img: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=100&auto=format&fit=crop&q=60' },
-    { id: 3, name: 'Honey Chocolate Bar', sku: 'CH0003', category: 'Honey Chocolate', stock: 60, unit: 'pcs', lowStock: 10, cost: '60.00', expiry: '15 Jul 2025', status: 'In Stock', img: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?w=100&auto=format&fit=crop&q=60' },
-    { id: 4, name: 'Chocolate Truffle Box', sku: 'CH0004', category: 'Truffles', stock: 25, unit: 'pcs', lowStock: 5, cost: '120.00', expiry: '10 Jun 2025', status: 'Low Stock', img: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?w=100&auto=format&fit=crop&q=60' },
-    { id: 5, name: 'White Chocolate Cranberry', sku: 'CH0005', category: 'White Chocolate', stock: 40, unit: 'pcs', lowStock: 8, cost: '65.00', expiry: '20 Sep 2025', status: 'In Stock', img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=100&auto=format&fit=crop&q=60' },
-    { id: 6, name: 'Cocoa Powder 250g', sku: 'ING001', category: 'Ingredients', stock: 30, unit: 'pcs', lowStock: 6, cost: '35.00', expiry: '12 Dec 2025', status: 'Low Stock', img: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=100&auto=format&fit=crop&q=60' },
-    { id: 7, name: 'Honey Raw 500ml', sku: 'HON001', category: 'Honey Product', stock: 18, unit: 'pcs', lowStock: 4, cost: '150.00', expiry: '05 Oct 2025', status: 'Low Stock', img: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=100&auto=format&fit=crop&q=60' },
-  ]);
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
 
   const [formData, setFormData] = useState({
     product: '',
@@ -30,13 +29,28 @@ const Inventory = () => {
     notes: ''
   });
 
-  // Handle Background Scroll Lock
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+  // API से डेटा फेच करें
+  const fetchInventory = async () => {
+    setLoading(true);
+    try {
+      const res = await API.get('/inventory');
+      if (res.data && res.data.success) {
+        setInventoryItems(res.data.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch items:', err);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchInventory();
+  }, []);
+
+  // बैकग्राउंड स्क्रॉल लॉक
+  useEffect(() => {
+    document.body.style.overflow = isModalOpen ? 'hidden' : 'unset';
     return () => {
       document.body.style.overflow = 'unset';
     };
@@ -44,14 +58,21 @@ const Inventory = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleReset = () => {
     setFormData({
-      product: '', sku: '', category: '', unit: 'pcs',
-      quantity: '', lowStockAlert: '', costPrice: '',
-      expiryDate: '', supplier: '', notes: ''
+      product: '',
+      sku: '',
+      category: '',
+      unit: 'pcs',
+      quantity: '',
+      lowStockAlert: '',
+      costPrice: '',
+      expiryDate: '',
+      supplier: '',
+      notes: ''
     });
     setEditingId(null);
   };
@@ -61,105 +82,149 @@ const Inventory = () => {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const qtyNum = parseInt(formData.quantity) || 0;
-    const lowNum = parseInt(formData.lowStockAlert) || 0;
-    const statusVal = qtyNum <= lowNum ? 'Low Stock' : 'In Stock';
-
-    if (editingId !== null) {
-      setInventoryItems(prev => prev.map(item => {
-        if (item.id === editingId) {
-          return {
-            ...item,
-            name: formData.product,
-            sku: formData.sku,
-            category: formData.category,
-            stock: qtyNum,
-            unit: formData.unit,
-            lowStock: lowNum,
-            cost: formData.costPrice,
-            expiry: formData.expiryDate || item.expiry,
-            status: statusVal
-          };
-        }
-        return item;
-      }));
-    } else {
-      const newItem = {
-        id: Date.now(),
-        name: formData.product,
-        sku: formData.sku,
-        category: formData.category,
-        stock: qtyNum,
-        unit: formData.unit,
-        lowStock: lowNum,
-        cost: formData.costPrice,
-        expiry: formData.expiryDate || '31 Dec 2026',
-        status: statusVal,
-        img: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=60'
-      };
-      setInventoryItems(prev => [newItem, ...prev]);
-    }
-
-    setIsModalOpen(false);
-    handleReset();
+  // इमेज URL रिज़ॉल्वर
+  const resolveImageUrl = (img) => {
+    if (!img) return DEFAULT_IMAGE;
+    if (img.startsWith('http://') || img.startsWith('https://')) return img;
+    return `${IMG_URL || ''}${img.startsWith('/') ? '' : '/'}${img}`;
   };
 
+  // फॉर्म सबमिशन (Create या Update)
+  const handleSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+
+    if (!formData.product || !formData.sku || !formData.category || !formData.quantity || !formData.costPrice) {
+      alert('कृपया सभी आवश्यक फ़ील्ड्स भरें!');
+      return;
+    }
+
+    const payload = {
+      name: formData.product,
+      sku: formData.sku,
+      category: formData.category,
+      unit: formData.unit,
+      stock: Number(formData.quantity),
+      lowStock: Number(formData.lowStockAlert) || 0,
+      cost: formData.costPrice,
+      expiry: formData.expiryDate,
+      supplier: formData.supplier,
+      notes: formData.notes
+    };
+
+    try {
+      if (editingId !== null) {
+        // Update item (PUT)
+        const res = await API.put(`/inventory/${editingId}`, payload);
+        if (res.data && res.data.success) {
+          setInventoryItems((prev) =>
+            prev.map((item) => (item._id === editingId ? res.data.data : item))
+          );
+        } else {
+          alert(res.data?.message || 'Update failed');
+          return;
+        }
+      } else {
+        // Create item (POST)
+        const res = await API.post('/inventory', payload);
+        if (res.data && res.data.success) {
+          setInventoryItems((prev) => [res.data.data, ...prev]);
+        } else {
+          alert(res.data?.message || 'Creation failed');
+          return;
+        }
+      }
+
+      setIsModalOpen(false);
+      handleReset();
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      alert(err.response?.data?.message || 'सर्वर में कोई समस्या आई है।');
+    }
+  };
+
+  // एडिट के लिए फॉर्म में डेटा लोड करें
   const handleEdit = (item) => {
-    setEditingId(item.id);
+    setEditingId(item._id);
     setFormData({
-      product: item.name,
-      sku: item.sku,
-      category: item.category,
+      product: item.name || '',
+      sku: item.sku || '',
+      category: item.category || '',
       unit: item.unit || 'pcs',
-      quantity: item.stock.toString(),
-      lowStockAlert: item.lowStock.toString(),
-      costPrice: item.cost,
-      expiryDate: item.expiry,
-      supplier: '',
-      notes: ''
+      quantity: (item.stock ?? '').toString(),
+      lowStockAlert: (item.lowStock ?? '').toString(),
+      costPrice: item.cost || '',
+      expiryDate: item.expiry || '',
+      supplier: item.supplier || '',
+      notes: item.notes || ''
     });
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this inventory item?')) {
-      setInventoryItems(prev => prev.filter(item => item.id !== id));
+  // आइटम डिलीट करें (DELETE)
+  const handleDelete = async (id) => {
+    if (window.confirm('क्या आप वाकई इस आइटम को हटाना चाहते हैं?')) {
+      try {
+        const res = await API.delete(`/inventory/${id}`);
+        if (res.data && res.data.success) {
+          setInventoryItems((prev) => prev.filter((item) => item._id !== id));
+        } else {
+          alert(res.data?.message || 'Delete failed');
+        }
+      } catch (err) {
+        console.error('Error deleting item:', err);
+        alert(err.response?.data?.message || 'हटाने में विफल रहा');
+      }
     }
   };
 
-  const handleImport = () => {
+  // सिमुलेटेड इम्पोर्ट
+  const handleImport = async () => {
     const simulatedImport = {
-      id: Date.now(),
       name: 'Imported Cocoa Bar',
-      sku: `IMP00${Math.floor(Math.random() * 90 + 10)}`,
+      sku: `IMP00${Math.floor(Math.random() * 900 + 100)}`,
       category: 'Dark Chocolate',
       stock: 50,
       unit: 'pcs',
       lowStock: 10,
       cost: '40.00',
-      expiry: '10 Nov 2026',
-      status: 'In Stock',
-      img: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=60'
+      expiry: '10 Nov 2026'
     };
-    setInventoryItems(prev => [simulatedImport, ...prev]);
-    alert('Successfully imported 1 new inventory item!');
+
+    try {
+      const res = await API.post('/inventory', simulatedImport);
+      if (res.data && res.data.success) {
+        setInventoryItems((prev) => [res.data.data, ...prev]);
+        alert('1 नया इन्वेंटरी आइटम सफलतापूर्वक इम्पोर्ट किया गया!');
+      }
+    } catch (err) {
+      console.error('Error importing:', err);
+      alert('इम्पोर्ट विफल रहा');
+    }
   };
 
-  const filteredItems = inventoryItems.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          item.sku.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All Categories' || item.category === selectedCategory;
+  const filteredItems = inventoryItems.filter((item) => {
+    const matchesSearch =
+      (item.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.sku || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === 'All Categories' || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage) || 1;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div className="Inventory-dashboard">
       <div className="Inventory-header">
         <div className="Inventory-header-title-wrapper">
           <div className="Inventory-header-icon-box">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4" />
+            </svg>
           </div>
           <div>
             <h1>Inventory Management</h1>
@@ -168,7 +233,9 @@ const Inventory = () => {
         </div>
         <div className="Inventory-header-actions">
           <button className="Inventory-btn-secondary" onClick={handleImport}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
             Import Inventory
           </button>
           <button className="Inventory-btn-primary" onClick={handleOpenAddModal}>
@@ -182,18 +249,27 @@ const Inventory = () => {
 
         <div className="Inventory-filters-bar">
           <div className="Inventory-search-box">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input 
-              type="text" 
-              placeholder="Search by product, SKU..." 
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search by product, SKU..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </div>
           <div className="Inventory-filter-dropdowns">
-            <select 
-              value={selectedCategory} 
-              onChange={(e) => setSelectedCategory(e.target.value)}
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setCurrentPage(1);
+              }}
               className="Inventory-category-select"
             >
               <option>All Categories</option>
@@ -205,10 +281,6 @@ const Inventory = () => {
               <option>Ingredients</option>
               <option>Honey Product</option>
             </select>
-            <button className="Inventory-filter-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-              Filter
-            </button>
           </div>
         </div>
 
@@ -228,33 +300,63 @@ const Inventory = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredItems.length > 0 ? (
-                filteredItems.map((item) => (
-                  <tr key={item.id}>
+              {loading ? (
+                <tr>
+                  <td colSpan="9" style={{ textAlign: 'center', padding: '2rem' }}>
+                    Loading items...
+                  </td>
+                </tr>
+              ) : currentItems.length > 0 ? (
+                currentItems.map((item) => (
+                  <tr key={item._id}>
                     <td className="Inventory-product-cell">
                       <div className="Inventory-thumb-container">
-                        <img src={item.img} alt={item.name} className="Inventory-product-thumb" />
+                        <img
+                          src={resolveImageUrl(item.img)}
+                          alt={item.name}
+                          className="Inventory-product-thumb"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = DEFAULT_IMAGE;
+                          }}
+                        />
                       </div>
                       <span>{item.name}</span>
                     </td>
                     <td className="Inventory-sku-cell">{item.sku}</td>
                     <td>{item.category}</td>
-                    <td>{item.stock} <span className="Inventory-unit-text">{item.unit || ''}</span></td>
+                    <td>
+                      {item.stock} <span className="Inventory-unit-text">{item.unit || ''}</span>
+                    </td>
                     <td>{item.lowStock}</td>
                     <td>₹{item.cost}</td>
-                    <td>{item.expiry}</td>
+                    <td>{item.expiry || '-'}</td>
                     <td>
-                      <span className={`Inventory-status-badge ${item.status === 'In Stock' ? 'Inventory-in-stock' : 'Inventory-low-stock'}`}>
+                      <span
+                        className={`Inventory-status-badge ${
+                          item.status === 'In Stock' ? 'Inventory-in-stock' : 'Inventory-low-stock'
+                        }`}
+                      >
                         {item.status}
                       </span>
                     </td>
                     <td>
                       <div className="Inventory-action-btns">
                         <button className="Inventory-icon-btn" title="Edit" onClick={() => handleEdit(item)}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                          </svg>
                         </button>
-                        <button className="Inventory-icon-btn Inventory-delete" title="Delete" onClick={() => handleDelete(item.id)}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                        <button
+                          className="Inventory-icon-btn Inventory-delete"
+                          title="Delete"
+                          onClick={() => handleDelete(item._id)}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                          </svg>
                         </button>
                       </div>
                     </td>
@@ -272,11 +374,26 @@ const Inventory = () => {
         </div>
 
         <div className="Inventory-footer">
-          <span className="Inventory-pagination-info">Showing {filteredItems.length} of {inventoryItems.length} items</span>
+          <span className="Inventory-pagination-info">
+            Showing {filteredItems.length > 0 ? indexOfFirstItem + 1 : 0} to{' '}
+            {Math.min(indexOfLastItem, filteredItems.length)} of {filteredItems.length} items
+          </span>
           <div className="Inventory-pagination-controls">
-            <button className="Inventory-page-btn" disabled>&lt;</button>
-            <button className="Inventory-page-btn Inventory-active">1</button>
-            <button className="Inventory-page-btn" disabled>&gt;</button>
+            <button
+              className="Inventory-page-btn"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            >
+              &lt;
+            </button>
+            <button className="Inventory-page-btn Inventory-active">{currentPage}</button>
+            <button
+              className="Inventory-page-btn"
+              disabled={currentPage === totalPages || filteredItems.length === 0}
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            >
+              &gt;
+            </button>
           </div>
         </div>
       </div>
@@ -286,20 +403,36 @@ const Inventory = () => {
           <div className="Inventory-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="Inventory-modal-header">
               <h2>{editingId !== null ? 'Update Inventory Item' : 'Add New Inventory Item'}</h2>
-              <button className="Inventory-modal-close" onClick={() => setIsModalOpen(false)}>&times;</button>
+              <button className="Inventory-modal-close" onClick={() => setIsModalOpen(false)}>
+                &times;
+              </button>
             </div>
 
             <div className="Inventory-form-scrollable-container">
               <form onSubmit={handleSubmit} className="Inventory-form" id="inventory-modal-form">
                 <div className="Inventory-form-group">
                   <label>Product Name <span>*</span></label>
-                  <input type="text" name="product" placeholder="Enter Product Name" value={formData.product} onChange={handleInputChange} required />
+                  <input
+                    type="text"
+                    name="product"
+                    placeholder="Enter Product Name"
+                    value={formData.product}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
 
                 <div className="Inventory-form-row">
                   <div className="Inventory-form-group">
                     <label>SKU <span>*</span></label>
-                    <input type="text" name="sku" placeholder="Enter SKU (e.g. CH0001)" value={formData.sku} onChange={handleInputChange} required />
+                    <input
+                      type="text"
+                      name="sku"
+                      placeholder="Enter SKU (e.g. CH0001)"
+                      value={formData.sku}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                   <div className="Inventory-form-group">
                     <label>Category <span>*</span></label>
@@ -328,25 +461,49 @@ const Inventory = () => {
                 <div className="Inventory-form-row">
                   <div className="Inventory-form-group">
                     <label>Quantity <span>*</span></label>
-                    <input type="number" name="quantity" placeholder="Enter Quantity" value={formData.quantity} onChange={handleInputChange} required />
+                    <input
+                      type="number"
+                      name="quantity"
+                      placeholder="Enter Quantity"
+                      value={formData.quantity}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                   <div className="Inventory-form-group">
                     <label>Low Stock Alert <span>*</span></label>
-                    <input type="number" name="lowStockAlert" placeholder="Enter Threshold" value={formData.lowStockAlert} onChange={handleInputChange} required />
+                    <input
+                      type="number"
+                      name="lowStockAlert"
+                      placeholder="Enter Threshold"
+                      value={formData.lowStockAlert}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                 </div>
 
                 <div className="Inventory-form-group">
                   <label>Cost Price (₹) <span>*</span></label>
-                  <input type="text" name="costPrice" placeholder="Enter Cost Price" value={formData.costPrice} onChange={handleInputChange} required />
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="costPrice"
+                    placeholder="Enter Cost Price"
+                    value={formData.costPrice}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
 
                 <div className="Inventory-form-group">
                   <label>Expiry Date</label>
-                  <div className="Inventory-input-icon-wrapper">
-                    <input type="text" name="expiryDate" placeholder="e.g. 30 Jun 2025" value={formData.expiryDate} onChange={handleInputChange} />
-                    <svg className="Inventory-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </div>
+                  <input
+                    type="date"
+                    name="expiryDate"
+                    value={formData.expiryDate}
+                    onChange={handleInputChange}
+                  />
                 </div>
 
                 <div className="Inventory-form-group">
@@ -360,22 +517,34 @@ const Inventory = () => {
 
                 <div className="Inventory-form-group">
                   <label>Notes</label>
-                  <textarea name="notes" placeholder="Enter Notes (optional)" rows="3" value={formData.notes} onChange={handleInputChange}></textarea>
+                  <textarea
+                    name="notes"
+                    placeholder="Enter Notes (optional)"
+                    rows="3"
+                    value={formData.notes}
+                    onChange={handleInputChange}
+                  ></textarea>
                 </div>
               </form>
             </div>
 
             <div className="Inventory-modal-footer">
               <button type="button" className="Inventory-btn-reset" onClick={handleReset}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 4v6h6M23 20v-6h-6" />
+                  <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" />
+                </svg>
                 Reset
               </button>
-              <button type="button" className="Inventory-btn-save" onClick={handleSubmit}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <button type="submit" form="inventory-modal-form" className="Inventory-btn-save">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
                 {editingId !== null ? 'Update Item' : 'Save Item'}
               </button>
             </div>
-
           </div>
         </div>
       )}

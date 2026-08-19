@@ -1,85 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  FaStar, FaRegStar, FaStarHalfAlt, FaSmile, FaThumbsUp, FaThumbsDown, 
+  FaStar, FaRegStar, FaSmile, FaThumbsUp, FaThumbsDown, 
   FaSearch, FaFilter, FaEye, FaEllipsisV, FaPlus, FaTimes, FaTrash, FaEdit 
 } from 'react-icons/fa';
 import './Reviews.css';
-
-const initialReviewsData = [
-  {
-    id: 1,
-    customer: 'Arjun Mehta',
-    email: 'arjun@gmail.com',
-    avatar: 'A',
-    product: 'Dark Chocolate 70% Cocoa',
-    productImg: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80',
-    rating: 4,
-    title: 'Excellent Taste!',
-    review: 'Rich and smooth dark chocolate. Loved the natural taste...',
-    status: 'Approved',
-    date: 'May 29, 2025',
-    time: '11:20 AM'
-  },
-  {
-    id: 2,
-    customer: 'Sneha Kapoor',
-    email: 'sneha@gmail.com',
-    avatar: 'S',
-    product: 'Honey Chocolate With Almonds',
-    productImg: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=100&auto=format&fit=crop&q=80',
-    rating: 5,
-    title: 'Totally Loved It',
-    review: 'The combination of honey and almonds is just perfect...',
-    status: 'Approved',
-    date: 'May 29, 2025',
-    time: '10:05 AM'
-  },
-  {
-    id: 3,
-    customer: 'Ravi Singh',
-    email: 'ravi@gmail.com',
-    avatar: 'R',
-    product: 'Milk Chocolate Classic',
-    productImg: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?w=100&auto=format&fit=crop&q=80',
-    rating: 3,
-    title: 'Good But Sweet',
-    review: 'Good quality but a bit too sweet for my taste.',
-    status: 'Pending',
-    date: 'May 28, 2025',
-    time: '09:30 PM'
-  },
-  {
-    id: 4,
-    customer: 'Kavya Reddy',
-    email: 'kavya@gmail.com',
-    avatar: 'K',
-    product: 'Chocolate Truffle Box',
-    productImg: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?w=100&auto=format&fit=crop&q=80',
-    rating: 5,
-    title: 'Perfect Gift!',
-    review: 'Beautiful packaging and amazing taste. Perfect for gifting!',
-    status: 'Approved',
-    date: 'May 28, 2025',
-    time: '07:45 PM'
-  },
-  {
-    id: 5,
-    customer: 'Manish Gupta',
-    email: 'manish@gmail.com',
-    avatar: 'M',
-    product: 'Hazelnut Chocolate Bar',
-    productImg: 'https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=100&auto=format&fit=crop&q=80',
-    rating: 3,
-    title: 'Okay Experience',
-    review: 'Nice packaging but expected more in taste.',
-    status: 'Rejected',
-    date: 'May 28, 2025',
-    time: '06:10 PM'
-  }
-];
+import API, { IMG_URL } from '../../api/axios';
 
 const Reviews = () => {
-  const [reviews, setReviews] = useState(initialReviewsData);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [ratingFilter, setRatingFilter] = useState('All Ratings');
   const [productFilter, setProductFilter] = useState('All Products');
@@ -93,7 +22,7 @@ const Reviews = () => {
   const [selectedReview, setSelectedReview] = useState(null);
   const [activeDropdownId, setActiveDropdownId] = useState(null);
 
-  // Form state for Add/Edit
+  // Form State for Add/Edit
   const [formData, setFormData] = useState({
     customer: '',
     email: '',
@@ -106,12 +35,31 @@ const Reviews = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
 
+  // 1. Fetch Reviews using API instance
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      const res = await API.get('/reviews');
+      if (res.data && res.data.data) {
+        setReviews(res.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
   // Filter Logic
   const filteredReviews = reviews.filter((item) => {
     const matchesSearch = 
-      item.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.product.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.title.toLowerCase().includes(searchQuery.toLowerCase());
+      (item.customer || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.product || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.title || '').toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesRating = ratingFilter === 'All Ratings' || item.rating.toString() === ratingFilter;
     const matchesProduct = productFilter === 'All Products' || item.product === productFilter;
@@ -139,9 +87,10 @@ const Reviews = () => {
     return stars;
   };
 
-  // Handlers for Add / Edit
+  // Open Add Modal
   const handleOpenAddModal = () => {
     setIsEditing(false);
+    setEditId(null);
     setFormData({
       customer: '',
       email: '',
@@ -154,47 +103,44 @@ const Reviews = () => {
     setIsAddModalOpen(true);
   };
 
-  const handleFormSubmit = (e) => {
+  // 2. Add / Edit Submit Handler
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (isEditing) {
-      setReviews(reviews.map(rev => rev.id === editId ? {
-        ...rev,
-        customer: formData.customer,
-        email: formData.email,
-        product: formData.product,
-        rating: Number(formData.rating),
-        title: formData.title,
-        review: formData.review,
-        status: formData.status
-      } : rev));
-    } else {
-      const newEntry = {
-        id: Date.now(),
-        customer: formData.customer,
-        email: formData.email || 'customer@gmail.com',
-        avatar: formData.customer.charAt(0).toUpperCase() || 'C',
-        product: formData.product,
-        productImg: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80',
-        rating: Number(formData.rating),
-        title: formData.title,
-        review: formData.review,
-        status: formData.status,
-        date: 'May 29, 2025',
-        time: '12:00 PM'
-      };
-      setReviews([newEntry, ...reviews]);
+    try {
+      if (isEditing) {
+        const res = await API.put(`/reviews/${editId}`, formData);
+        if (res.data && res.data.data) {
+          setReviews(reviews.map(rev => (rev._id === editId ? res.data.data : rev)));
+        }
+      } else {
+        const res = await API.post('/reviews', formData);
+        if (res.data && res.data.data) {
+          setReviews([res.data.data, ...reviews]);
+        }
+      }
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.error('Error saving review:', error);
     }
-    setIsAddModalOpen(false);
   };
 
-  const handleDelete = (id) => {
-    setReviews(reviews.filter(rev => rev.id !== id));
-    setActiveDropdownId(null);
+  // 3. Delete Handler
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this review?')) {
+      try {
+        await API.delete(`/reviews/${id}`);
+        setReviews(reviews.filter(rev => rev._id !== id));
+        setActiveDropdownId(null);
+      } catch (error) {
+        console.error('Error deleting review:', error);
+      }
+    }
   };
 
+  // Edit Handler
   const handleEdit = (rev) => {
     setIsEditing(true);
-    setEditId(rev.id);
+    setEditId(rev._id);
     setFormData({
       customer: rev.customer,
       email: rev.email,
@@ -208,10 +154,18 @@ const Reviews = () => {
     setActiveDropdownId(null);
   };
 
+  // View Handler
   const handleView = (rev) => {
     setSelectedReview(rev);
     setIsViewModalOpen(true);
     setActiveDropdownId(null);
+  };
+
+  // Helper to format image URLs
+  const getImageUrl = (img) => {
+    if (!img) return 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=100&auto=format&fit=crop&q=80';
+    if (img.startsWith('http')) return img;
+    return `${IMG_URL}/${img}`;
   };
 
   return (
@@ -234,8 +188,8 @@ const Reviews = () => {
             <span className="reviews-card-label">Total Reviews</span>
             <div className="reviews-card-icon-box gold"><FaStar /></div>
           </div>
-          <div className="reviews-card-value">458</div>
-          <div className="reviews-card-trend positive">↑ 18.2% vs last month</div>
+          <div className="reviews-card-value">{reviews.length}</div>
+          <div className="reviews-card-trend positive">↑ Live Data</div>
         </div>
 
         <div className="reviews-card">
@@ -243,26 +197,31 @@ const Reviews = () => {
             <span className="reviews-card-label">Average Rating</span>
             <div className="reviews-card-icon-box yellow"><FaSmile /></div>
           </div>
-          <div className="reviews-card-value">4.6 <span className="reviews-card-sub">/ 5</span></div>
-          <div className="reviews-card-trend positive">↑ 0.3 vs last month</div>
+          <div className="reviews-card-value">
+            {reviews.length > 0 
+              ? (reviews.reduce((acc, curr) => acc + Number(curr.rating), 0) / reviews.length).toFixed(1) 
+              : '0.0'} 
+            <span className="reviews-card-sub">/ 5</span>
+          </div>
+          <div className="reviews-card-trend positive">Based on customer ratings</div>
         </div>
 
         <div className="reviews-card">
           <div className="reviews-card-top">
-            <span className="reviews-card-label">Positive Reviews</span>
+            <span className="reviews-card-label">Approved Reviews</span>
             <div className="reviews-card-icon-box green"><FaThumbsUp /></div>
           </div>
-          <div className="reviews-card-value">392</div>
-          <div className="reviews-card-trend positive">↑ 21.5% vs last month</div>
+          <div className="reviews-card-value">{reviews.filter(r => r.status === 'Approved').length}</div>
+          <div className="reviews-card-trend positive">Published</div>
         </div>
 
         <div className="reviews-card">
           <div className="reviews-card-top">
-            <span className="reviews-card-label">Negative Reviews</span>
+            <span className="reviews-card-label">Pending / Rejected</span>
             <div className="reviews-card-icon-box red"><FaThumbsDown /></div>
           </div>
-          <div className="reviews-card-value">66</div>
-          <div className="reviews-card-trend negative">↓ 9.7% vs last month</div>
+          <div className="reviews-card-value">{reviews.filter(r => r.status !== 'Approved').length}</div>
+          <div className="reviews-card-trend negative">Needs moderation</div>
         </div>
       </div>
 
@@ -293,8 +252,8 @@ const Reviews = () => {
           </select>
 
           <select 
-            className="reviews-select"
-            value={productFilter}
+            className="reviews-select" 
+            value={productFilter} 
             onChange={(e) => setProductFilter(e.target.value)}
           >
             <option>All Products</option>
@@ -306,8 +265,8 @@ const Reviews = () => {
           </select>
 
           <select 
-            className="reviews-select"
-            value={statusFilter}
+            className="reviews-select" 
+            value={statusFilter} 
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option>All Status</option>
@@ -322,7 +281,7 @@ const Reviews = () => {
             setProductFilter('All Products');
             setStatusFilter('All Status');
           }}>
-            <FaFilter /> Filter
+            <FaFilter /> Reset Filter
           </button>
         </div>
       </div>
@@ -343,12 +302,16 @@ const Reviews = () => {
             </tr>
           </thead>
           <tbody>
-            {currentReviews.length > 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan="8" className="reviews-no-data">Loading reviews...</td>
+              </tr>
+            ) : currentReviews.length > 0 ? (
               currentReviews.map((rev) => (
-                <tr key={rev.id}>
+                <tr key={rev._id}>
                   <td>
                     <div className="reviews-customer-cell">
-                      <div className="reviews-avatar">{rev.avatar}</div>
+                      <div className="reviews-avatar">{rev.avatar || rev.customer?.charAt(0).toUpperCase()}</div>
                       <div>
                         <div className="reviews-customer-name">{rev.customer}</div>
                         <div className="reviews-customer-email">{rev.email}</div>
@@ -357,7 +320,7 @@ const Reviews = () => {
                   </td>
                   <td>
                     <div className="reviews-product-cell">
-                      <img src={rev.productImg} alt={rev.product} className="reviews-product-img" />
+                      <img src={getImageUrl(rev.productImg)} alt={rev.product} className="reviews-product-img" />
                       <span className="reviews-product-name">{rev.product}</span>
                     </div>
                   </td>
@@ -373,7 +336,7 @@ const Reviews = () => {
                     <span className="reviews-desc-text" title={rev.review}>{rev.review}</span>
                   </td>
                   <td>
-                    <span className={`reviews-status-badge ${rev.status.toLowerCase()}`}>
+                    <span className={`reviews-status-badge ${rev.status?.toLowerCase()}`}>
                       {rev.status}
                     </span>
                   </td>
@@ -392,14 +355,14 @@ const Reviews = () => {
                         <button 
                           className="reviews-action-icon-btn" 
                           title="More Options"
-                          onClick={() => setActiveDropdownId(activeDropdownId === rev.id ? null : rev.id)}
+                          onClick={() => setActiveDropdownId(activeDropdownId === rev._id ? null : rev._id)}
                         >
                           <FaEllipsisV />
                         </button>
-                        {activeDropdownId === rev.id && (
+                        {activeDropdownId === rev._id && (
                           <div className="reviews-dropdown-menu">
                             <button onClick={() => handleEdit(rev)}><FaEdit /> Edit</button>
-                            <button onClick={() => handleDelete(rev.id)} className="delete"><FaTrash /> Delete</button>
+                            <button onClick={() => handleDelete(rev._id)} className="delete"><FaTrash /> Delete</button>
                           </div>
                         )}
                       </div>
@@ -439,11 +402,11 @@ const Reviews = () => {
             </button>
           ))}
           <button 
-            className="reviews-page-btn"
+            className="reviews-page-btn" 
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages || totalPages === 0}
           >
-            Next <span style={{ marginLeft: '4px' }}>&gt;</span>
+            Next &gt;
           </button>
         </div>
       </div>
@@ -475,7 +438,7 @@ const Reviews = () => {
                 <strong>Review Text:</strong> {selectedReview.review}
               </div>
               <div className="reviews-modal-row">
-                <strong>Status:</strong> <span className={`reviews-status-badge ${selectedReview.status.toLowerCase()}`}>{selectedReview.status}</span>
+                <strong>Status:</strong> <span className={`reviews-status-badge ${selectedReview.status?.toLowerCase()}`}>{selectedReview.status}</span>
               </div>
               <div className="reviews-modal-row">
                 <strong>Date & Time:</strong> {selectedReview.date} at {selectedReview.time}

@@ -40,7 +40,7 @@ import Marketings from "./Components/Marketings/Marketings";
 import WebsiteSetting from "./Components/WebsiteSetting/WebsiteSetting";
 import Reviews from "./Components/Reviews/Reviews";
 import Couponsoffers from "./Components/Couponsoffers/Couponsoffers";
-import ReportsandAnalytics from "./Pages/ReportsandAnalytics/ReportsandAnalytics";
+import Reports from "./Components/Reports/Reports";
 import Support from "./Components/Support/Support";
 
 function App() {
@@ -116,7 +116,7 @@ function App() {
          
          <Route
          path="reports"
-         element={<ReportsandAnalytics/>}
+         element={<Reports/>}
          />
 
             <Route
