@@ -13,6 +13,7 @@ import Contact from "./Pages/Contact/Contact";
 import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
 import BlogDetails from "./Pages/BlogDetails/BlogDetails";
 import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
+import Cart from "./Component/Cart/Cart";
 
 
 
@@ -33,6 +34,10 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/blogDetails" element={<BlogDetails />} />
         <Route path="/premiumcollection" element={<PremimuCollection />} />
+        <Route path="/cart" element={<Cart />} />
+
+
+
 
 
 
