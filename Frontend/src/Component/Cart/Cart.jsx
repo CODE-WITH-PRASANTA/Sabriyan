@@ -57,7 +57,7 @@ const Cart = ({ isOpen, onClose }) => {
   const [couponCode, setCouponCode] = useState('');
   const [discountAmount, setDiscountAmount] = useState(200);
 
-  const handleQuantityChange = (id, delta) => {
+  const handleQuantity = (id, delta) => {
     setCartItems((prev) =>
       prev
         .map((item) => {
@@ -71,82 +71,82 @@ const Cart = ({ isOpen, onClose }) => {
     );
   };
 
-  const handleRemoveItem = (id) => {
+  const handleRemove = (id) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const totalItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalPayable = Math.max(0, subtotal - discountAmount);
 
   return (
     <>
-      {/* Backdrop for click outside to close */}
+      {/* Semi-transparent dark overlay for background visibility */}
       <div
-        className={`cart-backdrop ${isOpen ? 'open' : ''}`}
+        className={`cart-sidebar-overlay ${isOpen ? 'active' : ''}`}
         onClick={onClose}
       />
 
-      {/* Slide Drawer from Right */}
-      <aside className={`cart-panel ${isOpen ? 'open' : ''}`}>
+      {/* Right Side Cart Sidebar */}
+      <aside className={`cart-sidebar ${isOpen ? 'active' : ''}`}>
         {/* Header */}
-        <div className="cart-header">
-          <div className="cart-header-title-group">
-            <ShoppingCart className="cart-header-icon" size={22} />
+        <div className="cart-sidebar-header">
+          <div className="cart-sidebar-title-group">
+            <ShoppingCart className="cart-sidebar-header-icon" size={22} />
             <div>
-              <h2 className="cart-header-title">My Cart ({totalItemCount})</h2>
-              <p className="cart-header-subtitle">{totalItemCount} items in your cart</p>
+              <h2 className="cart-sidebar-title">My Cart ({totalItems})</h2>
+              <p className="cart-sidebar-subtitle">{totalItems} items in your cart</p>
             </div>
           </div>
-          <button onClick={onClose} className="cart-close-btn" aria-label="Close cart">
+          <button onClick={onClose} className="cart-sidebar-close-btn" aria-label="Close">
             <X size={20} />
           </button>
         </div>
 
-        {/* Product Items List */}
-        <div className="cart-items-container">
+        {/* Products Scroll Area */}
+        <div className="cart-sidebar-items">
           {cartItems.map((item) => (
-            <div key={item.id} className="cart-item-row">
-              <img src={item.image} alt={item.name} className="cart-item-thumbnail" />
+            <div key={item.id} className="cart-sidebar-item">
+              <img src={item.image} alt={item.name} className="cart-sidebar-item-img" />
 
-              <div className="cart-item-info">
+              <div className="cart-sidebar-item-info">
                 <div>
-                  <h3 className="cart-item-heading">{item.name}</h3>
-                  <p className="cart-item-unit">{item.weight}</p>
+                  <h3 className="cart-sidebar-item-name">{item.name}</h3>
+                  <p className="cart-sidebar-item-weight">{item.weight}</p>
                 </div>
 
-                <div className="cart-item-actions">
-                  <div className="cart-item-price-wrap">
-                    <span className="cart-item-price-active">₹{item.price}</span>
-                    <span className="cart-item-price-strike">₹{item.originalPrice}</span>
+                <div className="cart-sidebar-item-actions">
+                  <div className="cart-sidebar-price-group">
+                    <span className="cart-sidebar-price-current">₹{item.price}</span>
+                    <span className="cart-sidebar-price-old">₹{item.originalPrice}</span>
                   </div>
 
-                  <div className="cart-qty-counter">
+                  <div className="cart-sidebar-qty">
                     <button
-                      onClick={() => handleQuantityChange(item.id, -1)}
-                      className="cart-qty-btn"
+                      onClick={() => handleQuantity(item.id, -1)}
+                      className="cart-sidebar-qty-btn"
                     >
                       <Minus size={11} />
                     </button>
-                    <span className="cart-qty-value">{item.quantity}</span>
+                    <span className="cart-sidebar-qty-count">{item.quantity}</span>
                     <button
-                      onClick={() => handleQuantityChange(item.id, 1)}
-                      className="cart-qty-btn"
+                      onClick={() => handleQuantity(item.id, 1)}
+                      className="cart-sidebar-qty-btn"
                     >
                       <Plus size={11} />
                     </button>
                   </div>
 
-                  <span className="cart-item-subtotal">
+                  <span className="cart-sidebar-item-total">
                     ₹{item.price * item.quantity}
                   </span>
                 </div>
               </div>
 
               <button
-                onClick={() => handleRemoveItem(item.id)}
-                className="cart-item-remove-btn"
-                aria-label="Remove item"
+                onClick={() => handleRemove(item.id)}
+                className="cart-sidebar-item-remove"
+                aria-label="Delete item"
               >
                 <Trash2 size={15} />
               </button>
@@ -154,79 +154,77 @@ const Cart = ({ isOpen, onClose }) => {
           ))}
         </div>
 
-        {/* Footer & Checkout Panel */}
-        <div className="cart-footer-panel">
-          <div className="cart-coupon-form">
-            <Tag className="cart-coupon-badge-icon" size={15} />
+        {/* Footer */}
+        <div className="cart-sidebar-footer">
+          <div className="cart-sidebar-coupon">
+            <Tag className="cart-sidebar-coupon-icon" size={15} />
             <input
               type="text"
               placeholder="Apply Coupon Code"
               value={couponCode}
               onChange={(e) => setCouponCode(e.target.value)}
-              className="cart-coupon-textfield"
+              className="cart-sidebar-coupon-input"
             />
-            <button className="cart-coupon-submit-btn">Apply</button>
+            <button className="cart-sidebar-coupon-btn">Apply</button>
           </div>
 
           {discountAmount > 0 && (
-            <div className="cart-coupon-alert">
-              <span className="cart-coupon-alert-text">
-                🎉 <b>SABRIYANA10</b> applied successfully!
-              </span>
+            <div className="cart-sidebar-coupon-applied">
+              <span>🎉 <b>SABRIYANA10</b> applied successfully!</span>
               <button
                 onClick={() => setDiscountAmount(0)}
-                className="cart-coupon-remove"
+                className="cart-sidebar-coupon-remove"
               >
                 Remove
               </button>
             </div>
           )}
 
-          <div className="cart-bill-summary">
-            <div className="cart-bill-row">
-              <span>Subtotal ({totalItemCount} Items)</span>
+          <div className="cart-sidebar-bill">
+            <div className="cart-sidebar-bill-row">
+              <span>Subtotal ({totalItems} Items)</span>
               <span>₹{subtotal.toLocaleString('en-IN')}</span>
             </div>
             {discountAmount > 0 && (
-              <div className="cart-bill-row promo">
+              <div className="cart-sidebar-bill-row highlight">
                 <span>Discount (SABRIYANA10)</span>
                 <span>- ₹{discountAmount}</span>
               </div>
             )}
-            <div className="cart-bill-row free-tag">
+            <div className="cart-sidebar-bill-row highlight">
               <span>Shipping</span>
               <span>FREE</span>
             </div>
-            <div className="cart-bill-row final-total">
+            <div className="cart-sidebar-bill-row total-row">
               <span>Total Amount</span>
-              <span className="cart-grand-amount">₹{totalPayable.toLocaleString('en-IN')}</span>
+              <span className="cart-sidebar-grand-total">₹{totalPayable.toLocaleString('en-IN')}</span>
             </div>
           </div>
 
-          <button className="cart-checkout-action-btn">
+          <button className="cart-sidebar-checkout-btn">
             <Lock size={15} />
             Proceed to Checkout
           </button>
 
-          <p className="cart-shipping-notice">
+          <p className="cart-sidebar-shipping-tag">
             🚚 Free shipping on orders above ₹999
           </p>
 
-          <div className="cart-badges-grid">
-            <div className="cart-badge-cell">
-              <ShieldCheck className="cart-badge-symbol" size={16} />
-              <span className="cart-badge-lbl">Secure Payment</span>
-              <span className="cart-badge-sublbl">100% Safe</span>
+          <div className="cart-sidebar-badges">
+            <div className="cart-sidebar-badge">
+              <ShieldCheck className="cart-sidebar-badge-icon" size={16} />
+              <span className="cart-sidebar-badge-label">Secure Payment</span>
+              <span className="cart-sidebar-badge-sublabel">100% Safe</span>
             </div>
-            <div className="cart-badge-cell divider">
-              <Truck className="cart-badge-symbol" size={16} />
-              <span className="cart-badge-lbl">Fast Delivery</span>
-              <span className="cart-badge-sublbl">Across India</span>
+            <div className="cart-sidebar-badge bordered">
+              <Truck className="cart-sidebar-badge-icon" size={16} />
+              <span className="cart-sidebar-badge-label">Fast Delivery</span>
+              <span className="cart-sidebar-badge-sublabel">Across India</span>
             </div>
-            <div className="cart-badge-cell">
-              <RotateCcw className="cart-badge-symbol" size={16} />
-              <span className="cart-badge-lbl">Easy Returns</span>
-              <span className="cart-badge-sublbl">Hassle Free</span>
+            <div className="cart-sidebar-badge">
+              <RotateCcw className="cart-sidebar-badge-icon" size={16} />
+              <span className="cart-sidebar-badge-label">Easy Returns</span>
+              <span className="cart-sidebar-badge-sublabel">Hassle Free</span>
             </div>
           </div>
         </div>
