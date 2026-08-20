@@ -10,6 +10,7 @@ import Blog from "./Pages/Blog/Blog";
 import Faq from "./Pages/Faq/Faq";
 import Contact from "./Pages/Contact/Contact";
 import BlogDetails from "./Pages/BlogDetails/BlogDetails";
+import Honeyaddtocart from "./Component/Honeyaddtocart/Honeyaddtocart";
 import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
 
 // Components
