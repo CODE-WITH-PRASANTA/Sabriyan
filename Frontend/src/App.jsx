@@ -12,8 +12,8 @@ import Contact from "./Pages/Contact/Contact";
 import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
 import BlogDetails from "./Pages/BlogDetails/BlogDetails";
 import Honeyaddtocart from "./Component/Honeyaddtocart/Honeyaddtocart";
+import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
 
-// 👇 Flotingcontact कॉम्पोनेंट इम्पोर्ट करें
 import Flotingcontact from "./Component/Flotingcontact/Flotingcontact";
 
 const App = () => {
@@ -32,6 +32,12 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/blogDetails" element={<BlogDetails />} />
         <Route path="/honeyproduct" element={<Honeyaddtocart />} />
+        <Route path="/premiumcollection" element={<PremimuCollection />} />
+
+
+
+       
+
       </Routes>
 
       <Footer />
