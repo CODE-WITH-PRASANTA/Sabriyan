@@ -404,3 +404,82 @@
   .HoneyProducts-carouselWrapper { padding: 0; }
   .HoneyProducts-navBtn { display: none; } /* Uses pagination bullets on mobile */
 }
+
+/* =========================================================
+   SEO CONTENT - SABRIYANA HONEY
+========================================================= */
+
+.HoneyProducts-seoText {
+  max-width: 850px;
+  margin: 18px auto 0;
+  color: #d8cfbb;
+  font-size: 14px;
+  line-height: 1.8;
+  font-weight: 400;
+  text-align: center;
+}
+
+.HoneyProducts-seoText strong {
+  color: #ffd752;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER SEO CONTENT
+========================================================= */
+
+.HoneyProducts-footerText {
+  max-width: 850px;
+  margin: 0 auto 25px;
+  color: #cfc3a8;
+  font-size: 14px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.HoneyProducts-footerText strong {
+  color: #ffd752;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   IMPROVED HEADER SPACING
+========================================================= */
+
+.HoneyProducts-header {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* =========================================================
+   PRODUCT ACCESSIBILITY / SEO
+========================================================= */
+
+.HoneyProducts-bottleImg {
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   MOBILE SEO CONTENT
+========================================================= */
+
+@media (max-width: 640px) {
+
+  .HoneyProducts-seoText {
+    font-size: 12.5px;
+    line-height: 1.7;
+    padding: 0 8px;
+  }
+
+  .HoneyProducts-footerText {
+    font-size: 12.5px;
+    line-height: 1.7;
+    padding: 0 10px;
+  }
+
+}

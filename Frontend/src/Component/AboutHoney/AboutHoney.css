@@ -253,3 +253,127 @@
     height: 1px;
   }
 }
+/* =========================================================
+   SEO CONTENT - SABRIYANA HONEY
+========================================================= */
+
+.AboutHoney-description {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #3b2c12;
+  margin: 0 0 16px;
+  font-weight: 500;
+  max-width: 620px;
+}
+
+.AboutHoney-description strong {
+  color: #315c21;
+  font-weight: 700;
+}
+
+/* Second SEO paragraph */
+.AboutHoney-seoText {
+  margin-bottom: 20px;
+}
+
+/* =========================================================
+   SABRIYANA BRAND CONTENT
+========================================================= */
+
+.AboutHoney-brandText {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(59, 44, 18, 0.88);
+  margin: 0 0 24px;
+  max-width: 620px;
+}
+
+.AboutHoney-brandText strong {
+  color: #315c21;
+  font-weight: 700;
+}
+
+/* =========================================================
+   BETTER CONTENT SPACING
+========================================================= */
+
+.AboutHoney-features {
+  margin-top: 6px;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .AboutHoney-description {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .AboutHoney-brandText {
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .AboutHoney-card {
+    width: calc(100% - 30px);
+    margin: 15px;
+    padding: 28px 20px;
+  }
+
+  .AboutHoney-heading {
+    font-size: 32px;
+    line-height: 1.15;
+  }
+
+  .AboutHoney-description {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .AboutHoney-seoText {
+    margin-bottom: 18px;
+  }
+
+  .AboutHoney-brandText {
+    font-size: 11.5px;
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .AboutHoney-button {
+    font-size: 11px;
+    padding: 14px 20px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .AboutHoney-heading {
+    font-size: 28px;
+  }
+
+  .AboutHoney-description {
+    font-size: 12.5px;
+  }
+
+  .AboutHoney-brandText {
+    font-size: 11px;
+  }
+}
