@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
 import Home from "./Pages/Home/Home";
 import Navbar from "./Pages/Navbar/Navbar";
 import About from "./Pages/About/About";
@@ -12,18 +11,19 @@ import Faq from "./Pages/Faq/Faq";
 import Contact from "./Pages/Contact/Contact";
 import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
 import BlogDetails from "./Pages/BlogDetails/BlogDetails";
+import Honeyaddtocart from "./Component/Honeyaddtocart/Honeyaddtocart";
 
-
-
+// 👇 Flotingcontact कॉम्पोनेंट इम्पोर्ट करें
+import Flotingcontact from "./Component/Flotingcontact/Flotingcontact";
 
 const App = () => {
   return (
     <BrowserRouter>
-     <ScrollToTop />
+      <ScrollToTop />
+
       <Navbar />
 
       <Routes>
-
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/honey" element={<Honey />} />
@@ -31,10 +31,14 @@ const App = () => {
         <Route path="/faq" element={<Faq />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/blogDetails" element={<BlogDetails />} />
-       
-
+        <Route path="/honeyproduct" element={<Honeyaddtocart />} />
       </Routes>
+
       <Footer />
+
+    
+      <Flotingcontact />
+
     </BrowserRouter>
   );
 };
