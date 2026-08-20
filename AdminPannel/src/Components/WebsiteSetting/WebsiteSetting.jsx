@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./WebsiteSetting.css";
 
-// React Icons
 import {
   FiHome,
   FiMail,
@@ -16,10 +16,6 @@ import {
   FiClock,
   FiServer,
   FiShield,
-  FiGlobe,
-  FiBell,
-  FiDollarSign,
-  FiLock,
   FiDatabase,
   FiBarChart2,
   FiCheckCircle,
@@ -35,94 +31,347 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 
+const API_URL =
+  "http://localhost:5000/api/website-settings";
+
+const IMAGE_BASE_URL =
+  "http://localhost:5000";
+
 const WebsiteSetting = () => {
-  const [activeTab, setActiveTab] = useState("general");
-  const [saveMessage, setSaveMessage] = useState("");
+  const [activeTab, setActiveTab] =
+    useState("general");
 
-  // Logo
-  const [logoPreview, setLogoPreview] = useState(null);
+  const [loading, setLoading] =
+    useState(true);
 
-  // General Settings
+  const [saving, setSaving] =
+    useState(false);
+
+  const [saveMessage, setSaveMessage] =
+    useState("");
+
+  const [errorMessage, setErrorMessage] =
+    useState("");
+
+  const [logoPreview, setLogoPreview] =
+    useState(null);
+
+  const [logoFile, setLogoFile] =
+    useState(null);
+
+  // =====================================================
+  // GENERAL FORM DATA
+  // =====================================================
+
   const [formData, setFormData] = useState({
     storeName: "Choco Bliss",
-    tagline: "Premium Chocolates, Pure Happiness",
-    websiteEmail: "support@chocobliss.com",
+    tagline:
+      "Premium Chocolates, Pure Happiness",
+    websiteEmail:
+      "support@chocobliss.com",
+
     storeDescription:
       "Choco Bliss brings you the finest selection of premium chocolates made with love and the best ingredients. Indulge in the richness of happiness.",
 
-    address: "123 Chocolate Street, Sweet City, CA 90210, USA",
+    address:
+      "123 Chocolate Street, Sweet City, CA 90210, USA",
+
     phone: "+1 234 567 8900",
+
     whatsapp: "+1 234 567 8900",
-    supportEmail: "support@chocobliss.com",
-    workingHours: "Mon - Sun : 9:00 AM - 10:00 PM",
 
-    facebook: "https://facebook.com/chocobliss",
-    instagram: "https://instagram.com/chocobliss",
-    youtube: "https://youtube.com/chocobliss",
-    twitter: "https://twitter.com/chocobliss",
+    supportEmail:
+      "support@chocobliss.com",
 
-    metaTitle: "Choco Bliss - Premium Chocolates Online",
+    workingHours:
+      "Mon - Sun : 9:00 AM - 10:00 PM",
+
+    facebook:
+      "https://facebook.com/chocobliss",
+
+    instagram:
+      "https://instagram.com/chocobliss",
+
+    youtube:
+      "https://youtube.com/chocobliss",
+
+    twitter:
+      "https://twitter.com/chocobliss",
+
+    metaTitle:
+      "Choco Bliss - Premium Chocolates Online",
+
     metaDescription:
       "Discover premium chocolates crafted with love. Order online for the best chocolate gifts, hampers and treats.",
   });
 
-  // Features
-  const [features, setFeatures] = useState({
-    premiumCollection: true,
-    honeyProducts: true,
-    customerReviews: true,
-    newsletter: true,
-    whatsappChat: true,
-  });
+  // =====================================================
+  // FEATURES
+  // =====================================================
 
-  // Email Settings
-  const [emailSettings, setEmailSettings] = useState({
-    mailProvider: "SMTP",
-    smtpHost: "smtp.gmail.com",
-    smtpPort: "587",
-    smtpUsername: "support@chocobliss.com",
-    smtpPassword: "",
-    encryption: "TLS",
-    senderName: "Choco Bliss",
-    senderEmail: "support@chocobliss.com",
-    orderNotification: true,
-    customerRegistration: true,
-    paymentNotification: true,
-    newsletterNotification: false,
-  });
+  const [features, setFeatures] =
+    useState({
+      premiumCollection: true,
+      honeyProducts: true,
+      customerReviews: true,
+      newsletter: true,
+      whatsappChat: true,
+    });
 
-  // Payment Settings
-  const [paymentSettings, setPaymentSettings] = useState({
-    currency: "USD",
-    currencySymbol: "$",
-    razorpayKey: "",
-    razorpaySecret: "",
-    stripePublicKey: "",
-    stripeSecretKey: "",
-    cod: true,
-    onlinePayment: true,
-    paypal: false,
-    razorpay: true,
-    stripe: false,
-    testMode: true,
-  });
+  // =====================================================
+  // EMAIL SETTINGS
+  // =====================================================
 
-  // Other Settings
-  const [otherSettings, setOtherSettings] = useState({
-    timezone: "Asia/Kolkata",
-    language: "English",
-    dateFormat: "DD/MM/YYYY",
-    maintenanceMode: false,
-    customerRegistration: true,
-    guestCheckout: true,
-    googleAnalytics: "",
-    facebookPixel: "",
-    enableCache: true,
-    enableSecurity: true,
-  });
+  const [emailSettings, setEmailSettings] =
+    useState({
+      mailProvider: "SMTP",
+      smtpHost: "smtp.gmail.com",
+      smtpPort: "587",
+      smtpUsername:
+        "support@chocobliss.com",
+      smtpPassword: "",
+      encryption: "TLS",
+      senderName: "Choco Bliss",
+      senderEmail:
+        "support@chocobliss.com",
+      orderNotification: true,
+      customerRegistration: true,
+      paymentNotification: true,
+      newsletterNotification: false,
+    });
+
+  // =====================================================
+  // PAYMENT SETTINGS
+  // =====================================================
+
+  const [paymentSettings, setPaymentSettings] =
+    useState({
+      currency: "USD",
+      currencySymbol: "$",
+      razorpayKey: "",
+      razorpaySecret: "",
+      stripePublicKey: "",
+      stripeSecretKey: "",
+      cod: true,
+      onlinePayment: true,
+      paypal: false,
+      razorpay: true,
+      stripe: false,
+      testMode: true,
+    });
+
+  // =====================================================
+  // OTHER SETTINGS
+  // =====================================================
+
+  const [otherSettings, setOtherSettings] =
+    useState({
+      timezone: "Asia/Kolkata",
+      language: "English",
+      dateFormat: "DD/MM/YYYY",
+      maintenanceMode: false,
+      customerRegistration: true,
+      guestCheckout: true,
+      googleAnalytics: "",
+      facebookPixel: "",
+      enableCache: true,
+      enableSecurity: true,
+    });
+
+  // =====================================================
+  // LOAD SETTINGS
+  // =====================================================
+
+  useEffect(() => {
+    fetchSettings();
+
+    return () => {
+      if (
+        logoPreview &&
+        logoPreview.startsWith("blob:")
+      ) {
+        URL.revokeObjectURL(
+          logoPreview
+        );
+      }
+    };
+  }, []);
+
+  // =====================================================
+  // FETCH SETTINGS
+  // =====================================================
+
+  const fetchSettings = async () => {
+    try {
+      setLoading(true);
+      setErrorMessage("");
+
+      const response =
+        await axios.get(API_URL);
+
+      if (
+        response.data?.success &&
+        response.data?.data
+      ) {
+        const data =
+          response.data.data;
+
+        // -------------------------------------------------
+        // Store Profile
+        // -------------------------------------------------
+
+        setFormData((prev) => ({
+          ...prev,
+
+          storeName:
+            data.storeProfile?.storeName ??
+            prev.storeName,
+
+          tagline:
+            data.storeProfile?.tagline ??
+            prev.tagline,
+
+          websiteEmail:
+            data.storeProfile?.websiteEmail ??
+            prev.websiteEmail,
+
+          storeDescription:
+            data.storeProfile?.storeDescription ??
+            prev.storeDescription,
+
+          // Contact
+          address:
+            data.contactDetails?.address ??
+            prev.address,
+
+          phone:
+            data.contactDetails?.phone ??
+            prev.phone,
+
+          whatsapp:
+            data.contactDetails?.whatsapp ??
+            prev.whatsapp,
+
+          supportEmail:
+            data.contactDetails?.supportEmail ??
+            prev.supportEmail,
+
+          workingHours:
+            data.contactDetails?.workingHours ??
+            prev.workingHours,
+
+          // Social
+          facebook:
+            data.socialMedia?.facebook ??
+            prev.facebook,
+
+          instagram:
+            data.socialMedia?.instagram ??
+            prev.instagram,
+
+          youtube:
+            data.socialMedia?.youtube ??
+            prev.youtube,
+
+          twitter:
+            data.socialMedia?.twitter ??
+            prev.twitter,
+
+          // SEO
+          metaTitle:
+            data.seo?.metaTitle ??
+            prev.metaTitle,
+
+          metaDescription:
+            data.seo?.metaDescription ??
+            prev.metaDescription,
+        }));
+
+        // -------------------------------------------------
+        // Features
+        // -------------------------------------------------
+
+        if (data.features) {
+          setFeatures((prev) => ({
+            ...prev,
+            ...data.features,
+          }));
+        }
+
+        // -------------------------------------------------
+        // Email
+        // -------------------------------------------------
+
+        if (data.emailSettings) {
+          setEmailSettings((prev) => ({
+            ...prev,
+            ...data.emailSettings,
+          }));
+        }
+
+        // -------------------------------------------------
+        // Payment
+        // -------------------------------------------------
+
+        if (data.paymentSettings) {
+          setPaymentSettings((prev) => ({
+            ...prev,
+            ...data.paymentSettings,
+          }));
+        }
+
+        // -------------------------------------------------
+        // Other
+        // -------------------------------------------------
+
+        if (data.otherSettings) {
+          setOtherSettings((prev) => ({
+            ...prev,
+            ...data.otherSettings,
+          }));
+        }
+
+        // -------------------------------------------------
+        // Logo
+        // -------------------------------------------------
+
+        if (
+          data.storeProfile?.logo
+        ) {
+          setLogoPreview(
+            `${IMAGE_BASE_URL}${data.storeProfile.logo}`
+          );
+        } else {
+          setLogoPreview(null);
+        }
+
+        // Existing DB logo means no new file selected
+        setLogoFile(null);
+      }
+    } catch (error) {
+      console.error(
+        "Fetch Settings Error:",
+        error
+      );
+
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Failed to load website settings."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =====================================================
+  // GENERAL INPUT
+  // =====================================================
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value,
+    } = e.target;
 
     setFormData((prev) => ({
       ...prev,
@@ -130,8 +379,15 @@ const WebsiteSetting = () => {
     }));
   };
 
+  // =====================================================
+  // EMAIL INPUT
+  // =====================================================
+
   const handleEmailChange = (e) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value,
+    } = e.target;
 
     setEmailSettings((prev) => ({
       ...prev,
@@ -139,8 +395,15 @@ const WebsiteSetting = () => {
     }));
   };
 
+  // =====================================================
+  // PAYMENT INPUT
+  // =====================================================
+
   const handlePaymentChange = (e) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value,
+    } = e.target;
 
     setPaymentSettings((prev) => ({
       ...prev,
@@ -148,14 +411,25 @@ const WebsiteSetting = () => {
     }));
   };
 
+  // =====================================================
+  // OTHER INPUT
+  // =====================================================
+
   const handleOtherChange = (e) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value,
+    } = e.target;
 
     setOtherSettings((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
+
+  // =====================================================
+  // FEATURE TOGGLE
+  // =====================================================
 
   const handleToggle = (key) => {
     setFeatures((prev) => ({
@@ -164,12 +438,20 @@ const WebsiteSetting = () => {
     }));
   };
 
+  // =====================================================
+  // EMAIL TOGGLE
+  // =====================================================
+
   const handleEmailToggle = (key) => {
     setEmailSettings((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
   };
+
+  // =====================================================
+  // PAYMENT TOGGLE
+  // =====================================================
 
   const handlePaymentToggle = (key) => {
     setPaymentSettings((prev) => ({
@@ -178,6 +460,10 @@ const WebsiteSetting = () => {
     }));
   };
 
+  // =====================================================
+  // OTHER TOGGLE
+  // =====================================================
+
   const handleOtherToggle = (key) => {
     setOtherSettings((prev) => ({
       ...prev,
@@ -185,33 +471,294 @@ const WebsiteSetting = () => {
     }));
   };
 
+  // =====================================================
+  // LOGO UPLOAD
+  // NO DELETE BUTTON
+  // =====================================================
+
   const handleLogoChange = (e) => {
-    const file = e.target.files?.[0];
+    const file =
+      e.target.files?.[0];
 
-    if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Logo size must be less than 2MB.");
+    if (!file) {
       return;
     }
 
-    const imageUrl = URL.createObjectURL(file);
-    setLogoPreview(imageUrl);
+    // Validate image
+    if (
+      !file.type ||
+      !file.type.startsWith("image/")
+    ) {
+      setErrorMessage(
+        "Please select a valid image file."
+      );
+
+      e.target.value = "";
+      return;
+    }
+
+    // Validate size
+    if (
+      file.size >
+      10 * 1024 * 1024
+    ) {
+      setErrorMessage(
+        "Image size must be less than 10MB."
+      );
+
+      e.target.value = "";
+      return;
+    }
+
+    // Clear old error
+    setErrorMessage("");
+
+    // Revoke previous temporary preview
+    if (
+      logoPreview &&
+      logoPreview.startsWith("blob:")
+    ) {
+      URL.revokeObjectURL(
+        logoPreview
+      );
+    }
+
+    setLogoFile(file);
+
+    const previewUrl =
+      URL.createObjectURL(file);
+
+    setLogoPreview(previewUrl);
   };
 
-  const handleSave = () => {
-    setSaveMessage("Changes saved successfully!");
+  // =====================================================
+  // SAVE SETTINGS
+  // =====================================================
 
-    setTimeout(() => {
+  const handleSave = async () => {
+    try {
+      setSaving(true);
       setSaveMessage("");
-    }, 3000);
+      setErrorMessage("");
+
+      const data =
+        new FormData();
+
+      // -------------------------------------------------
+      // Store Profile
+      // -------------------------------------------------
+
+      data.append(
+        "storeProfile",
+        JSON.stringify({
+          storeName:
+            formData.storeName,
+
+          tagline:
+            formData.tagline,
+
+          websiteEmail:
+            formData.websiteEmail,
+
+          storeDescription:
+            formData.storeDescription,
+        })
+      );
+
+      // -------------------------------------------------
+      // Contact Details
+      // -------------------------------------------------
+
+      data.append(
+        "contactDetails",
+        JSON.stringify({
+          address:
+            formData.address,
+
+          phone:
+            formData.phone,
+
+          whatsapp:
+            formData.whatsapp,
+
+          supportEmail:
+            formData.supportEmail,
+
+          workingHours:
+            formData.workingHours,
+        })
+      );
+
+      // -------------------------------------------------
+      // Features
+      // -------------------------------------------------
+
+      data.append(
+        "features",
+        JSON.stringify(
+          features
+        )
+      );
+
+      // -------------------------------------------------
+      // Social Media
+      // -------------------------------------------------
+
+      data.append(
+        "socialMedia",
+        JSON.stringify({
+          facebook:
+            formData.facebook,
+
+          instagram:
+            formData.instagram,
+
+          youtube:
+            formData.youtube,
+
+          twitter:
+            formData.twitter,
+        })
+      );
+
+      // -------------------------------------------------
+      // SEO
+      // -------------------------------------------------
+
+      data.append(
+        "seo",
+        JSON.stringify({
+          metaTitle:
+            formData.metaTitle,
+
+          metaDescription:
+            formData.metaDescription,
+        })
+      );
+
+      // -------------------------------------------------
+      // Email
+      // -------------------------------------------------
+
+      data.append(
+        "emailSettings",
+        JSON.stringify(
+          emailSettings
+        )
+      );
+
+      // -------------------------------------------------
+      // Payment
+      // -------------------------------------------------
+
+      data.append(
+        "paymentSettings",
+        JSON.stringify(
+          paymentSettings
+        )
+      );
+
+      // -------------------------------------------------
+      // Other
+      // -------------------------------------------------
+
+      data.append(
+        "otherSettings",
+        JSON.stringify(
+          otherSettings
+        )
+      );
+
+      // -------------------------------------------------
+      // Logo
+      // -------------------------------------------------
+
+      if (logoFile) {
+        data.append(
+          "logo",
+          logoFile
+        );
+      }
+
+      // IMPORTANT:
+      // Do NOT manually set Content-Type.
+      // Browser/Axios will automatically add
+      // multipart boundary.
+      const response =
+        await axios.put(
+          API_URL,
+          data
+        );
+
+      // -------------------------------------------------
+      // Success
+      // -------------------------------------------------
+
+      if (
+        response.data?.success
+      ) {
+        const savedData =
+          response.data.data;
+
+        // Update logo from backend
+        if (
+          savedData?.storeProfile?.logo
+        ) {
+          setLogoPreview(
+            `${IMAGE_BASE_URL}${savedData.storeProfile.logo}`
+          );
+        }
+
+        // New file is now saved
+        setLogoFile(null);
+
+        setSaveMessage(
+          "Changes saved successfully!"
+        );
+
+        // Refresh actual settings from backend
+        await fetchSettings();
+
+        setTimeout(() => {
+          setSaveMessage("");
+        }, 3000);
+      }
+    } catch (error) {
+      console.error(
+        "Save Settings Error:",
+        error
+      );
+
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Failed to save website settings."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
+
+  // =====================================================
+  // PREVIEW
+  // =====================================================
 
   const handlePreview = () => {
-    window.open("https://chocobliss.com", "_blank");
+    window.open(
+      "https://chocobliss.com",
+      "_blank",
+      "noopener,noreferrer"
+    );
   };
 
-  const renderToggle = (label, value, onChange) => {
+  // =====================================================
+  // TOGGLE COMPONENT
+  // =====================================================
+
+  const renderToggle = (
+    label,
+    value,
+    onChange
+  ) => {
     return (
       <div className="WebsiteSetting-feature-row">
         <span>{label}</span>
@@ -219,7 +766,7 @@ const WebsiteSetting = () => {
         <label className="WebsiteSetting-switch">
           <input
             type="checkbox"
-            checked={value}
+            checked={Boolean(value)}
             onChange={onChange}
           />
 
@@ -229,14 +776,15 @@ const WebsiteSetting = () => {
     );
   };
 
-  /* =========================================================
-     GENERAL SETTINGS
-  ========================================================= */
+  // =====================================================
+  // GENERAL SETTINGS
+  // =====================================================
 
   const renderGeneralSettings = () => {
     return (
       <>
-        {/* Store Profile */}
+        {/* STORE PROFILE */}
+
         <section className="WebsiteSetting-card">
           <h2 className="WebsiteSetting-card-title">
             Store Profile
@@ -256,72 +804,104 @@ const WebsiteSetting = () => {
                 )}
               </div>
 
+              {/* NO DELETE BUTTON */}
+
               <label className="WebsiteSetting-upload-btn">
                 <FiUploadCloud />
-                <span>Change Logo</span>
+
+                <span>
+                  Change Logo
+                </span>
 
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/avif,image/bmp,image/tiff"
                   hidden
-                  onChange={handleLogoChange}
+                  onChange={
+                    handleLogoChange
+                  }
                 />
               </label>
 
               <span className="WebsiteSetting-file-hint">
-                JPG, PNG or WEBP. Max 2MB
+                Maximum 10MB. Backend converts image to WEBP.
               </span>
             </div>
 
             <div className="WebsiteSetting-profile-inputs">
               <div className="WebsiteSetting-field-group">
-                <label>Store Name</label>
+                <label>
+                  Store Name
+                </label>
 
                 <input
                   type="text"
                   name="storeName"
-                  value={formData.storeName}
-                  onChange={handleInputChange}
+                  value={
+                    formData.storeName
+                  }
+                  onChange={
+                    handleInputChange
+                  }
                 />
               </div>
 
               <div className="WebsiteSetting-field-group">
-                <label>Tagline</label>
+                <label>
+                  Tagline
+                </label>
 
                 <input
                   type="text"
                   name="tagline"
-                  value={formData.tagline}
-                  onChange={handleInputChange}
+                  value={
+                    formData.tagline
+                  }
+                  onChange={
+                    handleInputChange
+                  }
                 />
               </div>
 
               <div className="WebsiteSetting-field-group">
-                <label>Website Email</label>
+                <label>
+                  Website Email
+                </label>
 
                 <input
                   type="email"
                   name="websiteEmail"
-                  value={formData.websiteEmail}
-                  onChange={handleInputChange}
+                  value={
+                    formData.websiteEmail
+                  }
+                  onChange={
+                    handleInputChange
+                  }
                 />
               </div>
             </div>
           </div>
 
           <div className="WebsiteSetting-field-group WebsiteSetting-desc-group">
-            <label>Store Description</label>
+            <label>
+              Store Description
+            </label>
 
             <textarea
               name="storeDescription"
               rows={3}
-              value={formData.storeDescription}
-              onChange={handleInputChange}
+              value={
+                formData.storeDescription
+              }
+              onChange={
+                handleInputChange
+              }
             />
           </div>
         </section>
 
-        {/* Contact Details */}
+        {/* CONTACT DETAILS */}
+
         <section className="WebsiteSetting-card">
           <h2 className="WebsiteSetting-card-title">
             Contact Details
@@ -330,82 +910,113 @@ const WebsiteSetting = () => {
           <div className="WebsiteSetting-contact-list">
             <div className="WebsiteSetting-contact-row">
               <div className="WebsiteSetting-contact-label">
-                <FiMapPin className="WebsiteSetting-icon-muted" />
-                <span>Address</span>
+                <FiMapPin />
+                <span>
+                  Address
+                </span>
               </div>
 
               <input
                 type="text"
                 name="address"
                 className="WebsiteSetting-input-flex"
-                value={formData.address}
-                onChange={handleInputChange}
+                value={
+                  formData.address
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-contact-row">
               <div className="WebsiteSetting-contact-label">
-                <FiPhone className="WebsiteSetting-icon-muted" />
-                <span>Phone Number</span>
+                <FiPhone />
+                <span>
+                  Phone Number
+                </span>
               </div>
 
               <input
                 type="text"
                 name="phone"
                 className="WebsiteSetting-input-flex"
-                value={formData.phone}
-                onChange={handleInputChange}
+                value={
+                  formData.phone
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-contact-row">
               <div className="WebsiteSetting-contact-label">
-                <FaWhatsapp className="WebsiteSetting-icon-muted" />
-                <span>WhatsApp Number</span>
+                <FaWhatsapp />
+                <span>
+                  WhatsApp Number
+                </span>
               </div>
 
               <input
                 type="text"
                 name="whatsapp"
                 className="WebsiteSetting-input-flex"
-                value={formData.whatsapp}
-                onChange={handleInputChange}
+                value={
+                  formData.whatsapp
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-contact-row">
               <div className="WebsiteSetting-contact-label">
-                <FiMail className="WebsiteSetting-icon-muted" />
-                <span>Support Email</span>
+                <FiMail />
+                <span>
+                  Support Email
+                </span>
               </div>
 
               <input
                 type="email"
                 name="supportEmail"
                 className="WebsiteSetting-input-flex"
-                value={formData.supportEmail}
-                onChange={handleInputChange}
+                value={
+                  formData.supportEmail
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-contact-row">
               <div className="WebsiteSetting-contact-label">
-                <FiClock className="WebsiteSetting-icon-muted" />
-                <span>Working Hours</span>
+                <FiClock />
+                <span>
+                  Working Hours
+                </span>
               </div>
 
               <input
                 type="text"
                 name="workingHours"
                 className="WebsiteSetting-input-flex"
-                value={formData.workingHours}
-                onChange={handleInputChange}
+                value={
+                  formData.workingHours
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
           </div>
         </section>
 
-        {/* Features */}
+        {/* FEATURES */}
+
         <section className="WebsiteSetting-card">
           <h2 className="WebsiteSetting-card-title">
             Features
@@ -415,36 +1026,52 @@ const WebsiteSetting = () => {
             {renderToggle(
               "Enable Premium Collection",
               features.premiumCollection,
-              () => handleToggle("premiumCollection")
+              () =>
+                handleToggle(
+                  "premiumCollection"
+                )
             )}
 
             {renderToggle(
               "Enable Honey Products",
               features.honeyProducts,
-              () => handleToggle("honeyProducts")
+              () =>
+                handleToggle(
+                  "honeyProducts"
+                )
             )}
 
             {renderToggle(
               "Enable Customer Reviews",
               features.customerReviews,
-              () => handleToggle("customerReviews")
+              () =>
+                handleToggle(
+                  "customerReviews"
+                )
             )}
 
             {renderToggle(
               "Enable Newsletter Subscription",
               features.newsletter,
-              () => handleToggle("newsletter")
+              () =>
+                handleToggle(
+                  "newsletter"
+                )
             )}
 
             {renderToggle(
               "Enable WhatsApp Chat",
               features.whatsappChat,
-              () => handleToggle("whatsappChat")
+              () =>
+                handleToggle(
+                  "whatsappChat"
+                )
             )}
           </div>
         </section>
 
-        {/* Social Media */}
+        {/* SOCIAL MEDIA */}
+
         <section className="WebsiteSetting-card">
           <h2 className="WebsiteSetting-card-title">
             Social Media Links
@@ -457,15 +1084,21 @@ const WebsiteSetting = () => {
                   <FaFacebookF />
                 </div>
 
-                <span>Facebook</span>
+                <span>
+                  Facebook
+                </span>
               </div>
 
               <input
-                type="text"
+                type="url"
                 name="facebook"
                 className="WebsiteSetting-input-flex"
-                value={formData.facebook}
-                onChange={handleInputChange}
+                value={
+                  formData.facebook
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
@@ -475,15 +1108,21 @@ const WebsiteSetting = () => {
                   <FaInstagram />
                 </div>
 
-                <span>Instagram</span>
+                <span>
+                  Instagram
+                </span>
               </div>
 
               <input
-                type="text"
+                type="url"
                 name="instagram"
                 className="WebsiteSetting-input-flex"
-                value={formData.instagram}
-                onChange={handleInputChange}
+                value={
+                  formData.instagram
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
@@ -493,15 +1132,21 @@ const WebsiteSetting = () => {
                   <FaYoutube />
                 </div>
 
-                <span>YouTube</span>
+                <span>
+                  YouTube
+                </span>
               </div>
 
               <input
-                type="text"
+                type="url"
                 name="youtube"
                 className="WebsiteSetting-input-flex"
-                value={formData.youtube}
-                onChange={handleInputChange}
+                value={
+                  formData.youtube
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
@@ -511,21 +1156,28 @@ const WebsiteSetting = () => {
                   <FaTwitter />
                 </div>
 
-                <span>Twitter</span>
+                <span>
+                  Twitter
+                </span>
               </div>
 
               <input
-                type="text"
+                type="url"
                 name="twitter"
                 className="WebsiteSetting-input-flex"
-                value={formData.twitter}
-                onChange={handleInputChange}
+                value={
+                  formData.twitter
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
           </div>
         </section>
 
         {/* SEO */}
+
         <section className="WebsiteSetting-card WebsiteSetting-card-full">
           <h2 className="WebsiteSetting-card-title">
             SEO Settings
@@ -533,24 +1185,36 @@ const WebsiteSetting = () => {
 
           <div className="WebsiteSetting-seo-row">
             <div className="WebsiteSetting-seo-item">
-              <label>Meta Title</label>
+              <label>
+                Meta Title
+              </label>
 
               <input
                 type="text"
                 name="metaTitle"
-                value={formData.metaTitle}
-                onChange={handleInputChange}
+                value={
+                  formData.metaTitle
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-seo-item">
-              <label>Meta Description</label>
+              <label>
+                Meta Description
+              </label>
 
               <input
                 type="text"
                 name="metaDescription"
-                value={formData.metaDescription}
-                onChange={handleInputChange}
+                value={
+                  formData.metaDescription
+                }
+                onChange={
+                  handleInputChange
+                }
               />
             </div>
           </div>
@@ -559,9 +1223,9 @@ const WebsiteSetting = () => {
     );
   };
 
-  /* =========================================================
-     EMAIL SETTINGS
-  ========================================================= */
+  // =====================================================
+  // EMAIL SETTINGS
+  // =====================================================
 
   const renderEmailSettings = () => {
     return (
@@ -585,76 +1249,131 @@ const WebsiteSetting = () => {
 
           <div className="WebsiteSetting-form-grid">
             <div className="WebsiteSetting-field-group">
-              <label>Mail Provider</label>
+              <label>
+                Mail Provider
+              </label>
 
               <select
                 name="mailProvider"
-                value={emailSettings.mailProvider}
-                onChange={handleEmailChange}
+                value={
+                  emailSettings.mailProvider
+                }
+                onChange={
+                  handleEmailChange
+                }
               >
-                <option value="SMTP">SMTP</option>
-                <option value="Gmail">Gmail</option>
-                <option value="SendGrid">SendGrid</option>
-                <option value="Mailgun">Mailgun</option>
+                <option value="SMTP">
+                  SMTP
+                </option>
+
+                <option value="Gmail">
+                  Gmail
+                </option>
+
+                <option value="SendGrid">
+                  SendGrid
+                </option>
+
+                <option value="Mailgun">
+                  Mailgun
+                </option>
               </select>
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>SMTP Host</label>
+              <label>
+                SMTP Host
+              </label>
 
               <input
                 type="text"
                 name="smtpHost"
-                value={emailSettings.smtpHost}
-                onChange={handleEmailChange}
+                value={
+                  emailSettings.smtpHost
+                }
+                onChange={
+                  handleEmailChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>SMTP Port</label>
+              <label>
+                SMTP Port
+              </label>
 
               <input
                 type="text"
                 name="smtpPort"
-                value={emailSettings.smtpPort}
-                onChange={handleEmailChange}
+                value={
+                  emailSettings.smtpPort
+                }
+                onChange={
+                  handleEmailChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>Encryption</label>
+              <label>
+                Encryption
+              </label>
 
               <select
                 name="encryption"
-                value={emailSettings.encryption}
-                onChange={handleEmailChange}
+                value={
+                  emailSettings.encryption
+                }
+                onChange={
+                  handleEmailChange
+                }
               >
-                <option value="TLS">TLS</option>
-                <option value="SSL">SSL</option>
-                <option value="None">None</option>
+                <option value="TLS">
+                  TLS
+                </option>
+
+                <option value="SSL">
+                  SSL
+                </option>
+
+                <option value="None">
+                  None
+                </option>
               </select>
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>SMTP Username</label>
+              <label>
+                SMTP Username
+              </label>
 
               <input
                 type="email"
                 name="smtpUsername"
-                value={emailSettings.smtpUsername}
-                onChange={handleEmailChange}
+                value={
+                  emailSettings.smtpUsername
+                }
+                onChange={
+                  handleEmailChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>SMTP Password</label>
+              <label>
+                SMTP Password
+              </label>
 
               <input
                 type="password"
                 name="smtpPassword"
                 placeholder="Enter SMTP password"
-                value={emailSettings.smtpPassword}
-                onChange={handleEmailChange}
+                value={
+                  emailSettings.smtpPassword
+                }
+                onChange={
+                  handleEmailChange
+                }
               />
             </div>
           </div>
@@ -667,31 +1386,46 @@ const WebsiteSetting = () => {
 
           <div className="WebsiteSetting-form-grid">
             <div className="WebsiteSetting-field-group">
-              <label>Sender Name</label>
+              <label>
+                Sender Name
+              </label>
 
               <input
                 type="text"
                 name="senderName"
-                value={emailSettings.senderName}
-                onChange={handleEmailChange}
+                value={
+                  emailSettings.senderName
+                }
+                onChange={
+                  handleEmailChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>Sender Email</label>
+              <label>
+                Sender Email
+              </label>
 
               <input
                 type="email"
                 name="senderEmail"
-                value={emailSettings.senderEmail}
-                onChange={handleEmailChange}
+                value={
+                  emailSettings.senderEmail
+                }
+                onChange={
+                  handleEmailChange
+                }
               />
             </div>
           </div>
 
           <div className="WebsiteSetting-email-status">
             <FiCheckCircle />
-            <span>Email service configuration is ready</span>
+
+            <span>
+              Email service configuration is ready
+            </span>
           </div>
         </section>
 
@@ -704,25 +1438,37 @@ const WebsiteSetting = () => {
             {renderToggle(
               "New Order Notification",
               emailSettings.orderNotification,
-              () => handleEmailToggle("orderNotification")
+              () =>
+                handleEmailToggle(
+                  "orderNotification"
+                )
             )}
 
             {renderToggle(
               "Customer Registration",
               emailSettings.customerRegistration,
-              () => handleEmailToggle("customerRegistration")
+              () =>
+                handleEmailToggle(
+                  "customerRegistration"
+                )
             )}
 
             {renderToggle(
               "Payment Notification",
               emailSettings.paymentNotification,
-              () => handleEmailToggle("paymentNotification")
+              () =>
+                handleEmailToggle(
+                  "paymentNotification"
+                )
             )}
 
             {renderToggle(
               "Newsletter Notification",
               emailSettings.newsletterNotification,
-              () => handleEmailToggle("newsletterNotification")
+              () =>
+                handleEmailToggle(
+                  "newsletterNotification"
+                )
             )}
           </div>
         </section>
@@ -730,9 +1476,9 @@ const WebsiteSetting = () => {
     );
   };
 
-  /* =========================================================
-     PAYMENT SETTINGS
-  ========================================================= */
+  // =====================================================
+  // PAYMENT SETTINGS
+  // =====================================================
 
   const renderPaymentSettings = () => {
     return (
@@ -756,28 +1502,51 @@ const WebsiteSetting = () => {
 
           <div className="WebsiteSetting-form-grid">
             <div className="WebsiteSetting-field-group">
-              <label>Currency</label>
+              <label>
+                Currency
+              </label>
 
               <select
                 name="currency"
-                value={paymentSettings.currency}
-                onChange={handlePaymentChange}
+                value={
+                  paymentSettings.currency
+                }
+                onChange={
+                  handlePaymentChange
+                }
               >
-                <option value="USD">USD - US Dollar</option>
-                <option value="INR">INR - Indian Rupee</option>
-                <option value="EUR">EUR - Euro</option>
-                <option value="GBP">GBP - British Pound</option>
+                <option value="USD">
+                  USD - US Dollar
+                </option>
+
+                <option value="INR">
+                  INR - Indian Rupee
+                </option>
+
+                <option value="EUR">
+                  EUR - Euro
+                </option>
+
+                <option value="GBP">
+                  GBP - British Pound
+                </option>
               </select>
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>Currency Symbol</label>
+              <label>
+                Currency Symbol
+              </label>
 
               <input
                 type="text"
                 name="currencySymbol"
-                value={paymentSettings.currencySymbol}
-                onChange={handlePaymentChange}
+                value={
+                  paymentSettings.currencySymbol
+                }
+                onChange={
+                  handlePaymentChange
+                }
               />
             </div>
           </div>
@@ -792,31 +1561,46 @@ const WebsiteSetting = () => {
             {renderToggle(
               "Cash on Delivery",
               paymentSettings.cod,
-              () => handlePaymentToggle("cod")
+              () =>
+                handlePaymentToggle(
+                  "cod"
+                )
             )}
 
             {renderToggle(
               "Online Payment",
               paymentSettings.onlinePayment,
-              () => handlePaymentToggle("onlinePayment")
+              () =>
+                handlePaymentToggle(
+                  "onlinePayment"
+                )
             )}
 
             {renderToggle(
               "Razorpay",
               paymentSettings.razorpay,
-              () => handlePaymentToggle("razorpay")
+              () =>
+                handlePaymentToggle(
+                  "razorpay"
+                )
             )}
 
             {renderToggle(
               "Stripe",
               paymentSettings.stripe,
-              () => handlePaymentToggle("stripe")
+              () =>
+                handlePaymentToggle(
+                  "stripe"
+                )
             )}
 
             {renderToggle(
               "PayPal",
               paymentSettings.paypal,
-              () => handlePaymentToggle("paypal")
+              () =>
+                handlePaymentToggle(
+                  "paypal"
+                )
             )}
           </div>
         </section>
@@ -841,50 +1625,74 @@ const WebsiteSetting = () => {
 
           <div className="WebsiteSetting-form-grid WebsiteSetting-payment-grid">
             <div className="WebsiteSetting-field-group">
-              <label>Razorpay Key ID</label>
+              <label>
+                Razorpay Key ID
+              </label>
 
               <input
                 type="text"
                 name="razorpayKey"
                 placeholder="Enter Razorpay key"
-                value={paymentSettings.razorpayKey}
-                onChange={handlePaymentChange}
+                value={
+                  paymentSettings.razorpayKey
+                }
+                onChange={
+                  handlePaymentChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>Razorpay Secret</label>
+              <label>
+                Razorpay Secret
+              </label>
 
               <input
                 type="password"
                 name="razorpaySecret"
                 placeholder="Enter Razorpay secret"
-                value={paymentSettings.razorpaySecret}
-                onChange={handlePaymentChange}
+                value={
+                  paymentSettings.razorpaySecret
+                }
+                onChange={
+                  handlePaymentChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>Stripe Public Key</label>
+              <label>
+                Stripe Public Key
+              </label>
 
               <input
                 type="text"
                 name="stripePublicKey"
                 placeholder="Enter Stripe public key"
-                value={paymentSettings.stripePublicKey}
-                onChange={handlePaymentChange}
+                value={
+                  paymentSettings.stripePublicKey
+                }
+                onChange={
+                  handlePaymentChange
+                }
               />
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>Stripe Secret Key</label>
+              <label>
+                Stripe Secret Key
+              </label>
 
               <input
                 type="password"
                 name="stripeSecretKey"
                 placeholder="Enter Stripe secret key"
-                value={paymentSettings.stripeSecretKey}
-                onChange={handlePaymentChange}
+                value={
+                  paymentSettings.stripeSecretKey
+                }
+                onChange={
+                  handlePaymentChange
+                }
               />
             </div>
           </div>
@@ -893,7 +1701,10 @@ const WebsiteSetting = () => {
             {renderToggle(
               "Enable Test Mode",
               paymentSettings.testMode,
-              () => handlePaymentToggle("testMode")
+              () =>
+                handlePaymentToggle(
+                  "testMode"
+                )
             )}
           </div>
         </section>
@@ -901,9 +1712,9 @@ const WebsiteSetting = () => {
     );
   };
 
-  /* =========================================================
-     OTHER SETTINGS
-  ========================================================= */
+  // =====================================================
+  // OTHER SETTINGS
+  // =====================================================
 
   const renderOtherSettings = () => {
     return (
@@ -927,12 +1738,18 @@ const WebsiteSetting = () => {
 
           <div className="WebsiteSetting-form-grid">
             <div className="WebsiteSetting-field-group">
-              <label>Timezone</label>
+              <label>
+                Timezone
+              </label>
 
               <select
                 name="timezone"
-                value={otherSettings.timezone}
-                onChange={handleOtherChange}
+                value={
+                  otherSettings.timezone
+                }
+                onChange={
+                  handleOtherChange
+                }
               >
                 <option value="Asia/Kolkata">
                   Asia/Kolkata
@@ -953,30 +1770,58 @@ const WebsiteSetting = () => {
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>Default Language</label>
+              <label>
+                Default Language
+              </label>
 
               <select
                 name="language"
-                value={otherSettings.language}
-                onChange={handleOtherChange}
+                value={
+                  otherSettings.language
+                }
+                onChange={
+                  handleOtherChange
+                }
               >
-                <option value="English">English</option>
-                <option value="Hindi">Hindi</option>
-                <option value="Odia">Odia</option>
+                <option value="English">
+                  English
+                </option>
+
+                <option value="Hindi">
+                  Hindi
+                </option>
+
+                <option value="Odia">
+                  Odia
+                </option>
               </select>
             </div>
 
             <div className="WebsiteSetting-field-group">
-              <label>Date Format</label>
+              <label>
+                Date Format
+              </label>
 
               <select
                 name="dateFormat"
-                value={otherSettings.dateFormat}
-                onChange={handleOtherChange}
+                value={
+                  otherSettings.dateFormat
+                }
+                onChange={
+                  handleOtherChange
+                }
               >
-                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                <option value="DD/MM/YYYY">
+                  DD/MM/YYYY
+                </option>
+
+                <option value="MM/DD/YYYY">
+                  MM/DD/YYYY
+                </option>
+
+                <option value="YYYY-MM-DD">
+                  YYYY-MM-DD
+                </option>
               </select>
             </div>
           </div>
@@ -991,19 +1836,28 @@ const WebsiteSetting = () => {
             {renderToggle(
               "Maintenance Mode",
               otherSettings.maintenanceMode,
-              () => handleOtherToggle("maintenanceMode")
+              () =>
+                handleOtherToggle(
+                  "maintenanceMode"
+                )
             )}
 
             {renderToggle(
               "Allow Customer Registration",
               otherSettings.customerRegistration,
-              () => handleOtherToggle("customerRegistration")
+              () =>
+                handleOtherToggle(
+                  "customerRegistration"
+                )
             )}
 
             {renderToggle(
               "Allow Guest Checkout",
               otherSettings.guestCheckout,
-              () => handleOtherToggle("guestCheckout")
+              () =>
+                handleOtherToggle(
+                  "guestCheckout"
+                )
             )}
           </div>
         </section>
@@ -1017,13 +1871,19 @@ const WebsiteSetting = () => {
             {renderToggle(
               "Enable Website Cache",
               otherSettings.enableCache,
-              () => handleOtherToggle("enableCache")
+              () =>
+                handleOtherToggle(
+                  "enableCache"
+                )
             )}
 
             {renderToggle(
               "Enable Security Protection",
               otherSettings.enableSecurity,
-              () => handleOtherToggle("enableSecurity")
+              () =>
+                handleOtherToggle(
+                  "enableSecurity"
+                )
             )}
           </div>
         </section>
@@ -1031,32 +1891,45 @@ const WebsiteSetting = () => {
         <section className="WebsiteSetting-card">
           <div className="WebsiteSetting-card-title-icon">
             <FiBarChart2 />
+
             <h2 className="WebsiteSetting-card-title">
               Analytics
             </h2>
           </div>
 
           <div className="WebsiteSetting-field-group">
-            <label>Google Analytics ID</label>
+            <label>
+              Google Analytics ID
+            </label>
 
             <input
               type="text"
               name="googleAnalytics"
               placeholder="G-XXXXXXXXXX"
-              value={otherSettings.googleAnalytics}
-              onChange={handleOtherChange}
+              value={
+                otherSettings.googleAnalytics
+              }
+              onChange={
+                handleOtherChange
+              }
             />
           </div>
 
           <div className="WebsiteSetting-field-group">
-            <label>Facebook Pixel ID</label>
+            <label>
+              Facebook Pixel ID
+            </label>
 
             <input
               type="text"
               name="facebookPixel"
               placeholder="Enter Facebook Pixel ID"
-              value={otherSettings.facebookPixel}
-              onChange={handleOtherChange}
+              value={
+                otherSettings.facebookPixel
+              }
+              onChange={
+                handleOtherChange
+              }
             />
           </div>
         </section>
@@ -1065,33 +1938,57 @@ const WebsiteSetting = () => {
           <div className="WebsiteSetting-system-info">
             <div className="WebsiteSetting-system-info-item">
               <FiServer />
+
               <div>
-                <span>Server Status</span>
-                <strong>Online</strong>
+                <span>
+                  Server Status
+                </span>
+
+                <strong>
+                  Online
+                </strong>
               </div>
             </div>
 
             <div className="WebsiteSetting-system-info-item">
               <FiDatabase />
+
               <div>
-                <span>Database</span>
-                <strong>Connected</strong>
+                <span>
+                  Database
+                </span>
+
+                <strong>
+                  Connected
+                </strong>
               </div>
             </div>
 
             <div className="WebsiteSetting-system-info-item">
               <FiShield />
+
               <div>
-                <span>Security</span>
-                <strong>Protected</strong>
+                <span>
+                  Security
+                </span>
+
+                <strong>
+                  Protected
+                </strong>
               </div>
             </div>
 
             <div className="WebsiteSetting-system-info-item">
               <FiRefreshCw />
+
               <div>
-                <span>Last Sync</span>
-                <strong>Just now</strong>
+                <span>
+                  Last Sync
+                </span>
+
+                <strong>
+                  Just now
+                </strong>
               </div>
             </div>
           </div>
@@ -1100,9 +1997,9 @@ const WebsiteSetting = () => {
     );
   };
 
-  /* =========================================================
-     TAB CONTENT
-  ========================================================= */
+  // =====================================================
+  // ACTIVE TAB
+  // =====================================================
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -1123,10 +2020,30 @@ const WebsiteSetting = () => {
     }
   };
 
+  // =====================================================
+  // LOADING
+  // =====================================================
+
+  if (loading) {
+    return (
+      <div className="WebsiteSetting-loading">
+        <FiRefreshCw className="WebsiteSetting-loading-icon" />
+
+        <span>
+          Loading website settings...
+        </span>
+      </div>
+    );
+  }
+
+  // =====================================================
+  // MAIN UI
+  // =====================================================
+
   return (
     <div className="WebsiteSetting-container">
-
       {/* HEADER */}
+
       <header className="WebsiteSetting-header">
         <div className="WebsiteSetting-header-left">
           <h1 className="WebsiteSetting-title">
@@ -1139,90 +2056,165 @@ const WebsiteSetting = () => {
         </div>
 
         <div className="WebsiteSetting-header-actions">
+          {/* PREVIEW */}
 
           <button
             type="button"
             className="WebsiteSetting-btn-secondary"
-            onClick={handlePreview}
+            onClick={
+              handlePreview
+            }
           >
-            <span>Preview Website</span>
+            <span>
+              Preview Website
+            </span>
+
             <FiExternalLink />
           </button>
+
+          {/* SAVE */}
 
           <button
             type="button"
             className="WebsiteSetting-btn-primary"
-            onClick={handleSave}
+            onClick={
+              handleSave
+            }
+            disabled={saving}
           >
             <FiSave />
-            <span>Save Changes</span>
-          </button>
 
+            <span>
+              {saving
+                ? "Saving..."
+                : "Save Changes"}
+            </span>
+          </button>
         </div>
       </header>
 
       {/* SUCCESS MESSAGE */}
+
       {saveMessage && (
         <div className="WebsiteSetting-save-message">
           <FiCheckCircle />
-          <span>{saveMessage}</span>
+
+          <span>
+            {saveMessage}
+          </span>
+        </div>
+      )}
+
+      {/* ERROR MESSAGE */}
+
+      {errorMessage && (
+        <div className="WebsiteSetting-error-message">
+          <FiAlertCircle />
+
+          <span>
+            {errorMessage}
+          </span>
+
+          <button
+            type="button"
+            onClick={() =>
+              setErrorMessage("")
+            }
+          >
+            ×
+          </button>
         </div>
       )}
 
       {/* TABS */}
-      <nav className="WebsiteSetting-tabs">
 
+      <nav className="WebsiteSetting-tabs">
         <button
           type="button"
           className={`WebsiteSetting-tab-btn ${
-            activeTab === "general" ? "active" : ""
+            activeTab === "general"
+              ? "active"
+              : ""
           }`}
-          onClick={() => setActiveTab("general")}
+          onClick={() =>
+            setActiveTab(
+              "general"
+            )
+          }
         >
           <FiHome />
-          <span>General Settings</span>
+
+          <span>
+            General Settings
+          </span>
         </button>
 
         <button
           type="button"
           className={`WebsiteSetting-tab-btn ${
-            activeTab === "email" ? "active" : ""
+            activeTab === "email"
+              ? "active"
+              : ""
           }`}
-          onClick={() => setActiveTab("email")}
+          onClick={() =>
+            setActiveTab(
+              "email"
+            )
+          }
         >
           <FiMail />
-          <span>Email Settings</span>
+
+          <span>
+            Email Settings
+          </span>
         </button>
 
         <button
           type="button"
           className={`WebsiteSetting-tab-btn ${
-            activeTab === "payment" ? "active" : ""
+            activeTab === "payment"
+              ? "active"
+              : ""
           }`}
-          onClick={() => setActiveTab("payment")}
+          onClick={() =>
+            setActiveTab(
+              "payment"
+            )
+          }
         >
           <FiCreditCard />
-          <span>Payment Settings</span>
+
+          <span>
+            Payment Settings
+          </span>
         </button>
 
         <button
           type="button"
           className={`WebsiteSetting-tab-btn ${
-            activeTab === "other" ? "active" : ""
+            activeTab === "other"
+              ? "active"
+              : ""
           }`}
-          onClick={() => setActiveTab("other")}
+          onClick={() =>
+            setActiveTab(
+              "other"
+            )
+          }
         >
           <FiSettings />
-          <span>Other Settings</span>
-        </button>
 
+          <span>
+            Other Settings
+          </span>
+        </button>
       </nav>
 
-      {/* ACTIVE TAB CONTENT */}
+      {/* CONTENT */}
+
       <main className="WebsiteSetting-grid">
         {renderActiveTab()}
       </main>
-
     </div>
   );
 };
