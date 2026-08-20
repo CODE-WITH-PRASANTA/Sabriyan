@@ -5,7 +5,7 @@ import { Flame, Star, Upload, Search, Filter, Edit, Trash2, Eye, Plus, RotateCcw
 import './HoneyProduct.css';
  
 const DEFAULT_HONEY_IMG = 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=400&auto=format&fit=crop&q=80';
-
+   
 const INITIAL_FORM_STATE = {
   _id: null,
   name: '',

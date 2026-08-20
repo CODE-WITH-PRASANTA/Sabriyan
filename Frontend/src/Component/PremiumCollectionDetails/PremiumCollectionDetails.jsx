@@ -34,14 +34,30 @@ import {
 import API, { IMG_URL } from '../../api/axios';
 import './PremiumCollectionDetails.css';
 
-const resolveImgUrl = (path) => {
-  if (!path) return 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&q=80&w=800';
-  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:')) {
-    return path;
+// Fallback assets matching ChocolateCard
+import FallbackBg from '../../assets/card.jpeg';
+import FallbackChoc from '../../assets/ch-2.jpeg';
+
+// Universal URL Resolver matching ChocolateCard logic
+const resolveImgUrl = (imagePath, fallback = FallbackChoc) => {
+  if (!imagePath) return fallback;
+
+  let normalizedPath = String(imagePath).replace(/\\/g, '/');
+
+  if (normalizedPath.startsWith('http://') || normalizedPath.startsWith('https://') || normalizedPath.startsWith('blob:')) {
+    return normalizedPath;
   }
-  const cleanPath = path.replace(/\\/g, '/').replace(/^\/?public\/?/, '');
-  const base = IMG_URL || 'http://localhost:5000';
-  return `${base.replace(/\/$/, '')}/${cleanPath.replace(/^\//, '')}`;
+
+  if (normalizedPath.startsWith('/public/')) {
+    normalizedPath = normalizedPath.replace('/public/', '/');
+  } else if (normalizedPath.startsWith('public/')) {
+    normalizedPath = normalizedPath.replace('public/', '');
+  }
+
+  const base = (IMG_URL || 'http://localhost:5000').replace(/\/+$/, '');
+  const cleanPath = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`;
+
+  return `${base}${cleanPath}`;
 };
 
 const PremiumCollectionDetails = () => {
@@ -68,26 +84,33 @@ const PremiumCollectionDetails = () => {
         setError(null);
 
         let currentItem = null;
+
+        // 1. Try fetching directly by ID
         try {
           const res = await API.get(`/premium-collection/${id}`);
-          if (res.data && res.data.success && res.data.data) {
+          if (res.data?.success && res.data?.data) {
             currentItem = res.data.data;
           }
         } catch {
+          // 2. Fallback to list search if single item endpoint fails or ID is a slug
           const listRes = await API.get('/premium-collection', { params: { limit: 100 } });
           const items = listRes.data?.data || [];
-          currentItem = items.find((p) => (p._id || p.id) === id || p.slug === id);
+          currentItem = items.find(
+            (p) => String(p._id || p.id) === String(id) || p.slug === id
+          );
         }
 
         if (currentItem) {
           setProduct(currentItem);
           setSelectedImage(0);
 
+          // Fetch related recommendations
           const recRes = await API.get('/premium-collection', {
-            params: { status: 'Active', limit: 4 }
+            params: { status: 'Active', limit: 8 }
           });
-          const recs = (recRes.data?.data || []).filter(
-            (p) => (p._id || p.id) !== (currentItem._id || currentItem.id)
+          const allItems = recRes.data?.data || [];
+          const recs = allItems.filter(
+            (p) => String(p._id || p.id) !== String(currentItem._id || currentItem.id)
           );
           setRecommendations(recs.slice(0, 3));
         } else {
@@ -95,7 +118,11 @@ const PremiumCollectionDetails = () => {
         }
       } catch (err) {
         console.error('Error loading product details:', err);
-        setError('Failed to load product details.');
+        setError(
+          err.code === 'ERR_NETWORK'
+            ? 'Cannot connect to server. Please verify backend is active.'
+            : 'Failed to load product details.'
+        );
       } finally {
         setLoading(false);
       }
@@ -149,47 +176,53 @@ const PremiumCollectionDetails = () => {
     );
   }
 
-  const allImages = [
+  // Aggregate and format all image sources
+  const rawImages = [
     product.image,
     ...(Array.isArray(product.galleryImages) ? product.galleryImages : []),
     ...(Array.isArray(product.images) ? product.images : []),
     product.bgImage
-  ]
-    .filter(Boolean)
-    .map(resolveImgUrl);
+  ].filter(Boolean);
 
-  const displayGallery = allImages.length > 0 ? Array.from(new Set(allImages)) : [resolveImgUrl(null)];
+  const displayGallery =
+    rawImages.length > 0
+      ? Array.from(new Set(rawImages.map((img) => resolveImgUrl(img, FallbackChoc))))
+      : [FallbackChoc];
 
   const name = product.name || 'Artisanal Chocolate';
   const rating = product.rating ? Number(product.rating).toFixed(1) : '5.0';
   const sellingPrice = product.sellingPrice ?? product.price ?? '—';
   const mrp = product.mrp;
-  const discount = product.discount || (mrp && sellingPrice && !isNaN(mrp) && !isNaN(sellingPrice) ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0);
+  const discount =
+    product.discount ||
+    (mrp && sellingPrice && !isNaN(mrp) && !isNaN(sellingPrice) && Number(mrp) > Number(sellingPrice)
+      ? Math.round(((mrp - sellingPrice) / mrp) * 100)
+      : 0);
 
   const artisanPerks = [
     {
       icon: <FaAward className="pcd-perk-icon" />,
       title: 'Grand Cru Cocoa',
-      desc: product.cocoa ? `Made with ${product.cocoa} selected cocoa beans` : 'Selected from single-origin plantations',
-      detail: 'Pure, sustainably-sourced cacao roasted in precise micro-batches to unlock deep aromatic notes.'
+      desc: product.cocoa ? `Made with ${product.cocoa} selected cocoa` : 'Selected single-origin plantations',
+      detail: 'Pure, sustainably-sourced cacao roasted in micro-batches to unlock deep aromatic notes.'
     },
     {
       icon: <FaCheckCircle className="pcd-perk-icon" />,
       title: 'Stone Ground & Conched',
       desc: 'Conched for up to 72 hours',
-      detail: 'Traditional slow-conching creates a silky, velvet texture that melts evenly across the palate.'
+      detail: 'Traditional slow-conching creates a silky texture that melts evenly across the palate.'
     },
     {
       icon: <FaGlobeAmericas className="pcd-perk-icon" />,
       title: 'Sustainable Sourcing',
       desc: 'Zero palm oil & eco-friendly',
-      detail: 'Direct trade relationships ensure farmer prosperity and zero deforestation impact.'
+      detail: 'Direct trade partnerships ensure farmer prosperity and zero deforestation impact.'
     },
     {
       icon: <FaSmile className="pcd-perk-icon" />,
       title: 'Loved by Connoisseurs',
       desc: `${rating}/5 from ${(product.reviewCount || 48) + 100}+ foodies`,
-      detail: 'Verified customer feedback endorsing rich tasting notes, pure ingredients, and zero additives.'
+      detail: 'Customer ratings endorsing rich tasting notes, pure ingredients, and zero additives.'
     }
   ];
 
@@ -204,7 +237,7 @@ const PremiumCollectionDetails = () => {
         </div>
       )}
 
-      {/* Breadcrumbs */}
+      {/* Breadcrumb Navigation */}
       <div className="pcd-breadcrumb">
         <FaHome className="pcd-home-icon" />
         <span className="pcd-crumb" onClick={() => navigate('/')}>Home</span>
@@ -214,9 +247,8 @@ const PremiumCollectionDetails = () => {
         <span className="pcd-crumb active">{name}</span>
       </div>
 
-      {/* Top Grid */}
       <div className="pcd-main-grid">
-        {/* Gallery */}
+        {/* Gallery Section */}
         <div className="pcd-gallery-container">
           <div className="pcd-thumbnails">
             {displayGallery.map((img, idx) => (
@@ -225,7 +257,14 @@ const PremiumCollectionDetails = () => {
                 className={`pcd-thumb-card ${selectedImage === idx ? 'active' : ''}`}
                 onClick={() => handleThumbnailClick(idx)}
               >
-                <img src={img} alt={`Thumb ${idx + 1}`} />
+                <img
+                  src={img}
+                  alt={`Thumbnail ${idx + 1}`}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = FallbackChoc;
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -241,6 +280,10 @@ const PremiumCollectionDetails = () => {
                 src={displayGallery[selectedImage] || displayGallery[0]}
                 alt={name}
                 className={`pcd-main-image ${animatingImg ? 'fade-switch' : ''}`}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = FallbackChoc;
+                }}
               />
             </div>
             <div className="pcd-zoom-hint">
@@ -249,7 +292,7 @@ const PremiumCollectionDetails = () => {
           </div>
         </div>
 
-        {/* Info */}
+        {/* Product Information */}
         <div className="pcd-info-container">
           <div className="pcd-rating-row">
             <div className="pcd-rating-stars">
@@ -276,7 +319,7 @@ const PremiumCollectionDetails = () => {
             </div>
             <div className="pcd-highlight-item">
               <div className="pcd-hl-icon-wrap"><FaSeedling className="pcd-hl-icon" /></div>
-              <span>{product.cocoa ? `${product.cocoa} Cocoa` : 'Pure Cocoa Butter'}</span>
+              <span>{product.cocoa || 'Pure Cocoa Butter'}</span>
             </div>
             <div className="pcd-highlight-item">
               <div className="pcd-hl-icon-wrap"><FaHeart className="pcd-hl-icon" /></div>
@@ -288,7 +331,7 @@ const PremiumCollectionDetails = () => {
             </div>
           </div>
 
-          {/* Pricing */}
+          {/* Pricing Block */}
           <div className="pcd-price-row">
             <span className="pcd-current-price">₹{sellingPrice}</span>
             {mrp && Number(mrp) > Number(sellingPrice) && (
@@ -296,9 +339,9 @@ const PremiumCollectionDetails = () => {
             )}
             {Number(discount) > 0 && <span className="pcd-discount-badge">{discount}% OFF</span>}
           </div>
-          <span className="pcd-tax-note">Inclusive of all taxes & temperature-safe pack</span>
+          <span className="pcd-tax-note">Inclusive of all taxes & temperature-safe packaging</span>
 
-          {/* CTAs */}
+          {/* Action Row */}
           <div className="pcd-cta-row">
             <div className="pcd-qty-counter">
               <button onClick={() => handleQuantity('dec')} aria-label="Decrease quantity"><FaMinus /></button>
@@ -319,7 +362,7 @@ const PremiumCollectionDetails = () => {
             </button>
           </div>
 
-          {/* Trust */}
+          {/* Trust Highlights */}
           <div className="pcd-trust-row">
             <div className="pcd-trust-box">
               <FaTruck className="pcd-trust-icon" />
@@ -345,7 +388,7 @@ const PremiumCollectionDetails = () => {
           </div>
         </div>
 
-        {/* Right Side Artisan Difference Card */}
+        {/* Brand Perks Card */}
         <div className="pcd-brand-card">
           <div className="pcd-brand-header">
             <h3>The Artisan Difference</h3>
@@ -384,9 +427,13 @@ const PremiumCollectionDetails = () => {
             </p>
             <div className="pcd-banner-img-wrap">
               <img
-                src={product.bgImage ? resolveImgUrl(product.bgImage) : displayGallery[0]}
+                src={product.bgImage ? resolveImgUrl(product.bgImage, FallbackBg) : displayGallery[0]}
                 alt={name}
                 className="pcd-floating-choc"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = FallbackBg;
+                }}
               />
             </div>
           </div>
@@ -395,13 +442,22 @@ const PremiumCollectionDetails = () => {
 
       {/* Tabs */}
       <div className="pcd-tabs-nav">
-        <button className={`pcd-tab-btn ${activeTab === 'details' ? 'active' : ''}`} onClick={() => setActiveTab('details')}>
+        <button
+          className={`pcd-tab-btn ${activeTab === 'details' ? 'active' : ''}`}
+          onClick={() => setActiveTab('details')}
+        >
           Product Specifications
         </button>
-        <button className={`pcd-tab-btn ${activeTab === 'nutrition' ? 'active' : ''}`} onClick={() => setActiveTab('nutrition')}>
+        <button
+          className={`pcd-tab-btn ${activeTab === 'nutrition' ? 'active' : ''}`}
+          onClick={() => setActiveTab('nutrition')}
+        >
           Nutritional Facts
         </button>
-        <button className={`pcd-tab-btn ${activeTab === 'shipping' ? 'active' : ''}`} onClick={() => setActiveTab('shipping')}>
+        <button
+          className={`pcd-tab-btn ${activeTab === 'shipping' ? 'active' : ''}`}
+          onClick={() => setActiveTab('shipping')}
+        >
           Shipping & Guarantee
         </button>
       </div>
@@ -517,32 +573,44 @@ const PremiumCollectionDetails = () => {
           </div>
 
           <div className="pcd-rec-grid">
-            {recommendations.map((rec) => (
-              <div
-                key={rec._id || rec.id}
-                className="pcd-product-card"
-                onClick={() => navigate(`/premiumcollection/${rec._id || rec.id}`)}
-              >
-                <div className="pcd-card-img-wrap">
-                  <img src={resolveImgUrl(rec.image)} alt={rec.name} />
-                </div>
-                <div className="pcd-card-body">
-                  <div className="pcd-card-rating">
-                    <FaStar className="pcd-star-gold" /> <span>{rec.rating || '5.0'}</span>
+            {recommendations.map((rec) => {
+              const recId = rec._id || rec.id;
+              const recImg = resolveImgUrl(rec.image, FallbackChoc);
+
+              return (
+                <div
+                  key={recId}
+                  className="pcd-product-card"
+                  onClick={() => navigate(`/premiumcollection/${recId}`)}
+                >
+                  <div className="pcd-card-img-wrap">
+                    <img
+                      src={recImg}
+                      alt={rec.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = FallbackChoc;
+                      }}
+                    />
                   </div>
-                  <h4>{rec.name}</h4>
-                  <div className="pcd-card-price">
-                    <strong>₹{rec.sellingPrice || rec.price}</strong>
-                    {rec.mrp && Number(rec.mrp) > Number(rec.sellingPrice || rec.price) && (
-                      <span>₹{rec.mrp}</span>
-                    )}
+                  <div className="pcd-card-body">
+                    <div className="pcd-card-rating">
+                      <FaStar className="pcd-star-gold" /> <span>{rec.rating ? Number(rec.rating).toFixed(1) : '5.0'}</span>
+                    </div>
+                    <h4>{rec.name}</h4>
+                    <div className="pcd-card-price">
+                      <strong>₹{rec.sellingPrice || rec.price}</strong>
+                      {rec.mrp && Number(rec.mrp) > Number(rec.sellingPrice || rec.price) && (
+                        <span>₹{rec.mrp}</span>
+                      )}
+                    </div>
+                    <button className="pcd-btn-card-cta">
+                      <FaShoppingCart /> View Chocolate
+                    </button>
                   </div>
-                  <button className="pcd-btn-card-cta">
-                    <FaShoppingCart /> View Chocolate
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

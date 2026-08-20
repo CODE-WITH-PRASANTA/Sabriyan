@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ChocolateCard.css";
-import API from "../../api/axios"; // Note: Removed IMG_URL to avoid /api conflicts
+import API, { IMG_URL } from "../../api/axios"; // now using IMG_URL for consistency with detail page
 import { FaArrowRight, FaStar } from "react-icons/fa";
 
 import CardBg from "../../assets/card.jpeg";     // Fallback Background image
@@ -15,6 +15,8 @@ const ChocolateCard = () => {
 
   // Fetch active products from the Premium Collection API
   useEffect(() => {
+    let isMounted = true;
+
     const fetchChocolates = async () => {
       try {
         setLoading(true);
@@ -24,12 +26,15 @@ const ChocolateCard = () => {
           params: { status: "Active", limit: 12 },
         });
 
+        if (!isMounted) return;
+
         if (response.data && response.data.success) {
           setChocolates(response.data.data || []);
         } else {
           setChocolates([]);
         }
       } catch (err) {
+        if (!isMounted) return;
         console.error("Error fetching chocolate collection:", err);
         setError(
           err.code === "ERR_NETWORK"
@@ -37,31 +42,37 @@ const ChocolateCard = () => {
             : "Failed to load chocolate collection."
         );
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchChocolates();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // 🚀 HARDCODED BULLETPROOF IMAGE FORMATTER
+  // Bulletproof image formatter — now uses the same IMG_URL base as the detail page,
+  // so images resolve consistently whether you're on the card grid or the details view.
   const getImageUrl = (imagePath, fallbackImage) => {
     if (!imagePath) return fallbackImage;
 
     let normalizedPath = imagePath.replace(/\\/g, "/");
 
-    if (normalizedPath.startsWith("http://") || normalizedPath.startsWith("https://")) {
+    if (
+      normalizedPath.startsWith("http://") ||
+      normalizedPath.startsWith("https://") ||
+      normalizedPath.startsWith("blob:")
+    ) {
       return normalizedPath;
     }
 
-    if (normalizedPath.startsWith("/public/")) {
-      normalizedPath = normalizedPath.replace("/public/", "/");
-    } else if (normalizedPath.startsWith("public/")) {
-      normalizedPath = normalizedPath.replace("public/", "");
-    }
+    // Strip a leading "public/" or "/public/" segment however it appears
+    normalizedPath = normalizedPath.replace(/^\/?public\/?/, "/");
 
-    // 🛑 HARDCODED BASE URL: This ensures "/api" doesn't accidentally get injected into your image path
-    const baseUrl = "http://localhost:5000";
+    // Use the shared IMG_URL from api/axios (falls back to localhost only if unset)
+    const baseUrl = (IMG_URL || "http://localhost:5000").replace(/\/$/, "");
 
     const cleanPath = normalizedPath.startsWith("/") ? normalizedPath : `/${normalizedPath}`;
 
@@ -125,13 +136,20 @@ const ChocolateCard = () => {
       {!loading && !error && chocolates.length > 0 && (
         <div className="ChocolateCard-grid">
           {chocolates.map((item) => {
-            // Pre-calculate URLs for debugging
             const bgImageSrc = getImageUrl(item.bgImage, CardBg);
             const mainImageSrc = getImageUrl(item.image, Chocolate);
 
             return (
-              <div className="ChocolateCard-card" key={item._id || item.id}>
-
+              <div
+                className="ChocolateCard-card"
+                key={item._id || item.id}
+                onClick={() => handleExplore(item)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") handleExplore(item);
+                }}
+              >
                 {/* Card Background Banner */}
                 <img
                   src={bgImageSrc}
@@ -198,8 +216,23 @@ const ChocolateCard = () => {
                     )}
                     {item.discount > 0 && item.mrp && (
                       <>
-                        <span className="price-mrp" style={{ textDecoration: "line-through", color: "#888", fontSize: "0.85em", marginLeft: "8px" }}>₹{item.mrp}</span>
-                        <span className="price-discount" style={{ color: "#27ae60", fontSize: "0.85em", marginLeft: "8px" }}>({item.discount}% OFF)</span>
+                        <span
+                          className="price-mrp"
+                          style={{
+                            textDecoration: "line-through",
+                            color: "#888",
+                            fontSize: "0.85em",
+                            marginLeft: "8px",
+                          }}
+                        >
+                          ₹{item.mrp}
+                        </span>
+                        <span
+                          className="price-discount"
+                          style={{ color: "#27ae60", fontSize: "0.85em", marginLeft: "8px" }}
+                        >
+                          ({item.discount}% OFF)
+                        </span>
                       </>
                     )}
                   </div>
@@ -212,7 +245,10 @@ const ChocolateCard = () => {
 
                     <button
                       className="ChocolateCard-btn"
-                      onClick={() => handleExplore(item)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // prevent double-trigger from the card's own onClick
+                        handleExplore(item);
+                      }}
                     >
                       Explore
                       <FaArrowRight />
@@ -227,7 +263,10 @@ const ChocolateCard = () => {
 
       {/* Bottom CTA */}
       <div className="ChocolateCard-bottom">
-        <button className="ChocolateCard-mainBtn">
+        <button
+          className="ChocolateCard-mainBtn"
+          onClick={() => navigate("/premiumcollection")}
+        >
           Explore All Chocolates
           <FaArrowRight />
         </button>
