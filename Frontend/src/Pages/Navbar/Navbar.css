@@ -7,10 +7,10 @@ Navbar Main
   position: fixed;
   top: 25px;
   left: 0;
-  z-index: 999999; /* Increased z-index */
+  z-index: 999999;
   display: flex;
   justify-content: center;
-  pointer-events: none; /* Keeps background transparent to clicks */
+  pointer-events: none;
 }
 
 .Navbar-container {
@@ -26,7 +26,7 @@ Navbar Main
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-  pointer-events: auto; /* Re-enables clicks for navbar body */
+  pointer-events: auto;
 }
 
 /*==============================
@@ -45,7 +45,7 @@ Desktop Menu
 
 .Navbar-links {
   display: flex;
-  gap: 48px;
+  gap: 40px;
   align-items: center;
 }
 
@@ -67,12 +67,12 @@ Desktop Menu
   transform: translateX(-50%);
   width: 0;
   height: 2px;
-  background: #7dff63;
+  background: #dfab54;
   transition: 0.4s;
 }
 
 .Navbar-links a:hover {
-  color: #90ff75;
+  color: #dfab54;
 }
 
 .Navbar-links a:hover::after {
@@ -80,7 +80,85 @@ Desktop Menu
 }
 
 .Navbar-links .active {
-  color: #7dff63;
+  color: #dfab54;
+}
+
+/*==============================
+3 Action Icons (Wishlist, Account, Cart)
+===============================*/
+
+.Navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.Navbar-action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  gap: 3px;
+  cursor: pointer;
+  background: transparent;
+  padding: 4px 6px;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.Navbar-action-item:hover {
+  transform: translateY(-3px);
+}
+
+.Navbar-action-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Navbar-action-icon {
+  font-size: 21px;
+  color: #dfab54;
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+
+.Navbar-action-item:hover .Navbar-action-icon,
+.Navbar-action-item.active .Navbar-action-icon {
+  color: #f5d799;
+  filter: drop-shadow(0 0 8px rgba(223, 171, 84, 0.7));
+}
+
+.Navbar-action-item span {
+  font-size: 11px;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+  transition: color 0.3s ease;
+}
+
+.Navbar-action-item:hover span,
+.Navbar-action-item.active span {
+  color: #dfab54;
+}
+
+/* Golden Circular Badge for Cart */
+.Navbar-badge {
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  background: #dfab54;
+  color: #03140f;
+  font-size: 10px;
+  font-weight: 800;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(223, 171, 84, 0.9);
+  line-height: 1;
 }
 
 /*==============================
@@ -89,19 +167,19 @@ Button
 
 .Navbar-btn {
   text-decoration: none;
-  color: white;
-  padding: 12px 26px;
+  color: #03140f;
+  padding: 11px 24px;
   border-radius: 100px;
-  background: #47c465;
-  font-weight: 600;
+  background: linear-gradient(135deg, #f5d799 0%, #dfab54 100%);
+  font-weight: 700;
+  font-size: 14px;
   transition: 0.35s;
   border: 1px solid transparent;
 }
 
 .Navbar-btn:hover {
-  background: #5dd978;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(0, 255, 100, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(223, 171, 84, 0.4);
 }
 
 /*==============================
@@ -112,13 +190,13 @@ Toggle
   display: none;
   border: none;
   background: none;
-  color: white;
+  color: #dfab54;
   font-size: 33px;
   cursor: pointer;
 }
 
 /*==============================
-Mobile Menu (Fixed Click Issue)
+Mobile Menu
 ===============================*/
 
 .Navbar-mobile {
@@ -131,64 +209,74 @@ Mobile Menu (Fixed Click Issue)
   visibility: hidden;
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  padding: 30px;
+  gap: 18px;
+  padding: 28px;
   border-radius: 25px;
-  background: rgba(10, 20, 12, 0.85); /* Slightly darker for better readability */
+  background: rgba(3, 20, 15, 0.95);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
   transition: all 0.45s ease;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  z-index: 999999; /* Higher priority layer */
-  pointer-events: none; /* Disabled when hidden */
+  border: 1px solid rgba(223, 171, 84, 0.2);
+  z-index: 999999;
+  pointer-events: none;
 }
 
 .Navbar-mobile-show {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
-  pointer-events: auto; /* Re-enabled when visible so links register taps */
+  pointer-events: auto;
 }
 
 .Navbar-mobile a {
   text-decoration: none;
   color: white;
-  font-size: 17px;
+  font-size: 16px;
   transition: 0.3s;
-  padding: 6px 0;
+  padding: 4px 0;
   display: block;
-  pointer-events: auto; /* Ensures router link receives touch events */
 }
 
 .Navbar-mobile a:hover,
 .Navbar-mobile a.active {
-  color: #7dff63;
+  color: #dfab54;
+}
+
+.Navbar-mobile-actions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
 }
 
 .Navbar-mobile-btn {
-  background: #47c465;
+  background: linear-gradient(135deg, #f5d799 0%, #dfab54 100%);
+  color: #03140f !important;
   text-align: center;
-  padding: 14px;
+  padding: 13px;
   border-radius: 50px;
-  margin-top: 10px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /*==============================
 Responsive
 ===============================*/
 
-@media (max-width: 1100px) {
+@media (max-width: 1150px) {
   .Navbar-links {
-    gap: 30px;
+    gap: 24px;
+  }
+  .Navbar-actions {
+    gap: 16px;
   }
 }
 
 @media (max-width: 950px) {
-  .Navbar-links {
-    display: none;
-  }
-
+  .Navbar-links,
+  .Navbar-actions,
   .Navbar-btn {
     display: none;
   }
@@ -233,6 +321,6 @@ Responsive
   }
 
   .Navbar-mobile {
-    padding: 25px;
+    padding: 22px;
   }
 }

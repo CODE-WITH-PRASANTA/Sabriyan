@@ -1,0 +1,682 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-gold: #e2a842;
+  --secondary-gold: #c68928;
+  --gold-glow: rgba(226, 168, 66, 0.35);
+  --bg-dark: #04100b;
+  --card-bg: rgba(6, 25, 17, 0.94);
+  --input-bg: rgba(9, 32, 22, 0.85);
+  --border-gold: rgba(226, 168, 66, 0.28);
+  --border-subtle: rgba(226, 168, 66, 0.15);
+  --text-main: #f5f2eb;
+  --text-muted: #95a59d;
+  --font-serif: 'Cinzel', serif;
+  --font-sans: 'Outfit', sans-serif;
+  --transition-smooth: all 0.65s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  font-family: var(--font-sans);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Base Wrapper */
+.account-wrapper {
+  background: radial-gradient(circle at top center, #0a251b 0%, #03100a 60%, #020805 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background overlay with lush leaf shadows */
+.account-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: 
+    radial-gradient(ellipse at 15% 30%, rgba(20, 60, 42, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 70%, rgba(15, 45, 32, 0.4) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Container Frame */
+.account-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1020px;
+  min-height: 640px;
+  display: flex;
+  background: rgba(3, 16, 11, 0.55);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(10, 40, 28, 0.3);
+  backdrop-filter: blur(14px);
+  transition: var(--transition-smooth);
+}
+
+/* ================= SLIDING ANIMATION SYSTEM ================= */
+.account-hero-panel {
+  width: 50%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: var(--transition-smooth);
+  transform: translateX(0);
+}
+
+.account-form-panel {
+  width: 50%;
+  padding: 32px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: var(--transition-smooth);
+  transform: translateX(0);
+}
+
+/* Swapping sides when Register is active */
+.account-container.account-mode-register .account-hero-panel {
+  transform: translateX(100%);
+  
+}
+
+.account-container.account-mode-register .account-form-panel {
+  transform: translateX(-100%);
+}
+
+/* ================= LEFT HERO DESIGN ================= */
+.account-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.account-brand-icon {
+  width: 36px;
+  height: 36px;
+  color: var(--primary-gold);
+  margin-bottom: 6px;
+}
+
+.account-logo-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.account-brand-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: var(--primary-gold);
+  font-weight: 700;
+}
+
+.account-brand-subtitle {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--primary-gold);
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.account-hero-text h2 {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.account-divider-line {
+  width: 35px;
+  height: 1.5px;
+  background: var(--primary-gold);
+  margin-bottom: 14px;
+}
+
+.account-hero-text p {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 320px;
+}
+
+/* Showcase Card (Chocolate & Honey) */
+.account-hero-showcase {
+  margin-top: 30px;
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  position: relative;
+}
+
+.account-chocolate-card {
+  width: 175px;
+  height: 270px;
+  background: linear-gradient(145deg, #12100d 0%, #1f1a14 100%);
+  border: 1px solid rgba(226, 168, 66, 0.4);
+  border-radius: 6px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: -8px 15px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.5);
+  transform: rotate(-4deg);
+  transition: transform 0.4s ease;
+}
+
+.account-chocolate-card:hover {
+  transform: rotate(-1deg) translateY(-6px);
+}
+
+.account-card-logo {
+  text-align: center;
+  color: var(--primary-gold);
+}
+
+.account-mini-logo {
+  width: 18px;
+  height: 18px;
+  margin: 0 auto;
+}
+
+.account-card-logo span {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.account-card-logo small {
+  font-size: 5px;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.account-cocoa-percent {
+  text-align: center;
+  color: var(--primary-gold);
+  margin: 10px 0;
+}
+
+.account-cocoa-percent h3 {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 0.9;
+  font-family: var(--font-serif);
+}
+
+.account-cocoa-percent span {
+  font-size: 7px;
+  letter-spacing: 2px;
+}
+
+.account-card-footer {
+  text-align: center;
+  color: var(--primary-gold);
+}
+
+.account-card-footer p {
+  font-size: 6px;
+  letter-spacing: 1px;
+}
+
+.account-card-footer h4 {
+  font-size: 8.5px;
+  letter-spacing: 1px;
+  margin: 2px 0;
+}
+
+.account-gold-dash {
+  width: 25px;
+  height: 1px;
+  background: var(--primary-gold);
+  margin: 3px auto;
+}
+
+.account-sub-text {
+  font-size: 4.5px !important;
+  opacity: 0.8;
+}
+
+.account-origin {
+  font-family: var(--font-serif);
+  font-size: 10px !important;
+  margin-top: 4px;
+}
+
+.account-weight {
+  font-size: 7px;
+  opacity: 0.7;
+}
+
+/* Honey Decor */
+.account-honey-decor {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.account-honey-jar {
+  font-size: 42px;
+  filter: drop-shadow(0 10px 15px rgba(226, 168, 66, 0.4));
+  animation: floatHoney 4s ease-in-out infinite alternate;
+}
+
+.account-choco-pieces {
+  font-size: 32px;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.6));
+}
+
+@keyframes floatHoney {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-8px) rotate(4deg); }
+}
+
+/* ================= RIGHT FORM DESIGN ================= */
+.account-form-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-gold);
+  border-radius: 20px;
+  padding: 34px 28px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(226, 168, 66, 0.03);
+  margin-top: 70px;
+
+  
+
+}
+
+.account-form-header {
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 80px;
+}
+
+.account-form-header h2 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.account-form-header p {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.account-ornament-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.account-ornament-line {
+  height: 1px;
+  width: 45px;
+  background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+}
+
+.account-ornament-icon {
+  color: var(--primary-gold);
+  font-size: 13px;
+}
+
+/* Form Inputs */
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.account-input-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #e5ede8;
+  margin-bottom: 6px;
+}
+
+.account-input-box {
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border: 1px solid var(--border-gold);
+  border-radius: 9px;
+  padding: 0 14px;
+  height: 44px;
+  transition: all 0.3s ease;
+}
+
+.account-input-box:focus-within {
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.account-field-icon {
+  color: var(--primary-gold);
+  font-size: 16px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.account-input-box input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 13px;
+  font-family: var(--font-sans);
+}
+
+.account-input-box input::placeholder {
+  color: #5d7568;
+}
+
+.account-password-toggle {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+.account-password-toggle:hover {
+  color: var(--primary-gold);
+}
+
+/* Options / Terms */
+.account-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.account-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.account-checkbox-label input {
+  display: none;
+}
+
+.account-custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-gold);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #03100a;
+  background: var(--input-bg);
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.account-checkbox-label input:checked + .account-custom-checkbox {
+  background: var(--primary-gold);
+  border-color: var(--primary-gold);
+}
+
+.account-forgot-link {
+  color: var(--primary-gold);
+  text-decoration: none;
+  font-size: 12px;
+  transition: opacity 0.2s;
+}
+
+.account-forgot-link:hover {
+  text-decoration: underline;
+}
+
+.account-terms-row {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.account-terms-row a {
+  color: var(--primary-gold);
+  text-decoration: none;
+}
+
+.account-terms-row a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.account-submit-btn {
+  height: 46px;
+  background: linear-gradient(135deg, #e5a93b 0%, #b87b22 100%);
+  border: none;
+  border-radius: 9px;
+  color: #0d1e15;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 6px 20px rgba(229, 169, 59, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.account-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(229, 169, 59, 0.5);
+}
+
+.account-btn-arrow {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.account-submit-btn:hover .account-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Or Divider */
+.account-or-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 4px 0;
+}
+
+.account-or-line {
+  height: 1px;
+  flex: 1;
+  background: var(--border-subtle);
+}
+
+.account-or-text {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Switch View footer */
+.account-switch-view {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.account-switch-btn {
+  background: none;
+  border: none;
+  color: var(--primary-gold);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-family: var(--font-sans);
+  transition: opacity 0.2s;
+}
+
+.account-switch-btn:hover {
+  text-decoration: underline;
+}
+
+/* Slide Down Animation for dynamic fields */
+.account-slide-down {
+  animation: fadeInDown 0.4s ease forwards;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= BOTTOM FEATURE PILLS ================= */
+.account-features-bar {
+  z-index: 2;
+  width: 100%;
+  max-width: 1020px;
+  margin-top: 24px;
+  background: rgba(4, 18, 12, 0.7);
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  padding: 14px 28px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.account-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.account-feature-icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(226, 168, 66, 0.05);
+}
+
+.account-feature-icon {
+  font-size: 18px;
+  color: var(--primary-gold);
+}
+
+.account-feature-text h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.account-feature-text p {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+@media (max-width: 920px) {
+  .account-container {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .account-hero-panel,
+  .account-form-panel {
+    width: 100%;
+    transform: none !important;
+  }
+
+  .account-hero-panel {
+    padding: 24px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .account-brand {
+    align-items: center;
+  }
+
+  .account-hero-text p {
+    max-width: 100%;
+  }
+
+  .account-hero-showcase {
+    display: none; /* Hidden on mobile to prioritize the form card */
+  }
+
+  .account-form-panel {
+    padding: 20px;
+  }
+
+  .account-features-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .account-form-card {
+    padding: 24px 18px;
+    height: 50px;
+  }
+
+  .account-features-bar {
+    grid-template-columns: 1fr;
+  }
+}
