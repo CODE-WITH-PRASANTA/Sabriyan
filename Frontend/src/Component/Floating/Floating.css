@@ -21,8 +21,8 @@
   position: relative;
   display: flex;
   width: 100%;
-  max-width: 620px;
-  
+  max-width: 680px;
+  min-height: 520px;
   background: radial-gradient(circle at 20% 30%, #0d2a1b 0%, #06150d 100%);
   border: 1px solid rgba(56, 114, 82, 0.35);
   border-radius: 24px;
@@ -30,15 +30,13 @@
               0 0 40px rgba(27, 84, 53, 0.25);
   overflow: hidden;
   animation: floatingPopUp 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  margin-top: 140px;
-  height:500px;
 }
 
 /* Close Button */
 .floating-close-btn {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 16px;
+  right: 16px;
   z-index: 10;
   display: flex;
   align-items: center;
@@ -62,49 +60,16 @@
 
 /* Left Showcase Pane */
 .floating-visual-pane {
-  flex: 0 0 44%;
+  flex: 0 0 45%;
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 2.2rem 1.5rem 1.8rem;
+  justify-content: center;
+  padding: 2rem 1.5rem;
   background: radial-gradient(circle at 50% 40%, rgba(20, 68, 42, 0.6) 0%, rgba(3, 16, 10, 0.85) 100%),
               radial-gradient(ellipse at bottom, rgba(14, 38, 25, 0.9) 0%, transparent 70%);
   border-right: 1px solid rgba(56, 114, 82, 0.2);
   overflow: hidden;
-}
-
-.floating-brand-header {
-  text-align: center;
-  z-index: 2;
-}
-
-.floating-brand-logo {
-  max-width: 140px;
-  height: auto;
-  object-fit: contain;
-}
-
-.floating-brand-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.floating-brand-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: #e5c158;
-}
-
-.floating-brand-subtitle {
-  font-size: 0.65rem;
-  letter-spacing: 2px;
-  color: #c49c3b;
-  margin-top: 2px;
 }
 
 .floating-product-wrapper {
@@ -113,21 +78,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;
 }
 
 .floating-product-img {
-  width: 82%;
-  max-width: 220px;
+  width: 100%;
+  max-width: 230px;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.75));
-  transform: rotate(-4deg);
+  transform: rotate(-3deg);
   transition: transform 0.4s ease;
 }
 
 .floating-container:hover .floating-product-img {
-  transform: rotate(-1deg) scale(1.03);
+  transform: rotate(-1deg) scale(1.02);
 }
 
 /* Right Form Pane */
@@ -135,42 +99,57 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 2.2rem 2.2rem 1.8rem;
+  justify-content: space-between;
+  padding: 2rem 2.2rem 1.8rem;
   z-index: 1;
-  margin-top: 95px;
-
-
 }
 
 .floating-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: #34d36e;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .floating-badge-icon {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
-.floating-heading {
-  font-size: 1.45rem;
+/* Brand Header in Form Pane */
+.floating-brand-header {
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+.floating-brand-logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.floating-brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.floating-brand-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: #ffffff;
-  line-height: 1.25;
-  margin: 0 0 0.45rem 0;
-  letter-spacing: -0.01em;
+  letter-spacing: 2px;
+  color: #e5c158;
 }
 
-.floating-description {
-  font-size: 0.78rem;
-  line-height: 1.45;
-  color: #92ab9d;
-  margin: 0 0 1.2rem 0;
-  max-width: 95%;
+.floating-brand-subtitle {
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  color: #c49c3b;
+  margin-top: 2px;
 }
 
 /* Form Styles */
@@ -355,7 +334,7 @@
 
   .floating-visual-pane {
     flex: none;
-    padding: 1.6rem 1.2rem 1rem;
+    padding: 1.5rem 1.2rem;
     border-right: none;
     border-bottom: 1px solid rgba(56, 114, 82, 0.2);
   }
@@ -365,11 +344,7 @@
   }
 
   .floating-form-pane {
-    padding: 1.4rem 1.2rem 1.2rem;
-  }
-
-  .floating-heading {
-    font-size: 1.25rem;
+    padding: 1.4rem 1.2rem;
   }
 }
 

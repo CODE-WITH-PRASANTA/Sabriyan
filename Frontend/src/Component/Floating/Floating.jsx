@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Floating.css';
 
 // React Icons
@@ -7,7 +7,7 @@ import { FaLeaf } from 'react-icons/fa6';
 import { FiUser, FiMail, FiPhone, FiHeart } from 'react-icons/fi';
 import { RiLeafLine, RiAwardLine } from 'react-icons/ri';
 
-// Replace with your actual image paths
+// Image paths
 import chocolateBarImg from "../../assets/sabriyana-chocolate-bar.png";
 import brandLogoImg from "../../assets/sabriyana-brand-logo.png";
 
@@ -42,19 +42,8 @@ const Floating = () => {
           <IoClose />
         </button>
 
-        {/* Left Side: Brand Visual Showcase */}
+        {/* Left Side: Product Showcase */}
         <div className="floating-visual-pane">
-          <div className="floating-brand-header">
-            {brandLogoImg ? (
-              <img src={brandLogoImg} alt="Sabriyana Logo" className="floating-brand-logo" />
-            ) : (
-              <div className="floating-brand-text">
-                <span className="floating-brand-title">SABRIYANA</span>
-                <span className="floating-brand-subtitle">— CRAFT CHOCOLATE —</span>
-              </div>
-            )}
-          </div>
-
           <div className="floating-product-wrapper">
             <img 
               src={chocolateBarImg || 'https://images.unsplash.com/photo-1548907040-4baa42d10919?w=600&auto=format&fit=crop&q=80'} 
@@ -71,11 +60,17 @@ const Floating = () => {
             <span>Get In Touch</span>
           </div>
 
-          <h2 className="floating-heading">We'd Love to Hear From You!</h2>
-          
-          <p className="floating-description">
-            Have a question, feedback, or partnership inquiry? Fill out the form and we'll get back to you soon.
-          </p>
+          {/* Brand Logo below Get In Touch */}
+          <div className="floating-brand-header">
+            {brandLogoImg ? (
+              <img src={brandLogoImg} alt="Sabriyana Logo" className="floating-brand-logo" />
+            ) : (
+              <div className="floating-brand-text">
+                <span className="floating-brand-title">SABRIYANA</span>
+                <span className="floating-brand-subtitle">— CRAFT CHOCOLATE —</span>
+              </div>
+            )}
+          </div>
 
           <form className="floating-form" onSubmit={handleSubmit}>
             <div className="floating-input-group">
