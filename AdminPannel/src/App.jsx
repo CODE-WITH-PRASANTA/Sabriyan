@@ -35,9 +35,13 @@ import HoneyProduct from "./Components/HoneyProduct/HoneyProduct";
 
 // Login
 import Login from "./Components/Login/Login";
+import Inventory from "./Components/Inventory/Inventory";
+import Marketings from "./Components/Marketings/Marketings";
+import WebsiteSetting from "./Components/WebsiteSetting/WebsiteSetting";
 import Reviews from "./Components/Reviews/Reviews";
 import Couponsoffers from "./Components/Couponsoffers/Couponsoffers";
-import ReportsandAnalytics from "./Pages/ReportsandAnalytics/ReportsandAnalytics";
+import Reports from "./Components/Reports/Reports";
+import Support from "./Components/Support/Support";
 
 function App() {
   return (
@@ -78,6 +82,9 @@ function App() {
               element={<Dashboard />}
             />
 
+            {/* Blog */}
+            <Route path="/blogpost" element={<BlogPost />} />
+            <Route path="/blogmanagement" element={<BlogManagement />} />
             {/* =========================
                 PRODUCTS
             ========================== */}
@@ -109,7 +116,7 @@ function App() {
          
          <Route
          path="reports"
-         element={<ReportsandAnalytics/>}
+         element={<Reports/>}
          />
 
             <Route
@@ -172,7 +179,14 @@ function App() {
            path="coupons"
            element={<Couponsoffers/>}
            />
+            
+          <Route path="support"element={<Support/>}/>
 
+
+            <Route
+               path="website-settings"
+               element={<WebsiteSetting/>}
+               />
 
             {/* =========================
                 BLOG
@@ -230,6 +244,14 @@ function App() {
             <Route
               path="testimonials"
               element={<Testimonial />}
+            />
+            <Route
+              path="inventory"
+              element={<Inventory/>}
+            />
+            <Route
+              path="marketing"
+              element={<Marketings/>}
             />
 
           </Route>

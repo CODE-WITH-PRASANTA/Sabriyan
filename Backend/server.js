@@ -20,6 +20,11 @@ const attributeRoutes = require("./routes/attributeRoutes");
 const productRoutes = require("./routes/productRoutes");
 const storeArticleRoutes = require("./routes/storeArticleRoutes");
 const blogRoutes = require('./routes/blogRoutes')
+const reviewRoutes = require('./routes/reviewRoutes');
+const inventoryRoutes = require('./routes/inventoryRoutes');
+const couponRoutes = require('./routes/couponRoutes');
+const supportRoutes = require("./routes/supportRoutes");
+
 
 // ======================
 // Ensure Uploads Directory Exists
@@ -88,6 +93,10 @@ app.use(
   "/api/blog",
   blogRoutes
 );
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/coupons', require('./routes/couponRoutes'));
+app.use("/api/support", supportRoutes);
 
 // ======================
 // 404 Route Handler

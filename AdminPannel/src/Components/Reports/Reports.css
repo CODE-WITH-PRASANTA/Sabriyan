@@ -1,220 +1,562 @@
+/* =========================================================
+   GLOBAL REPORTS
+========================================================= */
+
 .reports-container {
-  background-color: #0b1310;
-  color: #d1d5db;
-  padding: 24px;
+  width: 100%;
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
+  padding: 24px;
+
+  background: #0b1310;
+  color: #d1d5db;
+
+  font-family: "Inter", sans-serif;
+
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.reports-container *,
+.reports-container *::before,
+.reports-container *::after {
   box-sizing: border-box;
 }
 
-.reports-container * {
-  box-sizing: border-box;
-}
 
-/* Top Metrics Grid */
+/* =========================================================
+   METRICS
+========================================================= */
+
 .reports-metrics-grid {
+  width: 100%;
+
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .reports-metric-card {
-  background-color: #111f18;
-  border: 1px solid #1a3327;
-  border-radius: 12px;
+  min-width: 0;
+  min-height: 176px;
+
   padding: 20px;
+
+  background: #111f18;
+
+  border: 1px solid #1a3327;
+  border-radius: 14px;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.reports-metric-card:hover {
+  transform: translateY(-3px);
+
+  background: #12251c;
+  border-color: #24503a;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.18);
 }
 
 .reports-metric-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  justify-content: space-between;
+
+  gap: 12px;
 }
 
 .reports-metric-title {
-  font-size: 14px;
   color: #9ca3af;
+
+  font-size: 14px;
   font-weight: 500;
 }
 
 .reports-metric-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+
+  flex: 0 0 44px;
+
+  border-radius: 10px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+
+  font-size: 21px;
 }
 
-.reports-metric-icon.green-bg { background-color: #0f291e; color: #10b981; }
-.reports-metric-icon.orange-bg { background-color: #332314; color: #f97316; }
-.reports-metric-icon.purple-bg { background-color: #221733; color: #a855f7; }
-.reports-metric-icon.blue-bg { background-color: #142833; color: #3b82f6; }
+.reports-metric-icon.green-bg {
+  color: #10b981;
+  background: #0c2a1e;
+}
+
+.reports-metric-icon.orange-bg {
+  color: #f97316;
+  background: #332314;
+}
+
+.reports-metric-icon.purple-bg {
+  color: #a855f7;
+  background: #241634;
+}
+
+.reports-metric-icon.blue-bg {
+  color: #3b82f6;
+  background: #142a3a;
+}
 
 .reports-metric-value {
-  font-size: 24px;
-  font-weight: 700;
+  margin: 16px 0 6px;
+
   color: #ffffff;
-  margin-bottom: 8px;
+
+  font-size: 28px;
+  line-height: 1.15;
+  font-weight: 750;
 }
 
 .reports-metric-trend {
+  min-height: 18px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 2px;
+
+  white-space: nowrap;
+
   font-size: 12px;
   font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 2px;
 }
 
-.reports-metric-trend.positive { color: #10b981; }
-.reports-metric-trend.negative { color: #ef4444; }
+.reports-metric-trend svg {
+  font-size: 15px;
+}
+
+.reports-metric-trend.positive {
+  color: #10b981;
+}
+
+.reports-metric-trend.negative {
+  color: #ef4444;
+}
 
 .reports-trend-period {
+  margin-left: 5px;
+
+  color: #66756e;
+
   font-weight: 400;
-  color: #6b7280;
-  margin-left: 4px;
 }
 
-/* Charts Grid */
-.reports-charts-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-}
+
+/* =========================================================
+   CARDS
+========================================================= */
 
 .reports-card {
-  background-color: #111f18;
+  min-width: 0;
+
+  background: #111f18;
+
   border: 1px solid #1a3327;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 14px;
 }
 
-.reports-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+/* =========================================================
+   CHART GRID
+========================================================= */
+
+.reports-charts-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 2fr)
+    minmax(350px, 1fr);
+
+  gap: 20px;
+
   margin-bottom: 20px;
 }
 
-.reports-card-title-wrap {
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.reports-card-header {
+  min-height: 42px;
+
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 18px;
 }
 
-.reports-card-header h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: #ffffff;
+.reports-card-header h3,
+.reports-table-header h3 {
   margin: 0;
+
+  color: #ffffff;
+
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 650;
+}
+
+.reports-card-title-wrap {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
 }
 
 .reports-legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+
+  gap: 7px;
+
+  color: #8f9b95;
+
   font-size: 12px;
-  color: #9ca3af;
 }
 
 .reports-legend-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #10b981;
+  width: 9px;
+  height: 9px;
+
+  flex: 0 0 9px;
+
   border-radius: 50%;
+
+  background: #10b981;
 }
+
+
+/* =========================================================
+   DROPDOWN
+========================================================= */
 
 .reports-card-controls {
   display: flex;
-  gap: 10px;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.reports-dropdown-wrapper {
+  position: relative;
+  z-index: 20;
 }
 
 .reports-dropdown {
-  background-color: #0b1310;
-  border: 1px solid #1a3327;
-  color: #d1d5db;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 12px;
+  min-width: 84px;
+  height: 37px;
+
+  padding: 0 11px;
+
+  border: 1px solid #1c3a2b;
+  border-radius: 8px;
+
+  background: #0b1712;
+  color: #dbe4df;
+
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  font-family: inherit;
+  font-size: 12px;
+
   cursor: pointer;
+
+  transition: 0.2s ease;
 }
 
-.reports-dropdown:hover {
-  border-color: #234837;
+.reports-dropdown:hover,
+.reports-dropdown.active {
+  background: #10231a;
+  border-color: #286044;
+  color: #ffffff;
 }
 
-/* Sales Overview Chart Body */
-.reports-chart-body {
+.reports-dropdown svg {
+  font-size: 17px;
+
+  transition: transform 0.25s ease;
+}
+
+.reports-arrow-open {
+  transform: rotate(180deg);
+}
+
+.reports-dropdown-menu {
+  position: absolute;
+
+  top: calc(100% + 7px);
+  right: 0;
+
+  min-width: 125px;
+
+  padding: 5px;
+
+  border: 1px solid #214735;
+  border-radius: 9px;
+
+  background: #101e17;
+
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.45);
+
+  z-index: 100;
+}
+
+.reports-dropdown-menu button {
+  width: 100%;
+
+  padding: 9px 10px;
+
+  border: 0;
+  border-radius: 6px;
+
+  background: transparent;
+  color: #aebbb4;
+
+  text-align: left;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.reports-dropdown-menu button:hover,
+.reports-dropdown-menu button.selected {
+  background: #0b3324;
+  color: #10b981;
+}
+
+.reports-channel-menu {
+  min-width: 145px;
+}
+
+
+/* =========================================================
+   SALES OVERVIEW
+========================================================= */
+
+.reports-sales-overview {
+  min-height: 390px;
+
+  padding: 20px 20px 16px;
+}
+
+.reports-chart-wrapper {
+  width: 100%;
+  height: 245px;
+
   display: flex;
-  height: 180px;
-  position: relative;
 }
 
 .reports-y-axis {
+  width: 42px;
+  flex: 0 0 42px;
+
+  height: 220px;
+
+  padding-right: 7px;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: flex-end;
+
+  color: #63746b;
+
   font-size: 11px;
-  color: #6b7280;
-  padding-right: 10px;
-  text-align: right;
-  min-width: 32px;
 }
 
 .reports-svg-container {
+  min-width: 0;
+
   flex: 1;
+
+  height: 220px;
+
   position: relative;
-  height: 100%;
+
+  cursor: crosshair;
+}
+
+.reports-grid-lines {
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+}
+
+.reports-grid-lines span {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  height: 1px;
+
+  background: rgba(74, 103, 89, 0.13);
 }
 
 .reports-line-svg {
   width: 100%;
   height: 100%;
+
+  display: block;
+
   overflow: visible;
+
+  position: relative;
+  z-index: 2;
 }
 
-.reports-chart-pulse-dot {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background-color: #10b981;
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 8px #10b981;
+.reports-main-line {
+  filter:
+    drop-shadow(
+      0 0 4px rgba(16, 185, 129, 0.22)
+    );
 }
+
+
+/* =========================================================
+   CHART TOOLTIP
+========================================================= */
+
+.reports-chart-tooltip {
+  position: absolute;
+
+  z-index: 10;
+
+  min-width: 115px;
+
+  padding: 9px 11px;
+
+  border: 1px solid #286044;
+  border-radius: 8px;
+
+  background: rgba(10, 25, 18, 0.97);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.4);
+
+  pointer-events: none;
+
+  transform: translate(-50%, -115%);
+}
+
+.reports-tooltip-date {
+  margin-bottom: 3px;
+
+  color: #8c9d94;
+
+  font-size: 10px;
+}
+
+.reports-tooltip-value {
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reports-tooltip-small {
+  margin-top: 2px;
+
+  color: #10b981;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   X AXIS
+========================================================= */
 
 .reports-x-axis {
+  width: calc(100% - 42px);
+
+  margin-left: 42px;
+
+  height: 24px;
+
   display: flex;
+  align-items: flex-end;
   justify-content: space-between;
+
+  gap: 8px;
+
+  color: #687a70;
+
   font-size: 11px;
-  color: #6b7280;
-  padding-top: 10px;
-  padding-left: 32px;
+
+  white-space: nowrap;
 }
 
-/* Sales by Channel Donut Chart */
+
+/* =========================================================
+   SALES CHANNEL
+========================================================= */
+
+.reports-sales-channel {
+  min-height: 390px;
+
+  padding: 20px;
+}
+
 .reports-channel-content {
+  min-height: 300px;
+
   display: flex;
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
-  gap: 20px;
+
+  gap: 22px;
 }
 
 .reports-donut-container {
+  width: 190px;
+  height: 190px;
+
   position: relative;
-  width: 150px;
-  height: 150px;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,98 +565,1145 @@
 .reports-donut-svg {
   width: 100%;
   height: 100%;
-  transform: rotate(-90deg);
+}
+
+.reports-donut-segment {
+  cursor: pointer;
+
+  transition:
+    stroke-width 0.25s ease,
+    filter 0.25s ease;
+}
+
+.reports-donut-segment:hover {
+  filter:
+    drop-shadow(
+      0 0 7px rgba(16, 185, 129, 0.25)
+    );
 }
 
 .reports-donut-center {
   position: absolute;
+
+  width: 106px;
+  height: 106px;
+
+  border-radius: 50%;
+
+  background: #111f18;
+
   display: flex;
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
+
   text-align: center;
-  background-color: #111f18;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+
+  pointer-events: none;
 }
 
 .reports-donut-value {
-  font-size: 13px;
-  font-weight: 700;
   color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 750;
 }
 
 .reports-donut-label {
+  margin-top: 3px;
+
+  color: #75867d;
+
   font-size: 11px;
-  color: #9ca3af;
 }
+
+
+/* =========================================================
+   DONUT TOOLTIP
+========================================================= */
+
+.reports-donut-tooltip {
+  position: absolute;
+
+  top: 3px;
+  right: -34px;
+
+  min-width: 112px;
+
+  padding: 8px 10px;
+
+  border: 1px solid #28513c;
+  border-radius: 8px;
+
+  background: rgba(10, 25, 18, 0.97);
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+
+  z-index: 10;
+}
+
+.reports-donut-tooltip span {
+  color: #b7c5be;
+  font-size: 10px;
+}
+
+.reports-donut-tooltip strong {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.reports-donut-tooltip small {
+  color: #10b981;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   CHANNEL LEGEND
+========================================================= */
 
 .reports-channel-legend {
   width: 100%;
+
   display: flex;
   flex-direction: column;
-  gap: 12px;
+
+  gap: 2px;
 }
 
 .reports-legend-row {
+  min-height: 38px;
+
+  padding: 7px 9px;
+
+  border-radius: 7px;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 13px;
+  justify-content: space-between;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.reports-legend-row:hover,
+.reports-legend-row.channel-active {
+  background: #15271e;
+
+  transform: translateX(2px);
 }
 
 .reports-legend-info {
+  min-width: 0;
+
   display: flex;
   align-items: center;
-  gap: 8px;
+
+  gap: 9px;
 }
 
 .reports-dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
+
+  flex: 0 0 9px;
+
   border-radius: 50%;
 }
 
-.reports-dot.website { background-color: #10b981; }
-.reports-dot.mobile { background-color: #3b82f6; }
-.reports-dot.marketplace { background-color: #f97316; }
-
 .reports-channel-name {
-  color: #d1d5db;
-  font-weight: 500;
+  color: #d1d8d4;
+
+  font-size: 13px;
+  font-weight: 550;
 }
 
 .reports-channel-stats {
   display: flex;
+
   gap: 6px;
-  font-size: 12px;
 }
 
 .reports-channel-percent {
-  font-weight: 600;
   color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .reports-channel-amount {
-  color: #6b7280;
+  color: #687a70;
+
+  font-size: 11px;
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 1024px) {
+
+/* =========================================================
+   BOTTOM GRID
+========================================================= */
+
+.reports-bottom-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  gap: 20px;
+
+  align-items: start;
+}
+
+
+/* =========================================================
+   TABLE CARDS
+========================================================= */
+
+.reports-table-card {
+  min-width: 0;
+
+  padding: 20px;
+
+  background: #111f18;
+
+  border: 1px solid #1a3327;
+  border-radius: 14px;
+
+  overflow: hidden;
+}
+
+.reports-table-header {
+  min-height: 32px;
+
+  margin-bottom: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.reports-view-all {
+  padding: 4px 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #10b981;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.reports-view-all:hover {
+  color: #34d399;
+
+  transform: translateX(2px);
+}
+
+
+/* =========================================================
+   GENERIC TABLE
+========================================================= */
+
+.reports-table {
+  width: 100%;
+}
+
+.reports-table-row {
+  min-width: 0;
+  min-height: 57px;
+
+  display: grid;
+  align-items: center;
+
+  gap: 12px;
+
+  border-top: 1px solid #1a3327;
+
+  color: #d3dbd7;
+
+  font-size: 13px;
+
+  transition:
+    background 0.2s ease;
+}
+
+.reports-table-row > * {
+  min-width: 0;
+}
+
+.reports-table-row:not(
+  .reports-table-heading
+):hover {
+  background: rgba(25, 55, 41, 0.42);
+}
+
+.reports-table-heading {
+  min-height: 37px;
+
+  border-top: 0;
+
+  color: #83958b;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   PRODUCT TABLE
+========================================================= */
+
+.reports-product-table
+  .reports-table-row {
+  grid-template-columns:
+    minmax(0, 1fr)
+    70px
+    78px;
+}
+
+
+/* =========================================================
+   CATEGORY TABLE
+========================================================= */
+
+.reports-category-table
+  .reports-table-row {
+  grid-template-columns:
+    minmax(0, 1fr)
+    60px
+    82px;
+}
+
+
+/* =========================================================
+   PRODUCT / CATEGORY
+========================================================= */
+
+.reports-product-name,
+.reports-category-name {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.reports-product-name > span,
+.reports-category-name > span {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #e5eae7;
+
+  font-weight: 600;
+}
+
+.reports-small-icon {
+  width: 40px;
+  height: 40px;
+
+  flex: 0 0 40px;
+
+  border: 1px solid #24513b;
+  border-radius: 8px;
+
+  background: #142c21;
+  color: #10b981;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 19px;
+}
+
+
+/* =========================================================
+   CATEGORY ICONS
+========================================================= */
+
+.reports-category-icon {
+  width: 40px;
+  height: 40px;
+
+  flex: 0 0 40px;
+
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 19px;
+}
+
+.reports-category-icon.dark {
+  color: #f97316;
+  background: #302014;
+  border: 1px solid #5a3518;
+}
+
+.reports-category-icon.yellow {
+  color: #facc15;
+  background: #322a13;
+  border: 1px solid #594c1b;
+}
+
+.reports-category-icon.purple {
+  color: #a855f7;
+  background: #261738;
+  border: 1px solid #4b2a70;
+}
+
+.reports-category-icon.red {
+  color: #ef4444;
+  background: #321719;
+  border: 1px solid #5d2528;
+}
+
+.reports-category-icon.blue {
+  color: #3b82f6;
+  background: #142a3a;
+  border: 1px solid #244c6c;
+}
+
+.reports-category-icon.green {
+  color: #10b981;
+  background: #123024;
+  border: 1px solid #24513b;
+}
+
+
+/* =========================================================
+   =========================================================
+   RECENT ORDERS - COMPLETELY FIXED
+   =========================================================
+========================================================= */
+
+.reports-orders-card {
+  min-width: 0;
+  width: 100%;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   ORDERS TABLE
+========================================================= */
+
+.reports-orders-table {
+  width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   ORDER GRID
+========================================================= */
+
+/*
+  IMPORTANT:
+
+  80px      = Order ID
+  flexible  = Customer
+  78px      = Amount
+  88px      = Status
+
+  This prevents the status badge from pushing
+  outside the card.
+*/
+
+.reports-order-grid {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    80px
+    minmax(0, 1fr)
+    78px
+    88px;
+
+  column-gap: 10px;
+
+  align-items: center;
+}
+
+
+/* =========================================================
+   ALL ORDER GRID CHILDREN
+========================================================= */
+
+.reports-order-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+
+/* =========================================================
+   ORDER HEADER
+========================================================= */
+
+.reports-order-heading {
+  min-height: 40px;
+
+  border-bottom: 1px solid #1a3327;
+
+  color: #83958b;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+/* Order ID */
+
+.reports-order-heading span:nth-child(1) {
+  text-align: left;
+}
+
+
+/* Customer */
+
+.reports-order-heading span:nth-child(2) {
+  text-align: left;
+}
+
+
+/* Amount */
+
+.reports-order-heading span:nth-child(3) {
+  text-align: right;
+}
+
+
+/* Status */
+
+.reports-order-heading span:nth-child(4) {
+  text-align: right;
+}
+
+
+/* =========================================================
+   ORDER DATA ROW
+========================================================= */
+
+.reports-order-data {
+  min-height: 57px;
+
+  border-bottom: 1px solid #1a3327;
+
+  transition:
+    background 0.2s ease;
+}
+
+.reports-order-data:last-child {
+  border-bottom: 0;
+}
+
+
+/* =========================================================
+   ORDER ROW HOVER
+========================================================= */
+
+.reports-order-data:hover {
+  background: rgba(20, 55, 41, 0.45);
+}
+
+
+/* =========================================================
+   ORDER ID
+========================================================= */
+
+.reports-order-id {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #778a80;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  text-align: left;
+
+  transition: color 0.2s ease;
+}
+
+.reports-order-data:hover
+.reports-order-id {
+  color: #9aaca3;
+}
+
+
+/* =========================================================
+   CUSTOMER
+========================================================= */
+
+.reports-customer-name {
+  min-width: 0;
+  max-width: 100%;
+
+  display: block;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #e5eae7 !important;
+
+  font-size: 13px;
+  font-weight: 650;
+
+  text-align: left;
+
+  transition: color 0.2s ease;
+}
+
+.reports-order-data:hover
+.reports-customer-name {
+  color: #ffffff !important;
+}
+
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+.reports-order-amount {
+  min-width: 0;
+
+  color: #e5eae7;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-align: right;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   STATUS CONTAINER
+========================================================= */
+
+.reports-order-status {
+  justify-self: end;
+
+  width: 88px;
+  max-width: 88px;
+  min-width: 0;
+
+  height: 27px;
+
+  padding: 0 7px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  line-height: 1;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   STATUS TEXT
+========================================================= */
+
+.reports-status-text {
+  min-width: 0;
+  max-width: 100%;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   STATUS DOT
+========================================================= */
+
+.reports-status-dot {
+  width: 6px;
+  height: 6px;
+
+  flex: 0 0 6px;
+
+  border-radius: 50%;
+}
+
+
+/* =========================================================
+   DELIVERED
+========================================================= */
+
+.reports-order-status.delivered {
+  color: #10b981;
+
+  background: rgba(16, 185, 129, 0.08);
+
+  border: 1px solid rgba(16, 185, 129, 0.22);
+}
+
+.reports-order-status.delivered
+.reports-status-dot {
+  background: #10b981;
+
+  box-shadow:
+    0 0 6px rgba(16, 185, 129, 0.65);
+}
+
+
+/* =========================================================
+   PROCESSING
+========================================================= */
+
+.reports-order-status.processing {
+  color: #3b82f6;
+
+  background: rgba(59, 130, 246, 0.08);
+
+  border: 1px solid rgba(59, 130, 246, 0.22);
+}
+
+.reports-order-status.processing
+.reports-status-dot {
+  background: #3b82f6;
+
+  box-shadow:
+    0 0 6px rgba(59, 130, 246, 0.6);
+}
+
+
+/* =========================================================
+   SHIPPED
+========================================================= */
+
+.reports-order-status.shipped {
+  color: #f97316;
+
+  background: rgba(249, 115, 22, 0.1);
+
+  border: 1px solid rgba(249, 115, 22, 0.22);
+}
+
+.reports-order-status.shipped
+.reports-status-dot {
+  background: #f97316;
+
+  box-shadow:
+    0 0 6px rgba(249, 115, 22, 0.6);
+}
+
+
+/* =========================================================
+   STATUS HOVER
+========================================================= */
+
+.reports-order-data:hover
+.reports-order-status {
+  transform: scale(1.02);
+}
+
+.reports-order-status.delivered:hover {
+  background: rgba(16, 185, 129, 0.14);
+}
+
+.reports-order-status.processing:hover {
+  background: rgba(59, 130, 246, 0.14);
+}
+
+.reports-order-status.shipped:hover {
+  background: rgba(249, 115, 22, 0.15);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.reports-footer {
+  margin-top: 16px;
+
+  padding: 2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  color: #53645b;
+
+  font-size: 11px;
+}
+
+.reports-footer-info {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.reports-footer-info svg {
+  color: #10b981;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   RESPONSIVE - 1350
+========================================================= */
+
+@media (max-width: 1350px) {
+
+  .reports-metrics-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .reports-charts-grid {
+    grid-template-columns:
+      minmax(0, 1.7fr)
+      minmax(320px, 1fr);
+  }
+
+  .reports-bottom-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .reports-orders-card {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 1050
+========================================================= */
+
+@media (max-width: 1050px) {
+
+  .reports-container {
+    padding: 18px;
+  }
+
+  .reports-metrics-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
   .reports-charts-grid {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 768px) {
-  .reports-metrics-grid {
+  .reports-bottom-grid {
     grid-template-columns: 1fr;
   }
+
+  .reports-orders-card {
+    grid-column: auto;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 700
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .reports-container {
+    padding: 13px;
+  }
+
+  .reports-metrics-grid {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+  .reports-metric-card {
+    min-height: 150px;
+
+    padding: 17px;
+  }
+
+  .reports-charts-grid,
+  .reports-bottom-grid {
+    gap: 14px;
+  }
+
   .reports-card-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .reports-card-title-wrap {
+    width: 100%;
+  }
+
+  .reports-card-controls {
+    width: 100%;
+  }
+
+  .reports-card-controls
+  .reports-dropdown-wrapper {
+    flex: 1;
+  }
+
+  .reports-card-controls
+  .reports-dropdown {
+    width: 100%;
+  }
+
+  .reports-table-card {
+    padding: 16px;
+  }
+
+
+  /* -----------------------------------------
+     RECENT ORDERS MOBILE
+  ----------------------------------------- */
+
+  .reports-orders-card {
+    overflow: hidden;
+  }
+
+  .reports-orders-table {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .reports-order-grid {
+    grid-template-columns:
+      76px
+      minmax(0, 1fr)
+      70px
+      82px;
+
+    column-gap: 7px;
+  }
+
+  .reports-order-heading {
+    min-height: 38px;
+
+    font-size: 11px;
+  }
+
+  .reports-order-data {
+    min-height: 55px;
+  }
+
+  .reports-order-id {
+    font-size: 10px;
+  }
+
+  .reports-customer-name {
+    font-size: 12px;
+  }
+
+  .reports-order-amount {
+    font-size: 12px;
+  }
+
+  .reports-order-status {
+    width: 82px;
+    max-width: 82px;
+
+    height: 26px;
+
+    padding: 0 6px;
+
+    font-size: 9px;
+
+    gap: 4px;
+  }
+
+  .reports-status-dot {
+    width: 5px;
+    height: 5px;
+
+    flex-basis: 5px;
+  }
+
+  .reports-footer {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+
+    gap: 6px;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 480
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .reports-container {
+    padding: 10px;
+  }
+
+  .reports-table-card {
+    padding: 14px;
+  }
+
+  .reports-table-header {
+    margin-bottom: 10px;
+  }
+
+  .reports-table-header h3 {
+    font-size: 17px;
+  }
+
+  .reports-view-all {
+    font-size: 12px;
+  }
+
+
+  /* Recent Orders */
+
+  .reports-order-grid {
+    grid-template-columns:
+      70px
+      minmax(0, 1fr)
+      66px
+      76px;
+
+    column-gap: 5px;
+  }
+
+  .reports-order-heading {
+    font-size: 10px;
+  }
+
+  .reports-order-id {
+    font-size: 9px;
+  }
+
+  .reports-customer-name {
+    font-size: 11px;
+  }
+
+  .reports-order-amount {
+    font-size: 11px;
+  }
+
+  .reports-order-status {
+    width: 76px;
+    max-width: 76px;
+
+    height: 25px;
+
+    padding: 0 5px;
+
+    font-size: 8.5px;
+  }
+
+  .reports-status-dot {
+    width: 5px;
+    height: 5px;
+
+    flex-basis: 5px;
+  }
+
+
+  .reports-channel-amount {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .reports-order-grid {
+    grid-template-columns:
+      64px
+      minmax(0, 1fr)
+      60px
+      72px;
+
+    column-gap: 4px;
+  }
+
+  .reports-order-status {
+    width: 72px;
+    max-width: 72px;
+
+    font-size: 8px;
+  }
+
+  .reports-customer-name {
+    font-size: 10px;
+  }
+
+  .reports-order-amount {
+    font-size: 10px;
+  }
+
+  .reports-order-id {
+    font-size: 8px;
   }
 }
