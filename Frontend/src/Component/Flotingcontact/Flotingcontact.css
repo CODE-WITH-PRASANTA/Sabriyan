@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;500;600&display=swap');
+
+/* Trigger Floating Button */
+.floating-trigger-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a3e635, #4d7c0f);
+  color: #051608;
+  border: 2px solid rgba(163, 230, 53, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(74, 222, 128, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  z-index: 9999;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-trigger-btn:hover {
+  transform: scale(1.08) translateY(-3px);
+  box-shadow: 0 15px 30px rgba(74, 222, 128, 0.6);
+}
+
+.trigger-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #84cc16;
+  animation: pulse-ring 2s infinite ease-out;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Floating Form Container */
+.floating-contact-container {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 9999;
+  font-family: 'Poppins', sans-serif;
+  animation: floatUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes floatUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 3D Glassmorphic Card */
+.floating-card-3d {
+  position: relative;
+  width: 380px;
+  max-width: 90vw;
+  background: radial-gradient(circle at 50% 0%, rgba(13, 39, 18, 0.95) 0%, rgba(4, 15, 7, 0.98) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 28px;
+  padding: 30px 24px 22px;
+  border: 1px solid rgba(132, 204, 22, 0.4);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.8),
+    0 0 35px rgba(74, 222, 128, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 10px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+/* Glowing Neon Highlights */
+.glow-top-left {
+  position: absolute;
+  top: -40px;
+  left: -40px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(132, 204, 22, 0.4) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.glow-bottom-right {
+  position: absolute;
+  bottom: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Close Button */
+.floating-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(132, 204, 22, 0.6);
+  color: #a3e635;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 10px rgba(132, 204, 22, 0.2);
+}
+
+.floating-close-btn:hover {
+  background: rgba(132, 204, 22, 0.25);
+  transform: rotate(90deg) scale(1.05);
+  color: #fff;
+}
+
+/* Header */
+.form-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.form-header .subtitle {
+  font-size: 13px;
+  color: #e2e8f0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.form-header .brand-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 2px 0 0;
+  background: linear-gradient(180deg, #f7fee7 0%, #bef264 50%, #65a30d 100%);
+  webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(163, 230, 53, 0.4));
+}
+
+.form-header .tagline {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  font-weight: 300;
+  margin-top: 2px;
+}
+
+.leaf-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.leaf-divider .line {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(132, 204, 22, 0.6), transparent);
+}
+
+.leaf-divider .leaf-icon {
+  font-size: 12px;
+  filter: drop-shadow(0 0 4px #84cc16);
+}
+
+/* Form Inputs */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(7, 24, 11, 0.7);
+  border: 1px solid rgba(132, 204, 22, 0.25);
+  border-radius: 14px;
+  padding: 0 14px;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.input-box:focus-within {
+  border-color: #84cc16;
+  box-shadow: 0 0 12px rgba(132, 204, 22, 0.35), inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  background: rgba(10, 32, 15, 0.85);
+}
+
+.input-box .field-icon {
+  color: #84cc16;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.input-box input,
+.input-box textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f1f5f9;
+  font-size: 13.5px;
+  font-family: 'Poppins', sans-serif;
+  padding: 12px 0;
+}
+
+.input-box input::placeholder,
+.input-box textarea::placeholder {
+  color: #64748b;
+  font-weight: 300;
+}
+
+.textarea-box {
+  align-items: flex-start;
+  padding-top: 10px;
+}
+
+.textarea-box .field-icon {
+  margin-top: 2px;
+}
+
+.textarea-box textarea {
+  resize: none;
+  padding: 0;
+}
+
+/* 3D Green Glow Button */
+.submit-btn-3d {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 0;
+  margin-top: 6px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(180deg, #bef264 0%, #84cc16 50%, #4d7c0f 100%);
+  color: #061a08;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: 
+    0 4px 15px rgba(132, 204, 22, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.7),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s ease;
+}
+
+.submit-btn-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 22px rgba(132, 204, 22, 0.6),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.submit-btn-3d:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(132, 204, 22, 0.4);
+}
+
+/* Footer Badge */
+.form-footer {
+  margin-top: 16px;
+  text-align: center;
+  position: relative;
+}
+
+.form-footer .footer-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(132, 204, 22, 0.3), transparent);
+  margin-bottom: 10px;
+}
+
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #a3e635;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.trust-badge .shield-icon {
+  color: #84cc16;
+}

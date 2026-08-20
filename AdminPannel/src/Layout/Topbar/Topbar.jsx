@@ -1,16 +1,30 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Search, Calendar, Bell, Gift, User, Settings, LogOut, X } from 'lucide-react';
 import './Topbar.css';
 
 const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   const notifRef = useRef(null);
   const profileRef = useRef(null);
+
+  // Logout Handler
+  const handleLogout = () => {
+    // Auth tokens/session साफ़ करें
+    localStorage.removeItem('authToken');
+    sessionStorage.clear();
+    
+    // Dropdown बंद करें
+    setShowProfileMenu(false);
+
+    // Login पेज पर रीडायरेक्ट करें
+    navigate('/login');
+  };
 
   // Parse pathnames for breadcrumbs
   const pathNames = location.pathname.split('/').filter((x) => x);
@@ -148,7 +162,7 @@ const Topbar = ({ toggleSidebar, toggleMobileSidebar }) => {
                 <li>
                   <Settings size={16} /> Account Settings
                 </li>
-                <li className="logout-btn">
+                <li className="logout-btn" onClick={handleLogout} style={{ cursor: 'pointer' }}>
                   <LogOut size={16} /> Logout
                 </li>
               </ul>
