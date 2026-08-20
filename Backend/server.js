@@ -19,6 +19,7 @@ const brandRoutes = require("./routes/brandRoutes");
 const attributeRoutes = require("./routes/attributeRoutes");
 const productRoutes = require("./routes/productRoutes");
 const storeArticleRoutes = require("./routes/storeArticleRoutes");
+const blogRoutes = require('./routes/blogRoutes')
 
 // ======================
 // Ensure Uploads Directory Exists
@@ -83,6 +84,10 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/attributes", attributeRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/store-articles", storeArticleRoutes);
+app.use(
+  "/api/blog",
+  blogRoutes
+);
 
 // ======================
 // 404 Route Handler

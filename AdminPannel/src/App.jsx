@@ -177,7 +177,7 @@ function App() {
             {/* =========================
                 BLOG
             ========================== */}
-            <Route
+            {/* <Route
               path="blog/post"
               element={<BlogPost />}
             />
@@ -185,7 +185,7 @@ function App() {
             <Route
               path="blog/management"
               element={<BlogManagement />}
-            />
+            /> */}
 
             {/* Backward-compatible blog routes */}
             <Route

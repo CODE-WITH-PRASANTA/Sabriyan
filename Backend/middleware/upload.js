@@ -3,68 +3,120 @@ const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
 
-// Store file in memory buffer for Sharp processing
 const storage = multer.memoryStorage();
 
-// Multer Upload Configuration
 const upload = multer({
   storage,
-  limits: { 
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+
+  limits: {
+    fileSize: 10 * 1024 * 1024,
   },
+
   fileFilter: (req, file, cb) => {
-    // Only accept valid image MIME types
-    if (file && file.mimetype && file.mimetype.startsWith("image/")) {
+    if (
+      file &&
+      file.mimetype &&
+      file.mimetype.startsWith("image/")
+    ) {
       cb(null, true);
     } else {
-      cb(new Error("Only valid image files (PNG, JPG, JPEG, WEBP) are allowed!"));
+      cb(
+        new Error(
+          "Only image files are allowed!"
+        )
+      );
     }
   },
 });
 
-// Middleware Factory: Convert Buffer to Optimized WebP
 const convertToWebp = (options = {}) => {
   const {
     quality = 80,
-    folder = "products",
-    prefix = "product",
+    folder = "blogs",
+    prefix = "blog",
+    width,
+    height,
   } = options;
 
   return async (req, res, next) => {
     try {
-      // 1. If no image was uploaded, skip gracefully
-      if (!req.file || !req.file.buffer || req.file.buffer.length === 0) {
+      if (!req.files) {
         return next();
       }
 
-      // 2. Define upload destination directory
-      const targetFolder = folder || "products";
-      const targetDir = path.join(__dirname, `../public/uploads/${targetFolder}`);
+      const targetFolder = folder || "blogs";
 
-      // 3. Ensure target directory exists asynchronously
-      await fs.promises.mkdir(targetDir, { recursive: true });
+      const targetDir = path.join(
+        __dirname,
+        `../public/uploads/${targetFolder}`
+      );
 
-      // 4. Generate unique, collision-resistant WebP filename
-      const filePrefix = prefix || targetFolder;
-      const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
-      const outputPath = path.join(targetDir, uniqueName);
+      await fs.promises.mkdir(targetDir, {
+        recursive: true,
+      });
 
-      // 5. Optimize and convert image with Sharp
-      await sharp(req.file.buffer)
-        .rotate() // Automatically orient image based on EXIF
-        .webp({ quality: Number(quality) || 80, effort: 4 })
-        .toFile(outputPath);
+      const processImage = async (file, filePrefix) => {
+        if (!file || !file.buffer) {
+          return null;
+        }
 
-      // 6. Attach standardized metadata and URL path to req.file
-      req.file.filename = uniqueName;
-      req.file.mimetype = "image/webp";
-      req.file.path = outputPath;
-      // Use standard forward slashes for clean frontend URL resolution
-      req.file.destinationPath = `/uploads/${targetFolder}/${uniqueName}`.replace(/\\/g, "/");
+        const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(
+          Math.random() * 1e9
+        )}.webp`;
+
+        const outputPath = path.join(
+          targetDir,
+          uniqueName
+        );
+
+        let image = sharp(file.buffer).rotate();
+
+        if (width || height) {
+          image = image.resize(width, height, {
+            fit: "cover",
+            withoutEnlargement: true,
+          });
+        }
+
+        await image
+          .webp({
+            quality: Number(quality) || 80,
+            effort: 4,
+          })
+          .toFile(outputPath);
+
+        return {
+          originalname: file.originalname,
+          filename: uniqueName,
+          mimetype: "image/webp",
+          path: outputPath,
+          url: `/uploads/${targetFolder}/${uniqueName}`,
+        };
+      };
+
+      if (req.files.featuredImage) {
+        req.files.featuredImage = await Promise.all(
+          req.files.featuredImage.map((file) =>
+            processImage(file, `${prefix}-featured`)
+          )
+        );
+      }
+
+      if (req.files.thumbnailImage) {
+        req.files.thumbnailImage = await Promise.all(
+          req.files.thumbnailImage.map((file) =>
+            processImage(file, `${prefix}-thumbnail`)
+          )
+        );
+      }
 
       next();
     } catch (error) {
-      console.error("❌ WebP Conversion Middleware Error:", error);
+      console.error(
+        "❌ WebP Conversion Error:",
+        error
+      );
+
       return res.status(500).json({
         success: false,
         message: `Image processing failed: ${error.message}`,
@@ -73,4 +125,7 @@ const convertToWebp = (options = {}) => {
   };
 };
 
-module.exports = { upload, convertToWebp };
+module.exports = {
+  upload,
+  convertToWebp,
+};
