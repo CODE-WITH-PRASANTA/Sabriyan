@@ -7,68 +7,125 @@ const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+
   fileFilter: (req, file, cb) => {
-    if (file && file.mimetype && file.mimetype.startsWith("image/")) {
+    if (
+      file &&
+      file.mimetype &&
+      file.mimetype.startsWith("image/")
+    ) {
       cb(null, true);
     } else {
-      cb(new Error("Only valid image files (PNG, JPG, JPEG, WEBP) are allowed!"));
+      cb(
+        new Error(
+          "Only image files are allowed!"
+        )
+      );
     }
   },
 });
 
 const convertToWebp = (options = {}) => {
-  const { quality = 80, folder = "products", prefix = "product" } = options;
+  const {
+    quality = 80,
+    folder = "blogs",
+    prefix = "blog",
+    width,
+    height,
+  } = options;
 
   return async (req, res, next) => {
     try {
-      if (!req.file && (!req.files || Object.keys(req.files).length === 0)) {
+      if (!req.files) {
         return next();
       }
 
-      const targetFolder = folder || "products";
-      const targetDir = path.join(__dirname, `../public/uploads/${targetFolder}`);
-      await fs.promises.mkdir(targetDir, { recursive: true });
+      const targetFolder = folder || "blogs";
 
-      const processFile = async (fileObj) => {
-        if (!fileObj || !fileObj.buffer || fileObj.buffer.length === 0) return;
+      const targetDir = path.join(
+        __dirname,
+        `../public/uploads/${targetFolder}`
+      );
 
-        const filePrefix = prefix || targetFolder;
-        const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
-        const outputPath = path.join(targetDir, uniqueName);
+      await fs.promises.mkdir(targetDir, {
+        recursive: true,
+      });
 
-        await sharp(fileObj.buffer)
-          .rotate() 
-          .webp({ quality: Number(quality) || 80, effort: 4 })
+      const processImage = async (file, filePrefix) => {
+        if (!file || !file.buffer) {
+          return null;
+        }
+
+        const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(
+          Math.random() * 1e9
+        )}.webp`;
+
+        const outputPath = path.join(
+          targetDir,
+          uniqueName
+        );
+
+        let image = sharp(file.buffer).rotate();
+
+        if (width || height) {
+          image = image.resize(width, height, {
+            fit: "cover",
+            withoutEnlargement: true,
+          });
+        }
+
+        await image
+          .webp({
+            quality: Number(quality) || 80,
+            effort: 4,
+          })
           .toFile(outputPath);
 
-        fileObj.filename = uniqueName;
-        fileObj.mimetype = "image/webp";
-        fileObj.path = outputPath;
-        fileObj.destinationPath = `/uploads/${targetFolder}/${uniqueName}`.replace(/\\/g, "/");
+        return {
+          originalname: file.originalname,
+          filename: uniqueName,
+          mimetype: "image/webp",
+          path: outputPath,
+          url: `/uploads/${targetFolder}/${uniqueName}`,
+        };
       };
 
-      if (req.file) await processFile(req.file);
+      if (req.files.featuredImage) {
+        req.files.featuredImage = await Promise.all(
+          req.files.featuredImage.map((file) =>
+            processImage(file, `${prefix}-featured`)
+          )
+        );
+      }
 
-      if (req.files && !Array.isArray(req.files) && typeof req.files === "object") {
-        for (const fieldName in req.files) {
-          const fileArray = req.files[fieldName];
-          for (const fileObj of fileArray) {
-            await processFile(fileObj);
-          }
-        }
-      } else if (req.files && Array.isArray(req.files)) {
-        for (const fileObj of req.files) {
-          await processFile(fileObj);
-        }
+      if (req.files.thumbnailImage) {
+        req.files.thumbnailImage = await Promise.all(
+          req.files.thumbnailImage.map((file) =>
+            processImage(file, `${prefix}-thumbnail`)
+          )
+        );
       }
 
       next();
     } catch (error) {
-      console.error("WebP Conversion Middleware Error:", error);
-      return res.status(500).json({ success: false, message: `Image processing failed: ${error.message}` });
+      console.error(
+        "❌ WebP Conversion Error:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: `Image processing failed: ${error.message}`,
+      });
     }
   };
 };
 
-module.exports = { upload, convertToWebp };
+module.exports = {
+  upload,
+  convertToWebp,
+};
