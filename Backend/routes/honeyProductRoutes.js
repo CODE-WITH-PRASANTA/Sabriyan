@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); // Removed the comment slashes
 const router = express.Router();
 
 const { upload, convertToWebp } = require("../middleware/upload");
@@ -15,15 +15,13 @@ const cpUpload = upload.fields([
   { name: 'galleryImages', maxCount: 8 },
 ]);
 
-router
-  .route('/')
-  .post(cpUpload, convertToWebp({ quality: 80 }), createHoneyProduct)
+router.route('/')
+  .post(cpUpload, convertToWebp({ quality: 80, folder: 'honey', prefix: 'honey' }), createHoneyProduct)
   .get(getHoneyProducts);
 
-router
-  .route('/:id')
+router.route('/:id')
   .get(getHoneyProductById)
-  .put(cpUpload, convertToWebp({ quality: 80 }), updateHoneyProduct)
+  .put(cpUpload, convertToWebp({ quality: 80, folder: 'honey', prefix: 'honey' }), updateHoneyProduct)
   .delete(deleteHoneyProduct);
 
 module.exports = router;

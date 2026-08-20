@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
 import Home from "./Pages/Home/Home";
 import Navbar from "./Pages/Navbar/Navbar";
 import About from "./Pages/About/About";
@@ -14,17 +13,13 @@ import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
 import BlogDetails from "./Pages/BlogDetails/BlogDetails";
 import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
 
-
-
-
 const App = () => {
   return (
     <BrowserRouter>
-     <ScrollToTop />
+      <ScrollToTop />
       <Navbar />
 
       <Routes>
-
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/honey" element={<Honey />} />
@@ -32,13 +27,11 @@ const App = () => {
         <Route path="/faq" element={<Faq />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/blogDetails" element={<BlogDetails />} />
-        <Route path="/premiumcollection" element={<PremimuCollection />} />
 
-
-
-       
-
+     
+        <Route path="/premiumcollection/:id" element={<PremimuCollection />} />
       </Routes>
+
       <Footer />
     </BrowserRouter>
   );

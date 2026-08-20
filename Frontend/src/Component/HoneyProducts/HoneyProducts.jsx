@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import { FaShoppingCart, FaArrowRight, FaChevronLeft, FaChevronRight, FaStar } from "react-icons/fa";
+import { FaShoppingCart, FaArrowRight, FaChevronLeft, FaChevronRight, FaStar } from "react-icons/fa"; 
 import API, { IMG_URL } from "../../api/axios"; 
 
 // Swiper styles
