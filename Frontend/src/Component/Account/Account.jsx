@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Account.css';
+import chocoBg from "../../assets/choco1.png"; // Ensure your chocolate swirl image is placed here
 
-// React Icons
 import {
   FiUser,
   FiMail,
@@ -24,7 +24,6 @@ const Account = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
 
-  // Form states
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -48,10 +47,7 @@ const Account = () => {
       return;
     }
 
-    console.log(
-      isRegister ? 'Register Data:' : 'Login Data:',
-      formData
-    );
+    console.log(isRegister ? 'Register Data:' : 'Login Data:', formData);
   };
 
   const handleModeChange = (registerMode) => {
@@ -62,162 +58,108 @@ const Account = () => {
 
   return (
     <div className="account-wrapper">
-
       <div
         className={`account-container ${
-          isRegister
-            ? 'account-mode-register'
-            : 'account-mode-login'
+          isRegister ? 'account-mode-register' : 'account-mode-login'
         }`}
       >
-
         {/* ================= LEFT / HERO SECTION ================= */}
         <div className="account-hero-panel">
+          {/* Blurred Artistic Chocolate Background */}
+          <div
+            className="account-hero-bg-layer"
+            style={{ backgroundImage: `url(${chocoBg})` }}
+          />
+          <div className="account-hero-overlay" />
+
+          {/* Floating Accents */}
+          <div className="account-floating-icon choco-float">🍫</div>
+          <div className="account-floating-icon honey-float">🍯</div>
 
           <div className="account-hero-content">
-
             {/* Brand Header */}
             <div className="account-brand">
-
               <div className="account-brand-icon">
-                <svg
-                  viewBox="0 0 100 100"
-                  className="account-logo-svg"
-                >
+                <svg viewBox="0 0 100 100" className="account-logo-svg">
                   <path
                     d="M50 5 C30 25 15 50 25 75 C35 100 65 100 75 75 C85 50 70 25 50 5 Z"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="3.5"
+                    className="account-logo-outline"
                   />
-
                   <path
                     d="M50 22 C40 38 30 55 38 70 C44 82 56 82 62 70 C70 55 60 38 50 22 Z"
                     fill="currentColor"
-                    opacity="0.85"
+                    className="account-logo-inner"
                   />
                 </svg>
               </div>
 
-              <h1 className="account-brand-title">
-                SABRIYANA
-              </h1>
-
-              <p className="account-brand-subtitle">
-                CRAFT CHOCOLATE & HONEY
-              </p>
-
+              <h1 className="account-brand-title">SABRIYANA</h1>
+              <p className="account-brand-subtitle">CRAFT CHOCOLATE & HONEY</p>
             </div>
 
             {/* Welcome Text */}
             <div className="account-hero-text">
-
               <h2>
                 {isRegister
                   ? 'Begin Your Journey with Sabriyana'
                   : 'Welcome Back to Sabriyana'}
               </h2>
-
               <div className="account-divider-line"></div>
-
               <p>
-                Indulge in premium chocolates and pure honey.
-                Crafted with love, made for you.
+                Indulge in premium chocolates and pure honey. Crafted with love,
+                made for you.
               </p>
-
             </div>
 
             {/* Product Showcase */}
             <div className="account-hero-showcase">
-
               <div className="account-chocolate-card">
-
                 <div className="account-card-logo">
-
-                  <svg
-                    viewBox="0 0 100 100"
-                    className="account-mini-logo"
-                  >
+                  <svg viewBox="0 0 100 100" className="account-mini-logo">
                     <path
                       d="M50 15 C35 32 25 50 32 68 C38 80 62 80 68 68 C75 50 65 32 50 15 Z"
                       fill="currentColor"
                     />
                   </svg>
-
                   <span>SABRIYANA</span>
                   <small>CRAFT CHOCOLATE</small>
-
                 </div>
 
                 <div className="account-cocoa-percent">
-
                   <h3>
                     55<sup>%</sup>
                   </h3>
-
                   <span>COCOA</span>
-
                 </div>
 
                 <div className="account-card-footer">
-
                   <p>SINGLE ORIGIN</p>
-
                   <h4>DARK CHOCOLATE</h4>
-
                   <div className="account-gold-dash"></div>
-
                   <p className="account-sub-text">
                     BEAN TO BAR FINEST INGREDIENTS
                   </p>
-
-                  <p className="account-origin">
-                    india
-                  </p>
-
-                  <span className="account-weight">
-                    80g
-                  </span>
-
+                  <p className="account-origin">India</p>
+                  <span className="account-weight">80g</span>
                 </div>
-
               </div>
-
-              {/* Honey & Chocolate Decoration */}
-              <div className="account-honey-decor">
-
-                <div className="account-honey-glow"></div>
-
-                <div className="account-honey-jar">
-                  🍯
-                </div>
-
-                <div className="account-choco-pieces">
-                  🍫
-                </div>
-
-              </div>
-
             </div>
-
           </div>
-
         </div>
 
         {/* ================= RIGHT / FORM SECTION ================= */}
         <div className="account-form-panel">
-
           <div className="account-form-card">
-
             {/* Header */}
             <div className="account-form-header">
-
               <h2>
                 {isRegister
                   ? 'Create Your Account'
                   : 'Login to Your Account'}
               </h2>
-
               <p>
                 {isRegister
                   ? 'Fill in the details below to get started'
@@ -226,35 +168,20 @@ const Account = () => {
 
               {/* Ornament Divider */}
               <div className="account-ornament-divider">
-
                 <span className="account-ornament-line"></span>
-
-                <span className="account-ornament-icon">
-                  ✤
-                </span>
-
+                <span className="account-ornament-icon">✤</span>
                 <span className="account-ornament-line"></span>
-
               </div>
-
             </div>
 
             {/* Form */}
-            <form
-              onSubmit={handleSubmit}
-              className="account-form"
-            >
-
+            <form onSubmit={handleSubmit} className="account-form">
               {/* Full Name */}
               {isRegister && (
                 <div className="account-input-group account-slide-down">
-
                   <label>Full Name</label>
-
                   <div className="account-input-box">
-
                     <FiUser className="account-field-icon" />
-
                     <input
                       type="text"
                       name="fullName"
@@ -263,21 +190,15 @@ const Account = () => {
                       onChange={handleChange}
                       required
                     />
-
                   </div>
-
                 </div>
               )}
 
               {/* Email */}
               <div className="account-input-group">
-
                 <label>Email Address</label>
-
                 <div className="account-input-box">
-
                   <FiMail className="account-field-icon" />
-
                   <input
                     type="email"
                     name="email"
@@ -286,21 +207,15 @@ const Account = () => {
                     onChange={handleChange}
                     required
                   />
-
                 </div>
-
               </div>
 
               {/* Phone */}
               {isRegister && (
                 <div className="account-input-group account-slide-down">
-
                   <label>Phone Number</label>
-
                   <div className="account-input-box">
-
                     <FiPhone className="account-field-icon" />
-
                     <input
                       type="tel"
                       name="phone"
@@ -309,318 +224,205 @@ const Account = () => {
                       onChange={handleChange}
                       required
                     />
-
                   </div>
-
                 </div>
               )}
 
               {/* Password */}
               <div className="account-input-group">
-
                 <label>Password</label>
-
                 <div className="account-input-box">
-
                   <FiLock className="account-field-icon" />
-
                   <input
-                    type={
-                      showPassword
-                        ? 'text'
-                        : 'password'
-                    }
+                    type={showPassword ? 'text' : 'password'}
                     name="password"
                     placeholder={
-                      isRegister
-                        ? 'Create a password'
-                        : 'Enter your password'
+                      isRegister ? 'Create a password' : 'Enter your password'
                     }
                     value={formData.password}
                     onChange={handleChange}
                     required
                   />
-
                   <button
                     type="button"
                     className="account-password-toggle"
-                    onClick={() =>
-                      setShowPassword(!showPassword)
-                    }
-                    aria-label={
-                      showPassword
-                        ? 'Hide password'
-                        : 'Show password'
-                    }
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? (
-                      <FiEyeOff />
+                      <FiEyeOff className="account-toggle-icon" />
                     ) : (
-                      <FiEye />
+                      <FiEye className="account-toggle-icon" />
                     )}
                   </button>
-
                 </div>
-
               </div>
 
               {/* Confirm Password */}
               {isRegister && (
                 <div className="account-input-group account-slide-down">
-
                   <label>Confirm Password</label>
-
                   <div className="account-input-box">
-
                     <FiLock className="account-field-icon" />
-
                     <input
-                      type={
-                        showConfirmPassword
-                          ? 'text'
-                          : 'password'
-                      }
+                      type={showConfirmPassword ? 'text' : 'password'}
                       name="confirmPassword"
                       placeholder="Confirm your password"
                       value={formData.confirmPassword}
                       onChange={handleChange}
                       required
                     />
-
-                    <button
-                      type="button"
-                      className="account-password-toggle"
-                      onClick={() =>
-                        setShowConfirmPassword(
-                          !showConfirmPassword
-                        )
-                      }
-                      aria-label={
-                        showConfirmPassword
-                          ? 'Hide confirm password'
-                          : 'Show confirm password'
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <FiEyeOff />
-                      ) : (
-                        <FiEye />
-                      )}
-                    </button>
-
-                  </div>
-
-                </div>
-              )}
-
-              {/* Login Options */}
-              {!isRegister ? (
-                <div className="account-options-row">
-
-                  <label className="account-checkbox-label">
-
-                    <input
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) =>
-                        setRememberMe(e.target.checked)
-                      }
-                    />
-
-                    <span className="account-custom-checkbox">
-                      {rememberMe && <FiCheck />}
-                    </span>
-
-                    <span>
-                      Remember me
-                    </span>
-
-                  </label>
-
-                  <a
-                    href="#forgot"
-                    className="account-forgot-link"
+                  <button
+                    type="button"
+                    className="account-password-toggle"
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
+                    aria-label={
+                      showConfirmPassword
+                        ? 'Hide confirm password'
+                        : 'Show confirm password'
+                    }
                   >
-                    Forgot Password?
-                  </a>
-
+                    {showConfirmPassword ? (
+                      <FiEyeOff className="account-toggle-icon" />
+                    ) : (
+                      <FiEye className="account-toggle-icon" />
+                    )}
+                  </button>
                 </div>
-              ) : (
-
-                /* Register Terms */
-                <div className="account-terms-row account-slide-down">
-
-                  <label className="account-checkbox-label">
-
-                    <input
-                      type="checkbox"
-                      checked={agreeTerms}
-                      onChange={(e) =>
-                        setAgreeTerms(e.target.checked)
-                      }
-                      required
-                    />
-
-                    <span className="account-custom-checkbox">
-                      {agreeTerms && <FiCheck />}
-                    </span>
-
-                    <span>
-                      I agree to the{' '}
-                      <a href="#terms">
-                        Terms & Conditions
-                      </a>{' '}
-                      and{' '}
-                      <a href="#privacy">
-                        Privacy Policy
-                      </a>
-                    </span>
-
-                  </label>
-
-                </div>
-              )}
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="account-submit-btn"
-              >
-
-                <span>
-                  {isRegister
-                    ? 'Register'
-                    : 'Login'}
-                </span>
-
-                <FiArrowRight className="account-btn-arrow" />
-
-              </button>
-
-              {/* Or Divider */}
-              {!isRegister && (
-                <div className="account-or-divider">
-
-                  <span className="account-or-line"></span>
-
-                  <span className="account-or-text">
-                    or
-                  </span>
-
-                  <span className="account-or-line"></span>
-
-                </div>
-              )}
-
-              {/* Switch Login/Register */}
-              <div className="account-switch-view">
-
-                {isRegister ? (
-
-                  <p>
-                    Already have an account?{' '}
-
-                    <button
-                      type="button"
-                      className="account-switch-btn"
-                      onClick={() =>
-                        handleModeChange(false)
-                      }
-                    >
-                      Login now
-                    </button>
-                  </p>
-
-                ) : (
-
-                  <p>
-                    Don't have an account?{' '}
-
-                    <button
-                      type="button"
-                      className="account-switch-btn"
-                      onClick={() =>
-                        handleModeChange(true)
-                      }
-                    >
-                      Register now
-                    </button>
-                  </p>
-
-                )}
-
               </div>
+            )}
 
-            </form>
+            {/* Login Options */}
+            {!isRegister ? (
+              <div className="account-options-row">
+                <label className="account-checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <span className="account-custom-checkbox">
+                    {rememberMe && <FiCheck className="account-check-icon" />}
+                  </span>
+                  <span>Remember me</span>
+                </label>
 
-          </div>
+                <a href="#forgot" className="account-forgot-link">
+                  Forgot Password?
+                </a>
+              </div>
+            ) : (
+              /* Register Terms */
+              <div className="account-terms-row account-slide-down">
+                <label className="account-checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={agreeTerms}
+                    onChange={(e) => setAgreeTerms(e.target.checked)}
+                    required
+                  />
+                  <span className="account-custom-checkbox">
+                    {agreeTerms && <FiCheck className="account-check-icon" />}
+                  </span>
+                  <span>
+                    I agree to the <a href="#terms">Terms & Conditions</a> and{' '}
+                    <a href="#privacy">Privacy Policy</a>
+                  </span>
+                </label>
+              </div>
+            )}
 
+            {/* Submit Button */}
+            <button type="submit" className="account-submit-btn">
+              <span>{isRegister ? 'Register' : 'Login'}</span>
+              <FiArrowRight className="account-btn-arrow" />
+            </button>
+
+            {/* Or Divider */}
+            {!isRegister && (
+              <div className="account-or-divider">
+                <span className="account-or-line"></span>
+                <span className="account-or-text">or</span>
+                <span className="account-or-line"></span>
+              </div>
+            )}
+
+            {/* Switch Login/Register */}
+            <div className="account-switch-view">
+              {isRegister ? (
+                <p>
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    className="account-switch-btn"
+                    onClick={() => handleModeChange(false)}
+                  >
+                    Login now
+                  </button>
+                </p>
+              ) : (
+                <p>
+                  Don't have an account?{' '}
+                  <button
+                    type="button"
+                    className="account-switch-btn"
+                    onClick={() => handleModeChange(true)}
+                  >
+                    Register now
+                  </button>
+                </p>
+              )}
+            </div>
+          </form>
         </div>
-
       </div>
-
-      {/* ================= BOTTOM FEATURE BAR ================= */}
-      <div className="account-features-bar">
-
-        {/* Premium */}
-        <div className="account-feature-item">
-
-          <div className="account-feature-icon-wrapper">
-            <FiHeart className="account-feature-icon" />
-          </div>
-
-          <div className="account-feature-text">
-            <h4>Premium</h4>
-            <p>Ingredients</p>
-          </div>
-
-        </div>
-
-        {/* Bean to Bar */}
-        <div className="account-feature-item">
-
-          <div className="account-feature-icon-wrapper">
-            <FiCoffee className="account-feature-icon" />
-          </div>
-
-          <div className="account-feature-text">
-            <h4>Bean to Bar</h4>
-            <p>Crafted</p>
-          </div>
-
-        </div>
-
-        {/* Pure Honey */}
-        <div className="account-feature-item">
-
-          <div className="account-feature-icon-wrapper">
-            <FiBox className="account-feature-icon" />
-          </div>
-
-          <div className="account-feature-text">
-            <h4>Pure & Natural</h4>
-            <p>Honey</p>
-          </div>
-
-        </div>
-
-        {/* Made in India */}
-        <div className="account-feature-item">
-
-          <div className="account-feature-icon-wrapper">
-            <FiMapPin className="account-feature-icon" />
-          </div>
-
-          <div className="account-feature-text">
-            <h4>Made in</h4>
-            <p>India</p>
-          </div>
-
-        </div>
-
-      </div>
-
     </div>
+
+    {/* ================= BOTTOM FEATURE BAR ================= */}
+    <div className="account-features-bar">
+      <div className="account-feature-item">
+        <div className="account-feature-icon-wrapper">
+          <FiHeart className="account-feature-icon" />
+        </div>
+        <div className="account-feature-text">
+          <h4>Premium</h4>
+          <p>Ingredients</p>
+        </div>
+      </div>
+
+      <div className="account-feature-item">
+        <div className="account-feature-icon-wrapper">
+          <FiCoffee className="account-feature-icon" />
+        </div>
+        <div className="account-feature-text">
+          <h4>Bean to Bar</h4>
+          <p>Crafted</p>
+        </div>
+      </div>
+
+      <div className="account-feature-item">
+        <div className="account-feature-icon-wrapper">
+          <FiBox className="account-feature-icon" />
+        </div>
+        <div className="account-feature-text">
+          <h4>Pure & Natural</h4>
+          <p>Honey</p>
+        </div>
+      </div>
+
+      <div className="account-feature-item">
+        <div className="account-feature-icon-wrapper">
+          <FiMapPin className="account-feature-icon" />
+        </div>
+        <div className="account-feature-text">
+          <h4>Made in</h4>
+          <p>India</p>
+        </div>
+      </div>
+    </div>
+  </div>
   );
 };
 

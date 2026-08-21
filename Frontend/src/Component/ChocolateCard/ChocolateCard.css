@@ -1,259 +1,459 @@
+/* =========================================================
+   CHOCOLATE CARD (OPTIMIZED)
+========================================================= */
 .ChocolateCard {
+  --green: #63ff8c;
+  --green-light: #8bffa5;
+  --green-dark: #0ca74d;
+  --gold: #ffd95d;
+  --white: #ffffff;
+  --text: #d6d6d6;
+  --glass: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.09);
   position: relative;
-  background: #0d0c0a;
-  color: #fff;
-  padding: 80px 20px;
+  width: 100%;
+  padding: 90px 7%;
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--white);
+  isolation: isolate;
 }
 
-/* Background Ambient Glows */
+.ChocolateCard *, .ChocolateCard *::before, .ChocolateCard *::after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ChocolateCard button { font-family: inherit; }
+
+/* GLOWS & BACKGROUND */
 .ChocolateCard-glow {
   position: absolute;
   border-radius: 50%;
-  filter: blur(120px);
-  z-index: 0;
   pointer-events: none;
+  filter: blur(120px);
+  z-index: -1;
+  animation: chocolateGlow 10s ease-in-out infinite alternate;
 }
-.glow1 { top: 10%; left: -10%; width: 350px; height: 350px; background: rgba(226, 184, 102, 0.12); }
-.glow2 { top: 50%; right: -10%; width: 400px; height: 400px; background: rgba(184, 115, 51, 0.15); }
-.glow3 { bottom: 5%; left: 30%; width: 300px; height: 300px; background: rgba(226, 184, 102, 0.08); }
+.glow1 { top: 80px; left: -130px; width: 420px; height: 420px; background: rgba(0, 255, 102, 0.25); }
+.glow2 { top: 350px; right: -120px; width: 350px; height: 350px; background: rgba(76, 255, 132, 0.25); animation-duration: 14s; }
+.glow3 { bottom: -80px; left: 45%; width: 280px; height: 280px; background: rgba(39, 255, 118, 0.25); animation-duration: 8s; }
 
-/* Header Section */
+/* HEADING */
 .ChocolateCard-heading {
-  text-align: center;
-  max-width: 650px;
-  margin: 0 auto 50px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto 70px;
+  text-align: center;
 }
-
 .ChocolateCard-tag {
-  display: inline-block;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #e2b866;
-  border: 1px solid rgba(226, 184, 102, 0.4);
-  padding: 6px 14px;
-  border-radius: 20px;
-  margin-bottom: 15px;
+  display: inline-flex;
+  padding: 10px 24px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(120, 255, 170, 0.15);
+  border-radius: 50px;
+  background: var(--glass);
+  color: var(--green-light);
+  font-size: 14px;
+  letter-spacing: 1px;
+  backdrop-filter: blur(15px);
+  animation: fadeUp 0.8s ease both;
 }
-
 .ChocolateCard-heading h2 {
-  font-size: 2.5rem;
+  margin: 0 0 18px;
+  font-size: 3.4rem;
   font-weight: 700;
-  margin: 10px 0;
+  line-height: 1.2;
+  animation: fadeUp 1s ease both;
 }
-
-.ChocolateCard-heading h2 span {
-  color: #e2b866;
-}
-
+.ChocolateCard-heading h2 span { color: #74ff92; }
 .ChocolateCard-heading p {
-  color: #a3a3a3;
-  font-size: 1rem;
-  line-height: 1.6;
+  max-width: 650px;
+  margin: auto;
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  animation: fadeUp 1.2s ease both;
 }
 
-/* Status States */
-.ChocolateCard-state-message {
-  text-align: center;
-  padding: 60px 0;
-  font-size: 1.1rem;
-  position: relative;
-  z-index: 1;
-}
-.ChocolateCard-state-message.loading { color: #e2b866; }
-.ChocolateCard-state-message.error { color: #e74c3c; }
-.ChocolateCard-state-message.empty { color: #888; }
-
-/* Grid Layout */
+/* GRID & CARDS */
 .ChocolateCard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 34px;
 }
-
-/* Card Design */
 .ChocolateCard-card {
   position: relative;
-  background: #171513;
-  border: 1px solid rgba(226, 184, 102, 0.15);
-  border-radius: 16px;
+  min-height: 570px;
   overflow: hidden;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  backdrop-filter: blur(18px);
+  transition: transform 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease;
+  animation: cardAppear 0.8s ease both;
 }
+.ChocolateCard-card:nth-child(2) { animation-delay: 0.12s; }
+.ChocolateCard-card:nth-child(3) { animation-delay: 0.24s; }
+.ChocolateCard-card:nth-child(4) { animation-delay: 0.36s; }
+.ChocolateCard-card:nth-child(5) { animation-delay: 0.48s; }
+.ChocolateCard-card:nth-child(6) { animation-delay: 0.6s; }
 
 .ChocolateCard-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(226, 184, 102, 0.5);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  transform: translateY(-15px) scale(1.015);
+  border-color: rgba(89, 255, 141, 0.75);
+  box-shadow: 0 25px 65px rgba(0, 255, 120, 0.16), 0 0 30px rgba(80, 255, 120, 0.08);
 }
+
+/* CARD INTERNAL VISUALS */
+.ChocolateCard-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  width: 45%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.13), transparent);
+  transform: translateX(-220%) skewX(-25deg);
+  pointer-events: none;
+  transition: transform 0.9s ease;
+}
+.ChocolateCard-card:hover::before { transform: translateX(420%) skewX(-25deg); }
 
 .ChocolateCard-cardBg {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.15;
-  transition: opacity 0.3s ease;
+  opacity: 0.45;
+  transition: transform 0.8s ease, opacity 0.5s ease;
 }
-
-.ChocolateCard-card:hover .ChocolateCard-cardBg {
-  opacity: 0.25;
-}
+.ChocolateCard-card:hover .ChocolateCard-cardBg { opacity: 0.52; transform: scale(1.08); }
 
 .ChocolateCard-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(23, 21, 19, 0.3) 0%, #171513 85%);
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 20, 0, 0.08) 0%, rgba(0, 40, 10, 0.5) 48%, rgba(0, 15, 0, 0.96) 100%);
 }
 
-/* Visual / Image Showcase */
+.ChocolateCard-light {
+  position: absolute;
+  top: -70px;
+  left: 20%;
+  z-index: 2;
+  width: 220px;
+  height: 400px;
+  background: linear-gradient(rgba(255, 255, 255, 0.55), transparent);
+  filter: blur(40px);
+  opacity: 0.35;
+  transform: rotate(18deg);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.6s ease;
+}
+.ChocolateCard-card:hover .ChocolateCard-light { opacity: 0.65; transform: rotate(14deg) scale(1.2); }
+
+/* PRODUCT DISPLAY AREA */
 .ChocolateCard-imageArea {
   position: relative;
-  height: 200px;
+  z-index: 3;
+  height: 360px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  perspective: 1000px;
+}
+.ChocolateCard-ring {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border: 1px solid rgba(120, 255, 170, 0.15);
+  border-radius: 50%;
+  animation: rotate360 18s linear infinite;
+  transition: border-color 0.45s ease, box-shadow 0.45s ease;
+}
+.ChocolateCard-ring::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px dashed rgba(120, 255, 170, 0.1);
+  border-radius: 50%;
+}
+.ChocolateCard-card:hover .ChocolateCard-ring {
+  border-color: rgba(110, 255, 145, 0.75);
+  box-shadow: 0 0 25px rgba(100, 255, 160, 0.12), inset 0 0 25px rgba(100, 255, 160, 0.05);
+}
+
+.ChocolateCard-platform {
+  position: absolute;
+  bottom: 35px;
+  width: 180px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120, 255, 170, 0.45), rgba(0, 0, 0, 0.15));
+  filter: blur(4px);
+  animation: platformGlow 5s ease-in-out infinite;
 }
 
 .ChocolateCard-image {
-  max-height: 160px;
-  max-width: 80%;
-  object-fit: contain;
-  z-index: 2;
-  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
-  transition: transform 0.4s ease;
-}
-
-.ChocolateCard-card:hover .ChocolateCard-image {
-  transform: scale(1.08) rotate(-2deg);
-}
-
-/* Card Content Details */
-.ChocolateCard-content {
   position: relative;
-  z-index: 2;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  z-index: 5;
+  width: 210px;
+  height: 240px;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+}
+.ChocolateCard-card:hover .ChocolateCard-image {
+  transform: translateY(-10px) scale(1.08) rotateY(12deg);
+  filter: drop-shadow(0 45px 70px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 35px rgba(80, 255, 120, 0.4));
 }
 
+/* FLOATING DECORATIONS */
+.ChocolateCard-bean {
+  position: absolute;
+  z-index: 8;
+  width: 16px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #7a4520, #44220f);
+  box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.15), 0 6px 12px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+.ChocolateCard-bean::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  width: 2px;
+  height: 18px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(-50%);
+}
+.bean1 { top: 55px; left: 45px; animation: floatYRotate 8s linear infinite; }
+.bean2 { top: 90px; right: 55px; animation: floatTranslate 9s ease-in-out infinite; }
+.bean3 { bottom: 100px; left: 70px; animation: floatY 10s ease-in-out infinite; }
+.bean4 { right: 60px; bottom: 70px; animation: rotate360 7s linear infinite; }
+
+.ChocolateCard-particle {
+  position: absolute;
+  z-index: 8;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 15px var(--green);
+  pointer-events: none;
+}
+.p1 { top: 70px; left: 70px; width: 7px; height: 7px; animation: particleFloatY 7s ease-in-out infinite; }
+.p2 { top: 120px; right: 60px; width: 10px; height: 10px; animation: particleFloatX 8s ease-in-out infinite; }
+.p3 { bottom: 70px; left: 90px; width: 6px; height: 6px; animation: pulseScale 6s ease-in-out infinite; }
+.p4 { right: 90px; bottom: 90px; width: 8px; height: 8px; animation: floatY 9s ease-in-out infinite; }
+
+.ChocolateCard-piece {
+  position: absolute;
+  z-index: 7;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #7b4b28, #4d2613);
+  box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.18), 0 6px 18px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  transition: box-shadow 0.35s ease;
+}
+.piece1 { top: 55px; left: 120px; animation: rotate360 8s linear infinite; }
+.piece2 { top: 170px; right: 105px; animation: floatYRotate 10s ease-in-out infinite; }
+.piece3 { bottom: 95px; left: 120px; animation: rotateY 9s linear infinite; }
+.ChocolateCard-card:hover .ChocolateCard-piece {
+  box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.25), 0 0 25px rgba(100, 255, 160, 0.5);
+}
+
+.ChocolateCard-floatingBean, .ChocolateCard-floatingLeaf {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  animation: floatSway 12s ease-in-out infinite;
+}
+.ChocolateCard-floatingBean { width: 80px; opacity: 0.28; }
+.ChocolateCard-floatingLeaf { width: 120px; opacity: 0.18; animation-duration: 16s; }
+.beanLeft { top: 12%; left: 2%; }
+.beanRight { right: 3%; bottom: 10%; animation-delay: 3s; }
+.leafLeft { bottom: 8%; left: 8%; }
+.leafRight { top: 12%; right: 5%; animation-delay: 5s; }
+
+/* CONTENT & FOOTER */
+.ChocolateCard-content { position: relative; z-index: 10; padding: 0 30px 30px; }
 .ChocolateCard-rating {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.85rem;
-  color: #e2b866;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: var(--gold);
+  font-size: 15px;
+  transition: transform 0.35s ease;
 }
+.ChocolateCard-card:hover .ChocolateCard-rating { transform: translateX(3px) scale(1.04); }
 
 .ChocolateCard-content h3 {
-  font-size: 1.25rem;
-  margin: 0 0 6px 0;
-  color: #fff;
-}
-
-.ChocolateCard-shortTitle {
-  font-size: 0.85rem;
-  color: #888;
-  margin: 0 0 12px 0;
-}
-
-.ChocolateCard-pricing {
-  display: flex;
-  align-items: baseline;
-  margin-bottom: 16px;
-}
-
-.price-selling {
-  font-size: 1.2rem;
+  margin: 0 0 10px;
+  font-size: 30px;
   font-weight: 700;
-  color: #e2b866;
+  line-height: 1.2;
+  transition: color 0.35s ease;
 }
-
-.price-mrp {
-  text-decoration: line-through;
-  color: #666;
-  font-size: 0.85rem;
-  margin-left: 8px;
-}
-
-.price-discount {
-  color: #27ae60;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-left: 6px;
-}
+.ChocolateCard-card:hover .ChocolateCard-content h3 { color: var(--green-light); }
+.ChocolateCard-content p { margin: 0 0 28px; color: var(--text); font-size: 15px; line-height: 1.7; }
 
 .ChocolateCard-footer {
-  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 12px;
+  gap: 15px;
+}
+.ChocolateCard-footer > span {
+  display: inline-flex;
+  padding: 9px 18px;
+  border: 1px solid rgba(120, 255, 170, 0.08);
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #90ff9f;
+  font-size: 13px;
+  transition: transform 0.35s ease, background 0.35s ease;
+}
+.ChocolateCard-card:hover .ChocolateCard-footer > span {
+  background: rgba(100, 255, 140, 0.1);
+  transform: scale(1.05);
 }
 
-.ChocolateCard-sweetness {
-  font-size: 0.8rem;
-  color: #aaa;
-}
-
-.ChocolateCard-btn {
-  background: transparent;
-  border: none;
-  color: #e2b866;
-  font-size: 0.85rem;
-  font-weight: 600;
+.ChocolateCard-footer button {
   display: flex;
   align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: gap 0.2s ease;
-}
-
-.ChocolateCard-btn:hover {
-  gap: 10px;
-}
-
-/* Bottom CTA */
-.ChocolateCard-bottom {
-  text-align: center;
-  margin-top: 50px;
-  position: relative;
-  z-index: 1;
-}
-
-.ChocolateCard-mainBtn {
-  background: #e2b866;
-  color: #171513;
+  gap: 8px;
+  padding: 0;
   border: none;
-  padding: 14px 28px;
-  border-radius: 30px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  background: transparent;
+  color: var(--white);
+  font-size: 15px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.35s ease;
+}
+.ChocolateCard-footer button svg,
+.ChocolateCard-bottom button svg { transition: transform 0.35s ease; }
+.ChocolateCard-footer button:hover { color: #6eff91; }
+.ChocolateCard-footer button:hover svg,
+.ChocolateCard-bottom button:hover svg { transform: translateX(8px); }
+
+/* BOTTOM BUTTON */
+.ChocolateCard-bottom {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  margin-top: 70px;
+}
+.ChocolateCard-bottom button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 42px;
+  border: none;
+  border-radius: 60px;
+  background: linear-gradient(135deg, #0ca74d, #36ff7d);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 255, 120, 0.15);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.ChocolateCard-bottom button:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(0, 255, 120, 0.3);
 }
 
-.ChocolateCard-mainBtn:hover {
-  background: #d4a754;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(226, 184, 102, 0.3);
+/* =========================================================
+   KEYFRAMES
+========================================================= */
+@keyframes chocolateGlow { to { transform: scale(1.25); } }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes cardAppear {
+  from { opacity: 0; transform: translateY(70px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes rotate360 { to { transform: rotate(360deg); } }
+@keyframes rotateY { to { transform: rotateY(360deg); } }
+@keyframes platformGlow { 50% { transform: scale(1.12); opacity: 1; } }
+@keyframes floatYRotate { 50% { transform: translateY(-25px) rotate(180deg); } }
+@keyframes floatTranslate { 50% { transform: translate(20px, -20px); } }
+@keyframes floatY { 50% { transform: translateY(-30px); } }
+@keyframes particleFloatY {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-35px); opacity: 1; }
+}
+@keyframes particleFloatX { 50% { transform: translateX(25px); } }
+@keyframes pulseScale { 50% { transform: scale(1.7); } }
+@keyframes floatSway { 50% { transform: translateY(-30px) rotate(15deg); } }
+
+/* =========================================================
+   RESPONSIVE & ACCESSIBILITY
+========================================================= */
+@media (max-width: 1400px) {
+  .ChocolateCard-grid { gap: 26px; }
+  .ChocolateCard-card { min-height: 540px; }
+  .ChocolateCard-image { width: 190px; }
+}
+
+@media (max-width: 1100px) {
+  .ChocolateCard { padding: 80px 5%; }
+  .ChocolateCard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+  .ChocolateCard-heading h2 { font-size: 2.8rem; }
+}
+
+@media (max-width: 768px) {
+  .ChocolateCard { padding: 70px 20px; }
+  .ChocolateCard-grid { grid-template-columns: 1fr; gap: 25px; }
+  .ChocolateCard-card { min-height: 500px; }
+  .ChocolateCard-imageArea { height: 300px; }
+  .ChocolateCard-image { width: 170px; height: 220px; }
+  .ChocolateCard-heading h2 { font-size: 2.3rem; }
+  .ChocolateCard-heading p { font-size: 15px; }
+  .ChocolateCard-content { padding: 0 22px 22px; }
+  .ChocolateCard-content h3 { font-size: 24px; }
+  .ChocolateCard-footer { align-items: flex-start; }
+  .ChocolateCard-bottom { margin-top: 45px; }
+  .ChocolateCard-bottom button { width: 100%; }
+  .ChocolateCard-floatingBean, .ChocolateCard-floatingLeaf { opacity: 0.1; }
+}
+
+@media (max-width: 480px) {
+  .ChocolateCard { padding: 60px 18px; }
+  .ChocolateCard-heading { margin-bottom: 50px; }
+  .ChocolateCard-heading h2 { font-size: 2rem; }
+  .ChocolateCard-heading p, .ChocolateCard-content p, .ChocolateCard-footer button, .ChocolateCard-bottom button { font-size: 14px; }
+  .ChocolateCard-tag { padding: 8px 18px; font-size: 12px; }
+  .ChocolateCard-card { min-height: 470px; border-radius: 22px; }
+  .ChocolateCard-imageArea { height: 270px; }
+  .ChocolateCard-image { width: 145px; height: 190px; }
+  .ChocolateCard-ring { width: 180px; height: 180px; }
+  .ChocolateCard-platform { width: 140px; }
+  .ChocolateCard-content h3 { font-size: 22px; }
+  .ChocolateCard-content p { margin-bottom: 20px; }
+  .ChocolateCard-footer { flex-direction: row; align-items: center; }
+  .ChocolateCard-footer > span { padding: 8px 14px; }
+  .ChocolateCard-bottom button { padding: 16px 25px; }
+  .ChocolateCard-bean, .ChocolateCard-piece { transform: scale(0.8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ChocolateCard *, .ChocolateCard *::before, .ChocolateCard *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -18,13 +18,13 @@ import Honeyaddtocart from "./Component/Honeyaddtocart/Honeyaddtocart";
 // Components
 import Footer from "./Component/Footer/Footer";
 import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
-import Cart from "./Component/Cart/Cart";
 import MyWishlist from "./Component/MyWishlist/MyWishlist";
 import Account from "./Component/Account/Account";
 import OurProducts from "./Component/OurProducts/OurProducts";
 import PrivacyPolicy from "./Component/PrivacyPolicy/PrivacyPolicy";
 import TermsAndConditions from "./Component/TermsAndConditions/TermsAndConditions";
 import Floating from "./Component/Floating/Floating";
+import Cart from "./Component/Cart/Cart";
 
 
 const App = () => {
@@ -50,15 +50,49 @@ const App = () => {
           <Route path="/blog" element={<Blog />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/blogDetails" element={<BlogDetails />} />
-          <Route path="/honeyaddtocart/:id" element={<Honeyaddtocart />} />
-          <Route path="/premiumcollection/:id" element={<PremimuCollection />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/wishlist" element={<MyWishlist />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/ourproduct" element={<OurProducts />} />
-          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-          <Route path="/termandcondition" element={<TermsAndConditions />} />
+
+          <Route
+            path="/blogDetails"
+            element={<BlogDetails />}
+          />
+
+          <Route
+            path="/premiumcollection"
+            element={<PremimuCollection />}
+          />
+
+          
+
+          <Route
+            path="/wishlist"
+            element={<MyWishlist />}
+            />
+              
+               <Route
+            path="/cart"
+            element={<Cart />}
+            />
+
+
+          <Route
+            path="/account"
+            element={<Account />}
+          />
+
+          <Route
+            path="/ourproduct"
+            element={<OurProducts />}
+          />
+
+          <Route
+            path="/privacypolicy"
+            element={<PrivacyPolicy />}
+          />
+
+          <Route
+            path="/termandcondition"
+            element={<TermsAndConditions />}
+          />
         </Routes>
       </main>
 
