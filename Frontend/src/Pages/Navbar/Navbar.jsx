@@ -46,6 +46,10 @@ const Navbar = () => {
             About
           </NavLink>
 
+          <NavLink to="/ourproduct" onClick={closeMenu}>
+            Our Products
+          </NavLink>
+
           <NavLink to="/honey" onClick={closeMenu}>
             Honey
           </NavLink>
@@ -76,7 +80,6 @@ const Navbar = () => {
             <div className="Navbar-action-icon-wrap">
               <FiHeart className="Navbar-action-icon" />
             </div>
-
             <span>Wishlist</span>
           </NavLink>
 
@@ -89,7 +92,6 @@ const Navbar = () => {
             <div className="Navbar-action-icon-wrap">
               <FiUser className="Navbar-action-icon" />
             </div>
-
             <span>Account</span>
           </NavLink>
 
@@ -101,17 +103,13 @@ const Navbar = () => {
             aria-label="Open shopping cart"
           >
             <div className="Navbar-action-icon-wrap">
-
               <FiShoppingCart className="Navbar-action-icon" />
-
               {cartItemCount > 0 && (
                 <span className="Navbar-badge">
                   {cartItemCount}
                 </span>
               )}
-
             </div>
-
             <span>Cart</span>
           </NavLink>
 
@@ -154,6 +152,10 @@ const Navbar = () => {
           About
         </NavLink>
 
+        <NavLink to="/ourproduct" onClick={closeMenu}>
+          Our Products
+        </NavLink>
+
         <NavLink to="/honey" onClick={closeMenu}>
           Honey
         </NavLink>
@@ -182,7 +184,6 @@ const Navbar = () => {
             <div className="Navbar-action-icon-wrap">
               <FiHeart className="Navbar-action-icon" />
             </div>
-
             <span>Wishlist</span>
           </NavLink>
 
@@ -195,7 +196,6 @@ const Navbar = () => {
             <div className="Navbar-action-icon-wrap">
               <FiUser className="Navbar-action-icon" />
             </div>
-
             <span>Account</span>
           </NavLink>
 
@@ -207,17 +207,13 @@ const Navbar = () => {
             aria-label="Open shopping cart"
           >
             <div className="Navbar-action-icon-wrap">
-
               <FiShoppingCart className="Navbar-action-icon" />
-
               {cartItemCount > 0 && (
                 <span className="Navbar-badge">
                   {cartItemCount}
                 </span>
               )}
-
             </div>
-
             <span>Cart</span>
           </NavLink>
 

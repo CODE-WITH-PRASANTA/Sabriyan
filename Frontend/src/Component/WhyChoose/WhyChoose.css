@@ -1,209 +1,492 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&display=swap');
 
-/* Base Section & Background Zoom */
+/* =========================================================
+   BASE SECTION
+========================================================= */
+
 .whyChoose {
   min-height: 100vh;
   width: 100%;
   position: relative;
   overflow: hidden;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
   animation: bgZoom 25s infinite alternate ease-in-out;
+
   padding: 60px 20px;
+
   box-sizing: border-box;
 }
 
 @keyframes bgZoom {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
-/* Dark Forest Overlay */
+/* =========================================================
+   DARK OVERLAY
+========================================================= */
+
 .whyChoose-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 30, 0, 0.45) 0%, rgba(0, 0, 0, 0.75) 100%);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 30, 0, 0.45) 0%,
+      rgba(0, 0, 0, 0.78) 100%
+    );
+
   z-index: 1;
 }
 
-/* Floating Fog */
+/* =========================================================
+   FLOATING FOG
+========================================================= */
+
 .whyChoose-fog {
   position: absolute;
+
   width: 50%;
   height: 50%;
+
   background: rgba(255, 255, 255, 0.06);
+
   filter: blur(80px);
+
   opacity: 0.15;
+
   pointer-events: none;
+
   z-index: 1;
+
   border-radius: 50%;
 }
-.fog-1 { top: 10%; left: -10%; animation: fogDrift 40s infinite ease-in-out alternate; }
-.fog-2 { bottom: 0; right: -10%; animation: fogDrift 35s infinite ease-in-out alternate-reverse; }
-.fog-3 { top: 40%; left: 30%; animation: fogDrift 45s infinite ease-in-out alternate; }
 
-@keyframes fogDrift {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(120px); }
+.fog-1 {
+  top: 10%;
+  left: -10%;
+
+  animation:
+    fogDrift 40s infinite ease-in-out alternate;
 }
 
-/* Sun Rays */
+.fog-2 {
+  bottom: 0;
+  right: -10%;
+
+  animation:
+    fogDrift 35s infinite ease-in-out alternate-reverse;
+}
+
+.fog-3 {
+  top: 40%;
+  left: 30%;
+
+  animation:
+    fogDrift 45s infinite ease-in-out alternate;
+}
+
+@keyframes fogDrift {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(120px);
+  }
+}
+
+/* =========================================================
+   SUN RAYS
+========================================================= */
+
 .whyChoose-sunRays {
   position: absolute;
+
   top: -100px;
   left: 50%;
+
   transform: translateX(-50%);
+
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.35) 0%, rgba(255, 215, 0, 0) 70%);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 215, 0, 0.35) 0%,
+      rgba(255, 215, 0, 0) 70%
+    );
+
   pointer-events: none;
+
   z-index: 1;
-  animation: rayPulse 12s infinite ease-in-out alternate;
+
+  animation:
+    rayPulse 12s infinite ease-in-out alternate;
 }
 
 @keyframes rayPulse {
-  0% { opacity: 0.4; transform: translateX(-50%) scale(0.9); }
-  100% { opacity: 0.8; transform: translateX(-50%) scale(1.15); }
+  0% {
+    opacity: 0.4;
+
+    transform:
+      translateX(-50%)
+      scale(0.9);
+  }
+
+  100% {
+    opacity: 0.8;
+
+    transform:
+      translateX(-50%)
+      scale(1.15);
+  }
 }
 
-/* Parallax Wrapper */
+/* =========================================================
+   PARALLAX WRAPPER
+========================================================= */
+
 .whyChoose-parallax {
   position: relative;
+
   width: 100%;
   max-width: 1350px;
+
   z-index: 2;
+
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Particles */
+/* =========================================================
+   PARTICLES
+========================================================= */
+
 .whyChoose-particles {
   position: absolute;
   inset: 0;
+
   pointer-events: none;
 }
 
 .whyChoose-particle {
   position: absolute;
+
   bottom: -10px;
+
   width: 3px;
   height: 3px;
+
   border-radius: 50%;
+
   background: #FFD54F;
-  box-shadow: 0 0 8px #FFD54F, 0 0 12px #FFC107;
-  animation: particleUp 8s infinite linear;
+
+  box-shadow:
+    0 0 8px #FFD54F,
+    0 0 12px #FFC107;
+
+  animation:
+    particleUp 8s infinite linear;
 }
 
 @keyframes particleUp {
-  0% { transform: translateY(0) scale(1); opacity: 0; }
-  50% { opacity: 0.85; }
-  100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+  0% {
+    transform:
+      translateY(0)
+      scale(1);
+
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+
+  100% {
+    transform:
+      translateY(-100vh)
+      scale(1.5);
+
+    opacity: 0;
+  }
 }
 
-/* Leaves */
+/* =========================================================
+   FLOATING LEAVES
+========================================================= */
+
 .whyChoose-leaves {
   position: absolute;
   inset: 0;
+
   pointer-events: none;
 }
 
 .whyChoose-leaf {
   position: absolute;
+
   top: -20px;
+
   width: 12px;
   height: 20px;
+
   background: rgba(124, 182, 48, 0.7);
-  border-radius: 0% 100% 0% 100% / 0% 100% 0% 100%;
-  animation: leafFall 12s infinite linear;
+
+  border-radius:
+    0% 100% 0% 100%
+    /
+    0% 100% 0% 100%;
+
+  animation:
+    leafFall 12s infinite linear;
 }
 
 @keyframes leafFall {
-  0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.8; }
-  100% { transform: translateY(110vh) rotate(360deg) translateX(60px); opacity: 0; }
+  0% {
+    transform:
+      translateY(0)
+      rotate(0deg)
+      translateX(0);
+
+    opacity: 0.8;
+  }
+
+  100% {
+    transform:
+      translateY(110vh)
+      rotate(360deg)
+      translateX(60px);
+
+    opacity: 0;
+  }
 }
 
-/* Flying Bees SVG */
+/* =========================================================
+   FLYING BEES
+========================================================= */
+
 .whyChoose-bee {
   position: absolute;
+
   width: 42px;
   height: 42px;
+
   z-index: 6;
+
   pointer-events: none;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+
+  filter:
+    drop-shadow(
+      0 4px 8px rgba(0, 0, 0, 0.5)
+    );
 }
 
-.whyChoose-bee-svg { width: 100%; height: 100%; }
+.whyChoose-bee-svg {
+  width: 100%;
+  height: 100%;
+}
 
 .whyChoose-bee-wings {
   transform-origin: center;
-  animation: wingVibrate 0.15s infinite alternate ease-in-out;
+
+  animation:
+    wingVibrate
+    0.15s
+    infinite
+    alternate
+    ease-in-out;
 }
 
 @keyframes wingVibrate {
-  0% { transform: rotate(-6deg); }
-  100% { transform: rotate(6deg); }
+  0% {
+    transform: rotate(-6deg);
+  }
+
+  100% {
+    transform: rotate(6deg);
+  }
 }
 
-.bee-1 { top: 8%; left: 8%; }
-.bee-2 { top: 15%; right: 10%; }
-.bee-3 { top: 38%; left: 32%; }
-.bee-4 { top: 35%; right: 30%; }
-.bee-5 { bottom: 18%; left: 12%; }
-.bee-6 { bottom: 22%; right: 14%; }
+.bee-1 {
+  top: 8%;
+  left: 8%;
+}
 
-/* Header Section */
+.bee-2 {
+  top: 15%;
+  right: 10%;
+}
+
+.bee-3 {
+  top: 38%;
+  left: 32%;
+}
+
+.bee-4 {
+  top: 35%;
+  right: 30%;
+}
+
+.bee-5 {
+  bottom: 18%;
+  left: 12%;
+}
+
+.bee-6 {
+  bottom: 22%;
+  right: 14%;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .whyChoose-header {
+  width: 100%;
+
   text-align: center;
+
   margin-bottom: 35px;
+
+  padding: 0 15px;
+
+  box-sizing: border-box;
 }
+
+/* Badge */
 
 .whyChoose-badge {
   display: inline-block;
-  background: linear-gradient(180deg, #3A5A1B 0%, #1E330D 100%);
+
+  background:
+    linear-gradient(
+      180deg,
+      #3A5A1B 0%,
+      #1E330D 100%
+    );
+
   border: 1px solid #FFD54F;
+
   border-radius: 30px;
+
   padding: 6px 20px;
+
   font-family: 'Cinzel', serif;
+
   font-size: 0.85rem;
+
   color: #FFD54F;
+
   font-weight: 700;
+
   letter-spacing: 2px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.4);
+
   margin-bottom: 12px;
 }
 
+/* Main Heading */
+
 .whyChoose-title {
   font-family: 'Cinzel', serif;
+
   font-size: 2.8rem;
+
   font-weight: 800;
+
   color: #FFFFFF;
+
   margin: 0;
-  text-shadow: 0 10px 25px rgba(0,0,0,0.7);
+
+  line-height: 1.2;
+
+  text-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.7);
 }
 
 .title-highlight {
   color: #7CB630;
 }
 
-/* Main Grid Container */
+/* =========================================================
+   SEO INTRODUCTION
+========================================================= */
+
+.whyChoose-intro {
+  max-width: 760px;
+
+  margin: 16px auto 0;
+
+  color:
+    rgba(255, 255, 255, 0.78);
+
+  font-family: 'Montserrat', sans-serif;
+
+  font-size: 0.92rem;
+
+  font-weight: 400;
+
+  line-height: 1.7;
+
+  text-align: center;
+}
+
+.whyChoose-intro strong {
+  color: #B5E048;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
 .whyChoose-container {
   display: grid;
-  grid-template-columns: minmax(300px, 1fr) minmax(380px, 1.2fr) minmax(300px, 1fr);
+
+  grid-template-columns:
+    minmax(300px, 1fr)
+    minmax(380px, 1.2fr)
+    minmax(300px, 1fr);
+
   align-items: center;
+
   gap: 20px;
+
   width: 100%;
 }
 
+/* Columns */
+
 .whyChoose-col {
   display: flex;
+
   flex-direction: column;
-  gap: 60px; /* Space out top and bottom cards vertically */
+
+  gap: 60px;
 }
 
 .left-col {
@@ -214,163 +497,594 @@
   padding-left: 10px;
 }
 
-/* Center Stage: The Honey Bottle Container */
+/* =========================================================
+   CENTER PRODUCT STAGE
+========================================================= */
+
 .whyChoose-centerStage {
   min-height: 420px;
+
   height: 100%;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   position: relative;
-  /* Maintain position for parallax effect from parent wrapper */
 }
 
 .whyChoose-bottleWrapper {
   position: relative;
-  z-index: 5; /* Sit between cards and background */
+
+  z-index: 5;
+
   width: 100%;
+
   display: flex;
+
   justify-content: center;
-  will-change: transform, opacity;
+
+  will-change:
+    transform,
+    opacity;
 }
 
 .whyChoose-bottleImg {
-  width: 85%; /* Adjust this to match the requested size */
-  max-width: 320px; /* Maximum size for large screens */
+  width: 85%;
+
+  max-width: 320px;
+
   height: auto;
+
   display: block;
+
   object-fit: contain;
-  /* Use a composite shadow for depth and environmental glow */
-  filter: 
-    drop-shadow(0 20px 40px rgba(0,0,0,0.8)) 
-    drop-shadow(0 0 15px rgba(255, 213, 79, 0.2));
+
+  filter:
+    drop-shadow(
+      0 20px 40px rgba(0, 0, 0, 0.8)
+    )
+    drop-shadow(
+      0 0 15px rgba(255, 213, 79, 0.2)
+    );
 }
 
-/* Glass Benefit Cards */
+/* =========================================================
+   BENEFIT CARDS
+========================================================= */
+
 .whyChoose-card {
   display: flex;
+
   align-items: center;
+
   gap: 18px;
-  background: rgba(15, 40, 15, 0.65);
+
+  background:
+    rgba(15, 40, 15, 0.65);
+
   backdrop-filter: blur(18px);
+
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.15);
+
   border-radius: 50px;
+
   padding: 18px 26px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  transition: all 0.4s ease;
+
+  box-shadow:
+    0 20px 60px
+    rgba(0, 0, 0, 0.5);
+
+  transition:
+    all 0.4s ease;
+
   perspective: 1000px;
+
   position: relative;
-  z-index: 6; /* Cards should sit in front of the bottle */
+
+  z-index: 6;
 }
 
 .whyChoose-card:hover {
-  border-color: rgba(255, 213, 79, 0.5);
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 213, 79, 0.25);
-  z-index: 10; /* Bring hovered card above others */
+  border-color:
+    rgba(255, 213, 79, 0.5);
+
+  box-shadow:
+    0 25px 70px
+    rgba(0, 0, 0, 0.7),
+    0 0 25px
+    rgba(255, 213, 79, 0.25);
+
+  z-index: 10;
 }
 
-/* Icons Wrapper */
+/* =========================================================
+   ICON
+========================================================= */
+
 .whyChoose-iconWrapper {
   width: 55px;
   height: 55px;
+
   border-radius: 50%;
-  background: linear-gradient(135deg, #7CB630 0%, #3A5A1B 100%);
+
+  background:
+    linear-gradient(
+      135deg,
+      #7CB630 0%,
+      #3A5A1B 100%
+    );
+
   border: 2px solid #FFD54F;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   color: #FFFFFF;
+
   font-size: 1.4rem;
+
   flex-shrink: 0;
-  box-shadow: 0 0 15px rgba(255, 213, 79, 0.5);
-  animation: iconPulse 3s infinite ease-in-out alternate;
+
+  box-shadow:
+    0 0 15px
+    rgba(255, 213, 79, 0.5);
+
+  animation:
+    iconPulse
+    3s infinite
+    ease-in-out
+    alternate;
 }
 
 @keyframes iconPulse {
-  0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 213, 79, 0.4); }
-  100% { transform: scale(1.06); box-shadow: 0 0 25px rgba(255, 213, 79, 0.8); }
+  0% {
+    transform: scale(1);
+
+    box-shadow:
+      0 0 15px
+      rgba(255, 213, 79, 0.4);
+  }
+
+  100% {
+    transform: scale(1.06);
+
+    box-shadow:
+      0 0 25px
+      rgba(255, 213, 79, 0.8);
+  }
 }
+
+/* Card Title */
 
 .whyChoose-cardTitle {
   font-family: 'Cinzel', serif;
+
   font-size: 1.1rem;
+
   font-weight: 700;
+
   color: #FFD54F;
-  margin: 0 0 4px 0;
+
+  margin:
+    0 0 4px 0;
 }
+
+/* Card Description */
 
 .whyChoose-cardDesc {
   font-family: 'Montserrat', sans-serif;
+
   font-size: 0.82rem;
+
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.85);
+
+  color:
+    rgba(255, 255, 255, 0.85);
+
   margin: 0;
 }
 
-/* Honey Dripping Effect */
+/* =========================================================
+   SEO SUPPORTING CONTENT
+========================================================= */
+
+.whyChoose-seoText {
+  width: 100%;
+
+  max-width: 850px;
+
+  margin: 35px auto 0;
+
+  padding: 0 20px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+.whyChoose-seoText p {
+  margin: 0;
+
+  font-family: 'Montserrat', sans-serif;
+
+  font-size: 0.86rem;
+
+  line-height: 1.75;
+
+  font-weight: 400;
+
+  color:
+    rgba(255, 255, 255, 0.68);
+}
+
+.whyChoose-seoText strong {
+  color: #B5E048;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   HONEY / PRODUCT DRIPPING EFFECT
+========================================================= */
+
 .whyChoose-dripsContainer {
   position: absolute;
+
   bottom: 0;
+
   width: 100%;
+
   height: 30px;
+
   pointer-events: none;
 }
 
 .whyChoose-drip {
   position: absolute;
+
   width: 8px;
   height: 12px;
+
   background: #FFC107;
-  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
-  box-shadow: 0 0 8px #FFC107;
-  animation: dripFall 3s infinite ease-in-out;
+
+  border-radius:
+    50% 50% 50% 50%
+    /
+    30% 30% 70% 70%;
+
+  box-shadow:
+    0 0 8px #FFC107;
+
+  animation:
+    dripFall
+    3s
+    infinite
+    ease-in-out;
 }
 
-.drip-1 { left: 25%; animation-delay: 0s; }
-.drip-2 { left: 50%; animation-delay: 1.2s; }
-.drip-3 { left: 75%; animation-delay: 0.6s; }
+.drip-1 {
+  left: 25%;
+
+  animation-delay: 0s;
+}
+
+.drip-2 {
+  left: 50%;
+
+  animation-delay: 1.2s;
+}
+
+.drip-3 {
+  left: 75%;
+
+  animation-delay: 0.6s;
+}
 
 @keyframes dripFall {
-  0% { transform: translateY(0) scaleY(1); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateY(25px) scaleY(1.4); opacity: 0; }
+  0% {
+    transform:
+      translateY(0)
+      scaleY(1);
+
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translateY(25px)
+      scaleY(1.4);
+
+    opacity: 0;
+  }
 }
 
-/* Responsive Layout */
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .whyChoose-container {
+    grid-template-columns:
+      minmax(250px, 1fr)
+      minmax(300px, 1fr)
+      minmax(250px, 1fr);
+
+    gap: 15px;
+  }
+
+  .whyChoose-col {
+    gap: 35px;
+  }
+
+  .whyChoose-card {
+    padding: 15px 18px;
+
+    gap: 12px;
+  }
+
+  .whyChoose-cardTitle {
+    font-size: 0.95rem;
+  }
+
+  .whyChoose-cardDesc {
+    font-size: 0.75rem;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
 @media (max-width: 1024px) {
+
+  .whyChoose {
+    padding:
+      55px 20px;
+  }
+
   .whyChoose-container {
     grid-template-columns: 1fr;
+
     gap: 30px;
   }
+
   .whyChoose-centerStage {
     min-height: auto;
-    margin: 20px 0; /* Add margin around bottle on smaller screens */
+
+    margin:
+      20px 0;
   }
+
   .whyChoose-bottleImg {
-    width: 60%; /* Slightly smaller relative width on mobile */
+    width: 60%;
+
+    max-width: 300px;
   }
-  .left-col, .right-col {
+
+  .left-col,
+  .right-col {
     padding: 0;
+
     gap: 25px;
   }
+
   .whyChoose-title {
     font-size: 2.2rem;
   }
+
+  .whyChoose-intro {
+    max-width: 650px;
+  }
+
+  .whyChoose-seoText {
+    margin-top: 30px;
+  }
 }
 
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 640px) {
+
   .whyChoose {
-    padding: 40px 15px;
+    min-height: auto;
+
+    padding:
+      50px 15px 45px;
   }
+
+  .whyChoose-header {
+    margin-bottom: 25px;
+  }
+
+  .whyChoose-badge {
+    font-size: 0.68rem;
+
+    letter-spacing: 1.5px;
+
+    padding:
+      5px 14px;
+  }
+
   .whyChoose-title {
     font-size: 1.7rem;
+
+    line-height: 1.25;
   }
+
+  .whyChoose-intro {
+    padding: 0 10px;
+
+    font-size: 0.8rem;
+
+    line-height: 1.65;
+  }
+
   .whyChoose-bottleImg {
-    width: 75%; /* Increase relative width back slightly for small screens */
+    width: 75%;
+
+    max-width: 260px;
   }
+
+  .whyChoose-centerStage {
+    margin:
+      10px 0;
+  }
+
   .whyChoose-card {
+    width: 100%;
+
+    box-sizing: border-box;
+
     border-radius: 25px;
-    padding: 14px 18px;
+
+    padding:
+      14px 18px;
+
+    gap: 13px;
+  }
+
+  .whyChoose-iconWrapper {
+    width: 48px;
+    height: 48px;
+
+    font-size: 1.15rem;
+  }
+
+  .whyChoose-cardTitle {
+    font-size: 0.9rem;
+  }
+
+  .whyChoose-cardDesc {
+    font-size: 0.72rem;
+
+    line-height: 1.5;
+  }
+
+  .whyChoose-seoText {
+    margin-top: 25px;
+
+    padding:
+      0 12px;
+  }
+
+  .whyChoose-seoText p {
+    font-size: 0.75rem;
+
+    line-height: 1.7;
+  }
+
+  /* Reduce decorative elements */
+
+  .whyChoose-bee {
+    width: 30px;
+    height: 30px;
+  }
+
+  .whyChoose-sunRays {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .whyChoose {
+    padding:
+      40px 12px;
+  }
+
+  .whyChoose-title {
+    font-size: 1.45rem;
+  }
+
+  .whyChoose-badge {
+    font-size: 0.6rem;
+
+    padding:
+      5px 12px;
+  }
+
+  .whyChoose-intro {
+    font-size: 0.74rem;
+
+    line-height: 1.65;
+  }
+
+  .whyChoose-card {
+    padding:
+      12px 14px;
+  }
+
+  .whyChoose-iconWrapper {
+    width: 43px;
+    height: 43px;
+
+    font-size: 1rem;
+  }
+
+  .whyChoose-cardTitle {
+    font-size: 0.82rem;
+  }
+
+  .whyChoose-cardDesc {
+    font-size: 0.67rem;
+  }
+
+  .whyChoose-seoText {
+    padding: 0 8px;
+  }
+
+  .whyChoose-seoText p {
+    font-size: 0.7rem;
+  }
+
+  /* Hide some decorative bees on very small screens */
+
+  .bee-3,
+  .bee-4 {
+    display: none;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .whyChoose,
+  .whyChoose-fog,
+  .whyChoose-sunRays,
+  .whyChoose-particle,
+  .whyChoose-leaf,
+  .whyChoose-bee-wings,
+  .whyChoose-iconWrapper,
+  .whyChoose-drip {
+    animation: none !important;
+  }
+
+  .whyChoose-card {
+    transition: none;
   }
 }

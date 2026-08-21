@@ -10,8 +10,10 @@ import Blog from "./Pages/Blog/Blog";
 import Faq from "./Pages/Faq/Faq";
 import Contact from "./Pages/Contact/Contact";
 import BlogDetails from "./Pages/BlogDetails/BlogDetails";
-import Honeyaddtocart from "./Component/Honeyaddtocart/Honeyaddtocart";
+
 import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
+import Honeyaddtocart from "./Component/Honeyaddtocart/Honeyaddtocart";
+
 
 // Components
 import Footer from "./Component/Footer/Footer";
@@ -24,28 +26,29 @@ import TermsAndConditions from "./Component/TermsAndConditions/TermsAndCondition
 import Floating from "./Component/Floating/Floating";
 import Cart from "./Component/Cart/Cart";
 
+
 const App = () => {
   return (
     <BrowserRouter>
-      {/* Scroll to top on route change */}
       <ScrollToTop />
-
-      {/* Navbar */}
       <Navbar />
 
-      {/* Routes */}
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
 
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/honey" element={<Honey />} />
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blogDetails" element={<BlogDetails />} />
+       
           <Route path="/about" element={<About />} />
-
           <Route path="/honey" element={<Honey />} />
-
           <Route path="/blog" element={<Blog />} />
-
           <Route path="/faq" element={<Faq />} />
-
           <Route path="/contact" element={<Contact />} />
 
           <Route
@@ -93,10 +96,7 @@ const App = () => {
         </Routes>
       </main>
 
-      {/* Footer */}
       <Footer />
-
-      {/* Floating */}
       <Floating />
     </BrowserRouter>
   );

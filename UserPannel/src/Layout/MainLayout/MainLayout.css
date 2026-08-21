@@ -1,0 +1,33 @@
+.MainLayout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  background: #f5f6fa;
+  overflow: hidden;
+}
+
+.MainLayout_Content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 0;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+
+.MainLayout_Page {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .MainLayout_Content,
+  .MainLayout_ContentCollapsed {
+    margin-left: 0;
+    width: 100%;
+  }
+}
