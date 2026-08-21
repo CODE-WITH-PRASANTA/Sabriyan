@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import API, { IMG_URL } from "../../api/axios";
+import API, { IMG_URL } from '../../api/axios';
+   
 import {
   ShoppingBag,
   Package,
@@ -47,71 +48,78 @@ const INITIAL_FORM_STATE = {
   galleryImages: []
 };
 
+export const resolveImgUrl = (path) => {
+  if (!path) return 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&q=80&w=800';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:')) {
+    return path;
+  }
+  const cleanPath = path.replace(/\\/g, '/').replace(/^\/?public\/?/, '');
+  const base = IMG_URL || 'http://localhost:5000';
+  return `${base.replace(/\/$/, '')}/${cleanPath.replace(/^\//, '')}`;
+};
+
 const PremiumCollection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Raw File State for Uploads
+  // Binary Files State
   const [mainImageFile, setMainImageFile] = useState(null);
   const [bgImageFile, setBgImageFile] = useState(null);
   const [galleryFiles, setGalleryFiles] = useState([]);
 
-  // Hidden File Input References
+  // File Input References
   const mainImageInputRef = useRef(null);
   const bgImageInputRef = useRef(null);
   const galleryImageInputRef = useRef(null);
 
-  // Filters & Search State
+  // Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [featuredFilter, setFeaturedFilter] = useState('All');
   const [ratingFilter, setRatingFilter] = useState('All Ratings');
 
-  // Modal / Preview state
+  // Modal & Pagination
   const [viewProduct, setViewProduct] = useState(null);
-
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
-  // 1. Fetch Products from Backend API
-  const fetchProducts = async () => {
+  // 1. Fetch Products
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await API.get('/premium-collection', {
-        params: {
-          search: searchQuery,
-          category: categoryFilter.trim() !== '' ? categoryFilter : undefined,
-          status: statusFilter,
-          featured: featuredFilter,
-          rating: ratingFilter,
-          page: currentPage,
-          limit: itemsPerPage
-        }
-      });
+      const params = {
+        page: currentPage,
+        limit: itemsPerPage
+      };
+
+      if (searchQuery.trim()) params.search = searchQuery.trim();
+      if (categoryFilter.trim()) params.category = categoryFilter.trim();
+      if (statusFilter !== 'All Status') params.status = statusFilter;
+      if (featuredFilter !== 'All') params.featured = featuredFilter === 'Featured' ? 'Yes' : 'No';
+      if (ratingFilter !== 'All Ratings') params.rating = ratingFilter;
+
+      const response = await API.get('/premium-collection', { params });
 
       if (response.data && response.data.success) {
         setProducts(response.data.data || []);
         setTotalPages(response.data.totalPages || 1);
-        setTotalCount(response.data.total || 0);
       }
     } catch (err) {
       console.error('Failed to fetch products:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, categoryFilter, statusFilter, featuredFilter, ratingFilter, currentPage]);
 
   useEffect(() => {
     fetchProducts();
-  }, [searchQuery, categoryFilter, statusFilter, featuredFilter, ratingFilter, currentPage]);
+  }, [fetchProducts]);
 
-  // Handle Text Input Changes
+  // Form Field Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -119,6 +127,22 @@ const PremiumCollection = () => {
 
   const handleEditorChange = (content) => {
     setFormData((prev) => ({ ...prev, description: content }));
+  };
+
+  const handlePriceChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+      const mrpVal = parseFloat(name === 'mrp' ? value : prev.mrp) || 0;
+      const sellingVal = parseFloat(name === 'sellingPrice' ? value : prev.sellingPrice) || 0;
+      
+      if (mrpVal > 0 && sellingVal > 0 && sellingVal <= mrpVal) {
+        updated.discount = Math.round(((mrpVal - sellingVal) / mrpVal) * 100).toString();
+      } else {
+        updated.discount = '';
+      }
+      return updated;
+    });
   };
 
   // Image Upload Handlers
@@ -145,7 +169,7 @@ const PremiumCollection = () => {
       const newUrls = files.map((f) => URL.createObjectURL(f));
       setFormData((prev) => ({
         ...prev,
-        galleryImages: [...prev.galleryImages, ...newUrls]
+        galleryImages: [...(prev.galleryImages || []), ...newUrls]
       }));
     }
   };
@@ -158,41 +182,31 @@ const PremiumCollection = () => {
     setGalleryFiles((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   };
 
-  const handlePriceChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => {
-      const updated = { ...prev, [name]: value };
-      const mrp = parseFloat(updated.mrp) || 0;
-      const selling = parseFloat(updated.sellingPrice) || 0;
-      if (mrp > 0 && selling <= mrp) {
-        updated.discount = Math.round(((mrp - selling) / mrp) * 100).toString();
-      } else {
-        updated.discount = '';
-      }
-      return updated;
-    });
-  };
-
-  // 2. Publish/Update Form Handler via FormData
+  // Submit Handler
   const handlePublish = async (e) => {
     e.preventDefault();
-    if (!formData.name) return alert('Please enter product name');
-    if (!formData.category) return alert('Please enter product category');
+    if (!formData.name.trim()) return alert('Please enter product name');
+    if (!formData.category.trim()) return alert('Please enter product category');
+    if (!formData.sellingPrice) return alert('Please enter selling price');
 
     try {
       const data = new FormData();
 
-      // Append standard text fields
       Object.keys(formData).forEach((key) => {
-        if (key !== 'image' && key !== 'bgImage' && key !== 'galleryImages' && key !== '_id') {
-          data.append(key, formData[key]);
+        if (!['image', 'bgImage', 'galleryImages', '_id'].includes(key)) {
+          data.append(key, formData[key] ?? '');
         }
       });
 
-      // Append binary files
       if (mainImageFile) data.append('image', mainImageFile);
       if (bgImageFile) data.append('bgImage', bgImageFile);
       galleryFiles.forEach((file) => data.append('galleryImages', file));
+
+      // Append existing gallery image URLs when editing
+      if (isEditing) {
+        const existingGallery = (formData.galleryImages || []).filter((img) => !img.startsWith('blob:'));
+        data.append('existingGalleryImages', JSON.stringify(existingGallery));
+      }
 
       if (isEditing && formData._id) {
         await API.put(`/premium-collection/${formData._id}`, data, {
@@ -209,7 +223,7 @@ const PremiumCollection = () => {
       handleReset();
       fetchProducts();
     } catch (err) {
-      console.error('Failed to save product:', err);
+      console.error('Save error:', err);
       alert(err.response?.data?.message || 'Error saving product');
     }
   };
@@ -220,38 +234,36 @@ const PremiumCollection = () => {
     setBgImageFile(null);
     setGalleryFiles([]);
     setIsEditing(false);
+    if (mainImageInputRef.current) mainImageInputRef.current.value = '';
+    if (bgImageInputRef.current) bgImageInputRef.current.value = '';
+    if (galleryImageInputRef.current) galleryImageInputRef.current.value = '';
   };
 
   const handleEdit = (product) => {
     setFormData({
+      ...INITIAL_FORM_STATE,
       ...product,
-      featured: product.featured ? 'Yes' : 'No',
-      trending: product.trending ? 'Yes' : 'No'
+      featured: product.featured === true || product.featured === 'Yes' ? 'Yes' : 'No',
+      trending: product.trending === true || product.trending === 'Yes' ? 'Yes' : 'No',
+      galleryImages: product.galleryImages || product.images || []
     });
+    setMainImageFile(null);
+    setBgImageFile(null);
+    setGalleryFiles([]);
     setIsEditing(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 3. Delete Product Handler
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         await API.delete(`/premium-collection/${id}`);
         fetchProducts();
       } catch (err) {
-        console.error('Failed to delete product:', err);
+        console.error('Delete error:', err);
         alert('Failed to delete product');
       }
     }
-  };
-
-  // Image Path Resolver Helper
-  const resolveImgUrl = (path) => {
-    if (!path) return "https://via.placeholder.com/400x400?text=No+Image";
-    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:')) {
-      return path;
-    }
-    return `${IMG_URL || ''}${path.startsWith('/') ? path : `/${path}`}`;
   };
 
   const renderStars = (rating, interactive = false) => (
@@ -261,9 +273,7 @@ const PremiumCollection = () => {
           key={star}
           size={interactive ? 18 : 14}
           className={`star-icon ${star <= rating ? 'filled' : 'empty'}`}
-          onClick={() => {
-            if (interactive) setFormData((prev) => ({ ...prev, rating: star }));
-          }}
+          onClick={() => interactive && setFormData((prev) => ({ ...prev, rating: star }))}
         />
       ))}
     </div>
@@ -280,7 +290,7 @@ const PremiumCollection = () => {
           </div>
 
           <form onSubmit={handlePublish} className="form-body">
-            {/* Basic Information */}
+            {/* Basic Info */}
             <div className="form-section">
               <h3 className="section-title">Basic Information</h3>
               <div className="form-row gap-12">
@@ -296,7 +306,7 @@ const PremiumCollection = () => {
                       if (!isEditing) {
                         setFormData((prev) => ({
                           ...prev,
-                          slug: e.target.value.toLowerCase().replace(/\s+/g, '-')
+                          slug: e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
                         }));
                       }
                     }}
@@ -321,7 +331,7 @@ const PremiumCollection = () => {
                   <input
                     type="text"
                     name="category"
-                    placeholder="e.g. Premium Collection, Craft Chocolates"
+                    placeholder="e.g. Premium Collection"
                     value={formData.category}
                     onChange={handleChange}
                     required
@@ -339,9 +349,9 @@ const PremiumCollection = () => {
                 </div>
               </div>
 
-              {/* Rich Text Editor */}
+              {/* Rich Text */}
               <div className="form-group mt-12">
-                <label>Description (Rich Text)</label>
+                <label>Description</label>
                 <div className="editor-wrapper">
                   <Editor
                     apiKey="8hswbe7bfeeneui9eb9gjgsym8ku30nx5gwre9808ajdzniu"
@@ -351,7 +361,7 @@ const PremiumCollection = () => {
                       height: 180,
                       menubar: false,
                       plugins: ['advlist', 'autolink', 'lists', 'link', 'code'],
-                      toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | removeformat',
+                      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | removeformat',
                       skin: 'oxide-dark',
                       content_css: 'dark'
                     }}
@@ -360,7 +370,7 @@ const PremiumCollection = () => {
               </div>
             </div>
 
-            {/* Price Information */}
+            {/* Pricing */}
             <div className="sub-card mt-16">
               <div className="sub-card-header">
                 <ShoppingBag size={16} />
@@ -378,29 +388,30 @@ const PremiumCollection = () => {
                   />
                 </div>
                 <div className="form-group flex-1">
-                  <label>Selling Price (₹)</label>
+                  <label>Selling Price (₹) <span className="req">*</span></label>
                   <input
                     type="number"
                     name="sellingPrice"
                     placeholder="0.00"
                     value={formData.sellingPrice}
                     onChange={handlePriceChange}
+                    required
                   />
                 </div>
                 <div className="form-group flex-1">
                   <label>Discount (%)</label>
                   <input
-                    type="number"
+                    type="text"
                     name="discount"
                     placeholder="Auto-calculated"
-                    value={formData.discount}
+                    value={formData.discount ? `${formData.discount}%` : ''}
                     readOnly
                   />
                 </div>
               </div>
             </div>
 
-            {/* Chocolate Details & Rating */}
+            {/* Specs & Attributes */}
             <div className="sub-card mt-12">
               <div className="sub-card-header">
                 <Package size={16} />
@@ -412,7 +423,7 @@ const PremiumCollection = () => {
                   <input
                     type="text"
                     name="cocoa"
-                    placeholder="e.g. 70"
+                    placeholder="e.g. 70%"
                     value={formData.cocoa}
                     onChange={handleChange}
                   />
@@ -422,37 +433,33 @@ const PremiumCollection = () => {
                   <input
                     type="text"
                     name="weight"
-                    placeholder="e.g. 80 gm"
+                    placeholder="e.g. 80g"
                     value={formData.weight}
                     onChange={handleChange}
                   />
                 </div>
                 <div className="form-group flex-1">
-                  <label>Sweetness Level</label>
-                  <select
-                    name="sweetness"
-                    value={formData.sweetness}
-                    onChange={handleChange}
-                  >
+                  <label>Sweetness</label>
+                  <select name="sweetness" value={formData.sweetness} onChange={handleChange}>
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
                   </select>
                 </div>
                 <div className="form-group flex-1">
-                  <label>Product Rating</label>
-                  <div className="star-select-wrapper">
+                  <label>Rating</label>
+                  <div className="star-select-wrapper mt-2">
                     {renderStars(formData.rating, true)}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Image Uploads */}
-            <div className="sub-card mt-12 bigger-image-card">
+            {/* Images */}
+            <div className="sub-card mt-12">
               <div className="sub-card-header">
-                <Upload size={18} />
-                <span>Product Images (Click to Upload / Change)</span>
+                <Upload size={16} />
+                <span>Product Images</span>
               </div>
 
               <input type="file" ref={mainImageInputRef} onChange={handleMainImageUpload} accept="image/*" style={{ display: 'none' }} />
@@ -460,13 +467,9 @@ const PremiumCollection = () => {
               <input type="file" ref={galleryImageInputRef} onChange={handleGalleryUpload} accept="image/*" multiple style={{ display: 'none' }} />
 
               <div className="image-upload-grid-large mt-12">
-                {/* Main Product Image */}
                 <div className="upload-box-large flex-1">
                   <label className="upload-lbl-large">Main Product Image</label>
-                  <div 
-                    className="large-preview-container"
-                    onClick={() => mainImageInputRef.current.click()}
-                  >
+                  <div className="large-preview-container" onClick={() => mainImageInputRef.current.click()}>
                     {formData.image ? (
                       <img src={resolveImgUrl(formData.image)} alt="Main Product" className="large-img-preview" />
                     ) : (
@@ -475,56 +478,39 @@ const PremiumCollection = () => {
                         <span>Upload Main Image</span>
                       </div>
                     )}
-                    <button type="button" className="btn-upload-overlay">
-                      <Upload size={14} /> Change Image
-                    </button>
+                    <button type="button" className="btn-upload-overlay">Change Image</button>
                   </div>
                 </div>
 
-                {/* Background Image */}
                 <div className="upload-box-large flex-1">
-                  <label className="upload-lbl-large">Background Image (Optional)</label>
-                  <div 
-                    className="large-preview-container"
-                    onClick={() => bgImageInputRef.current.click()}
-                  >
+                  <label className="upload-lbl-large">Background Banner (Optional)</label>
+                  <div className="large-preview-container" onClick={() => bgImageInputRef.current.click()}>
                     {formData.bgImage ? (
                       <img src={resolveImgUrl(formData.bgImage)} alt="Background" className="large-img-preview bg-banner" />
                     ) : (
                       <div className="upload-placeholder-box">
                         <Upload size={24} />
-                        <span>Upload Banner Image</span>
+                        <span>Upload Banner</span>
                       </div>
                     )}
-                    <button type="button" className="btn-upload-overlay">
-                      <Upload size={14} /> Change Image
-                    </button>
+                    <button type="button" className="btn-upload-overlay">Change Banner</button>
                   </div>
                 </div>
               </div>
 
-              {/* Gallery Upload */}
+              {/* Gallery Preview */}
               <div className="gallery-upload-large mt-12">
                 <label className="upload-lbl-large">Gallery Images</label>
                 <div className="gallery-thumbs-large">
-                  {formData.galleryImages && formData.galleryImages.map((imgUrl, idx) => (
+                  {formData.galleryImages?.map((imgUrl, idx) => (
                     <div key={idx} className="large-mini-thumb">
                       <img src={resolveImgUrl(imgUrl)} alt={`gallery-${idx}`} />
-                      <button 
-                        type="button" 
-                        className="btn-remove-thumb"
-                        onClick={() => removeGalleryImage(idx)}
-                      >
+                      <button type="button" className="btn-remove-thumb" onClick={() => removeGalleryImage(idx)}>
                         <X size={12} />
                       </button>
                     </div>
                   ))}
-
-                  <button 
-                    type="button" 
-                    className="add-large-thumb-btn"
-                    onClick={() => galleryImageInputRef.current.click()}
-                  >
+                  <button type="button" className="add-large-thumb-btn" onClick={() => galleryImageInputRef.current.click()}>
                     <Plus size={20} />
                     <span>Add Image</span>
                   </button>
@@ -532,11 +518,11 @@ const PremiumCollection = () => {
               </div>
             </div>
 
-            {/* Product Status & Toggles */}
+            {/* Status & Visibility */}
             <div className="sub-card mt-12">
               <div className="sub-card-header">
                 <Check size={16} />
-                <span>Product Status</span>
+                <span>Product Status & Visibility</span>
               </div>
               <div className="form-row gap-12 mt-8 align-center">
                 <div className="form-group flex-1">
@@ -546,12 +532,7 @@ const PremiumCollection = () => {
                       <input
                         type="checkbox"
                         checked={formData.status === 'Active'}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            status: e.target.checked ? 'Active' : 'Inactive'
-                          }))
-                        }
+                        onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.checked ? 'Active' : 'Inactive' }))}
                       />
                       <span className="slider round"></span>
                     </label>
@@ -577,7 +558,7 @@ const PremiumCollection = () => {
               </div>
             </div>
 
-            {/* SEO Information */}
+            {/* SEO */}
             <div className="sub-card mt-12">
               <div className="sub-card-header">
                 <Search size={16} />
@@ -593,7 +574,7 @@ const PremiumCollection = () => {
                   <input type="text" name="metaKeywords" placeholder="Keywords" value={formData.metaKeywords} onChange={handleChange} />
                 </div>
                 <div className="form-group flex-1">
-                  <label>Display Order</label>
+                  <label>Order</label>
                   <input type="number" name="displayOrder" value={formData.displayOrder} onChange={handleChange} />
                 </div>
               </div>
@@ -603,7 +584,7 @@ const PremiumCollection = () => {
               </div>
             </div>
 
-            {/* Form Action Buttons */}
+            {/* Form Actions */}
             <div className="form-actions-row mt-16">
               <button type="submit" className="btn-action btn-publish">
                 <Send size={16} /> {isEditing ? 'Update Product' : 'Publish Product'}
@@ -651,12 +632,11 @@ const PremiumCollection = () => {
           </div>
 
           <div className="filters-dropdown-grid">
-            {/* Category Search/Filter Input */}
             <div className="filter-item">
-              <label>Category Filter</label>
+              <label>Category</label>
               <input
                 type="text"
-                placeholder="Filter by category..."
+                placeholder="Filter category..."
                 value={categoryFilter}
                 onChange={(e) => { setCategoryFilter(e.target.value); setCurrentPage(1); }}
               />
@@ -714,9 +694,7 @@ const PremiumCollection = () => {
                 ) : products.length > 0 ? (
                   products.map((prod, idx) => (
                     <tr key={prod._id || prod.id}>
-                      <td className="row-num">
-                        {(currentPage - 1) * itemsPerPage + idx + 1}
-                      </td>
+                      <td className="row-num">{(currentPage - 1) * itemsPerPage + idx + 1}</td>
                       <td className="row-img">
                         <img src={resolveImgUrl(prod.image)} alt={prod.name} />
                       </td>
@@ -724,9 +702,7 @@ const PremiumCollection = () => {
                         <div className="p-title">{prod.name}</div>
                         <div className="p-subtitle">{prod.shortTitle}</div>
                       </td>
-                      <td className="row-rating">
-                        {renderStars(prod.rating)}
-                      </td>
+                      <td className="row-rating">{renderStars(prod.rating || 5)}</td>
                       <td className="row-price">
                         <div className="selling-p">₹{prod.sellingPrice}</div>
                         {prod.mrp && <div className="mrp-p">₹{prod.mrp}</div>}
@@ -735,7 +711,7 @@ const PremiumCollection = () => {
                         <span className="cat-pill">{prod.category}</span>
                       </td>
                       <td className="row-featured">
-                        {prod.featured ? (
+                        {prod.featured === true || prod.featured === 'Yes' ? (
                           <span className="icon-circle icon-check"><Check size={14} /></span>
                         ) : (
                           <span className="icon-circle icon-cross"><X size={14} /></span>
@@ -748,25 +724,13 @@ const PremiumCollection = () => {
                       </td>
                       <td className="row-actions">
                         <div className="action-buttons">
-                          <button
-                            className="btn-icon btn-view"
-                            title="View Product"
-                            onClick={() => setViewProduct(prod)}
-                          >
+                          <button className="btn-icon btn-view" title="View Product" onClick={() => setViewProduct(prod)}>
                             <Eye size={15} />
                           </button>
-                          <button
-                            className="btn-icon btn-edit"
-                            title="Edit Product"
-                            onClick={() => handleEdit(prod)}
-                          >
+                          <button className="btn-icon btn-edit" title="Edit Product" onClick={() => handleEdit(prod)}>
                             <Edit size={15} />
                           </button>
-                          <button
-                            className="btn-icon btn-delete"
-                            title="Remove Product"
-                            onClick={() => handleDelete(prod._id || prod.id)}
-                          >
+                          <button className="btn-icon btn-delete" title="Remove Product" onClick={() => handleDelete(prod._id || prod.id)}>
                             <Trash2 size={15} />
                           </button>
                         </div>
@@ -775,16 +739,14 @@ const PremiumCollection = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="no-data">
-                      No products found.
-                    </td>
+                    <td colSpan="9" className="no-data">No products found.</td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
 
-          {/* Pagination Controls */}
+          {/* Pagination */}
           <div className="pagination-wrapper">
             <button
               className="btn-page"
@@ -817,7 +779,7 @@ const PremiumCollection = () => {
         </div>
       </div>
 
-      {/* Product View Modal */}
+      {/* Modal */}
       {viewProduct && (
         <div className="modal-overlay" onClick={() => setViewProduct(null)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
@@ -831,16 +793,16 @@ const PremiumCollection = () => {
               <img src={resolveImgUrl(viewProduct.image)} alt={viewProduct.name} className="modal-img" />
               <div className="modal-info">
                 <p><strong>Category:</strong> {viewProduct.category}</p>
-                <p><strong>Short Title:</strong> {viewProduct.shortTitle}</p>
+                <p><strong>Short Title:</strong> {viewProduct.shortTitle || '—'}</p>
                 <p><strong>Price:</strong> ₹{viewProduct.sellingPrice} {viewProduct.mrp && `(MRP: ₹${viewProduct.mrp})`}</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '8px 0' }}>
-                  <strong>Rating:</strong> {renderStars(viewProduct.rating)}
+                  <strong>Rating:</strong> {renderStars(viewProduct.rating || 5)}
                 </div>
                 <div>
                   <strong>Description:</strong>
-                  <div 
+                  <div
                     className="modal-description-html"
-                    dangerouslySetInnerHTML={{ __html: viewProduct.description || 'No description provided.' }} 
+                    dangerouslySetInnerHTML={{ __html: viewProduct.description || 'No description provided.' }}
                   />
                 </div>
               </div>

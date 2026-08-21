@@ -1,8 +1,8 @@
 const PremiumCollection = require("../models/PremiumCollection");
-
+ 
 // Helper to escape regex special characters
 const escapeRegex = (text) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-
+  
 // ================= 1. CREATE PRODUCT (POST) =================
 exports.createProduct = async (req, res) => {
   try {

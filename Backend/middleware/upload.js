@@ -1,4 +1,4 @@
-const multer = require("multer");
+const multer = require("multer"); // Removed the comment slashes
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
