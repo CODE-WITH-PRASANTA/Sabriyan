@@ -1,10 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import './MainAbout.css';
-// 1. Give the imported image a variable name
 import bgImage from '../../assets/about-3.webp';
 
-// Component for word-by-word animation from the right side
+// Component for word-by-word animation
 const AnimatedText = ({ text, className, tag: Tag = 'p' }) => {
   const words = text.split(' ');
 
@@ -12,14 +11,17 @@ const AnimatedText = ({ text, className, tag: Tag = 'p' }) => {
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
       opacity: 1,
-      transition: { staggerChildren: 0.12, delayChildren: 0.04 * i },
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.04 * i,
+      },
     }),
   };
 
   const wordVariants = {
     hidden: {
       opacity: 0,
-      x: 40, // Animates in slow from the right side
+      x: 40,
       filter: 'blur(4px)',
     },
     visible: {
@@ -47,7 +49,10 @@ const AnimatedText = ({ text, className, tag: Tag = 'p' }) => {
           <motion.span
             key={index}
             variants={wordVariants}
-            style={{ display: 'inline-block', marginRight: '0.3em' }}
+            style={{
+              display: 'inline-block',
+              marginRight: '0.3em',
+            }}
           >
             {word}
           </motion.span>
@@ -59,14 +64,21 @@ const AnimatedText = ({ text, className, tag: Tag = 'p' }) => {
 
 const MainAbout = () => {
   return (
-    // 2. Pass the imported image to backgroundImage style
-    <section 
-      className="main-about" 
-      style={{ backgroundImage: `url(${bgImage})` }}
-    >
+    <section className="main-about">
+
+      {/* LCP Background Image */}
+      <img
+        src={bgImage}
+        alt=""
+        className="main-about__bg"
+        fetchPriority="high"
+        decoding="async"
+        aria-hidden="true"
+      />
+
       <div className="main-about__wrapper">
-        {/* Paper scroll container matching the background scroll structure */}
         <div className="main-about__paper-content">
+
           <AnimatedText
             tag="h3"
             className="main-about__subtitle"
@@ -93,20 +105,24 @@ const MainAbout = () => {
             text="Experience the art of artisanal chocolate making where tradition meets modern culinary innovation."
           />
 
-          
-
-          {/* Call to Action Button */}
           <motion.div
             className="main-about__cta-box"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
+            transition={{
+              delay: 1.2,
+              duration: 0.8,
+            }}
             viewport={{ once: true }}
           >
-            <button className="main-about__button">Explore Our Creations</button>
+            <button className="main-about__button">
+              Explore Our Creations
+            </button>
           </motion.div>
+
         </div>
       </div>
+
     </section>
   );
 };

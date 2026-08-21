@@ -30,12 +30,8 @@ import {
   useNavigate
 } from 'react-router-dom';
 
-<<<<<<< HEAD
 // Importing local background image as requested
 import bgForest from '../../assets/blog-bg.webp';
-=======
-import bgForest from '../../assets/blog-bg.jpeg';
->>>>>>> 80188399821557018d7897d124989d3991398776
 
 import './BlogHero.css';
 

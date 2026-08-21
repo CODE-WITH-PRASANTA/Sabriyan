@@ -6,7 +6,10 @@ import './Breadcrumb.css';
 
 import bgImage from '../../assets/breadcrumb.webp';
 
-// SVG Bee Component
+// =========================================
+// SVG BEE COMPONENT
+// =========================================
+
 const BeeSVG = () => (
   <svg
     viewBox="0 0 64 64"
@@ -70,7 +73,10 @@ const BeeSVG = () => (
   </svg>
 );
 
-// SVG Flower Component
+// =========================================
+// SVG FLOWER COMPONENT
+// =========================================
+
 const FlowerSVG = () => (
   <svg
     viewBox="0 0 100 100"
@@ -86,23 +92,37 @@ const FlowerSVG = () => (
     <circle cx="66" cy="34" r="14" fill="#FFFFFF" />
     <circle cx="66" cy="66" r="14" fill="#FFFFFF" />
     <circle cx="34" cy="66" r="14" fill="#FFFFFF" />
-    <circle cx="50" cy="50" r="12" fill="#FFC107" />
+
+    <circle
+      cx="50"
+      cy="50"
+      r="12"
+      fill="#FFC107"
+    />
   </svg>
 );
+
+// =========================================
+// BREADCRUMB COMPONENT
+// =========================================
 
 const Breadcrumb = () => {
   const parallaxRef = useRef(null);
   const beesRef = useRef([]);
 
-  // Mouse parallax
+  // =========================================
+  // OPTIMIZED MOUSE PARALLAX
+  // =========================================
+
   useEffect(() => {
     const element = parallaxRef.current;
 
     if (!element) return;
 
     let frameId = null;
-    let mouseX = 0;
-    let mouseY = 0;
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
 
     const updateParallax = () => {
       frameId = null;
@@ -131,12 +151,17 @@ const Breadcrumb = () => {
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove, {
-      passive: true,
-    });
+    window.addEventListener(
+      'mousemove',
+      handleMouseMove,
+      { passive: true }
+    );
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener(
+        'mousemove',
+        handleMouseMove
+      );
 
       if (frameId) {
         cancelAnimationFrame(frameId);
@@ -146,7 +171,10 @@ const Breadcrumb = () => {
     };
   }, []);
 
-  // Flying bees
+  // =========================================
+  // FLYING BEES
+  // =========================================
+
   useEffect(() => {
     const animations = [];
 
@@ -154,9 +182,9 @@ const Breadcrumb = () => {
       if (!bee) return;
 
       const animation = gsap.to(bee, {
-        x: `random(-35,35,5)`,
-        y: `random(-25,25,5)`,
-        rotation: `random(-12,12)`,
+        x: 'random(-35,35,5)',
+        y: 'random(-25,25,5)',
+        rotation: 'random(-12,12)',
         duration: 4 + index,
         repeat: -1,
         yoyo: true,
@@ -175,109 +203,136 @@ const Breadcrumb = () => {
 
   return (
     <section className="breadcrumb">
-      {/* Optimized LCP background image */}
+
+      {/* =====================================
+          OPTIMIZED BACKGROUND IMAGE
+      ===================================== */}
+
       <picture className="breadcrumb-bg-picture">
         <img
           src={bgImage}
           alt=""
           aria-hidden="true"
           className="breadcrumb-bg-image"
-          width="1920"
-          height="1080"
+          width="1056"
+          height="887"
           fetchPriority="high"
           decoding="async"
         />
       </picture>
 
-      {/* Dark overlay */}
-      <div className="breadcrumb-overlay" />
+      {/* =====================================
+          DARK OVERLAY
+      ===================================== */}
 
-      {/* Fog */}
-      <div className="breadcrumb-fog fog-1" />
-      <div className="breadcrumb-fog fog-2" />
-      <div className="breadcrumb-fog fog-3" />
+      <div
+        className="breadcrumb-overlay"
+        aria-hidden="true"
+      />
 
-      {/* Main wrapper */}
+      {/* =====================================
+          FOG
+      ===================================== */}
+
+      <div
+        className="breadcrumb-fog fog-1"
+        aria-hidden="true"
+      />
+
+      <div
+        className="breadcrumb-fog fog-2"
+        aria-hidden="true"
+      />
+
+      <div
+        className="breadcrumb-fog fog-3"
+        aria-hidden="true"
+      />
+
+      {/* =====================================
+          PARALLAX WRAPPER
+      ===================================== */}
+
       <div
         className="breadcrumb-parallax"
         ref={parallaxRef}
       >
-        {/* Floating particles */}
+
+        {/* =====================================
+            PARTICLES
+        ===================================== */}
+
         <div
           className="breadcrumb-particles"
           aria-hidden="true"
         >
-          {Array.from({ length: 20 }).map((_, index) => (
-            <span
-              key={index}
-              className="breadcrumb-particle"
-              style={{
-                left: `${(index * 17) % 100}%`,
-                animationDelay: `${(index % 8) * 0.8}s`,
-                animationDuration: `${6 + (index % 5)}s`,
-              }}
-            />
-          ))}
+          {Array.from({ length: 20 }).map(
+            (_, index) => (
+              <span
+                key={index}
+                className="breadcrumb-particle"
+                style={{
+                  left:
+                    `${(index * 17) % 100}%`,
+                  animationDelay:
+                    `${(index % 8) * 0.8}s`,
+                  animationDuration:
+                    `${6 + (index % 5)}s`,
+                }}
+              />
+            )
+          )}
         </div>
 
-        {/* Floating leaves */}
+        {/* =====================================
+            FLOATING LEAVES
+        ===================================== */}
+
         <div
           className="breadcrumb-leaves"
           aria-hidden="true"
         >
-          {Array.from({ length: 6 }).map((_, index) => (
-            <span
-              key={index}
-              className="breadcrumb-leaf"
-              style={{
-                left: `${(index * 19) % 100}%`,
-                animationDelay: `${(index % 5) * 1.2}s`,
-                animationDuration: `${9 + (index % 4)}s`,
-              }}
-            />
-          ))}
+          {Array.from({ length: 6 }).map(
+            (_, index) => (
+              <span
+                key={index}
+                className="breadcrumb-leaf"
+                style={{
+                  left:
+                    `${(index * 19) % 100}%`,
+                  animationDelay:
+                    `${(index % 5) * 1.2}s`,
+                  animationDuration:
+                    `${9 + (index % 4)}s`,
+                }}
+              />
+            )
+          )}
         </div>
 
-        {/* Bees */}
-        <div
-          className="breadcrumb-bee bee-1"
-          ref={(el) => {
-            beesRef.current[0] = el;
-          }}
-        >
-          <BeeSVG />
-        </div>
+        {/* =====================================
+            FLYING BEES
+        ===================================== */}
 
-        <div
-          className="breadcrumb-bee bee-2"
-          ref={(el) => {
-            beesRef.current[1] = el;
-          }}
-        >
-          <BeeSVG />
-        </div>
+        {[0, 1, 2, 3].map((index) => (
+          <div
+            key={index}
+            className={`breadcrumb-bee bee-${index + 1}`}
+            ref={(el) => {
+              beesRef.current[index] = el;
+            }}
+          >
+            <BeeSVG />
+          </div>
+        ))}
 
-        <div
-          className="breadcrumb-bee bee-3"
-          ref={(el) => {
-            beesRef.current[2] = el;
-          }}
-        >
-          <BeeSVG />
-        </div>
+        {/* =====================================
+            CENTER CONTENT
+        ===================================== */}
 
-        <div
-          className="breadcrumb-bee bee-4"
-          ref={(el) => {
-            beesRef.current[3] = el;
-          }}
-        >
-          <BeeSVG />
-        </div>
-
-        {/* Center content */}
         <div className="breadcrumb-content">
-          {/* Honey drops */}
+
+          {/* Honey Drops */}
           <div
             className="breadcrumb-honey-drops"
             aria-hidden="true"
@@ -287,11 +342,12 @@ const Breadcrumb = () => {
             <span className="breadcrumb-drop drop-3" />
           </div>
 
-          {/* Breadcrumb navigation */}
+          {/* Breadcrumb Navigation */}
           <nav
             className="breadcrumb-nav"
             aria-label="Breadcrumb"
           >
+
             <Link
               to="/"
               className="breadcrumb-link"
@@ -322,10 +378,15 @@ const Breadcrumb = () => {
             >
               About
             </span>
+
           </nav>
+
         </div>
 
-        {/* Flowers */}
+        {/* =====================================
+            FLOWERS
+        ===================================== */}
+
         <div
           className="breadcrumb-flower left"
           aria-hidden="true"
@@ -340,7 +401,10 @@ const Breadcrumb = () => {
           <FlowerSVG />
         </div>
 
-        {/* Honeycomb */}
+        {/* =====================================
+            HONEYCOMB
+        ===================================== */}
+
         <div
           className="breadcrumb-honeycomb"
           aria-hidden="true"
@@ -351,6 +415,7 @@ const Breadcrumb = () => {
           <div className="hex" />
           <div className="hex" />
         </div>
+
       </div>
     </section>
   );

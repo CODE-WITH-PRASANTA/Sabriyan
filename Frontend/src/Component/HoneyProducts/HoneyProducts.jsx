@@ -2,9 +2,8 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import { useNavigate } from 'react-router-dom';
 import { FaShoppingCart, FaArrowRight, FaChevronLeft, FaChevronRight, FaStar } from "react-icons/fa";
-import API, { IMG_URL } from "../../api/axios";
+import API, { IMG_URL } from "../../api/axios"; 
 
 // Swiper styles
 import 'swiper/css';
@@ -18,7 +17,6 @@ import productBgImg from '../../assets/honey4.webp';
 import honeyBottleImg from '../../assets/honey-2.webp';
 
 const HoneyProducts = () => {
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [swiperInstance, setSwiperInstance] = useState(null);
@@ -65,7 +63,7 @@ const HoneyProducts = () => {
       setLoading(true);
       try {
         const response = await API.get('/honey-products?status=Active&limit=20');
-
+        
         if (response.data && response.data.success) {
           const fetchedData = response.data.data;
           if (isMounted) {
@@ -105,18 +103,8 @@ const HoneyProducts = () => {
     }
   }, [swiperInstance, products]);
 
-  // Navigate to the id-specific detail page for whichever product was clicked
-  const handleBuyNow = (product) => {
-    const id = product._id || product.id;
-    if (!id) {
-      console.error("❌ Cannot navigate: product has no _id or id", product);
-      return;
-    }
-    navigate(`/honeyaddtocart/${id}`);
-  };
-
   return (
-    <section
+    <section 
       className="HoneyProducts"
       style={{
         backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0.85)), url(${productBgImg})`
@@ -159,9 +147,9 @@ const HoneyProducts = () => {
 
       {/* ---------------- MAIN CONTENT SECTION ---------------- */}
       <div className="HoneyProducts-container">
-
+        
         {/* Section Header */}
-        <motion.div
+        <motion.div 
           className="HoneyProducts-header"
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -175,12 +163,12 @@ const HoneyProducts = () => {
 
         {/* Carousel & Controls Wrapper */}
         <div className="HoneyProducts-carouselWrapper">
-
+          
           {/* Custom Navigation Buttons */}
           <button ref={prevRef} className="HoneyProducts-navBtn HoneyProducts-navBtn--prev" aria-label="Previous">
             <FaChevronLeft />
           </button>
-
+          
           <button ref={nextRef} className="HoneyProducts-navBtn HoneyProducts-navBtn--next" aria-label="Next">
             <FaChevronRight />
           </button>
@@ -223,9 +211,9 @@ const HoneyProducts = () => {
                   >
                     {/* Floating Bottle Image */}
                     <div className="HoneyProducts-imageWrapper">
-                      <img
-                        src={getImageUrl(product.image)}
-                        alt={product.name || 'Honey product'}
+                      <img 
+                        src={getImageUrl(product.image)} 
+                        alt={product.name || 'Honey product'} 
                         className="HoneyProducts-bottleImg"
                         onError={(e) => { e.target.onerror = null; e.target.src = honeyBottleImg; }}
                       />
@@ -247,10 +235,14 @@ const HoneyProducts = () => {
                       </p>
                       <div className="HoneyProducts-price">₹{product.price}</div>
 
-                      {/* Buy Button — now navigates id-wise to Honeyaddtocart */}
-                      <button
+                      {/* Buy Button */}
+                      <button 
                         className="HoneyProducts-buyBtn"
-                        onClick={() => handleBuyNow(product)}
+                        onClick={() => {
+                          if (product.buttonLink) {
+                            window.location.href = product.buttonLink;
+                          }
+                        }}
                       >
                         <FaShoppingCart className="HoneyProducts-btnIcon" />
                         <span>{product.buttonText || 'BUY NOW'}</span>
@@ -264,7 +256,7 @@ const HoneyProducts = () => {
         </div>
 
         {/* Bottom Explore Button */}
-        <motion.div
+        <motion.div 
           className="HoneyProducts-footer"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

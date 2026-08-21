@@ -21,13 +21,9 @@ import { GiHoneyJar } from 'react-icons/gi';
 
 import './OurBlog.css';
 
-<<<<<<< HEAD
 // LOCAL IMAGE IMPORTS
 import jungleBg from '../../assets/blog.webp';
 import featuredStoryImg from '../../assets/honey-6.webp'; // Adjust filename/path as needed
-=======
-import jungleBg from '../../assets/blog.png';
-import featuredStoryImg from '../../assets/honey-6.png';
 
 import API, {
   IMG_URL,
@@ -46,7 +42,6 @@ const AnimatedBee = ({
     fill="none"
     className={`ourBlog-bee-svg ${className}`}
   >
->>>>>>> 80188399821557018d7897d124989d3991398776
 
     <g className="ourBlog-bee-wings">
 

@@ -10,6 +10,8 @@ import Blog from "./Pages/Blog/Blog";
 import Faq from "./Pages/Faq/Faq";
 import Contact from "./Pages/Contact/Contact";
 import BlogDetails from "./Pages/BlogDetails/BlogDetails";
+
+import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
 import Honeyaddtocart from "./Component/Honeyaddtocart/Honeyaddtocart";
 
 
@@ -23,7 +25,7 @@ import OurProducts from "./Component/OurProducts/OurProducts";
 import PrivacyPolicy from "./Component/PrivacyPolicy/PrivacyPolicy";
 import TermsAndConditions from "./Component/TermsAndConditions/TermsAndConditions";
 import Floating from "./Component/Floating/Floating";
-import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
+
 
 const App = () => {
   return (

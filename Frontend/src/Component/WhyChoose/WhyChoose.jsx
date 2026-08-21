@@ -1,19 +1,20 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import React, { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
 import {
   FaLeaf,
   FaShieldAlt,
   FaGlobeAmericas,
-} from 'react-icons/fa';
-import { GiHoneyJar } from 'react-icons/gi';
-import './WhyChoose.css';
+} from "react-icons/fa";
+import { GiHoneyJar } from "react-icons/gi";
+import "./WhyChoose.css";
 
-import bgImage from '../../assets/honey-6.webp';
-import honeyBottleImg from '../../assets/honey-2.webp';
+import bgImage from "../../assets/honey-6.webp";
+import honeyBottleImg from "../../assets/honey-2.webp";
 
-/* =========================================
-   BEE SVG
-========================================= */
+/* =========================================================
+   ANIMATED BEE
+========================================================= */
 
 const BeeSVG = () => (
   <svg
@@ -51,21 +52,21 @@ const BeeSVG = () => (
     />
 
     <path
-      d="M16 32 C24 35,40 35,48 32"
+      d="M16 32 C24 35, 40 35, 48 32"
       stroke="#1A1A1A"
       strokeWidth="4"
       strokeLinecap="round"
     />
 
     <path
-      d="M15 40 C24 43,40 43,49 40"
+      d="M15 40 C24 43, 40 43, 49 40"
       stroke="#1A1A1A"
       strokeWidth="4"
       strokeLinecap="round"
     />
 
     <path
-      d="M18 48 C25 50,39 50,46 48"
+      d="M18 48 C25 50, 39 50, 46 48"
       stroke="#1A1A1A"
       strokeWidth="4"
       strokeLinecap="round"
@@ -80,56 +81,59 @@ const BeeSVG = () => (
   </svg>
 );
 
-/* =========================================
+/* =========================================================
    BENEFIT DATA
-========================================= */
+========================================================= */
 
 const benefitCards = [
   {
     id: 1,
-    title: '100% Natural',
+    title: "Premium Quality",
     description:
-      'Pure honey, directly from nature no additives, no preservatives.',
+      "Sabriyana carefully selects quality ingredients to create premium chocolates and pure honey with a distinctive taste.",
     icon: <FaLeaf aria-hidden="true" />,
-    position: 'left-top',
+    position: "left-top",
   },
+
   {
     id: 2,
-    title: 'Ethically Sourced',
+    title: "Natural Goodness",
     description:
-      'Our honey is harvested with care, ensuring the well-being of bees and nature.',
+      "From Sabriyana pure honey to thoughtfully crafted chocolate, we celebrate simple ingredients and authentic flavours.",
     icon: <GiHoneyJar aria-hidden="true" />,
-    position: 'left-bottom',
+    position: "left-bottom",
   },
+
   {
     id: 3,
-    title: 'Rich in Nutrients',
+    title: "Crafted with Care",
     description:
-      'Packed with antioxidants, vitamins and minerals for a healthier you.',
+      "Every Sabriyana product is created with attention to flavour, texture and quality, bringing together nature and craftsmanship.",
     icon: <FaShieldAlt aria-hidden="true" />,
-    position: 'right-top',
+    position: "right-top",
   },
+
   {
     id: 4,
-    title: 'Sustainable Practices',
+    title: "Inspired by Nature",
     description:
-      'We follow eco-friendly and sustainable methods to protect our environment.',
+      "Sabriyana draws inspiration from nature to create premium chocolate and honey products that feel authentic and memorable.",
     icon: <FaGlobeAmericas aria-hidden="true" />,
-    position: 'right-bottom',
+    position: "right-bottom",
   },
 ];
 
-/* =========================================
-   WHY CHOOSE
-========================================= */
+/* =========================================================
+   WHY CHOOSE COMPONENT
+========================================================= */
 
 const WhyChoose = () => {
   const parallaxRef = useRef(null);
   const beesRef = useRef([]);
 
-  /* =========================================
-     OPTIMIZED MOUSE PARALLAX
-  ========================================= */
+  /* =======================================================
+     MOUSE PARALLAX
+  ======================================================= */
 
   useEffect(() => {
     const element = parallaxRef.current;
@@ -153,7 +157,7 @@ const WhyChoose = () => {
         x: moveX,
         y: moveY,
         duration: 0.6,
-        ease: 'power2.out',
+        ease: "power2.out",
         overwrite: true,
       });
     };
@@ -167,15 +171,13 @@ const WhyChoose = () => {
       }
     };
 
-    window.addEventListener(
-      'mousemove',
-      handleMouseMove,
-      { passive: true }
-    );
+    window.addEventListener("mousemove", handleMouseMove, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener(
-        'mousemove',
+        "mousemove",
         handleMouseMove
       );
 
@@ -187,9 +189,9 @@ const WhyChoose = () => {
     };
   }, []);
 
-  /* =========================================
-     BEE ANIMATIONS
-  ========================================= */
+  /* =======================================================
+     FLYING BEE ANIMATIONS
+  ======================================================= */
 
   useEffect(() => {
     const animations = [];
@@ -198,13 +200,13 @@ const WhyChoose = () => {
       if (!bee) return;
 
       const animation = gsap.to(bee, {
-        x: `random(-50,50,10)`,
-        y: `random(-35,35,5)`,
-        rotation: `random(-15,15)`,
-        duration: 4 + index * 0.7,
+        x: "random(-70, 70, 10)",
+        y: "random(-50, 50, 10)",
+        rotation: "random(-25, 25)",
+        duration: 3 + index * 0.8,
         repeat: -1,
         yoyo: true,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
       });
 
       animations.push(animation);
@@ -217,18 +219,14 @@ const WhyChoose = () => {
     };
   }, []);
 
-  /* =========================================
-     RENDER
-  ========================================= */
-
   return (
     <section
       className="whyChoose"
-      aria-labelledby="whyChooseTitle"
+      aria-labelledby="why-choose-sabriyana"
     >
-      {/* =====================================
-          LAZY BACKGROUND IMAGE
-      ===================================== */}
+      {/* ===================================================
+          BACKGROUND
+      =================================================== */}
 
       <img
         src={bgImage}
@@ -269,105 +267,213 @@ const WhyChoose = () => {
         aria-hidden="true"
       />
 
-      {/* Main Parallax */}
+      {/* ===================================================
+          PARALLAX WRAPPER
+      =================================================== */}
+
       <div
         className="whyChoose-parallax"
         ref={parallaxRef}
       >
-        {/* ===================================
+        {/* =================================================
             LIGHT PARTICLES
-        =================================== */}
+        ================================================= */}
 
         <div
           className="whyChoose-particles"
           aria-hidden="true"
         >
-          {Array.from({ length: 18 }).map((_, index) => (
-            <span
-              key={index}
-              className="whyChoose-particle"
-              style={{
-                left: `${(index * 19) % 100}%`,
-                animationDelay: `${(index % 7) * 0.8}s`,
-                animationDuration: `${6 + (index % 5)}s`,
-              }}
-            />
-          ))}
+          {Array.from({ length: 18 }).map(
+            (_, index) => (
+              <span
+                key={index}
+                className="whyChoose-particle"
+                style={{
+                  left: `${(index * 19) % 100}%`,
+                  animationDelay: `${
+                    (index % 7) * 0.8
+                  }s`,
+                  animationDuration: `${
+                    6 + (index % 5)
+                  }s`,
+                }}
+              />
+            )
+          )}
         </div>
 
-        {/* ===================================
+        {/* =================================================
             FLOATING LEAVES
-        =================================== */}
+        ================================================= */}
 
         <div
           className="whyChoose-leaves"
           aria-hidden="true"
         >
-          {Array.from({ length: 6 }).map((_, index) => (
-            <span
-              key={index}
-              className="whyChoose-leaf"
-              style={{
-                left: `${(index * 21) % 100}%`,
-                animationDelay: `${(index % 5) * 1.2}s`,
-                animationDuration: `${9 + (index % 4)}s`,
-              }}
-            />
-          ))}
+          {Array.from({ length: 6 }).map(
+            (_, index) => (
+              <span
+                key={index}
+                className="whyChoose-leaf"
+                style={{
+                  left: `${(index * 21) % 100}%`,
+                  animationDelay: `${
+                    (index % 5) * 1.2
+                  }s`,
+                  animationDuration: `${
+                    9 + (index % 4)
+                  }s`,
+                }}
+              />
+            )
+          )}
         </div>
 
-        {/* ===================================
+        {/* =================================================
             FLYING BEES
-        =================================== */}
+        ================================================= */}
 
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div
-            key={index}
-            className={`whyChoose-bee bee-${index + 1}`}
-            ref={(element) => {
-              beesRef.current[index] = element;
-            }}
-          >
-            <BeeSVG />
-          </div>
-        ))}
+        {Array.from({ length: 6 }).map(
+          (_, index) => (
+            <div
+              key={index}
+              className={`whyChoose-bee bee-${
+                index + 1
+              }`}
+              ref={(element) => {
+                beesRef.current[index] = element;
+              }}
+            >
+              <BeeSVG />
+            </div>
+          )
+        )}
 
-        {/* ===================================
+        {/* =================================================
             HEADER
-        =================================== */}
+        ================================================= */}
 
         <div className="whyChoose-header">
-          <div className="whyChoose-badge">
-            <span>Why Choose Sabriyana?</span>
-          </div>
-
-          <h2
-            id="whyChooseTitle"
-            className="whyChoose-title"
+          <motion.div
+            className="whyChoose-badge"
+            initial={{
+              opacity: 0,
+              y: -20,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              duration: 0.6,
+            }}
           >
-            Nature's Goodness,{' '}
-            <span className="title-highlight">
-              Our Promise
+            <span>
+              Why Choose Sabriyana?
             </span>
-          </h2>
+          </motion.div>
+
+          <motion.h2
+            id="why-choose-sabriyana"
+            className="whyChoose-title"
+            initial={{
+              opacity: 0,
+              y: 30,
+              filter: "blur(8px)",
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              duration: 0.8,
+              delay: 0.2,
+            }}
+          >
+            Nature's Goodness,{" "}
+            <span className="title-highlight">
+              Sabriyana's Promise
+            </span>
+          </motion.h2>
+
+          {/* SEO Introduction */}
+          <motion.p
+            className="whyChoose-intro"
+            initial={{
+              opacity: 0,
+              y: 20,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              duration: 0.7,
+              delay: 0.3,
+            }}
+          >
+            Sabriyana is a{" "}
+            <strong>
+              premium chocolate and honey brand in Odisha
+            </strong>
+            , bringing together thoughtfully crafted
+            chocolates and naturally inspired honey
+            products. From{" "}
+            <strong>Sabriyana chocolate</strong> to{" "}
+            <strong>Sabriyana pure honey</strong>, every
+            product reflects our focus on quality, flavour
+            and authentic craftsmanship.
+          </motion.p>
         </div>
 
-        {/* ===================================
-            MAIN GRID
-        =================================== */}
+        {/* =================================================
+            BENEFITS + PRODUCT
+        ================================================= */}
 
         <div className="whyChoose-container">
-          {/* LEFT CARDS */}
+          {/* =================================================
+              LEFT CARDS
+          ================================================= */}
 
           <div className="whyChoose-col left-col">
             {benefitCards
               .filter((card) =>
-                card.position.startsWith('left')
+                card.position.startsWith("left")
               )
-              .map((card) => (
-                <article
+              .map((card, index) => (
+                <motion.article
                   key={card.id}
                   className="whyChoose-card"
+                  initial={{
+                    opacity: 0,
+                    x: -60,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                  viewport={{
+                    once: true,
+                  }}
+                  transition={{
+                    duration: 0.7,
+                    delay: 0.2 * index,
+                  }}
+                  whileHover={{
+                    scale: 1.04,
+                    y: -8,
+                    rotateY: -6,
+                  }}
                 >
                   <div className="whyChoose-iconWrapper">
                     {card.icon}
@@ -382,39 +488,79 @@ const WhyChoose = () => {
                       {card.description}
                     </p>
                   </div>
-                </article>
+                </motion.article>
               ))}
           </div>
 
-          {/* ===================================
+          {/* =================================================
               CENTER BOTTLE
-          =================================== */}
+          ================================================= */}
 
           <div className="whyChoose-centerStage">
-            <div className="whyChoose-bottleWrapper">
+            <motion.div
+              className="whyChoose-bottleWrapper"
+              initial={{
+                opacity: 0,
+                scale: 0.8,
+              }}
+              whileInView={{
+                opacity: 1,
+                scale: 1,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 1,
+                delay: 0.4,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
               <img
                 src={honeyBottleImg}
-                alt="Sabriyana Pure Honey Bottle"
+                alt="Sabriyana premium honey product from Odisha"
                 className="whyChoose-bottleImg"
                 width="400"
                 height="600"
                 loading="lazy"
                 decoding="async"
               />
-            </div>
+            </motion.div>
           </div>
 
-          {/* RIGHT CARDS */}
+          {/* =================================================
+              RIGHT CARDS
+          ================================================= */}
 
           <div className="whyChoose-col right-col">
             {benefitCards
               .filter((card) =>
-                card.position.startsWith('right')
+                card.position.startsWith("right")
               )
-              .map((card) => (
-                <article
+              .map((card, index) => (
+                <motion.article
                   key={card.id}
                   className="whyChoose-card"
+                  initial={{
+                    opacity: 0,
+                    x: 60,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                  viewport={{
+                    once: true,
+                  }}
+                  transition={{
+                    duration: 0.7,
+                    delay: 0.2 * index,
+                  }}
+                  whileHover={{
+                    scale: 1.04,
+                    y: -8,
+                    rotateY: 6,
+                  }}
                 >
                   <div className="whyChoose-iconWrapper">
                     {card.icon}
@@ -429,14 +575,74 @@ const WhyChoose = () => {
                       {card.description}
                     </p>
                   </div>
-                </article>
+                </motion.article>
               ))}
           </div>
         </div>
 
-        {/* ===================================
+        {/* =================================================
+            SEO SUPPORTING CONTENT
+        ================================================= */}
+
+        <motion.div
+          className="whyChoose-seoText"
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.7,
+            delay: 0.3,
+          }}
+        >
+          <p>
+            At <strong>Sabriyana</strong>, we believe that
+            good food should feel honest, thoughtful and
+            enjoyable. As a growing{" "}
+            <strong>
+              chocolate and honey brand from Odisha
+            </strong>
+            , Sabriyana creates products that bring
+            together natural inspiration and careful
+            craftsmanship.
+          </p>
+
+          <p>
+            Our chocolate range is made for people who enjoy
+            rich and memorable flavours, while our honey
+            range celebrates the natural sweetness and
+            character of carefully sourced honey. Whether
+            you are looking for{" "}
+            <strong>
+              premium chocolates in Odisha
+            </strong>{" "}
+            or{" "}
+            <strong>
+              pure honey from Odisha
+            </strong>
+            , Sabriyana aims to make every experience
+            special.
+          </p>
+
+          <p>
+            From <strong>Sabriyana chocolate</strong> to{" "}
+            <strong>Sabriyana honey</strong>, our goal is to
+            build a trusted Indian brand known for quality,
+            thoughtful ingredients and products people love
+            to share.
+          </p>
+        </motion.div>
+
+        {/* =================================================
             HONEY DRIPS
-        =================================== */}
+        ================================================= */}
 
         <div
           className="whyChoose-dripsContainer"

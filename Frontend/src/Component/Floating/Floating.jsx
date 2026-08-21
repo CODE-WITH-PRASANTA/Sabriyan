@@ -8,8 +8,8 @@ import { FiUser, FiMail, FiPhone, FiHeart } from 'react-icons/fi';
 import { RiLeafLine, RiAwardLine } from 'react-icons/ri';
 
 // Image paths
-import chocolateBarImg from "../../assets/sabriyana-chocolate-bar.png";
-import brandLogoImg from "../../assets/sabriyana-brand-logo.png";
+import chocolateBarImg from "../../assets/sabriyana-chocolate-bar.webp";
+import brandLogoImg from "../../assets/sabriyana-brand-logo.webp";
 
 const Floating = () => {
   const [isVisible, setIsVisible] = useState(true);

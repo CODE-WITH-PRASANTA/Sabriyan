@@ -35,8 +35,8 @@ import API, { IMG_URL } from '../../api/axios';
 import './PremiumCollectionDetails.css';
 
 // Fallback assets matching ChocolateCard
-import FallbackBg from '../../assets/card.jpeg';
-import FallbackChoc from '../../assets/ch-2.jpeg';
+import FallbackBg from '../../assets/card.webp';
+import FallbackChoc from '../../assets/ch-2.webp';
 
 // Universal URL Resolver matching ChocolateCard logic
 const resolveImgUrl = (imagePath, fallback = FallbackChoc) => {

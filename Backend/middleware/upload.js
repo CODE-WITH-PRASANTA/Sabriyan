@@ -1,9 +1,8 @@
-const multer = require("multer"); // Removed the comment slashes
+const multer = require("multer");
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
 
-<<<<<<< HEAD
 // =====================================================
 // MULTER MEMORY STORAGE
 // =====================================================
@@ -28,10 +27,6 @@ const allowedMimeTypes = [
 // MULTER UPLOAD
 // =====================================================
 
-=======
-const storage = multer.memoryStorage();
-
->>>>>>> 80188399821557018d7897d124989d3991398776
 const upload = multer({
   storage,
 
@@ -43,30 +38,20 @@ const upload = multer({
     if (
       file &&
       file.mimetype &&
-<<<<<<< HEAD
-      allowedMimeTypes.includes(
-        file.mimetype.toLowerCase()
-      )
-=======
-      file.mimetype.startsWith("image/")
->>>>>>> 80188399821557018d7897d124989d3991398776
+      file.mimetype.startsWith("image/") &&
+      allowedMimeTypes.includes(file.mimetype.toLowerCase())
     ) {
       cb(null, true);
     } else {
       cb(
         new Error(
-<<<<<<< HEAD
           "Only JPG, JPEG, PNG, WEBP, AVIF, BMP and TIFF images are allowed."
-=======
-          "Only image files are allowed!"
->>>>>>> 80188399821557018d7897d124989d3991398776
         )
       );
     }
   },
 });
 
-<<<<<<< HEAD
 // =====================================================
 // CONVERT IMAGE TO WEBP
 // =====================================================
@@ -80,187 +65,37 @@ const convertToWebp = (options = {}) => {
     width = null,
     height = null,
     effort = 4,
-=======
-const convertToWebp = (options = {}) => {
-  const {
-    quality = 80,
-    folder = "blogs",
-    prefix = "blog",
-    width,
-    height,
->>>>>>> 80188399821557018d7897d124989d3991398776
   } = options;
 
   return async (req, res, next) => {
     try {
-<<<<<<< HEAD
-      // -------------------------------------------------
-      // No image uploaded
-      // -------------------------------------------------
+      // =================================================
+      // SINGLE IMAGE: req.file
+      // =================================================
 
-      if (
-        !req.file ||
-        !req.file.buffer ||
-        req.file.buffer.length === 0
-      ) {
-        return next();
-      }
+      if (req.file && req.file.buffer) {
+        const targetFolder = String(folder || "website")
+          .replace(/^[\/\\]+|[\/\\]+$/g, "")
+          .replace(/\.\./g, "");
 
-      // -------------------------------------------------
-      // Clean folder
-      // -------------------------------------------------
+        const targetDir = path.join(
+          __dirname,
+          "..",
+          "public",
+          "uploads",
+          targetFolder
+        );
 
-      const targetFolder = String(
-        folder || "website"
-      )
-        .replace(/^[/\\]+|[/\\]+$/g, "")
-        .replace(/\.\./g, "");
-
-      // -------------------------------------------------
-      // Create destination directory
-      // -------------------------------------------------
-
-      const targetDir = path.join(
-        __dirname,
-        "..",
-        "public",
-        "uploads",
-        targetFolder
-      );
-
-      await fs.promises.mkdir(
-        targetDir,
-        {
+        await fs.promises.mkdir(targetDir, {
           recursive: true,
-        }
-      );
+        });
 
-      // -------------------------------------------------
-      // Clean prefix
-      // -------------------------------------------------
-
-      const filePrefix = String(
-        prefix || targetFolder
-      ).replace(
-        /[^a-zA-Z0-9_-]/g,
-        "-"
-      );
-
-      // -------------------------------------------------
-      // Unique filename
-      // -------------------------------------------------
-
-      const uniqueName =
-        `${filePrefix}-${Date.now()}-${Math.round(
-          Math.random() * 1000000000
-        )}.webp`;
-
-      const outputPath = path.join(
-        targetDir,
-        uniqueName
-      );
-
-      // -------------------------------------------------
-      // Sharp
-      // -------------------------------------------------
-
-      let image = sharp(
-        req.file.buffer
-      ).rotate();
-
-      // -------------------------------------------------
-      // Optional resize
-      // -------------------------------------------------
-
-      if (resize) {
-        const resizeOptions = {
-          fit: "inside",
-          withoutEnlargement: true,
-        };
-
-        if (width) {
-          resizeOptions.width =
-            Number(width);
-        }
-
-        if (height) {
-          resizeOptions.height =
-            Number(height);
-        }
-
-        image = image.resize(
-          resizeOptions
-        );
-      }
-
-      // -------------------------------------------------
-      // Convert to WebP
-      // -------------------------------------------------
-
-      await image
-        .webp({
-          quality: Math.min(
-            100,
-            Math.max(
-              1,
-              Number(quality) || 85
-            )
-          ),
-
-          effort: Math.min(
-            6,
-            Math.max(
-              0,
-              Number(effort) || 4
-            )
-          ),
-        })
-        .toFile(outputPath);
-
-      // -------------------------------------------------
-      // Attach processed file info
-      // -------------------------------------------------
-
-      req.file.filename =
-        uniqueName;
-
-      req.file.mimetype =
-        "image/webp";
-
-      req.file.path =
-        outputPath;
-
-      req.file.destination =
-        targetDir;
-
-      req.file.destinationPath =
-        `/uploads/${targetFolder}/${uniqueName}`.replace(
-          /\\/g,
-          "/"
-        );
-=======
-      if (!req.files) {
-        return next();
-      }
-
-      const targetFolder = folder || "blogs";
-
-      const targetDir = path.join(
-        __dirname,
-        `../public/uploads/${targetFolder}`
-      );
-
-      await fs.promises.mkdir(targetDir, {
-        recursive: true,
-      });
-
-      const processImage = async (file, filePrefix) => {
-        if (!file || !file.buffer) {
-          return null;
-        }
+        const filePrefix = String(
+          prefix || targetFolder
+        ).replace(/[^a-zA-Z0-9_-]/g, "-");
 
         const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(
-          Math.random() * 1e9
+          Math.random() * 1000000000
         )}.webp`;
 
         const outputPath = path.join(
@@ -268,47 +103,181 @@ const convertToWebp = (options = {}) => {
           uniqueName
         );
 
-        let image = sharp(file.buffer).rotate();
+        // -----------------------------------------------
+        // SHARP IMAGE PROCESSING
+        // -----------------------------------------------
 
-        if (width || height) {
-          image = image.resize(width, height, {
-            fit: "cover",
+        let image = sharp(req.file.buffer).rotate();
+
+        // -----------------------------------------------
+        // OPTIONAL RESIZE
+        // -----------------------------------------------
+
+        if (resize) {
+          const resizeOptions = {
+            fit: "inside",
             withoutEnlargement: true,
-          });
+          };
+
+          if (width) {
+            resizeOptions.width = Number(width);
+          }
+
+          if (height) {
+            resizeOptions.height = Number(height);
+          }
+
+          image = image.resize(resizeOptions);
         }
+
+        // -----------------------------------------------
+        // CONVERT TO WEBP
+        // -----------------------------------------------
 
         await image
           .webp({
-            quality: Number(quality) || 80,
-            effort: 4,
+            quality: Math.min(
+              100,
+              Math.max(1, Number(quality) || 85)
+            ),
+
+            effort: Math.min(
+              6,
+              Math.max(0, Number(effort) || 4)
+            ),
           })
           .toFile(outputPath);
 
-        return {
-          originalname: file.originalname,
-          filename: uniqueName,
-          mimetype: "image/webp",
-          path: outputPath,
-          url: `/uploads/${targetFolder}/${uniqueName}`,
+        // -----------------------------------------------
+        // UPDATE MULTER FILE INFORMATION
+        // -----------------------------------------------
+
+        req.file.filename = uniqueName;
+        req.file.mimetype = "image/webp";
+        req.file.path = outputPath;
+        req.file.destination = targetDir;
+
+        req.file.destinationPath =
+          `/uploads/${targetFolder}/${uniqueName}`.replace(
+            /\\/g,
+            "/"
+          );
+      }
+
+      // =================================================
+      // MULTIPLE IMAGES: req.files
+      // =================================================
+
+      if (req.files) {
+        const targetFolder = String(folder || "website")
+          .replace(/^[\/\\]+|[\/\\]+$/g, "")
+          .replace(/\.\./g, "");
+
+        const targetDir = path.join(
+          __dirname,
+          "..",
+          "public",
+          "uploads",
+          targetFolder
+        );
+
+        await fs.promises.mkdir(targetDir, {
+          recursive: true,
+        });
+
+        // -----------------------------------------------
+        // PROCESS MULTIPLE IMAGES
+        // -----------------------------------------------
+
+        const processImage = async (
+          file,
+          filePrefix
+        ) => {
+          if (!file || !file.buffer) {
+            return null;
+          }
+
+          const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(
+            Math.random() * 1000000000
+          )}.webp`;
+
+          const outputPath = path.join(
+            targetDir,
+            uniqueName
+          );
+
+          let image = sharp(file.buffer).rotate();
+
+          // Optional resize
+          if (width || height) {
+            image = image.resize({
+              width: width ? Number(width) : undefined,
+              height: height ? Number(height) : undefined,
+              fit: "cover",
+              withoutEnlargement: true,
+            });
+          }
+
+          // Convert to WebP
+          await image
+            .webp({
+              quality: Math.min(
+                100,
+                Math.max(1, Number(quality) || 85)
+              ),
+
+              effort: Math.min(
+                6,
+                Math.max(0, Number(effort) || 4)
+              ),
+            })
+            .toFile(outputPath);
+
+          return {
+            originalname: file.originalname,
+            filename: uniqueName,
+            mimetype: "image/webp",
+            path: outputPath,
+            url: `/uploads/${targetFolder}/${uniqueName}`,
+          };
         };
-      };
 
-      if (req.files.featuredImage) {
-        req.files.featuredImage = await Promise.all(
-          req.files.featuredImage.map((file) =>
-            processImage(file, `${prefix}-featured`)
-          )
-        );
+        // -----------------------------------------------
+        // FEATURED IMAGE
+        // -----------------------------------------------
+
+        if (req.files.featuredImage) {
+          req.files.featuredImage =
+            await Promise.all(
+              req.files.featuredImage.map((file) =>
+                processImage(
+                  file,
+                  `${prefix}-featured`
+                )
+              )
+            );
+        }
+
+        // -----------------------------------------------
+        // THUMBNAIL IMAGE
+        // -----------------------------------------------
+
+        if (req.files.thumbnailImage) {
+          req.files.thumbnailImage =
+            await Promise.all(
+              req.files.thumbnailImage.map((file) =>
+                processImage(
+                  file,
+                  `${prefix}-thumbnail`
+                )
+              )
+            );
+        }
       }
 
-      if (req.files.thumbnailImage) {
-        req.files.thumbnailImage = await Promise.all(
-          req.files.thumbnailImage.map((file) =>
-            processImage(file, `${prefix}-thumbnail`)
-          )
-        );
-      }
->>>>>>> 80188399821557018d7897d124989d3991398776
+      // =================================================
+      // NEXT MIDDLEWARE
+      // =================================================
 
       next();
     } catch (error) {
@@ -319,14 +288,12 @@ const convertToWebp = (options = {}) => {
 
       return res.status(500).json({
         success: false,
-        message:
-          `Image processing failed: ${error.message}`,
+        message: `Image processing failed: ${error.message}`,
       });
     }
   };
 };
 
-<<<<<<< HEAD
 // =====================================================
 // DELETE INTERNAL FILE
 // =====================================================
@@ -334,17 +301,13 @@ const convertToWebp = (options = {}) => {
 // There is NO DELETE BUTTON/API in frontend.
 // =====================================================
 
-const deleteUploadedFile = async (
-  fileUrl
-) => {
+const deleteUploadedFile = async (fileUrl) => {
   try {
     if (!fileUrl) {
       return;
     }
 
-    const cleanUrl = String(
-      fileUrl
-    )
+    const cleanUrl = String(fileUrl)
       .replace(/^[/\\]+/, "")
       .replace(/\.\./g, "");
 
@@ -361,9 +324,7 @@ const deleteUploadedFile = async (
         fs.constants.F_OK
       );
 
-      await fs.promises.unlink(
-        filePath
-      );
+      await fs.promises.unlink(filePath);
 
       console.log(
         "🗑️ Old website image deleted:",
@@ -372,6 +333,7 @@ const deleteUploadedFile = async (
     } catch (error) {
       // File does not exist.
       // Do not crash the request.
+
       if (error.code !== "ENOENT") {
         console.error(
           "❌ Old Image Delete Error:",
@@ -387,13 +349,12 @@ const deleteUploadedFile = async (
   }
 };
 
+// =====================================================
+// EXPORTS
+// =====================================================
+
 module.exports = {
   upload,
   convertToWebp,
   deleteUploadedFile,
-=======
-module.exports = {
-  upload,
-  convertToWebp,
->>>>>>> 80188399821557018d7897d124989d3991398776
 };

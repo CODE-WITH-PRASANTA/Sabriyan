@@ -7,7 +7,7 @@ import { FaChevronRight } from 'react-icons/fa';
 import './PremiumCollectionBreadcrumb.css';
 
 // ONLY BACKGROUND IMAGE IMPORTED HERE
-import bgImage from '../../assets/breadcrumb.png';
+import bgImage from '../../assets/breadcrumb.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 

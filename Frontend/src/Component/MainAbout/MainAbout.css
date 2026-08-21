@@ -1,125 +1,231 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+/* =========================================
+   MAIN ABOUT CONTAINER
+========================================= */
 
-/* Main Container with Background Image */
-
-/* Main Container */
 .main-about {
   min-height: 100vh;
   width: 100%;
+
+  position: relative;
+  overflow: hidden;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+
   padding: 40px 20px;
+
   box-sizing: border-box;
 }
 
 
+/* =========================================
+   LCP BACKGROUND IMAGE
+========================================= */
 
-/* Scroll Outer Box */
+.main-about__bg {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center center;
+
+  display: block;
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+
+/* =========================================
+   CONTENT WRAPPER
+========================================= */
+
 .main-about__wrapper {
   position: relative;
+  z-index: 1;
+
   width: 100%;
-  max-width: 580px; /* Constrains content strictly inside the center paper */
+  max-width: 580px;
+
   min-height: 850px;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 130px 45px 120px 45px; /* Ensures text stays clear of top/bottom wooden masks and side leaves */
+
+  padding: 130px 45px 120px 45px;
+
   box-sizing: border-box;
   text-align: center;
 }
 
-/* Paper Content Area */
+
+/* =========================================
+   PAPER CONTENT
+========================================= */
+
 .main-about__paper-content {
   width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #3b2314; /* Deep rich chocolate text color */
+
+  color: #3b2314;
 }
 
-/* Typography Styles */
+
+/* =========================================
+   TYPOGRAPHY
+========================================= */
+
 .main-about__subtitle {
   font-family: 'Montserrat', sans-serif;
+
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 3px;
+
   color: #7c4d25;
+
   font-weight: 600;
+
   margin: 0 0 8px 0;
 }
 
+
 .main-about__title {
   font-family: 'Playfair Display', serif;
+
   font-size: 2.2rem;
   line-height: 1.25;
+
   color: #2b180d;
+
   font-weight: 700;
+
   margin: 0 0 15px 0;
-  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.4);
+
+  text-shadow:
+    0px 1px 1px rgba(255, 255, 255, 0.4);
 }
+
 
 .main-about__divider {
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #8c532b, transparent);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #8c532b,
+      transparent
+    );
+
   margin: 10px 0 20px 0;
 }
 
+
 .main-about__description {
   font-family: 'Montserrat', sans-serif;
+
   font-size: 0.95rem;
   line-height: 1.7;
+
   color: #4a3324;
+
   margin-bottom: 14px;
+
   font-weight: 400;
 }
 
+
 .main-about__description.highlight {
   font-family: 'Playfair Display', serif;
+
   font-style: italic;
+
   font-size: 1.05rem;
+
   font-weight: 600;
+
   color: #5c3217;
 }
 
-/* Button & Animations */
+
+/* =========================================
+   BUTTON
+========================================= */
+
 .main-about__cta-box {
   margin-top: 15px;
 }
 
+
 .main-about__button {
   background: #3b2314;
+
   color: #f7e8d3;
+
   border: 1px solid #7c4d25;
+
   padding: 12px 28px;
+
   font-family: 'Montserrat', sans-serif;
+
   font-size: 0.85rem;
+
   font-weight: 600;
+
   letter-spacing: 1.5px;
+
   text-transform: uppercase;
+
   border-radius: 4px;
+
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.15);
+
+  transition:
+    all 0.3s ease;
 }
+
 
 .main-about__button:hover {
   background: #5c3217;
+
   color: #ffffff;
+
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* Responsive Media Queries */
+
+/* =========================================
+   TABLET
+========================================= */
+
 @media (max-width: 768px) {
+
+  .main-about {
+    padding: 40px 15px;
+  }
+
   .main-about__wrapper {
     max-width: 440px;
-    padding: 120px 30px 100px 30px;
+
+    padding:
+      120px 30px 100px 30px;
   }
 
   .main-about__title {
@@ -132,14 +238,22 @@
   }
 }
 
+
+/* =========================================
+   MOBILE
+========================================= */
+
 @media (max-width: 480px) {
+
   .main-about {
     padding: 10px;
   }
 
   .main-about__wrapper {
     max-width: 320px;
-    padding: 100px 20px 80px 20px;
+
+    padding:
+      100px 20px 80px 20px;
   }
 
   .main-about__subtitle {

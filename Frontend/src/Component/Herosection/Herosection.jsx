@@ -23,10 +23,10 @@ const Herosection = () => {
       const y = (window.innerHeight / 2 - e.clientY) / 35;
 
       image.style.transform = `
-      rotateY(${x}deg)
-      rotateX(${-y}deg)
-      translateX(${-x * 1.5}px)
-      translateY(${y * 1.5}px)
+        rotateY(${x}deg)
+        rotateX(${-y}deg)
+        translateX(${-x * 1.5}px)
+        translateY(${y * 1.5}px)
       `;
     };
 
@@ -36,17 +36,16 @@ const Herosection = () => {
   }, []);
 
   return (
-    <section className="Herosection" ref={heroRef}>
+    <section
+      className="Herosection"
+      ref={heroRef}
+      aria-label="Savriyana Premium Chocolate Brand"
+    >
       {/* Background Light */}
-
-      {/* <div className="Herosection-lightOne"></div> */}
-
       <div className="Herosection-lightTwo"></div>
-
       <div className="Herosection-lightThree"></div>
 
       {/* Floating Leaves */}
-
       <div className="Herosection-leaf leaf1">
         <FaLeaf />
       </div>
@@ -64,58 +63,63 @@ const Herosection = () => {
       </div>
 
       {/* Floating Glow */}
-
       <span className="Herosection-circle c1"></span>
-
       <span className="Herosection-circle c2"></span>
-
       <span className="Herosection-circle c3"></span>
-
       <span className="Herosection-circle c4"></span>
 
       {/* Main Container */}
-
       <div className="Herosection-container">
-        {/* LEFT */}
 
+        {/* ================= LEFT CONTENT ================= */}
         <div className="Herosection-left">
+
+          {/* SEO Badge */}
           <span className="Herosection-tag">
             <FaLeaf />
-
-            Organic Luxury Chocolate
+            Premium Chocolate Brand from Odisha
           </span>
 
+          {/* SEO Main Heading */}
           <h1>
-            Crafted Luxury
+            Best Chocolate Brand
             <br />
-            Chocolate
+            <span>in Odisha</span>
           </h1>
 
+          {/* SEO-Friendly Description */}
           <p>
-            Discover handcrafted premium chocolates made with
-            natural cocoa, desi khaand and traditional stone
-            crafted techniques for a luxurious experience.
+            Discover Savriyana, a premium chocolate brand from Odisha,
+            crafting rich and indulgent chocolates with carefully selected
+            cocoa, traditional Indian ingredients and thoughtful
+            craftsmanship. Every bar is created to deliver authentic
+            flavour, smooth texture and a memorable chocolate experience.
           </p>
 
           {/* Buttons */}
-
           <div className="Herosection-buttons">
-            <button className="Herosection-btnPrimary">
-              Shop Now
 
+            <button
+              className="Herosection-btnPrimary"
+              type="button"
+            >
+              Shop Now
               <FaArrowRight />
             </button>
 
-            <button className="Herosection-btnSecondary">
+            <button
+              className="Herosection-btnSecondary"
+              type="button"
+            >
               <FaPlay />
-
-              Watch Story
+              Watch Our Story
             </button>
+
           </div>
 
           {/* Rating */}
-
           <div className="Herosection-rating">
+
             <div className="Herosection-stars">
               <FaStar />
               <FaStar />
@@ -124,15 +128,18 @@ const Herosection = () => {
               <FaStar />
             </div>
 
-            <span>4.9 (2,350 Reviews)</span>
+            <span>
+              4.9/5 — Loved by Chocolate Lovers
+            </span>
+
           </div>
 
           {/* Stats */}
-
           <div className="Herosection-stats">
+
             <div className="Herosection-stat">
               <h2>55%</h2>
-              <p>Pure Cocoa</p>
+              <p>Rich Cocoa</p>
             </div>
 
             <div className="Herosection-stat">
@@ -142,69 +149,67 @@ const Herosection = () => {
 
             <div className="Herosection-stat">
               <h2>80g</h2>
-              <p>Premium Bar</p>
+              <p>Premium Chocolate Bar</p>
             </div>
+
           </div>
+
         </div>
 
-        {/* RIGHT */}
-
+        {/* ================= RIGHT CONTENT ================= */}
         <div className="Herosection-right">
+
           {/* Decorative Ring */}
-
           <div className="Herosection-ring"></div>
-
           <div className="Herosection-ring ring2"></div>
-
           <div className="Herosection-ring ring3"></div>
 
           {/* Glow */}
-
           <div className="Herosection-imageGlow"></div>
 
           {/* Floating Badge */}
-
           <div className="Herosection-badge">
+
             <span>★★★★★</span>
 
-            <p>Luxury Taste</p>
+            <p>Premium Taste</p>
+
           </div>
 
-          {/* Chocolate */}
+          {/* Chocolate Product */}
+          <div
+            className="Herosection-imageBox"
+            ref={imageRef}
+          >
 
-          <div className="Herosection-imageBox" ref={imageRef}>
             <img
               src={Chocolate}
-              alt="Chocolate"
+              alt="Savriyana premium chocolate bar - premium chocolate brand from Odisha"
               className="Herosection-image"
             />
 
-            {/* Floating Cocoa */}
-
+            {/* Floating Cocoa Beans */}
             <span className="bean bean1"></span>
-
             <span className="bean bean2"></span>
-
             <span className="bean bean3"></span>
-
             <span className="bean bean4"></span>
-
             <span className="bean bean5"></span>
 
             {/* Shadow */}
-
             <div className="Herosection-shadow"></div>
+
           </div>
+
         </div>
+
       </div>
 
       {/* Scroll */}
-
       <div className="Herosection-scroll">
         <span></span>
-
         <p>Scroll</p>
       </div>
+
     </section>
   );
 };
