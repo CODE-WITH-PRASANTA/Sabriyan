@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
+import { FiHeart, FiUser, FiShoppingCart } from "react-icons/fi";
 import "./Navbar.css";
 
 import Logo from "../../assets/logo.webp";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const cartItemCount = 4; // Dynamic cart count badge
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -19,7 +21,7 @@ const Navbar = () => {
           <img src={Logo} alt="Logo" />
         </NavLink>
 
-        {/* Desktop Menu */}
+        {/* Desktop Navigation Links */}
         <nav className="Navbar-links">
           <NavLink to="/">Home</NavLink>
           <NavLink to="/about">About</NavLink>
@@ -29,12 +31,39 @@ const Navbar = () => {
           <NavLink to="/contact">Contact</NavLink>
         </nav>
 
-        {/* Button */}
+        {/* Right Action Icons (Wishlist, Account, Cart) */}
+        <div className="Navbar-actions">
+          <NavLink to="/wishlist" className="Navbar-action-item">
+            <div className="Navbar-action-icon-wrap">
+              <FiHeart className="Navbar-action-icon" />
+            </div>
+            <span>Wishlist</span>
+          </NavLink>
+
+          <NavLink to="/account" className="Navbar-action-item">
+            <div className="Navbar-action-icon-wrap">
+              <FiUser className="Navbar-action-icon" />
+            </div>
+            <span>Account</span>
+          </NavLink>
+
+          <NavLink to="/cart" className="Navbar-action-item">
+            <div className="Navbar-action-icon-wrap">
+              <FiShoppingCart className="Navbar-action-icon" />
+              {cartItemCount > 0 && (
+                <span className="Navbar-badge">{cartItemCount}</span>
+              )}
+            </div>
+            <span>Cart</span>
+          </NavLink>
+        </div>
+
+        {/* Contact CTA Button */}
         <NavLink to="/contact" className="Navbar-btn">
           Contact Us
         </NavLink>
 
-        {/* Mobile Button */}
+        {/* Mobile Toggle Button */}
         <button
           type="button"
           className="Navbar-toggle"
@@ -74,6 +103,33 @@ const Navbar = () => {
         <NavLink to="/contact" onClick={closeMenu}>
           Contact
         </NavLink>
+
+        {/* Mobile Actions */}
+        <div className="Navbar-mobile-actions">
+          <NavLink to="/wishlist" className="Navbar-action-item" onClick={closeMenu}>
+            <div className="Navbar-action-icon-wrap">
+              <FiHeart className="Navbar-action-icon" />
+            </div>
+            <span>Wishlist</span>
+          </NavLink>
+
+          <NavLink to="/account" className="Navbar-action-item" onClick={closeMenu}>
+            <div className="Navbar-action-icon-wrap">
+              <FiUser className="Navbar-action-icon" />
+            </div>
+            <span>Account</span>
+          </NavLink>
+
+          <NavLink to="/cart" className="Navbar-action-item" onClick={closeMenu}>
+            <div className="Navbar-action-icon-wrap">
+              <FiShoppingCart className="Navbar-action-icon" />
+              {cartItemCount > 0 && (
+                <span className="Navbar-badge">{cartItemCount}</span>
+              )}
+            </div>
+            <span>Cart</span>
+          </NavLink>
+        </div>
 
         <NavLink
           to="/contact"

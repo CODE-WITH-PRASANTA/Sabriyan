@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+  
 const premiumCollectionSchema = new mongoose.Schema(
   {
     name: {

@@ -1,8 +1,9 @@
-const multer = require("multer");
+const multer = require("multer"); // Removed the comment slashes
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
 
+<<<<<<< HEAD
 // =====================================================
 // MULTER MEMORY STORAGE
 // =====================================================
@@ -27,6 +28,10 @@ const allowedMimeTypes = [
 // MULTER UPLOAD
 // =====================================================
 
+=======
+const storage = multer.memoryStorage();
+
+>>>>>>> 80188399821557018d7897d124989d3991398776
 const upload = multer({
   storage,
 
@@ -38,21 +43,30 @@ const upload = multer({
     if (
       file &&
       file.mimetype &&
+<<<<<<< HEAD
       allowedMimeTypes.includes(
         file.mimetype.toLowerCase()
       )
+=======
+      file.mimetype.startsWith("image/")
+>>>>>>> 80188399821557018d7897d124989d3991398776
     ) {
       cb(null, true);
     } else {
       cb(
         new Error(
+<<<<<<< HEAD
           "Only JPG, JPEG, PNG, WEBP, AVIF, BMP and TIFF images are allowed."
+=======
+          "Only image files are allowed!"
+>>>>>>> 80188399821557018d7897d124989d3991398776
         )
       );
     }
   },
 });
 
+<<<<<<< HEAD
 // =====================================================
 // CONVERT IMAGE TO WEBP
 // =====================================================
@@ -66,10 +80,20 @@ const convertToWebp = (options = {}) => {
     width = null,
     height = null,
     effort = 4,
+=======
+const convertToWebp = (options = {}) => {
+  const {
+    quality = 80,
+    folder = "blogs",
+    prefix = "blog",
+    width,
+    height,
+>>>>>>> 80188399821557018d7897d124989d3991398776
   } = options;
 
   return async (req, res, next) => {
     try {
+<<<<<<< HEAD
       // -------------------------------------------------
       // No image uploaded
       // -------------------------------------------------
@@ -214,6 +238,77 @@ const convertToWebp = (options = {}) => {
           /\\/g,
           "/"
         );
+=======
+      if (!req.files) {
+        return next();
+      }
+
+      const targetFolder = folder || "blogs";
+
+      const targetDir = path.join(
+        __dirname,
+        `../public/uploads/${targetFolder}`
+      );
+
+      await fs.promises.mkdir(targetDir, {
+        recursive: true,
+      });
+
+      const processImage = async (file, filePrefix) => {
+        if (!file || !file.buffer) {
+          return null;
+        }
+
+        const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(
+          Math.random() * 1e9
+        )}.webp`;
+
+        const outputPath = path.join(
+          targetDir,
+          uniqueName
+        );
+
+        let image = sharp(file.buffer).rotate();
+
+        if (width || height) {
+          image = image.resize(width, height, {
+            fit: "cover",
+            withoutEnlargement: true,
+          });
+        }
+
+        await image
+          .webp({
+            quality: Number(quality) || 80,
+            effort: 4,
+          })
+          .toFile(outputPath);
+
+        return {
+          originalname: file.originalname,
+          filename: uniqueName,
+          mimetype: "image/webp",
+          path: outputPath,
+          url: `/uploads/${targetFolder}/${uniqueName}`,
+        };
+      };
+
+      if (req.files.featuredImage) {
+        req.files.featuredImage = await Promise.all(
+          req.files.featuredImage.map((file) =>
+            processImage(file, `${prefix}-featured`)
+          )
+        );
+      }
+
+      if (req.files.thumbnailImage) {
+        req.files.thumbnailImage = await Promise.all(
+          req.files.thumbnailImage.map((file) =>
+            processImage(file, `${prefix}-thumbnail`)
+          )
+        );
+      }
+>>>>>>> 80188399821557018d7897d124989d3991398776
 
       next();
     } catch (error) {
@@ -231,6 +326,7 @@ const convertToWebp = (options = {}) => {
   };
 };
 
+<<<<<<< HEAD
 // =====================================================
 // DELETE INTERNAL FILE
 // =====================================================
@@ -295,4 +391,9 @@ module.exports = {
   upload,
   convertToWebp,
   deleteUploadedFile,
+=======
+module.exports = {
+  upload,
+  convertToWebp,
+>>>>>>> 80188399821557018d7897d124989d3991398776
 };
