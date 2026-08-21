@@ -16,8 +16,8 @@ import { GiHoneyJar } from 'react-icons/gi';
 import './OurBlog.css';
 
 // LOCAL IMAGE IMPORTS
-import jungleBg from '../../assets/blog.png';
-import featuredStoryImg from '../../assets/honey-6.png'; // Adjust filename/path as needed
+import jungleBg from '../../assets/blog.webp';
+import featuredStoryImg from '../../assets/honey-6.webp'; // Adjust filename/path as needed
 
 // Animated SVG Bee Component
 const AnimatedBee = ({ className }) => (

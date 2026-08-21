@@ -12,7 +12,7 @@ import {
 import { GiOakLeaf, GiSprout } from 'react-icons/gi';
 
 // Importing local background image as requested
-import bgForest from '../../assets/blog-bg.jpeg';
+import bgForest from '../../assets/blog-bg.webp';
 
 import './BlogHero.css';
 

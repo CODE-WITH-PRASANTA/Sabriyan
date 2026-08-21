@@ -8,7 +8,7 @@ import {
   FaPlay,
 } from "react-icons/fa";
 
-import Chocolate from "../../assets/ch-2.jpeg"; // Your Chocolate Image
+import Chocolate from "../../assets/ch-2.webp"; // Your Chocolate Image
 
 const Herosection = () => {
   const heroRef = useRef(null);

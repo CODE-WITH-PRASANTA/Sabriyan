@@ -1,6 +1,6 @@
 import React from 'react';
 import './AboutHoney.css';
-import bgImage from '../../assets/honey-3.png'; // Make sure your background image path is correct
+import bgImage from '../../assets/honey-3.webp'; // Make sure your background image path is correct
 
 const AboutHoney = () => {
   return (

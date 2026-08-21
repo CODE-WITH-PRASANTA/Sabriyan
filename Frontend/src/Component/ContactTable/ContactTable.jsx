@@ -8,7 +8,7 @@ import {
   Leaf
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
-import bgImage from '../../assets/faq.png'; // Your background image path
+import bgImage from '../../assets/faq.webp'; // Your background image path
 import './ContactTable.css';
 
 const ContactTable = () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import './MainAbout.css';
 // 1. Give the imported image a variable name
-import bgImage from '../../assets/about-3.jpeg';
+import bgImage from '../../assets/about-3.webp';
 
 // Component for word-by-word animation from the right side
 const AnimatedText = ({ text, className, tag: Tag = 'p' }) => {

@@ -14,7 +14,7 @@ import 'swiper/css/navigation';
 import './HoneyTestimonial.css';
 
 // ONLY BACKGROUND IMAGE IS IMPORTED HERE
-import bgImage from '../../assets/honey-6.png';
+import bgImage from '../../assets/honey-6.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -1,164 +1,215 @@
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/all';
 import { FaArrowRight } from 'react-icons/fa';
 import './OurStory.css';
 
-// ONLY BACKGROUND IMAGE IS IMPORTED
-import bgImage from '../../assets/story-bg.png';
-
-gsap.registerPlugin(ScrollTrigger);
+import bgImage from '../../assets/story-bg.webp';
 
 const OurStory = () => {
-  const containerRef = useRef(null);
   const parallaxRef = useRef(null);
 
-  // Mouse Parallax Effect
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e;
-      const moveX = (clientX - window.innerWidth / 2) * 0.015;
-      const moveY = (clientY - window.innerHeight / 2) * 0.015;
+  /* =========================================
+     OPTIMIZED MOUSE PARALLAX
+  ========================================= */
 
-      gsap.to(parallaxRef.current, {
+  useEffect(() => {
+    const element = parallaxRef.current;
+
+    if (!element) return;
+
+    let frameId = null;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+
+    const updateParallax = () => {
+      frameId = null;
+
+      const moveX =
+        (mouseX - window.innerWidth / 2) * 0.005;
+
+      const moveY =
+        (mouseY - window.innerHeight / 2) * 0.005;
+
+      gsap.to(element, {
         x: moveX,
         y: moveY,
+        duration: 0.6,
         ease: 'power2.out',
-        duration: 1
+        overwrite: true,
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const handleMouseMove = (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+
+      if (!frameId) {
+        frameId = requestAnimationFrame(updateParallax);
+      }
+    };
+
+    window.addEventListener(
+      'mousemove',
+      handleMouseMove,
+      { passive: true }
+    );
+
+    return () => {
+      window.removeEventListener(
+        'mousemove',
+        handleMouseMove
+      );
+
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+
+      gsap.killTweensOf(element);
+    };
   }, []);
 
   return (
-    <section 
-      className="aboutHero" 
-      ref={containerRef}
-      style={{ backgroundImage: `url(${bgImage})` }}
+    <section
+      className="aboutHero"
+      aria-labelledby="ourStoryTitle"
     >
+      {/* =====================================
+          LAZY BACKGROUND IMAGE
+      ===================================== */}
+
+      <img
+        src={bgImage}
+        alt=""
+        aria-hidden="true"
+        className="aboutHero-bgImage"
+        width="1600"
+        height="900"
+        loading="lazy"
+        decoding="async"
+      />
+
       {/* Dark Forest Overlay */}
-      <div className="aboutOverlay"></div>
+      <div
+        className="aboutOverlay"
+        aria-hidden="true"
+      />
 
       {/* Ambient Forest Fog */}
-      <div className="aboutHero-fog fog-left"></div>
-      <div className="aboutHero-fog fog-right"></div>
+      <div
+        className="aboutHero-fog fog-left"
+        aria-hidden="true"
+      />
 
-      {/* Parallax Wrapper */}
-      <div className="aboutHero-parallax" ref={parallaxRef}>
-        
+      <div
+        className="aboutHero-fog fog-right"
+        aria-hidden="true"
+      />
+
+      {/* =====================================
+          PARALLAX WRAPPER
+      ===================================== */}
+
+      <div
+        className="aboutHero-parallax"
+        ref={parallaxRef}
+      >
         {/* Golden Particles */}
-        <div className="aboutHero-particles">
-          {Array.from({ length: 40 }).map((_, i) => (
-            <span 
-              key={i} 
-              className="aboutHero-particle" 
-              style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 10}s`,
-                animationDuration: `${5 + Math.random() * 6}s`
-              }}
-            ></span>
-          ))}
+        <div
+          className="aboutHero-particles"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 18 }).map(
+            (_, index) => (
+              <span
+                key={index}
+                className="aboutHero-particle"
+                style={{
+                  left: `${(index * 19) % 100}%`,
+                  animationDelay: `${(index % 8) * 0.8}s`,
+                  animationDuration: `${6 + (index % 5)}s`,
+                }}
+              />
+            )
+          )}
         </div>
 
         {/* Floating Leaves */}
-        <div className="aboutHero-leaves">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <span 
-              key={i}
-              className="aboutHero-leaf"
-              style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 8}s`,
-                animationDuration: `${8 + Math.random() * 10}s`
-              }}
-            ></span>
-          ))}
+        <div
+          className="aboutHero-leaves"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 6 }).map(
+            (_, index) => (
+              <span
+                key={index}
+                className="aboutHero-leaf"
+                style={{
+                  left: `${(index * 21) % 100}%`,
+                  animationDelay: `${(index % 5) * 1.2}s`,
+                  animationDuration: `${9 + (index % 4)}s`,
+                }}
+              />
+            )
+          )}
         </div>
 
-        {/* Two Column Layout */}
-        <div className="aboutHero-container">
-          
-          {/* Left Column (60%): Text Content */}
-          <div className="aboutHero-content">
-            
-            {/* Top Subtitle */}
-            <motion.div 
-              className="aboutHero-tagline"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <span>ABOUT SABRIYANA</span>
-            </motion.div>
+        {/* =====================================
+            TWO COLUMN LAYOUT
+        ===================================== */}
 
-            {/* Main Heading */}
-            <motion.h1 
+        <div className="aboutHero-container">
+
+          {/* LEFT CONTENT */}
+          <div className="aboutHero-content">
+
+            <div className="aboutHero-tagline">
+              <span>ABOUT SABRIYANA</span>
+            </div>
+
+            <h2
+              id="ourStoryTitle"
               className="aboutHero-title"
-              initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
             >
               Our Story
-            </motion.h1>
+            </h2>
 
-            {/* Sub-headline */}
-            <motion.p 
-              className="aboutHero-motto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
+            <p className="aboutHero-motto">
               Rooted in Nature, Made with Pure Love
-            </motion.p>
+            </p>
 
-            {/* Story Paragraph */}
-            <motion.div 
-              className="aboutHero-description"
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
+            <div className="aboutHero-description">
               <p>
-                Sabriyana was born from a passion for purity and a deep respect for nature. 
-                Our honey is harvested from the lush green forests, where bees thrive on 
-                wildflowers and biodiversity. Every drop is a promise of natural goodness 
-                and sustainable beekeeping.
+                Sabriyana was born from a passion for
+                purity and a deep respect for nature.
+                Our honey is harvested from the lush
+                green forests, where bees thrive on
+                wildflowers and biodiversity. Every drop
+                is a promise of natural goodness and
+                sustainable beekeeping.
               </p>
-            </motion.div>
+            </div>
 
-            {/* Wooden & Gold CTA Button */}
-            <motion.button 
+            <button
+              type="button"
               className="aboutHero-btn"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.95 }}
             >
               <span>Discover Our Journey</span>
-              <FaArrowRight className="btn-arrow" />
-            </motion.button>
 
+              <FaArrowRight
+                className="btn-arrow"
+                aria-hidden="true"
+              />
+            </button>
           </div>
 
-          {/* Right Column (40%): Visual Stage */}
+          {/* RIGHT VISUAL */}
           <div className="aboutHero-visual">
             <div className="aboutHero-jarWrapper">
-              {/* Pure background composition */}
+              {/* Pure CSS visual composition */}
             </div>
           </div>
 
         </div>
-
       </div>
     </section>
   );

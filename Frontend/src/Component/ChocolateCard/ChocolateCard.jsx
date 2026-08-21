@@ -3,8 +3,8 @@ import "./ChocolateCard.css";
 import API, { IMG_URL } from "../../api/axios";
 import { FaArrowRight, FaStar } from "react-icons/fa";
 
-import CardBg from "../../assets/card.jpeg";     // Background asset reference
-import Chocolate from "../../assets/ch-2.jpeg"; // Fallback Chocolate image
+import CardBg from "../../assets/card.webp";     // Background asset reference
+import Chocolate from "../../assets/ch-2.webp"; // Fallback Chocolate image
 
 const ChocolateCard = () => {
   const [chocolates, setChocolates] = useState([]);

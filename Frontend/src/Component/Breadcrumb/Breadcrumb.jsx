@@ -1,32 +1,83 @@
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/all';
 import { Link } from 'react-router-dom';
 import { FaChevronRight } from 'react-icons/fa';
 import './Breadcrumb.css';
 
-// ONLY BACKGROUND IMAGE IMPORTED HERE
-import bgImage from '../../assets/breadcrumb.png';
-
-gsap.registerPlugin(ScrollTrigger);
+import bgImage from '../../assets/breadcrumb.webp';
 
 // SVG Bee Component
 const BeeSVG = () => (
-  <svg viewBox="0 0 64 64" fill="none" className="breadcrumb-bee-svg">
-    <ellipse cx="26" cy="18" rx="14" ry="8" fill="rgba(255, 255, 255, 0.75)" transform="rotate(-30 26 18)" />
-    <ellipse cx="38" cy="18" rx="14" ry="8" fill="rgba(255, 255, 255, 0.75)" transform="rotate(30 38 18)" />
-    <ellipse cx="32" cy="38" rx="18" ry="22" fill="#FFC107" />
-    <path d="M16 32 C 24 35, 40 35, 48 32" stroke="#1A1A1A" strokeWidth="4" strokeLinecap="round" />
-    <path d="M15 40 C 24 43, 40 43, 49 40" stroke="#1A1A1A" strokeWidth="4" strokeLinecap="round" />
-    <path d="M18 48 C 25 50, 39 50, 46 48" stroke="#1A1A1A" strokeWidth="4" strokeLinecap="round" />
-    <circle cx="32" cy="18" r="8" fill="#1A1A1A" />
+  <svg
+    viewBox="0 0 64 64"
+    fill="none"
+    className="breadcrumb-bee-svg"
+    aria-hidden="true"
+  >
+    <ellipse
+      cx="26"
+      cy="18"
+      rx="14"
+      ry="8"
+      fill="rgba(255,255,255,0.75)"
+      transform="rotate(-30 26 18)"
+    />
+
+    <ellipse
+      cx="38"
+      cy="18"
+      rx="14"
+      ry="8"
+      fill="rgba(255,255,255,0.75)"
+      transform="rotate(30 38 18)"
+    />
+
+    <ellipse
+      cx="32"
+      cy="38"
+      rx="18"
+      ry="22"
+      fill="#FFC107"
+    />
+
+    <path
+      d="M16 32 C24 35,40 35,48 32"
+      stroke="#1A1A1A"
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M15 40 C24 43,40 43,49 40"
+      stroke="#1A1A1A"
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M18 48 C25 50,39 50,46 48"
+      stroke="#1A1A1A"
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
+
+    <circle
+      cx="32"
+      cy="18"
+      r="8"
+      fill="#1A1A1A"
+    />
   </svg>
 );
 
-// SVG Flower Element
+// SVG Flower Component
 const FlowerSVG = () => (
-  <svg viewBox="0 0 100 100" fill="none" className="breadcrumb-flower-svg">
+  <svg
+    viewBox="0 0 100 100"
+    fill="none"
+    className="breadcrumb-flower-svg"
+    aria-hidden="true"
+  >
     <circle cx="50" cy="28" r="14" fill="#FFFFFF" />
     <circle cx="72" cy="50" r="14" fill="#FFFFFF" />
     <circle cx="50" cy="72" r="14" fill="#FFFFFF" />
@@ -40,170 +91,266 @@ const FlowerSVG = () => (
 );
 
 const Breadcrumb = () => {
-  const containerRef = useRef(null);
   const parallaxRef = useRef(null);
   const beesRef = useRef([]);
 
-  // Step 15: Mouse Parallax Effect
+  // Mouse parallax
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e;
-      const moveX = (clientX - window.innerWidth / 2) * 0.012;
-      const moveY = (clientY - window.innerHeight / 2) * 0.012;
+    const element = parallaxRef.current;
 
-      gsap.to(parallaxRef.current, {
+    if (!element) return;
+
+    let frameId = null;
+    let mouseX = 0;
+    let mouseY = 0;
+
+    const updateParallax = () => {
+      frameId = null;
+
+      const moveX =
+        (mouseX - window.innerWidth / 2) * 0.006;
+
+      const moveY =
+        (mouseY - window.innerHeight / 2) * 0.006;
+
+      gsap.to(element, {
         x: moveX,
         y: moveY,
-        ease: "power2.out",
-        duration: 1
+        duration: 0.6,
+        ease: 'power2.out',
+        overwrite: true,
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const handleMouseMove = (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+
+      if (!frameId) {
+        frameId = requestAnimationFrame(updateParallax);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+
+      gsap.killTweensOf(element);
+    };
   }, []);
 
-  // Step 8: Flying Bees Animation
+  // Flying bees
   useEffect(() => {
-    beesRef.current.forEach((bee, i) => {
+    const animations = [];
+
+    beesRef.current.forEach((bee, index) => {
       if (!bee) return;
-      gsap.to(bee, {
-        x: 'random(-50, 50, 10)',
-        y: 'random(-35, 35, 10)',
-        rotation: 'random(-20, 20)',
-        duration: 3 + i * 1.2,
+
+      const animation = gsap.to(bee, {
+        x: `random(-35,35,5)`,
+        y: `random(-25,25,5)`,
+        rotation: `random(-12,12)`,
+        duration: 4 + index,
         repeat: -1,
         yoyo: true,
-        ease: 'sine.inOut'
+        ease: 'sine.inOut',
       });
+
+      animations.push(animation);
     });
+
+    return () => {
+      animations.forEach((animation) => {
+        animation.kill();
+      });
+    };
   }, []);
 
   return (
-    <section 
-      className="breadcrumb" 
-      ref={containerRef}
-      style={{ backgroundImage: `url(${bgImage})` }}
-    >
-      {/* Step 3: Dark Forest Overlay */}
-      <div className="breadcrumb-overlay"></div>
+    <section className="breadcrumb">
+      {/* Optimized LCP background image */}
+      <picture className="breadcrumb-bg-picture">
+        <img
+          src={bgImage}
+          alt=""
+          aria-hidden="true"
+          className="breadcrumb-bg-image"
+          width="1920"
+          height="1080"
+          fetchPriority="high"
+          decoding="async"
+        />
+      </picture>
 
-      {/* Step 5: Floating Fog Effect */}
-      <div className="breadcrumb-fog fog-1"></div>
-      <div className="breadcrumb-fog fog-2"></div>
-      <div className="breadcrumb-fog fog-3"></div>
+      {/* Dark overlay */}
+      <div className="breadcrumb-overlay" />
 
-      {/* Parallax Content Wrapper */}
-      <div className="breadcrumb-parallax" ref={parallaxRef}>
-        
-        {/* Step 7: Floating Golden Light Particles */}
-        <div className="breadcrumb-particles">
-          {Array.from({ length: 35 }).map((_, i) => (
-            <span 
-              key={i} 
-              className="breadcrumb-particle" 
+      {/* Fog */}
+      <div className="breadcrumb-fog fog-1" />
+      <div className="breadcrumb-fog fog-2" />
+      <div className="breadcrumb-fog fog-3" />
+
+      {/* Main wrapper */}
+      <div
+        className="breadcrumb-parallax"
+        ref={parallaxRef}
+      >
+        {/* Floating particles */}
+        <div
+          className="breadcrumb-particles"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 20 }).map((_, index) => (
+            <span
+              key={index}
+              className="breadcrumb-particle"
               style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 10}s`,
-                animationDuration: `${5 + Math.random() * 6}s`
+                left: `${(index * 17) % 100}%`,
+                animationDelay: `${(index % 8) * 0.8}s`,
+                animationDuration: `${6 + (index % 5)}s`,
               }}
-            ></span>
+            />
           ))}
         </div>
 
-        {/* Step 6: Floating Leaves */}
-        <div className="breadcrumb-leaves">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <span 
-              key={i}
+        {/* Floating leaves */}
+        <div
+          className="breadcrumb-leaves"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 6 }).map((_, index) => (
+            <span
+              key={index}
               className="breadcrumb-leaf"
               style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 8}s`,
-                animationDuration: `${8 + Math.random() * 10}s`
+                left: `${(index * 19) % 100}%`,
+                animationDelay: `${(index % 5) * 1.2}s`,
+                animationDuration: `${9 + (index % 4)}s`,
               }}
-            ></span>
+            />
           ))}
         </div>
 
-        {/* Step 8: Flying Bees */}
-        <div className="breadcrumb-bee bee-1" ref={(el) => (beesRef.current[0] = el)}>
-          <BeeSVG />
-        </div>
-        <div className="breadcrumb-bee bee-2" ref={(el) => (beesRef.current[1] = el)}>
-          <BeeSVG />
-        </div>
-        <div className="breadcrumb-bee bee-3" ref={(el) => (beesRef.current[2] = el)}>
-          <BeeSVG />
-        </div>
-        <div className="breadcrumb-bee bee-4" ref={(el) => (beesRef.current[3] = el)}>
+        {/* Bees */}
+        <div
+          className="breadcrumb-bee bee-1"
+          ref={(el) => {
+            beesRef.current[0] = el;
+          }}
+        >
           <BeeSVG />
         </div>
 
-        {/* Center Hero Content */}
+        <div
+          className="breadcrumb-bee bee-2"
+          ref={(el) => {
+            beesRef.current[1] = el;
+          }}
+        >
+          <BeeSVG />
+        </div>
+
+        <div
+          className="breadcrumb-bee bee-3"
+          ref={(el) => {
+            beesRef.current[2] = el;
+          }}
+        >
+          <BeeSVG />
+        </div>
+
+        <div
+          className="breadcrumb-bee bee-4"
+          ref={(el) => {
+            beesRef.current[3] = el;
+          }}
+        >
+          <BeeSVG />
+        </div>
+
+        {/* Center content */}
         <div className="breadcrumb-content">
-          
-          {/* Step 9: 3D Nature Style Sabriyana Title */}
-          {/* <motion.h1 
-            className="breadcrumb-title"
-            initial={{ opacity: 0, y: 50, scale: 0.9, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 1, delay: 0.2 }}
+          {/* Honey drops */}
+          <div
+            className="breadcrumb-honey-drops"
+            aria-hidden="true"
           >
-            Sabriyana
-          </motion.h1> */}
-
-          {/* Step 10: Subtitle with Golden Ornament lines */}
-          {/* <motion.div 
-            className="breadcrumb-subtitle-wrapper"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <span className="breadcrumb-line left"></span>
-            <span className="breadcrumb-subtitle">PURE AS NATURE</span>
-            <span className="breadcrumb-line right"></span>
-          </motion.div> */}
-
-          {/* Step 13: Dripping Honey Drops */}
-          <div className="breadcrumb-honey-drops">
-            <span className="breadcrumb-drop drop-1"></span>
-            <span className="breadcrumb-drop drop-2"></span>
-            <span className="breadcrumb-drop drop-3"></span>
+            <span className="breadcrumb-drop drop-1" />
+            <span className="breadcrumb-drop drop-2" />
+            <span className="breadcrumb-drop drop-3" />
           </div>
 
-          {/* Step 11 & 12: Glassmorphic Breadcrumb Navigation Bar */}
-          <motion.nav 
+          {/* Breadcrumb navigation */}
+          <nav
             className="breadcrumb-nav"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
+            aria-label="Breadcrumb"
           >
-            <Link to="/" className="breadcrumb-link">Home</Link>
-            <FaChevronRight className="breadcrumb-arrow" />
-            <Link to="/products" className="breadcrumb-link">Products</Link>
-            <FaChevronRight className="breadcrumb-arrow" />
-            <span className="breadcrumb-current">About</span>
-          </motion.nav>
+            <Link
+              to="/"
+              className="breadcrumb-link"
+            >
+              Home
+            </Link>
 
+            <FaChevronRight
+              className="breadcrumb-arrow"
+              aria-hidden="true"
+            />
+
+            <Link
+              to="/products"
+              className="breadcrumb-link"
+            >
+              Products
+            </Link>
+
+            <FaChevronRight
+              className="breadcrumb-arrow"
+              aria-hidden="true"
+            />
+
+            <span
+              className="breadcrumb-current"
+              aria-current="page"
+            >
+              About
+            </span>
+          </nav>
         </div>
 
-        {/* Step 14: Decorative Flowers & Honeycomb Elements */}
-        <div className="breadcrumb-flower left">
+        {/* Flowers */}
+        <div
+          className="breadcrumb-flower left"
+          aria-hidden="true"
+        >
           <FlowerSVG />
         </div>
-        <div className="breadcrumb-flower right">
+
+        <div
+          className="breadcrumb-flower right"
+          aria-hidden="true"
+        >
           <FlowerSVG />
         </div>
 
-        <div className="breadcrumb-honeycomb">
-          <div className="hex"></div>
-          <div className="hex"></div>
-          <div className="hex"></div>
-          <div className="hex"></div>
-          <div className="hex"></div>
+        {/* Honeycomb */}
+        <div
+          className="breadcrumb-honeycomb"
+          aria-hidden="true"
+        >
+          <div className="hex" />
+          <div className="hex" />
+          <div className="hex" />
+          <div className="hex" />
+          <div className="hex" />
         </div>
-
       </div>
     </section>
   );

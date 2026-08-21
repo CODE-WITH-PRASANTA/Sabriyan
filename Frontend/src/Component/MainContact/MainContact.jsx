@@ -11,7 +11,7 @@ import {
   Sparkles,
   Loader2
 } from 'lucide-react'
-import bgImage from '../../assets/faq.png'
+import bgImage from '../../assets/faq.webp'
 import './MainContact.css'
 
 const MainContact = () => {

@@ -13,8 +13,8 @@ import 'swiper/css/pagination';
 import './HoneyProducts.css';
 
 // Import local fallback images
-import productBgImg from '../../assets/honey4.png';
-import honeyBottleImg from '../../assets/honey-2.png';
+import productBgImg from '../../assets/honey4.webp';
+import honeyBottleImg from '../../assets/honey-2.webp';
 
 const HoneyProducts = () => {
   const [products, setProducts] = useState([]);

@@ -11,8 +11,8 @@ import {
 import './HoneySection.css';
 
 // 🌅 IMPORT LOCAL IMAGE ASSETS
-import BotanicalBg from '../../assets/honey.png';
-import GlassHoneyBottle from '../../assets/honey-2.png';
+import BotanicalBg from '../../assets/honey.webp';
+import GlassHoneyBottle from '../../assets/honey-2.webp';
 
 const HoneySection = () => {
   // Stagger animation container variants
