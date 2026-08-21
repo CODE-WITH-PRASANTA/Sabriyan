@@ -16,13 +16,13 @@ import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
 // Components
 import Footer from "./Component/Footer/Footer";
 import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
-import Cart from "./Component/Cart/Cart";
 import MyWishlist from "./Component/MyWishlist/MyWishlist";
 import Account from "./Component/Account/Account";
 import OurProducts from "./Component/OurProducts/OurProducts";
 import PrivacyPolicy from "./Component/PrivacyPolicy/PrivacyPolicy";
 import TermsAndConditions from "./Component/TermsAndConditions/TermsAndConditions";
 import Floating from "./Component/Floating/Floating";
+import Cart from "./Component/Cart/Cart";
 
 const App = () => {
   return (
@@ -58,15 +58,18 @@ const App = () => {
             element={<PremimuCollection />}
           />
 
-          <Route
-            path="/cart"
-            element={<Cart />}
-          />
+          
 
           <Route
             path="/wishlist"
             element={<MyWishlist />}
-          />
+            />
+              
+               <Route
+            path="/cart"
+            element={<Cart />}
+            />
+
 
           <Route
             path="/account"

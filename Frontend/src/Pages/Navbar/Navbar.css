@@ -104,10 +104,24 @@ Desktop Menu
   background: transparent;
   padding: 4px 6px;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: inherit;
+  border: none;
+  outline: none;
 }
 
 .Navbar-action-item:hover {
   transform: translateY(-3px);
+}
+
+/* Button style reset for cart drawer trigger */
+.Navbar-cart-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-family: inherit;
+  color: inherit;
 }
 
 .Navbar-action-icon-wrap {
