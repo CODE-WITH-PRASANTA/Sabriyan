@@ -1,164 +1,353 @@
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/all';
-import { FaArrowRight } from 'react-icons/fa';
-import './OurStory.css';
+import React, { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/all";
+import { FaArrowRight } from "react-icons/fa";
+import "./OurStory.css";
 
-// ONLY BACKGROUND IMAGE IS IMPORTED
-import bgImage from '../../assets/story-bg.png';
+import bgImage from "../../assets/story-bg.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const OurStory = () => {
-  const containerRef = useRef(null);
   const parallaxRef = useRef(null);
 
   // Mouse Parallax Effect
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e;
-      const moveX = (clientX - window.innerWidth / 2) * 0.015;
-      const moveY = (clientY - window.innerHeight / 2) * 0.015;
+    const element = parallaxRef.current;
 
-      gsap.to(parallaxRef.current, {
+    if (!element) return;
+
+    let frameId = null;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+
+    const updateParallax = () => {
+      frameId = null;
+
+      const moveX =
+        (mouseX - window.innerWidth / 2) * 0.005;
+
+      const moveY =
+        (mouseY - window.innerHeight / 2) * 0.005;
+
+      gsap.to(element, {
         x: moveX,
         y: moveY,
-        ease: 'power2.out',
-        duration: 1
+        duration: 0.6,
+        ease: "power2.out",
+        overwrite: true,
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const handleMouseMove = (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+
+      if (!frameId) {
+        frameId = requestAnimationFrame(updateParallax);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+
+      gsap.killTweensOf(element);
+    };
   }, []);
 
   return (
-    <section 
-      className="aboutHero" 
-      ref={containerRef}
-      style={{ backgroundImage: `url(${bgImage})` }}
+    <section
+      className="aboutHero"
+      aria-labelledby="savriyana-story-title"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+      }}
     >
-      {/* Dark Forest Overlay */}
-      <div className="aboutOverlay"></div>
+      {/* Background Image */}
+      <img
+        src={bgImage}
+        alt=""
+        aria-hidden="true"
+        className="aboutHero-bgImage"
+        width="1600"
+        height="900"
+        loading="lazy"
+        decoding="async"
+      />
 
-      {/* Ambient Forest Fog */}
-      <div className="aboutHero-fog fog-left"></div>
-      <div className="aboutHero-fog fog-right"></div>
+      {/* Dark Overlay */}
+      <div
+        className="aboutOverlay"
+        aria-hidden="true"
+      />
+
+      {/* Ambient Fog */}
+      <div
+        className="aboutHero-fog fog-left"
+        aria-hidden="true"
+      />
+
+      <div
+        className="aboutHero-fog fog-right"
+        aria-hidden="true"
+      />
 
       {/* Parallax Wrapper */}
-      <div className="aboutHero-parallax" ref={parallaxRef}>
-        
+      <div
+        className="aboutHero-parallax"
+        ref={parallaxRef}
+      >
         {/* Golden Particles */}
-        <div className="aboutHero-particles">
-          {Array.from({ length: 40 }).map((_, i) => (
-            <span 
-              key={i} 
-              className="aboutHero-particle" 
-              style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 10}s`,
-                animationDuration: `${5 + Math.random() * 6}s`
-              }}
-            ></span>
-          ))}
+        <div
+          className="aboutHero-particles"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 18 }).map(
+            (_, index) => (
+              <span
+                key={index}
+                className="aboutHero-particle"
+                style={{
+                  left: `${(index * 19) % 100}%`,
+                  animationDelay: `${
+                    (index % 8) * 0.8
+                  }s`,
+                  animationDuration: `${
+                    6 + (index % 5)
+                  }s`,
+                }}
+              />
+            )
+          )}
         </div>
 
         {/* Floating Leaves */}
-        <div className="aboutHero-leaves">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <span 
-              key={i}
-              className="aboutHero-leaf"
-              style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 8}s`,
-                animationDuration: `${8 + Math.random() * 10}s`
-              }}
-            ></span>
-          ))}
+        <div
+          className="aboutHero-leaves"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 6 }).map(
+            (_, index) => (
+              <span
+                key={index}
+                className="aboutHero-leaf"
+                style={{
+                  left: `${(index * 21) % 100}%`,
+                  animationDelay: `${
+                    (index % 5) * 1.2
+                  }s`,
+                  animationDuration: `${
+                    9 + (index % 4)
+                  }s`,
+                }}
+              />
+            )
+          )}
         </div>
 
         {/* Two Column Layout */}
         <div className="aboutHero-container">
-          
-          {/* Left Column (60%): Text Content */}
+          {/* LEFT CONTENT */}
           <div className="aboutHero-content">
-            
-            {/* Top Subtitle */}
-            <motion.div 
+            {/* Tagline */}
+            <motion.div
               className="aboutHero-tagline"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              initial={{
+                opacity: 0,
+                x: -30,
+              }}
+              whileInView={{
+                opacity: 1,
+                x: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.6,
+              }}
             >
-              <span>ABOUT SABRIYANA</span>
+              <span>ABOUT SAVRIYANA</span>
             </motion.div>
 
             {/* Main Heading */}
-            <motion.h1 
+            <motion.h1
+              id="savriyana-story-title"
               className="aboutHero-title"
-              initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              initial={{
+                opacity: 0,
+                y: 30,
+                filter: "blur(8px)",
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2,
+              }}
             >
               Our Story
             </motion.h1>
 
-            {/* Sub-headline */}
-            <motion.p 
+            {/* Brand Motto */}
+            <motion.p
               className="aboutHero-motto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: 0.3,
+              }}
             >
-              Rooted in Nature, Made with Pure Love
+              From Nature, Crafted with Passion
             </motion.p>
 
-            {/* Story Paragraph */}
-            <motion.div 
+            {/* Story Description */}
+            <motion.div
               className="aboutHero-description"
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              initial={{
+                opacity: 0,
+                y: 25,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.8,
+                delay: 0.4,
+              }}
             >
               <p>
-                Sabriyana was born from a passion for purity and a deep respect for nature. 
-                Our honey is harvested from the lush green forests, where bees thrive on 
-                wildflowers and biodiversity. Every drop is a promise of natural goodness 
-                and sustainable beekeeping.
+                Savriyana is a premium chocolate brand
+                from Odisha, created from a simple belief
+                — great chocolate begins with thoughtful
+                ingredients and genuine craftsmanship. We
+                carefully bring together rich cocoa,
+                traditional Indian flavours and modern
+                chocolate-making to create a distinctive
+                experience for chocolate lovers.
+              </p>
+
+              <p>
+                Our journey is inspired by nature,
+                heritage and the joy of sharing something
+                truly special. Every Savriyana chocolate
+                is made with attention to flavour, texture
+                and detail, reflecting our ambition to
+                become one of the most loved chocolate
+                brands from Odisha.
+              </p>
+
+              <p>
+                From our ingredients to the finished bar,
+                we believe premium chocolate should feel
+                authentic, indulgent and memorable. That
+                is what makes Savriyana more than just
+                chocolate — it is our expression of
+                quality, craftsmanship and Indian
+                heritage.
               </p>
             </motion.div>
 
-            {/* Wooden & Gold CTA Button */}
-            <motion.button 
+            {/* SEO Supporting Text */}
+            <motion.div
+              className="aboutHero-seoText"
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: 0.5,
+              }}
+            >
+              <p>
+                Discover Savriyana, a{" "}
+                <strong>
+                  premium chocolate brand in Odisha
+                </strong>{" "}
+                focused on quality, authentic flavour and
+                thoughtfully crafted chocolate.
+              </p>
+            </motion.div>
+
+            {/* CTA Button */}
+            <motion.button
               className="aboutHero-btn"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.95 }}
+              type="button"
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: 0.6,
+              }}
+              whileHover={{
+                scale: 1.08,
+              }}
+              whileTap={{
+                scale: 0.95,
+              }}
             >
               <span>Discover Our Journey</span>
-              <FaArrowRight className="btn-arrow" />
-            </motion.button>
 
+              <FaArrowRight
+                className="btn-arrow"
+                aria-hidden="true"
+              />
+            </motion.button>
           </div>
 
-          {/* Right Column (40%): Visual Stage */}
+          {/* RIGHT VISUAL */}
           <div className="aboutHero-visual">
             <div className="aboutHero-jarWrapper">
-              {/* Pure background composition */}
+              {/* Visual composition can be styled using CSS */}
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );

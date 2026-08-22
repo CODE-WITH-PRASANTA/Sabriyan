@@ -1,209 +1,566 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&display=swap');
+ /* =========================================================
+   WHY CHOOSE SABRIYANA
+========================================================= */
 
-/* Base Section & Background Zoom */
 .whyChoose {
-  min-height: 100vh;
-  width: 100%;
   position: relative;
-  overflow: hidden;
+  width: 100%;
+  min-height: 100vh;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  animation: bgZoom 25s infinite alternate ease-in-out;
+
   padding: 60px 20px;
+
   box-sizing: border-box;
+  overflow: hidden;
+
+  background: #071c0b;
+
+  isolation: isolate;
+
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
 }
 
-@keyframes bgZoom {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
+/* =========================================================
+   BACKGROUND IMAGE
+========================================================= */
+
+.whyChoose-bgImage {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+
+  z-index: -3;
+
+  transform: scale(1.01);
+
+  animation: whyChooseBgZoom 25s ease-in-out infinite
+    alternate;
+
+  will-change: transform;
 }
 
-/* Dark Forest Overlay */
+@keyframes whyChooseBgZoom {
+  0% {
+    transform: scale(1.01);
+  }
+
+  100% {
+    transform: scale(1.06);
+  }
+}
+
+/* =========================================================
+   DARK OVERLAY
+========================================================= */
+
 .whyChoose-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 30, 0, 0.45) 0%, rgba(0, 0, 0, 0.75) 100%);
-  z-index: 1;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 30, 0, 0.45) 0%,
+      rgba(0, 0, 0, 0.78) 100%
+    );
+
+  z-index: -2;
+
+  pointer-events: none;
 }
 
-/* Floating Fog */
+/* =========================================================
+   FLOATING FOG
+========================================================= */
+
 .whyChoose-fog {
   position: absolute;
+
+  width: 45%;
+  height: 45%;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  filter: blur(65px);
+
+  opacity: 0.12;
+
+  pointer-events: none;
+
+  z-index: 1;
+
+  will-change: transform;
+}
+
+.fog-1 {
+  top: 10%;
+  left: -10%;
+
+  animation:
+    fogDrift1 40s ease-in-out infinite alternate;
+}
+
+.fog-2 {
+  right: -10%;
+  bottom: 0;
+
   width: 50%;
   height: 50%;
+
   background: rgba(255, 255, 255, 0.06);
+
   filter: blur(80px);
+
   opacity: 0.15;
-  pointer-events: none;
-  z-index: 1;
-  border-radius: 50%;
-}
-.fog-1 { top: 10%; left: -10%; animation: fogDrift 40s infinite ease-in-out alternate; }
-.fog-2 { bottom: 0; right: -10%; animation: fogDrift 35s infinite ease-in-out alternate-reverse; }
-.fog-3 { top: 40%; left: 30%; animation: fogDrift 45s infinite ease-in-out alternate; }
 
-@keyframes fogDrift {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(120px); }
+  animation:
+    fogDrift2 35s ease-in-out infinite alternate;
 }
 
-/* Sun Rays */
+.fog-3 {
+  top: 40%;
+  left: 30%;
+
+  animation:
+    fogDrift1 45s ease-in-out infinite alternate;
+}
+
+@keyframes fogDrift1 {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(80px, -20px, 0);
+  }
+}
+
+@keyframes fogDrift2 {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-70px, 25px, 0);
+  }
+}
+
+/* =========================================================
+   SUN RAYS
+========================================================= */
+
 .whyChoose-sunRays {
   position: absolute;
+
   top: -100px;
   left: 50%;
-  transform: translateX(-50%);
+
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.35) 0%, rgba(255, 215, 0, 0) 70%);
+
+  transform: translateX(-50%);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 215, 0, 0.35) 0%,
+      rgba(255, 215, 0, 0) 70%
+    );
+
   pointer-events: none;
+
   z-index: 1;
-  animation: rayPulse 12s infinite ease-in-out alternate;
+
+  animation:
+    rayPulse 12s ease-in-out infinite alternate;
+
+  will-change: transform, opacity;
 }
 
 @keyframes rayPulse {
-  0% { opacity: 0.4; transform: translateX(-50%) scale(0.9); }
-  100% { opacity: 0.8; transform: translateX(-50%) scale(1.15); }
+  from {
+    opacity: 0.35;
+
+    transform:
+      translate3d(-50%, 0, 0)
+      scale(0.95);
+  }
+
+  to {
+    opacity: 0.7;
+
+    transform:
+      translate3d(-50%, 0, 0)
+      scale(1.08);
+  }
 }
 
-/* Parallax Wrapper */
+/* =========================================================
+   PARALLAX WRAPPER
+========================================================= */
+
 .whyChoose-parallax {
   position: relative;
+
   width: 100%;
   max-width: 1350px;
-  z-index: 2;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  z-index: 2;
+
+  will-change: transform;
 }
 
-/* Particles */
+/* =========================================================
+   PARTICLES
+========================================================= */
+
 .whyChoose-particles {
   position: absolute;
   inset: 0;
+
   pointer-events: none;
+
+  z-index: 1;
 }
 
 .whyChoose-particle {
   position: absolute;
+
   bottom: -10px;
+
   width: 3px;
   height: 3px;
+
   border-radius: 50%;
-  background: #FFD54F;
-  box-shadow: 0 0 8px #FFD54F, 0 0 12px #FFC107;
-  animation: particleUp 8s infinite linear;
+
+  background: #ffd54f;
+
+  box-shadow:
+    0 0 6px #ffd54f,
+    0 0 10px #ffc107;
+
+  animation:
+    particleUp 8s linear infinite;
+
+  will-change: transform, opacity;
 }
 
 @keyframes particleUp {
-  0% { transform: translateY(0) scale(1); opacity: 0; }
-  50% { opacity: 0.85; }
-  100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+  0% {
+    transform:
+      translate3d(0, 0, 0)
+      scale(1);
+
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+
+  100% {
+    transform:
+      translate3d(0, -100vh, 0)
+      scale(1.35);
+
+    opacity: 0;
+  }
 }
 
-/* Leaves */
+/* =========================================================
+   FLOATING LEAVES
+========================================================= */
+
 .whyChoose-leaves {
   position: absolute;
   inset: 0;
+
   pointer-events: none;
+
+  z-index: 1;
 }
 
 .whyChoose-leaf {
   position: absolute;
+
   top: -20px;
+
   width: 12px;
   height: 20px;
+
   background: rgba(124, 182, 48, 0.7);
-  border-radius: 0% 100% 0% 100% / 0% 100% 0% 100%;
-  animation: leafFall 12s infinite linear;
+
+  border-radius:
+    0% 100% 0% 100% /
+    0% 100% 0% 100%;
+
+  animation:
+    leafFall 12s linear infinite;
+
+  will-change: transform, opacity;
 }
 
 @keyframes leafFall {
-  0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.8; }
-  100% { transform: translateY(110vh) rotate(360deg) translateX(60px); opacity: 0; }
+  0% {
+    transform:
+      translate3d(0, -20px, 0)
+      rotate(0deg);
+
+    opacity: 0.8;
+  }
+
+  100% {
+    transform:
+      translate3d(60px, 110vh, 0)
+      rotate(360deg);
+
+    opacity: 0;
+  }
 }
 
-/* Flying Bees SVG */
+/* =========================================================
+   FLYING BEES
+========================================================= */
+
 .whyChoose-bee {
   position: absolute;
+
   width: 42px;
   height: 42px;
+
   z-index: 6;
+
   pointer-events: none;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+
+  filter:
+    drop-shadow(
+      0 4px 8px rgba(0, 0, 0, 0.5)
+    );
+
+  will-change: transform;
 }
 
-.whyChoose-bee-svg { width: 100%; height: 100%; }
+.whyChoose-bee-svg {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+}
 
 .whyChoose-bee-wings {
   transform-origin: center;
-  animation: wingVibrate 0.15s infinite alternate ease-in-out;
+
+  animation:
+    wingVibrate 0.18s ease-in-out infinite
+    alternate;
 }
 
 @keyframes wingVibrate {
-  0% { transform: rotate(-6deg); }
-  100% { transform: rotate(6deg); }
+  from {
+    transform: rotate(-5deg);
+  }
+
+  to {
+    transform: rotate(5deg);
+  }
 }
 
-.bee-1 { top: 8%; left: 8%; }
-.bee-2 { top: 15%; right: 10%; }
-.bee-3 { top: 38%; left: 32%; }
-.bee-4 { top: 35%; right: 30%; }
-.bee-5 { bottom: 18%; left: 12%; }
-.bee-6 { bottom: 22%; right: 14%; }
+/* Bee Positions */
 
-/* Header Section */
+.bee-1 {
+  top: 8%;
+  left: 8%;
+}
+
+.bee-2 {
+  top: 15%;
+  right: 10%;
+}
+
+.bee-3 {
+  top: 35%;
+  right: 30%;
+}
+
+.bee-4 {
+  bottom: 20%;
+  right: 14%;
+}
+
+.bee-5 {
+  bottom: 18%;
+  left: 12%;
+}
+
+.bee-6 {
+  bottom: 22%;
+  right: 14%;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .whyChoose-header {
-  text-align: center;
+  position: relative;
+
+  width: 100%;
+
+  padding: 0 15px;
+
   margin-bottom: 35px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  z-index: 7;
 }
+
+/* Badge */
 
 .whyChoose-badge {
   display: inline-block;
-  background: linear-gradient(180deg, #3A5A1B 0%, #1E330D 100%);
-  border: 1px solid #FFD54F;
-  border-radius: 30px;
-  padding: 6px 20px;
-  font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
-  color: #FFD54F;
-  font-weight: 700;
-  letter-spacing: 2px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+
   margin-bottom: 12px;
+
+  padding: 6px 20px;
+
+  border:
+    1px solid #ffd54f;
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #3a5a1b 0%,
+      #1e330d 100%
+    );
+
+  color: #ffd54f;
+
+  font-family:
+    "Cinzel",
+    Georgia,
+    serif;
+
+  font-size: 0.85rem;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* Main Heading */
+
 .whyChoose-title {
-  font-family: 'Cinzel', serif;
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: #FFFFFF;
   margin: 0;
-  text-shadow: 0 10px 25px rgba(0,0,0,0.7);
+
+  color: #ffffff;
+
+  font-family:
+    "Cinzel",
+    Georgia,
+    serif;
+
+  font-size: 2.8rem;
+
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  text-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.7);
 }
 
 .title-highlight {
-  color: #7CB630;
+  color: #7cb630;
 }
 
-/* Main Grid Container */
+/* =========================================================
+   SEO INTRO
+========================================================= */
+
+.whyChoose-intro {
+  max-width: 760px;
+
+  margin: 16px auto 0;
+
+  color:
+    rgba(255, 255, 255, 0.78);
+
+  font-family:
+    "Montserrat",
+    Arial,
+    sans-serif;
+
+  font-size: 0.92rem;
+
+  font-weight: 400;
+
+  line-height: 1.7;
+
+  text-align: center;
+}
+
+.whyChoose-intro strong {
+  color: #b5e048;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
 .whyChoose-container {
+  position: relative;
+
+  z-index: 7;
+
   display: grid;
-  grid-template-columns: minmax(300px, 1fr) minmax(380px, 1.2fr) minmax(300px, 1fr);
+
+  grid-template-columns:
+    minmax(300px, 1fr)
+    minmax(380px, 1.2fr)
+    minmax(300px, 1fr);
+
   align-items: center;
+
   gap: 20px;
+
   width: 100%;
 }
 
+/* Columns */
+
 .whyChoose-col {
   display: flex;
+
   flex-direction: column;
-  gap: 60px; /* Space out top and bottom cards vertically */
+
+  gap: 60px;
 }
 
 .left-col {
@@ -214,163 +571,586 @@
   padding-left: 10px;
 }
 
-/* Center Stage: The Honey Bottle Container */
+/* =========================================================
+   CENTER PRODUCT STAGE
+========================================================= */
+
 .whyChoose-centerStage {
+  position: relative;
+
   min-height: 420px;
   height: 100%;
+
   display: flex;
+
   align-items: center;
   justify-content: center;
-  position: relative;
-  /* Maintain position for parallax effect from parent wrapper */
 }
 
 .whyChoose-bottleWrapper {
   position: relative;
-  z-index: 5; /* Sit between cards and background */
+
+  z-index: 5;
+
   width: 100%;
+
   display: flex;
+
   justify-content: center;
+
   will-change: transform, opacity;
 }
 
 .whyChoose-bottleImg {
-  width: 85%; /* Adjust this to match the requested size */
-  max-width: 320px; /* Maximum size for large screens */
-  height: auto;
   display: block;
+
+  width: 85%;
+  max-width: 320px;
+
+  height: auto;
+
   object-fit: contain;
-  /* Use a composite shadow for depth and environmental glow */
-  filter: 
-    drop-shadow(0 20px 40px rgba(0,0,0,0.8)) 
-    drop-shadow(0 0 15px rgba(255, 213, 79, 0.2));
+
+  filter:
+    drop-shadow(
+      0 20px 40px rgba(0, 0, 0, 0.8)
+    )
+    drop-shadow(
+      0 0 15px rgba(255, 213, 79, 0.2)
+    );
+
+  contain: layout paint;
 }
 
-/* Glass Benefit Cards */
+/* =========================================================
+   BENEFIT CARDS
+========================================================= */
+
 .whyChoose-card {
+  position: relative;
+
+  z-index: 6;
+
   display: flex;
+
   align-items: center;
+
   gap: 18px;
-  background: rgba(15, 40, 15, 0.65);
+
+  padding: 18px 26px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.15);
+
+  border-radius: 50px;
+
+  background:
+    rgba(15, 40, 15, 0.65);
+
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 50px;
-  padding: 18px 26px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  transition: all 0.4s ease;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5);
+
   perspective: 1000px;
-  position: relative;
-  z-index: 6; /* Cards should sit in front of the bottle */
+
+  transition:
+    transform 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
 }
 
 .whyChoose-card:hover {
-  border-color: rgba(255, 213, 79, 0.5);
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 213, 79, 0.25);
-  z-index: 10; /* Bring hovered card above others */
+  transform:
+    translate3d(0, -6px, 0)
+    scale(1.02);
+
+  border-color:
+    rgba(255, 213, 79, 0.5);
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.7),
+    0 0 25px rgba(255, 213, 79, 0.25);
 }
 
-/* Icons Wrapper */
+/* =========================================================
+   ICON
+========================================================= */
+
 .whyChoose-iconWrapper {
+  flex-shrink: 0;
+
   width: 55px;
   height: 55px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #7CB630 0%, #3A5A1B 100%);
-  border: 2px solid #FFD54F;
+
   display: flex;
+
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+
+  border:
+    2px solid #ffd54f;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7cb630 0%,
+      #3a5a1b 100%
+    );
+
+  color: #ffffff;
+
   font-size: 1.4rem;
-  flex-shrink: 0;
-  box-shadow: 0 0 15px rgba(255, 213, 79, 0.5);
-  animation: iconPulse 3s infinite ease-in-out alternate;
+
+  box-shadow:
+    0 0 15px rgba(255, 213, 79, 0.4);
+
+  animation:
+    iconPulse 3s ease-in-out infinite alternate;
 }
 
 @keyframes iconPulse {
-  0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 213, 79, 0.4); }
-  100% { transform: scale(1.06); box-shadow: 0 0 25px rgba(255, 213, 79, 0.8); }
+  from {
+    transform: scale(1);
+
+    box-shadow:
+      0 0 12px rgba(255, 213, 79, 0.35);
+  }
+
+  to {
+    transform: scale(1.04);
+
+    box-shadow:
+      0 0 20px rgba(255, 213, 79, 0.65);
+  }
+}
+
+/* =========================================================
+   CARD TEXT
+========================================================= */
+
+.whyChoose-cardBody {
+  min-width: 0;
 }
 
 .whyChoose-cardTitle {
-  font-family: 'Cinzel', serif;
+  margin: 0 0 4px;
+
+  color: #ffd54f;
+
+  font-family:
+    "Cinzel",
+    Georgia,
+    serif;
+
   font-size: 1.1rem;
+
   font-weight: 700;
-  color: #FFD54F;
-  margin: 0 0 4px 0;
 }
 
 .whyChoose-cardDesc {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.82rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.85);
   margin: 0;
+
+  color:
+    rgba(255, 255, 255, 0.85);
+
+  font-family:
+    "Montserrat",
+    Arial,
+    sans-serif;
+
+  font-size: 0.82rem;
+
+  line-height: 1.45;
 }
 
-/* Honey Dripping Effect */
+/* =========================================================
+   SEO SUPPORTING CONTENT
+========================================================= */
+
+.whyChoose-seoText {
+  width: 100%;
+  max-width: 850px;
+
+  margin: 35px auto 0;
+
+  padding: 0 20px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  position: relative;
+
+  z-index: 7;
+}
+
+.whyChoose-seoText p {
+  margin: 0 0 18px;
+
+  color:
+    rgba(255, 255, 255, 0.68);
+
+  font-family:
+    "Montserrat",
+    Arial,
+    sans-serif;
+
+  font-size: 0.86rem;
+
+  font-weight: 400;
+
+  line-height: 1.75;
+}
+
+.whyChoose-seoText p:last-child {
+  margin-bottom: 0;
+}
+
+.whyChoose-seoText strong {
+  color: #b5e048;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   HONEY DRIPS
+========================================================= */
+
 .whyChoose-dripsContainer {
   position: absolute;
+
+  left: 0;
   bottom: 0;
+
   width: 100%;
   height: 30px;
+
   pointer-events: none;
+
+  z-index: 5;
 }
 
 .whyChoose-drip {
   position: absolute;
+
   width: 8px;
   height: 12px;
-  background: #FFC107;
-  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
-  box-shadow: 0 0 8px #FFC107;
-  animation: dripFall 3s infinite ease-in-out;
+
+  background: #ffc107;
+
+  border-radius:
+    50% 50% 50% 50% /
+    30% 30% 70% 70%;
+
+  box-shadow:
+    0 0 8px #ffc107;
+
+  animation:
+    dripFall 3s ease-in-out infinite;
 }
 
-.drip-1 { left: 25%; animation-delay: 0s; }
-.drip-2 { left: 50%; animation-delay: 1.2s; }
-.drip-3 { left: 75%; animation-delay: 0.6s; }
+.drip-1 {
+  left: 25%;
+
+  animation-delay: 0s;
+}
+
+.drip-2 {
+  left: 50%;
+
+  animation-delay: 1.2s;
+}
+
+.drip-3 {
+  left: 75%;
+
+  animation-delay: 0.6s;
+}
 
 @keyframes dripFall {
-  0% { transform: translateY(0) scaleY(1); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateY(25px) scaleY(1.4); opacity: 0; }
+  0% {
+    transform:
+      translate3d(0, 0, 0)
+      scaleY(1);
+
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translate3d(0, 25px, 0)
+      scaleY(1.3);
+
+    opacity: 0;
+  }
 }
 
-/* Responsive Layout */
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1200px) {
+  .whyChoose-container {
+    grid-template-columns:
+      minmax(250px, 1fr)
+      minmax(300px, 1fr)
+      minmax(250px, 1fr);
+
+    gap: 15px;
+  }
+
+  .whyChoose-col {
+    gap: 35px;
+  }
+
+  .whyChoose-card {
+    padding: 15px 18px;
+
+    gap: 12px;
+  }
+
+  .whyChoose-cardTitle {
+    font-size: 0.95rem;
+  }
+
+  .whyChoose-cardDesc {
+    font-size: 0.75rem;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
 @media (max-width: 1024px) {
+  .whyChoose {
+    min-height: auto;
+
+    padding: 55px 20px;
+  }
+
   .whyChoose-container {
     grid-template-columns: 1fr;
+
     gap: 30px;
   }
+
   .whyChoose-centerStage {
     min-height: auto;
-    margin: 20px 0; /* Add margin around bottle on smaller screens */
+
+    margin: 20px 0;
   }
+
   .whyChoose-bottleImg {
-    width: 60%; /* Slightly smaller relative width on mobile */
+    width: 60%;
+    max-width: 300px;
   }
-  .left-col, .right-col {
+
+  .left-col,
+  .right-col {
     padding: 0;
+
     gap: 25px;
   }
+
   .whyChoose-title {
     font-size: 2.2rem;
   }
+
+  .whyChoose-intro {
+    max-width: 650px;
+  }
+
+  .whyChoose-seoText {
+    margin-top: 30px;
+  }
 }
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 640px) {
   .whyChoose {
-    padding: 40px 15px;
+    min-height: auto;
+
+    padding: 50px 15px 45px;
   }
+
+  .whyChoose-header {
+    margin-bottom: 25px;
+  }
+
+  .whyChoose-badge {
+    padding: 5px 14px;
+
+    font-size: 0.68rem;
+
+    letter-spacing: 1.5px;
+  }
+
   .whyChoose-title {
     font-size: 1.7rem;
+
+    line-height: 1.25;
   }
+
+  .whyChoose-intro {
+    padding: 0 10px;
+
+    font-size: 0.8rem;
+
+    line-height: 1.65;
+  }
+
+  .whyChoose-centerStage {
+    margin: 10px 0;
+  }
+
   .whyChoose-bottleImg {
-    width: 75%; /* Increase relative width back slightly for small screens */
+    width: 75%;
+    max-width: 280px;
   }
+
   .whyChoose-card {
-    border-radius: 25px;
+    width: 100%;
+
+    box-sizing: border-box;
+
     padding: 14px 18px;
+
+    gap: 13px;
+
+    border-radius: 25px;
+  }
+
+  .whyChoose-iconWrapper {
+    width: 48px;
+    height: 48px;
+
+    font-size: 1.15rem;
+  }
+
+  .whyChoose-cardTitle {
+    font-size: 0.9rem;
+  }
+
+  .whyChoose-cardDesc {
+    font-size: 0.72rem;
+
+    line-height: 1.5;
+  }
+
+  .whyChoose-seoText {
+    margin-top: 25px;
+
+    padding: 0 12px;
+  }
+
+  .whyChoose-seoText p {
+    font-size: 0.75rem;
+
+    line-height: 1.7;
+  }
+
+  .whyChoose-bee {
+    width: 30px;
+    height: 30px;
+  }
+
+  .whyChoose-sunRays {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .whyChoose {
+    padding: 40px 12px;
+  }
+
+  .whyChoose-title {
+    font-size: 1.45rem;
+  }
+
+  .whyChoose-badge {
+    padding: 5px 12px;
+
+    font-size: 0.6rem;
+
+    letter-spacing: 1.2px;
+  }
+
+  .whyChoose-intro {
+    font-size: 0.74rem;
+
+    line-height: 1.65;
+  }
+
+  .whyChoose-card {
+    padding: 12px 14px;
+  }
+
+  .whyChoose-iconWrapper {
+    width: 43px;
+    height: 43px;
+
+    font-size: 1rem;
+  }
+
+  .whyChoose-cardTitle {
+    font-size: 0.82rem;
+  }
+
+  .whyChoose-cardDesc {
+    font-size: 0.67rem;
+  }
+
+  .whyChoose-seoText {
+    padding: 0 8px;
+  }
+
+  .whyChoose-seoText p {
+    font-size: 0.7rem;
+  }
+
+  /* Hide some decorative bees */
+  .bee-3,
+  .bee-4 {
+    display: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION / ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .whyChoose-bgImage,
+  .whyChoose-fog,
+  .whyChoose-sunRays,
+  .whyChoose-particle,
+  .whyChoose-leaf,
+  .whyChoose-bee,
+  .whyChoose-bee-wings,
+  .whyChoose-iconWrapper,
+  .whyChoose-drip {
+    animation: none !important;
+  }
+
+  .whyChoose-card {
+    transition: none;
   }
 }

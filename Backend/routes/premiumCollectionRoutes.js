@@ -15,7 +15,7 @@ const cpUpload = upload.fields([
   { name: 'bgImage', maxCount: 1 },
   { name: 'galleryImages', maxCount: 10 },
 ]);
-
+ 
 router
   .route('/')
   .get(getProducts)

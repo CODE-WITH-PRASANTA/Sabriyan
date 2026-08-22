@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import API, { IMG_URL } from "../../api/axios"; 
-import {
-  Flame, Star, Upload, Search, Filter, Edit, Trash2, Eye, Plus, RotateCcw, Send, X, Loader2
-} from 'lucide-react';
+import { Flame, Star, Upload, Search, Filter, Edit, Trash2, Eye, Plus, RotateCcw, Send, X, Loader2 } from 'lucide-react';
 import './HoneyProduct.css';
-
+ 
 const DEFAULT_HONEY_IMG = 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=400&auto=format&fit=crop&q=80';
-
+   
 const INITIAL_FORM_STATE = {
   _id: null,
   name: '',
@@ -58,6 +56,7 @@ const HoneyProduct = () => {
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 5;
 
+  // FIX: Robust base URL resolution for images
   const SERVER_ORIGIN = (IMG_URL || 'http://localhost:5000').replace(/\/api\/?$/, '');
 
   const getImageUrl = (imgPath) => {

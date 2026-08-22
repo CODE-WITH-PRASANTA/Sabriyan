@@ -1,56 +1,96 @@
-/* Container styling */
+/* =========================================================
+   INGREDIENT / WHY CHOOSE SAVRIYANA
+========================================================= */
+
 .Ingrident {
   background-color: transparent;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 4rem 1rem;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   box-sizing: border-box;
 }
 
-/* Header Section */
+/* =========================================================
+   HEADER SECTION
+========================================================= */
+
 .Ingrident-header {
   text-align: center;
   margin-bottom: 3rem;
 }
 
 .Ingrident-subtitle {
-  color: #A1B882;
+  color: #a1b882;
   text-transform: uppercase;
   letter-spacing: 0.25em;
   font-size: 0.75rem;
   font-weight: 600;
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .Ingrident-title {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 2.25rem;
-  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  font-family:
+    Georgia,
+    Cambria,
+    "Times New Roman",
+    Times,
+    serif;
   letter-spacing: 0.025em;
+  line-height: 1.2;
   margin: 0;
 }
 
 .Ingrident-titleHighlight {
-  color: #8FB339;
+  color: #8fb339;
   font-style: italic;
   font-weight: 300;
 }
 
-/* Grid Layout */
+/* =========================================================
+   SEO INTRO TEXT
+========================================================= */
+
+.Ingrident-intro {
+  max-width: 850px;
+  margin: 1.25rem auto 0;
+  padding: 0 1rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* =========================================================
+   GRID LAYOUT
+========================================================= */
+
 .Ingrident-grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
-/* Responsive Grid Breakpoints */
+/* =========================================================
+   RESPONSIVE GRID
+========================================================= */
+
 @media (min-width: 640px) {
   .Ingrident-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
   .Ingrident-title {
     font-size: 2.5rem;
   }
@@ -66,81 +106,325 @@
   .Ingrident-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
+
   .Ingrident-title {
     font-size: 3rem;
   }
 }
 
-/* Card Styling */
+/* =========================================================
+   CARD STYLING
+========================================================= */
+
 .Ingrident-card {
+  position: relative;
+  overflow: hidden;
+
   background-color: rgba(9, 28, 18, 0.85);
+
   backdrop-filter: blur(8px);
-  border: 1px solid #1A3828;
+  -webkit-backdrop-filter: blur(8px);
+
+  border: 1px solid #1a3828;
   border-radius: 1rem;
+
+  min-height: 255px;
+
   padding: 1.75rem 1.25rem;
+
   text-align: center;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  transition: all 0.35s ease;
+
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    background-color 0.35s ease;
+
   cursor: pointer;
 }
 
-.Ingrident-card:hover {
-  border-color: #A1B882;
-  box-shadow: 0px 10px 25px rgba(161, 184, 130, 0.15);
-  transform: translateY(-5px);
+/* Subtle light effect */
+
+.Ingrident-card::before {
+  content: "";
+  position: absolute;
+
+  width: 120px;
+  height: 120px;
+
+  top: -60px;
+  right: -60px;
+
+  background: rgba(181, 224, 72, 0.08);
+
+  border-radius: 50%;
+
+  transition: transform 0.4s ease;
 }
 
-/* Icon Section */
+.Ingrident-card:hover::before {
+  transform: scale(1.5);
+}
+
+/* Hover */
+
+.Ingrident-card:hover {
+  border-color: #a1b882;
+
+  box-shadow:
+    0 10px 25px rgba(161, 184, 130, 0.15),
+    0 0 30px rgba(181, 224, 72, 0.04);
+
+  transform: translateY(-5px);
+
+  background-color: rgba(10, 34, 21, 0.92);
+}
+
+/* =========================================================
+   ICON SECTION
+========================================================= */
+
 .Ingrident-iconContainer {
+  position: relative;
+  z-index: 1;
+
   margin-bottom: 1.25rem;
+
+  width: 70px;
+  height: 70px;
+
   padding: 0.75rem;
+
+  box-sizing: border-box;
+
   border-radius: 50%;
+
   background-color: rgba(19, 42, 28, 0.6);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .Ingrident-card:hover .Ingrident-iconContainer {
-  background-color: #1E3F2B;
+  background-color: #1e3f2b;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 0 20px rgba(181, 224, 72, 0.08);
 }
 
 .Ingrident-icon {
-  color: #B5E048;
+  color: #b5e048;
+
   font-size: 2.75rem;
-  transition: transform 0.3s ease;
+
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
 }
 
 .Ingrident-card:hover .Ingrident-icon {
   transform: scale(1.1);
+  color: #c4ed5b;
 }
 
-/* Text Styling */
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
 .Ingrident-content {
+  position: relative;
+  z-index: 1;
+
   display: flex;
   flex-direction: column;
+
   gap: 0.5rem;
 }
 
 .Ingrident-cardTitle {
-  color: #FFFFFF;
+  color: #ffffff;
+
   font-weight: 600;
+
   font-size: 1.05rem;
+
+  line-height: 1.35;
+
   margin: 0;
+
   transition: color 0.3s ease;
 }
 
 .Ingrident-card:hover .Ingrident-cardTitle {
-  color: #B5E048;
+  color: #b5e048;
 }
 
 .Ingrident-cardDescription {
-  color: #A0B0A6;
+  color: #a0b0a6;
+
   font-size: 0.825rem;
-  line-height: 1.5;
+
+  line-height: 1.6;
+
   margin: 0;
+}
+
+/* =========================================================
+   SEO SUPPORTING TEXT
+========================================================= */
+
+.Ingrident-seoText {
+  max-width: 900px;
+
+  margin: 3rem auto 0;
+
+  padding: 0 1rem;
+
+  text-align: center;
+}
+
+.Ingrident-seoText p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.68);
+
+  font-size: 0.9rem;
+
+  line-height: 1.8;
+}
+
+.Ingrident-seoText strong {
+  color: #b5e048;
+
+  font-weight: 600;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1024px) {
+  .Ingrident {
+    padding: 3.5rem 1.25rem;
+  }
+
+  .Ingrident-card {
+    min-height: 240px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .Ingrident {
+    padding: 3rem 1rem;
+  }
+
+  .Ingrident-header {
+    margin-bottom: 2rem;
+  }
+
+  .Ingrident-subtitle {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+  }
+
+  .Ingrident-title {
+    font-size: 2rem;
+    line-height: 1.25;
+  }
+
+  .Ingrident-intro {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    padding: 0 0.5rem;
+  }
+
+  .Ingrident-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .Ingrident-card {
+    min-height: auto;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .Ingrident-iconContainer {
+    width: 65px;
+    height: 65px;
+  }
+
+  .Ingrident-icon {
+    font-size: 2.5rem;
+  }
+
+  .Ingrident-cardTitle {
+    font-size: 1rem;
+  }
+
+  .Ingrident-cardDescription {
+    font-size: 0.82rem;
+  }
+
+  .Ingrident-seoText {
+    margin-top: 2rem;
+    padding: 0 0.5rem;
+  }
+
+  .Ingrident-seoText p {
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .Ingrident {
+    padding: 2.5rem 0.85rem;
+  }
+
+  .Ingrident-title {
+    font-size: 1.75rem;
+  }
+
+  .Ingrident-intro {
+    font-size: 0.82rem;
+  }
+
+  .Ingrident-card {
+    border-radius: 0.85rem;
+    padding: 1.4rem 1rem;
+  }
+
+  .Ingrident-iconContainer {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+  }
+
+  .Ingrident-icon {
+    font-size: 2.25rem;
+  }
+
+  .Ingrident-cardDescription {
+    font-size: 0.78rem;
+  }
 }

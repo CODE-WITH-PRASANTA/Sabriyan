@@ -61,6 +61,7 @@ const sidebarConfig = [
   { title: 'Marketing', path: '/marketing', icon: Megaphone },
   { title: 'Reports & Analytics', path: '/reports', icon: BarChart3 },
   { title: 'Website Settings', path: '/website-settings', icon: Globe },
+  { title: 'Settings Summary', path: '/website-settings-summary', icon: Globe },
   { title: 'Support', path: '/support', icon: HelpCircle },
   { title: 'Blogpost', path: '/blogpost', icon: Book },
   { title: 'Blogmanagement', path: '/blogmanagement', icon: Notebook },

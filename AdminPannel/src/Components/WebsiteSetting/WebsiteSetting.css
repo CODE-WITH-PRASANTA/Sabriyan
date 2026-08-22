@@ -3,33 +3,60 @@
   --bg-card: #12241f;
   --bg-card-hover: #172d27;
   --bg-input: #0e1c18;
+
   --border-color: #1e382f;
   --border-focus: #28a745;
+
   --text-main: #e8f5e9;
   --text-muted: #8fa89b;
+
   --primary-accent: #198754;
   --primary-accent-hover: #20a065;
+
+  --green-light: #38d39f;
+  --green-border: rgba(56, 211, 159, 0.25);
+
   --social-fb: #1877f2;
   --social-insta: #e1306c;
   --social-yt: #ff0000;
   --social-tw: #1da1f2;
 }
 
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
 .WebsiteSetting-container {
   min-height: 100vh;
   background-color: var(--bg-main);
   color: var(--text-main);
+
   padding: 32px 40px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    sans-serif;
+
   box-sizing: border-box;
 }
 
-/* Header */
+/* =========================================================
+   HEADER
+========================================================= */
+
 .WebsiteSetting-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   margin-bottom: 24px;
+
   flex-wrap: wrap;
   gap: 16px;
 }
@@ -37,8 +64,11 @@
 .WebsiteSetting-title {
   font-size: 26px;
   font-weight: 700;
-  margin: 0 0 6px 0;
+
+  margin: 0 0 6px;
+
   color: #f1fcf4;
+
   letter-spacing: -0.5px;
 }
 
@@ -50,6 +80,7 @@
 
 .WebsiteSetting-header-actions {
   display: flex;
+  align-items: center;
   gap: 12px;
 }
 
@@ -57,13 +88,21 @@
 .WebsiteSetting-btn-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+
   gap: 8px;
+
   padding: 10px 18px;
+
   font-size: 14px;
   font-weight: 600;
+
   border-radius: 8px;
+
   cursor: pointer;
-  transition: all 0.2s ease;
+
+  transition: all 0.25s ease;
+
   border: 1px solid transparent;
 }
 
@@ -74,70 +113,193 @@
 
 .WebsiteSetting-btn-primary:hover {
   background-color: var(--primary-accent-hover);
-  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+
+  box-shadow:
+    0 4px 12px rgba(25, 135, 84, 0.3);
+
+  transform: translateY(-1px);
 }
 
 .WebsiteSetting-btn-secondary {
   background-color: var(--bg-card);
+
   color: var(--text-main);
+
   border-color: var(--border-color);
 }
 
 .WebsiteSetting-btn-secondary:hover {
   background-color: var(--bg-card-hover);
+
   border-color: var(--text-muted);
+
+  transform: translateY(-1px);
 }
 
-/* Navigation Tabs */
+/* =========================================================
+   SAVE MESSAGE
+========================================================= */
+
+.WebsiteSetting-save-message {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  width: fit-content;
+
+  margin: -4px 0 18px auto;
+
+  padding: 9px 14px;
+
+  border-radius: 8px;
+
+  color: #6ee7b7;
+
+  background: rgba(46, 184, 114, 0.1);
+
+  border: 1px solid rgba(46, 184, 114, 0.2);
+
+  font-size: 13px;
+  font-weight: 500;
+
+  animation: WebsiteSetting-message-in 0.25s ease;
+}
+
+@keyframes WebsiteSetting-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   NAVIGATION TABS
+========================================================= */
+
 .WebsiteSetting-tabs {
   display: flex;
+
   gap: 8px;
+
   border-bottom: 1px solid var(--border-color);
+
   margin-bottom: 28px;
+
   overflow-x: auto;
+
   padding-bottom: 4px;
+
+  scrollbar-width: thin;
+}
+
+.WebsiteSetting-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.WebsiteSetting-tabs::-webkit-scrollbar-thumb {
+  background: #29483c;
+  border-radius: 20px;
 }
 
 .WebsiteSetting-tab-btn {
   display: inline-flex;
   align-items: center;
+
   gap: 8px;
+
   background: transparent;
+
   border: none;
+
   color: var(--text-muted);
+
   font-size: 14px;
+
   font-weight: 500;
+
   padding: 10px 16px;
+
   border-radius: 6px;
+
   cursor: pointer;
-  transition: all 0.2s ease;
+
+  transition: all 0.25s ease;
+
   white-space: nowrap;
+}
+
+.WebsiteSetting-tab-btn svg {
+  font-size: 16px;
 }
 
 .WebsiteSetting-tab-btn:hover {
   color: var(--text-main);
+
   background-color: rgba(255, 255, 255, 0.03);
 }
 
 .WebsiteSetting-tab-btn.active {
-  color: #38d39f;
+  color: var(--green-light);
+
   background-color: rgba(56, 211, 159, 0.1);
+
   font-weight: 600;
 }
 
-/* Main Grid */
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
 .WebsiteSetting-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
   gap: 24px;
+
+  animation: WebsiteSetting-content-in 0.25s ease;
 }
 
+@keyframes WebsiteSetting-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
 .WebsiteSetting-card {
+  min-width: 0;
+
   background-color: var(--bg-card);
+
   border: 1px solid var(--border-color);
+
   border-radius: 12px;
+
   padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.2);
+
+  box-sizing: border-box;
+}
+
+.WebsiteSetting-card:hover {
+  border-color: #25463a;
 }
 
 .WebsiteSetting-card-full {
@@ -146,200 +308,408 @@
 
 .WebsiteSetting-card-title {
   font-size: 17px;
+
   font-weight: 600;
+
   color: #f1fcf4;
-  margin: 0 0 20px 0;
+
+  margin: 0 0 20px;
+
   padding-bottom: 12px;
+
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Form Inputs */
+.WebsiteSetting-title-no-border {
+  border-bottom: none;
+
+  padding-bottom: 0;
+
+  margin-bottom: 4px;
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+.WebsiteSetting-section-heading {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-bottom: 22px;
+}
+
+.WebsiteSetting-heading-icon {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: rgba(56, 211, 159, 0.1);
+
+  border: 1px solid var(--green-border);
+
+  color: var(--green-light);
+
+  font-size: 19px;
+}
+
+.WebsiteSetting-section-description {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
 .WebsiteSetting-field-group {
   display: flex;
+
   flex-direction: column;
+
   gap: 6px;
+
   margin-bottom: 14px;
 }
 
 .WebsiteSetting-field-group label {
   font-size: 13px;
+
   font-weight: 500;
+
   color: var(--text-muted);
 }
 
 .WebsiteSetting-field-group input,
 .WebsiteSetting-field-group textarea,
+.WebsiteSetting-field-group select,
 .WebsiteSetting-input-flex,
 .WebsiteSetting-seo-item input {
+  width: 100%;
+
   background-color: var(--bg-input);
+
   border: 1px solid var(--border-color);
+
   border-radius: 8px;
+
   padding: 10px 14px;
+
   font-size: 14px;
+
   color: var(--text-main);
+
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+
   box-sizing: border-box;
+}
+
+.WebsiteSetting-field-group select {
+  cursor: pointer;
+}
+
+.WebsiteSetting-field-group select option {
+  background: #12241f;
+  color: #e8f5e9;
+}
+
+.WebsiteSetting-field-group input::placeholder,
+.WebsiteSetting-field-group textarea::placeholder {
+  color: #557267;
 }
 
 .WebsiteSetting-field-group input:focus,
 .WebsiteSetting-field-group textarea:focus,
+.WebsiteSetting-field-group select:focus,
 .WebsiteSetting-input-flex:focus,
 .WebsiteSetting-seo-item input:focus {
   border-color: #2eb872;
-  box-shadow: 0 0 0 3px rgba(46, 184, 114, 0.15);
+
+  box-shadow:
+    0 0 0 3px rgba(46, 184, 114, 0.15);
+
+  background-color: #101f1a;
 }
 
 .WebsiteSetting-field-group textarea {
   resize: vertical;
+
   min-height: 80px;
 }
 
-/* Card 1: Logo & Store Profile */
+.WebsiteSetting-form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  column-gap: 20px;
+
+  row-gap: 2px;
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
 .WebsiteSetting-profile-top {
   display: flex;
+
   gap: 20px;
+
   margin-bottom: 14px;
+
   align-items: flex-start;
 }
 
 .WebsiteSetting-logo-box {
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   gap: 10px;
+
+  flex-shrink: 0;
 }
 
 .WebsiteSetting-logo-preview {
   width: 100px;
   height: 100px;
+
   border-radius: 10px;
+
   border: 2px dashed var(--border-color);
+
   background-color: var(--bg-input);
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
+  overflow: hidden;
+}
+
+.WebsiteSetting-logo-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
 }
 
 .WebsiteSetting-placeholder-icon {
   font-size: 32px;
+
   color: var(--text-muted);
 }
 
 .WebsiteSetting-upload-btn {
   display: inline-flex;
+
   align-items: center;
+
   gap: 6px;
+
   padding: 6px 12px;
+
   background-color: rgba(255, 255, 255, 0.05);
+
   border: 1px solid var(--border-color);
+
   border-radius: 6px;
+
   font-size: 12px;
+
   color: var(--text-main);
+
   cursor: pointer;
+
   transition: all 0.2s;
 }
 
 .WebsiteSetting-upload-btn:hover {
   background-color: rgba(255, 255, 255, 0.1);
+
   border-color: #2eb872;
 }
 
 .WebsiteSetting-file-hint {
   font-size: 11px;
+
   color: var(--text-muted);
+
   text-align: center;
 }
 
 .WebsiteSetting-profile-inputs {
   flex: 1;
+
+  min-width: 0;
 }
 
-/* Card 2: Contact List */
+/* =========================================================
+   CONTACT
+========================================================= */
+
 .WebsiteSetting-contact-list {
   display: flex;
+
   flex-direction: column;
+
   gap: 12px;
 }
 
 .WebsiteSetting-contact-row {
   display: flex;
+
   align-items: center;
+
   gap: 16px;
 }
 
 .WebsiteSetting-contact-label {
   display: flex;
+
   align-items: center;
+
   gap: 8px;
+
   width: 160px;
+
   flex-shrink: 0;
+
   font-size: 13px;
+
   color: var(--text-muted);
 }
 
 .WebsiteSetting-icon-muted {
   font-size: 16px;
-  color: #38d39f;
+
+  color: var(--green-light);
 }
 
 .WebsiteSetting-input-flex {
   flex: 1;
 }
 
-/* Card 3: Features & Switch */
+/* =========================================================
+   FEATURES
+========================================================= */
+
 .WebsiteSetting-features-list {
   display: flex;
+
   flex-direction: column;
+
   gap: 14px;
 }
 
 .WebsiteSetting-feature-row {
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
+  gap: 15px;
+
   padding: 10px 14px;
+
   background-color: var(--bg-input);
+
   border: 1px solid var(--border-color);
+
   border-radius: 8px;
+
   font-size: 14px;
+
   color: var(--text-main);
+
+  transition: all 0.2s ease;
 }
+
+.WebsiteSetting-feature-row:hover {
+  background-color: #11241e;
+
+  border-color: #29483c;
+}
+
+/* =========================================================
+   SWITCH
+========================================================= */
 
 .WebsiteSetting-switch {
   position: relative;
+
   display: inline-block;
+
   width: 44px;
   height: 24px;
+
+  flex-shrink: 0;
 }
 
 .WebsiteSetting-switch input {
   opacity: 0;
+
   width: 0;
   height: 0;
 }
 
 .WebsiteSetting-slider {
   position: absolute;
+
   cursor: pointer;
+
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+
   background-color: #1e382f;
+
   transition: 0.3s;
+
   border-radius: 24px;
 }
 
-.WebsiteSetting-slider:before {
+.WebsiteSetting-slider::before {
   position: absolute;
+
   content: "";
+
   height: 18px;
   width: 18px;
+
   left: 3px;
   bottom: 3px;
+
   background-color: white;
+
   transition: 0.3s;
+
   border-radius: 50%;
 }
 
@@ -347,81 +717,438 @@
   background-color: #2eb872;
 }
 
-.WebsiteSetting-switch input:checked + .WebsiteSetting-slider:before {
+.WebsiteSetting-switch input:checked + .WebsiteSetting-slider::before {
   transform: translateX(20px);
 }
 
-/* Card 4: Social Media */
+/* =========================================================
+   SOCIAL MEDIA
+========================================================= */
+
 .WebsiteSetting-social-list {
   display: flex;
+
   flex-direction: column;
+
   gap: 12px;
 }
 
 .WebsiteSetting-social-row {
   display: flex;
+
   align-items: center;
+
   gap: 16px;
 }
 
 .WebsiteSetting-social-brand {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
+
   width: 130px;
+
   flex-shrink: 0;
+
   font-size: 13px;
+
   color: var(--text-muted);
 }
 
 .WebsiteSetting-brand-icon {
   width: 28px;
   height: 28px;
+
   border-radius: 6px;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   color: #fff;
+
   font-size: 14px;
 }
 
-.WebsiteSetting-brand-icon.fb { background-color: var(--social-fb); }
-.WebsiteSetting-brand-icon.insta { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
-.WebsiteSetting-brand-icon.yt { background-color: var(--social-yt); }
-.WebsiteSetting-brand-icon.tw { background-color: var(--social-tw); }
+.WebsiteSetting-brand-icon.fb {
+  background-color: var(--social-fb);
+}
 
-/* Card 5: SEO */
+.WebsiteSetting-brand-icon.insta {
+  background:
+    radial-gradient(
+      circle at 30% 107%,
+      #fdf497 0%,
+      #fdf497 5%,
+      #fd5949 45%,
+      #d6249f 60%,
+      #285aeb 90%
+    );
+}
+
+.WebsiteSetting-brand-icon.yt {
+  background-color: var(--social-yt);
+}
+
+.WebsiteSetting-brand-icon.tw {
+  background-color: var(--social-tw);
+}
+
+/* =========================================================
+   SEO
+========================================================= */
+
 .WebsiteSetting-seo-row {
   display: flex;
+
   gap: 20px;
 }
 
 .WebsiteSetting-seo-item {
   flex: 1;
+
   display: flex;
+
   flex-direction: column;
+
   gap: 6px;
 }
 
 .WebsiteSetting-seo-item label {
   font-size: 13px;
+
   font-weight: 500;
+
   color: var(--text-muted);
 }
 
-/* Responsive */
+/* =========================================================
+   EMAIL SETTINGS
+========================================================= */
+
+.WebsiteSetting-email-status {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 6px;
+
+  padding: 10px 13px;
+
+  width: fit-content;
+
+  border-radius: 8px;
+
+  color: #65dca9;
+
+  background: rgba(46, 184, 114, 0.08);
+
+  border: 1px solid rgba(46, 184, 114, 0.16);
+
+  font-size: 12px;
+}
+
+.WebsiteSetting-notification-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 12px;
+}
+
+/* =========================================================
+   PAYMENT
+========================================================= */
+
+.WebsiteSetting-payment-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 15px;
+}
+
+.WebsiteSetting-test-mode {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 7px 11px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+
+  color: #e8c76a;
+
+  background: rgba(232, 199, 106, 0.08);
+
+  border: 1px solid rgba(232, 199, 106, 0.18);
+
+  white-space: nowrap;
+}
+
+.WebsiteSetting-test-toggle {
+  margin-top: 8px;
+}
+
+.WebsiteSetting-payment-grid {
+  margin-top: 4px;
+}
+
+/* =========================================================
+   OTHER SETTINGS
+========================================================= */
+
+.WebsiteSetting-card-title-icon {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.WebsiteSetting-card-title-icon > svg {
+  color: var(--green-light);
+
+  font-size: 18px;
+}
+
+/* =========================================================
+   SYSTEM INFO
+========================================================= */
+
+.WebsiteSetting-system-info {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 16px;
+}
+
+.WebsiteSetting-system-info-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px;
+
+  background: var(--bg-input);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 9px;
+}
+
+.WebsiteSetting-system-info-item > svg {
+  color: var(--green-light);
+
+  font-size: 19px;
+
+  flex-shrink: 0;
+}
+
+.WebsiteSetting-system-info-item div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.WebsiteSetting-system-info-item span {
+  font-size: 11px;
+
+  color: var(--text-muted);
+}
+
+.WebsiteSetting-system-info-item strong {
+  font-size: 13px;
+
+  color: #e8f5e9;
+
+  font-weight: 600;
+}
+
+/* =========================================================
+   RESPONSIVE - 1100px
+========================================================= */
+
+@media (max-width: 1100px) {
+  .WebsiteSetting-container {
+    padding: 28px 25px;
+  }
+
+  .WebsiteSetting-system-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE - 900px
+========================================================= */
+
 @media (max-width: 900px) {
   .WebsiteSetting-grid {
     grid-template-columns: 1fr;
   }
+
+  .WebsiteSetting-card-full {
+    grid-column: auto;
+  }
+
   .WebsiteSetting-seo-row {
     flex-direction: column;
   }
+
+  .WebsiteSetting-container {
+    padding: 22px 18px;
+  }
+
   .WebsiteSetting-profile-top {
     flex-direction: column;
     align-items: stretch;
   }
+
+  .WebsiteSetting-logo-box {
+    align-items: flex-start;
+  }
+
+  .WebsiteSetting-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .WebsiteSetting-notification-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE - 650px
+========================================================= */
+
+@media (max-width: 650px) {
   .WebsiteSetting-container {
-    padding: 20px 16px;
+    padding: 18px 12px;
+  }
+
+  .WebsiteSetting-header {
+    align-items: flex-start;
+  }
+
+  .WebsiteSetting-header-actions {
+    width: 100%;
+  }
+
+  .WebsiteSetting-btn-primary,
+  .WebsiteSetting-btn-secondary {
+    flex: 1;
+
+    padding: 10px 12px;
+  }
+
+  .WebsiteSetting-tabs {
+    margin-bottom: 20px;
+  }
+
+  .WebsiteSetting-tab-btn {
+    padding: 9px 12px;
+
+    font-size: 13px;
+  }
+
+  .WebsiteSetting-card {
+    padding: 18px;
+  }
+
+  .WebsiteSetting-contact-row {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 7px;
+  }
+
+  .WebsiteSetting-contact-label {
+    width: auto;
+  }
+
+  .WebsiteSetting-social-row {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 8px;
+  }
+
+  .WebsiteSetting-social-brand {
+    width: auto;
+  }
+
+  .WebsiteSetting-system-info {
+    grid-template-columns: 1fr;
+  }
+
+  .WebsiteSetting-payment-header {
+    flex-direction: column;
+  }
+
+  .WebsiteSetting-save-message {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE - 450px
+========================================================= */
+
+@media (max-width: 450px) {
+  .WebsiteSetting-title {
+    font-size: 22px;
+  }
+
+  .WebsiteSetting-subtitle {
+    font-size: 12px;
+  }
+
+  .WebsiteSetting-header-actions {
+    flex-direction: column;
+  }
+
+  .WebsiteSetting-btn-primary,
+  .WebsiteSetting-btn-secondary {
+    width: 100%;
+  }
+
+  .WebsiteSetting-card {
+    padding: 15px;
+  }
+
+  .WebsiteSetting-card-title {
+    font-size: 16px;
+  }
+
+  .WebsiteSetting-feature-row {
+    font-size: 13px;
+  }
+
+  .WebsiteSetting-logo-preview {
+    width: 90px;
+    height: 90px;
   }
 }

@@ -1,429 +1,1328 @@
 /* ==========================================================================
-   HoneySection Component - Premium Fullscreen (100vh) Hero Styles
+   HoneySection Component - Sabriyana Premium Honey Hero
    ========================================================================== */
 
-/* Main Section Wrapper */
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
 .HoneySection {
   position: relative;
   width: 100vw;
   height: 100vh;
   min-height: 720px;
+
   margin-left: calc(-50vw + 50%);
+
   overflow: hidden;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
   box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+
   color: #ffffff;
+
   padding-top: 2rem;
 }
 
-/* Background Layers & Overlays */
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
 .HoneySection-bgImage {
   position: absolute;
+
   top: 0;
   left: 0;
+
   width: 100%;
   height: 100%;
+
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+
   z-index: 1;
-  filter: brightness(0.7) contrast(1.1);
+
+  filter:
+    brightness(0.7)
+    contrast(1.1);
+
   transform: scale(1.02);
+
+  animation: HoneyBackgroundZoom 20s ease-in-out infinite alternate;
 }
+
+@keyframes HoneyBackgroundZoom {
+  0% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+
+/* =========================================================
+   DARK OVERLAY
+========================================================= */
 
 .HoneySection-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 30% 20%, rgba(255, 180, 40, 0.25) 0%, rgba(10, 18, 12, 0.8) 80%);
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(255, 180, 40, 0.25) 0%,
+      rgba(10, 18, 12, 0.8) 80%
+    );
+
   z-index: 2;
+
   pointer-events: none;
 }
 
-/* Sun Glow Effect */
+
+/* =========================================================
+   SUN GLOW
+========================================================= */
+
 .HoneySection-sunGlow {
   position: absolute;
+
   top: -10%;
   left: 20%;
+
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(255, 200, 80, 0.45) 0%, rgba(255, 150, 0, 0.15) 50%, transparent 70%);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 200, 80, 0.45) 0%,
+      rgba(255, 150, 0, 0.15) 50%,
+      transparent 70%
+    );
+
   filter: blur(50px);
+
   z-index: 3;
+
   pointer-events: none;
+
+  animation: honeyGlow 8s ease-in-out infinite alternate;
 }
 
-/* Drip Stream Effect */
+@keyframes honeyGlow {
+  from {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
+
+
+/* =========================================================
+   HONEY DRIP
+========================================================= */
+
 .HoneySection-honeyDrip {
   position: absolute;
+
   top: 0;
   left: 50%;
+
   transform: translateX(-50%);
+
   width: 4px;
   height: 120px;
-  background: linear-gradient(180deg, #ffcc00 0%, #e69900 100%);
-  border-radius: 0 0 4px 4px;
-  box-shadow: 0 0 15px #ffaa00;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffcc00 0%,
+      #e69900 100%
+    );
+
+  border-radius:
+    0 0 4px 4px;
+
+  box-shadow:
+    0 0 15px #ffaa00;
+
   z-index: 5;
+
+  animation: honeyDripPulse 3s ease-in-out infinite;
 }
 
-/* Animated Flying Bees */
+@keyframes honeyDripPulse {
+  0%,
+  100% {
+    height: 90px;
+    opacity: 0.7;
+  }
+
+  50% {
+    height: 130px;
+    opacity: 1;
+  }
+}
+
+
+/* =========================================================
+   ANIMATED BEES
+========================================================= */
+
 .HoneySection-bee {
   position: absolute;
+
   font-size: 1.5rem;
+
   z-index: 6;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+
+  filter:
+    drop-shadow(
+      0 4px 8px rgba(0, 0, 0, 0.5)
+    );
+
   pointer-events: none;
+
+  user-select: none;
 }
 
 .HoneySection-bee1 {
   top: 18%;
   left: 42%;
-  animation: beeFloat1 6s infinite ease-in-out;
+
+  animation:
+    beeFloat1
+    6s
+    infinite
+    ease-in-out;
 }
 
 .HoneySection-bee2 {
   top: 25%;
   right: 32%;
-  animation: beeFloat2 7s infinite ease-in-out;
+
+  animation:
+    beeFloat2
+    7s
+    infinite
+    ease-in-out;
 }
 
 .HoneySection-bee3 {
   bottom: 25%;
   left: 38%;
-  animation: beeFloat3 5.5s infinite ease-in-out;
+
+  animation:
+    beeFloat3
+    5.5s
+    infinite
+    ease-in-out;
 }
 
 @keyframes beeFloat1 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-15px, -20px) rotate(-10deg); }
+  0%,
+  100% {
+    transform:
+      translate(0, 0)
+      rotate(0deg);
+  }
+
+  50% {
+    transform:
+      translate(-15px, -20px)
+      rotate(-10deg);
+  }
 }
 
 @keyframes beeFloat2 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(20px, -15px) rotate(12deg); }
+  0%,
+  100% {
+    transform:
+      translate(0, 0)
+      rotate(0deg);
+  }
+
+  50% {
+    transform:
+      translate(20px, -15px)
+      rotate(12deg);
+  }
 }
 
 @keyframes beeFloat3 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-10px, 15px) rotate(-5deg); }
+  0%,
+  100% {
+    transform:
+      translate(0, 0)
+      rotate(0deg);
+  }
+
+  50% {
+    transform:
+      translate(-10px, 15px)
+      rotate(-5deg);
+  }
 }
 
-/* Hero Content Layout */
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
 .HoneySection-heroContent {
   position: relative;
+
   z-index: 5;
+
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
+
   max-width: 1400px;
+
   width: 100%;
+
   margin: 0 auto;
+
   padding: 0 3rem;
+
   flex: 1;
+
   box-sizing: border-box;
 }
 
-/* Left Column Styling */
+
+/* =========================================================
+   LEFT COLUMN
+========================================================= */
+
 .HoneySection-leftCol {
-  max-width: 480px;
+  max-width: 520px;
+
   display: flex;
+
   flex-direction: column;
 }
 
+
+/* =========================================================
+   TAGLINE
+========================================================= */
+
 .HoneySection-tagline {
   color: #fce055;
+
   font-size: 0.75rem;
+
   font-weight: 700;
+
   letter-spacing: 0.25em;
+
   margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.6);
 }
+
+
+/* =========================================================
+   MAIN BRAND TITLE
+========================================================= */
 
 .HoneySection-mainTitle {
   font-family: Georgia, serif;
+
   font-size: 4.25rem;
+
   font-weight: 800;
+
   letter-spacing: 0.08em;
+
   margin: 0;
-  background: linear-gradient(180deg, #ffffff 0%, #f3e5ab 100%);
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f3e5ab 100%
+    );
+
   -webkit-background-clip: text;
+  background-clip: text;
+
   -webkit-text-fill-color: transparent;
+
   line-height: 1;
 }
 
+
+/* =========================================================
+   HONEY TITLE
+========================================================= */
+
 .HoneySection-scriptTitle {
-  font-family: 'Brush Script MT', cursive, sans-serif;
+  font-family:
+    "Brush Script MT",
+    cursive,
+    sans-serif;
+
   font-size: 2.4rem;
+
   color: #fce055;
-  margin: 0.2rem 0 1rem 0;
+
+  margin:
+    0.2rem 0
+    1rem 0;
+
   font-weight: 400;
+
+  text-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.4);
 }
+
+
+/* =========================================================
+   MAIN SEO DESCRIPTION
+========================================================= */
 
 .HoneySection-description {
   color: #d1dcd5;
+
   font-size: 0.95rem;
+
+  line-height: 1.7;
+
+  margin:
+    0 0
+    0.75rem 0;
+
+  max-width: 560px;
+}
+
+.HoneySection-description strong {
+  color: #fce055;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   SEO SUPPORTING TEXT
+========================================================= */
+
+.HoneySection-seoText {
+  color:
+    rgba(255, 255, 255, 0.76);
+
+  font-size: 0.82rem;
+
   line-height: 1.65;
+
+  max-width: 560px;
+
+  margin:
+    0 0
+    1.5rem 0;
+
+  font-weight: 400;
+}
+
+.HoneySection-seoText strong {
+  color: #fce055;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   CTA BUTTON GROUP
+========================================================= */
+
+.HoneySection-ctaGroup {
+  display: flex;
+
+  align-items: center;
+
+  gap: 1.25rem;
+
   margin-bottom: 2rem;
 }
 
-/* CTA Action Buttons */
-.HoneySection-ctaGroup {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-bottom: 2.5rem;
-}
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
 
 .HoneySection-primaryBtn {
-  background: linear-gradient(135deg, #fce055 0%, #e69900 100%);
+  background:
+    linear-gradient(
+      135deg,
+      #fce055 0%,
+      #e69900 100%
+    );
+
   color: #1a0d00;
+
   border: none;
-  padding: 0.85rem 1.75rem;
+
+  padding:
+    0.85rem
+    1.75rem;
+
   border-radius: 9999px;
+
   font-size: 0.8rem;
+
   font-weight: 700;
+
   letter-spacing: 0.08em;
+
   cursor: pointer;
+
   display: flex;
+
   align-items: center;
+
   gap: 0.5rem;
-  box-shadow: 0 6px 20px rgba(230, 153, 0, 0.4);
-  transition: all 0.3s ease;
+
+  box-shadow:
+    0 6px 20px
+    rgba(230, 153, 0, 0.4);
+
+  transition:
+    all 0.3s ease;
 }
 
 .HoneySection-primaryBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(252, 224, 85, 0.6);
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 8px 25px
+    rgba(252, 224, 85, 0.6);
 }
 
+
+/* =========================================================
+   SECONDARY BUTTON
+========================================================= */
+
 .HoneySection-secondaryBtn {
-  background: rgba(15, 25, 18, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background:
+    rgba(15, 25, 18, 0.6);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.3);
+
   color: #ffffff;
-  padding: 0.85rem 1.5rem;
+
+  padding:
+    0.85rem
+    1.5rem;
+
   border-radius: 9999px;
+
   font-size: 0.75rem;
+
   font-weight: 600;
+
   letter-spacing: 0.08em;
+
   cursor: pointer;
+
   display: flex;
+
   align-items: center;
+
   gap: 0.6rem;
+
   backdrop-filter: blur(8px);
-  transition: all 0.3s ease;
+
+  transition:
+    all 0.3s ease;
 }
 
 .HoneySection-secondaryBtn:hover {
   border-color: #fce055;
+
   color: #fce055;
-  background: rgba(25, 40, 28, 0.8);
+
+  background:
+    rgba(25, 40, 28, 0.8);
+
+  transform:
+    translateY(-2px);
 }
 
-/* Feature Badges Grid */
+.HoneySection-playIcon {
+  font-size: 1rem;
+}
+
+
+/* =========================================================
+   FEATURE GRID
+========================================================= */
+
 .HoneySection-featuresGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
   gap: 0.75rem;
+
+  max-width: 500px;
 }
 
+
+/* =========================================================
+   FEATURE CARD
+========================================================= */
+
 .HoneySection-featureCard {
-  background: rgba(15, 25, 18, 0.5);
-  border: 1px solid rgba(255, 215, 0, 0.15);
-  backdrop-filter: blur(8px);
+  background:
+    rgba(15, 25, 18, 0.5);
+
+  border:
+    1px solid
+    rgba(255, 215, 0, 0.15);
+
+  backdrop-filter:
+    blur(8px);
+
   border-radius: 0.75rem;
-  padding: 0.75rem 0.5rem;
+
+  padding:
+    0.75rem
+    0.5rem;
+
   text-align: center;
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   gap: 0.35rem;
+
+  transition:
+    all 0.3s ease;
+}
+
+.HoneySection-featureCard:hover {
+  border-color:
+    rgba(252, 224, 85, 0.55);
+
+  background:
+    rgba(25, 40, 28, 0.7);
+
+  transform:
+    translateY(-4px);
 }
 
 .HoneySection-featureIcon {
   color: #fce055;
+
   font-size: 1.25rem;
 }
 
 .HoneySection-featureTitle {
   color: #e2ebe4;
+
   font-size: 0.6rem;
+
   font-weight: 700;
+
   line-height: 1.2;
+
+  letter-spacing: 0.04em;
 }
 
-/* Center Column - Glass Honey Bottle */
+
+/* =========================================================
+   CENTER PRODUCT
+========================================================= */
+
 .HoneySection-centerCol {
   position: relative;
+
   display: flex;
+
   justify-content: center;
+
   align-items: center;
 }
+
+
+/* =========================================================
+   BOTTLE CONTAINER
+========================================================= */
 
 .HoneySection-bottleContainer {
   position: relative;
+
   width: 380px;
+
   height: 480px;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 }
 
+
+/* =========================================================
+   HONEY BOTTLE
+========================================================= */
+
 .HoneySection-bottleImg {
   width: 100%;
+
   height: 100%;
+
   object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+
+  filter:
+    drop-shadow(
+      0 20px 40px
+      rgba(0, 0, 0, 0.8)
+    )
+    drop-shadow(
+      0 0 25px
+      rgba(255, 193, 7, 0.18)
+    );
+
+  will-change: transform;
 }
+
+
+/* =========================================================
+   DIPPER
+========================================================= */
 
 .HoneySection-dipper {
   position: absolute;
+
   top: -10%;
+
   right: -5%;
+
   width: 120px;
+
   height: 120px;
+
   z-index: 10;
+
   pointer-events: none;
-  animation: dipperFloat 5s infinite ease-in-out;
+
+  animation:
+    dipperFloat
+    5s
+    infinite
+    ease-in-out;
 }
 
 @keyframes dipperFloat {
-  0%, 100% { transform: rotate(0deg) translate(0, 0); }
-  50% { transform: rotate(-5deg) translate(-10px, -15px); }
+  0%,
+  100% {
+    transform:
+      rotate(0deg)
+      translate(0, 0);
+  }
+
+  50% {
+    transform:
+      rotate(-5deg)
+      translate(-10px, -15px);
+  }
 }
 
-/* Right Column - Video Widget */
+
+/* =========================================================
+   RIGHT JOURNEY WIDGET
+========================================================= */
+
 .HoneySection-rightCol {
   display: flex;
+
   flex-direction: column;
+
   align-items: flex-end;
 }
 
 .HoneySection-journeyWidget {
-  background: rgba(15, 25, 18, 0.5);
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 1.25rem;
-  padding: 1.25rem 1rem;
+  background:
+    rgba(15, 25, 18, 0.5);
+
+  border:
+    1px solid
+    rgba(255, 215, 0, 0.2);
+
+  backdrop-filter:
+    blur(10px);
+
+  border-radius:
+    1.25rem;
+
+  padding:
+    1.25rem
+    1rem;
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   gap: 0.75rem;
+
   text-align: center;
 }
 
 .HoneySection-circlePlayBtn {
   width: 45px;
+
   height: 45px;
+
   border-radius: 50%;
-  background: linear-gradient(135deg, #fce055 0%, #e69900 100%);
+
+  background:
+    linear-gradient(
+      135deg,
+      #fce055 0%,
+      #e69900 100%
+    );
+
   border: none;
+
   color: #1a0d00;
+
   font-size: 1.1rem;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   cursor: pointer;
-  box-shadow: 0 0 15px rgba(252, 224, 85, 0.4);
-  transition: transform 0.3s ease;
+
+  box-shadow:
+    0 0 15px
+    rgba(252, 224, 85, 0.4);
+
+  transition:
+    transform 0.3s ease;
 }
 
 .HoneySection-circlePlayBtn:hover {
-  transform: scale(1.1);
+  transform:
+    scale(1.1);
+
+  box-shadow:
+    0 0 25px
+    rgba(252, 224, 85, 0.7);
 }
 
 .HoneySection-journeyText {
   color: #fce055;
+
   font-size: 0.65rem;
+
   font-weight: 700;
+
   letter-spacing: 0.1em;
+
   line-height: 1.3;
 }
 
-/* Scroll Indicator Bottom */
+
+/* =========================================================
+   BOTTOM SEO CONTENT
+========================================================= */
+
+.HoneySection-bottomContent {
+  position: absolute;
+
+  left: 50%;
+
+  bottom: 55px;
+
+  transform:
+    translateX(-50%);
+
+  width:
+    min(850px, 90%);
+
+  z-index: 8;
+
+  text-align: center;
+
+  pointer-events: none;
+}
+
+.HoneySection-bottomContent p {
+  margin: 0;
+
+  color:
+    rgba(255, 255, 255, 0.68);
+
+  font-size: 0.76rem;
+
+  line-height: 1.65;
+
+  letter-spacing: 0.01em;
+
+  text-shadow:
+    0 2px 8px
+    rgba(0, 0, 0, 0.6);
+}
+
+.HoneySection-bottomContent strong {
+  color: #fce055;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   SCROLL INDICATOR
+========================================================= */
+
 .HoneySection-scrollIndicator {
   position: relative;
+
   z-index: 10;
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   gap: 0.3rem;
+
   padding-bottom: 1.25rem;
+
   cursor: pointer;
 }
 
 .HoneySection-mouseOutline {
   width: 20px;
+
   height: 32px;
-  border: 1.5px solid rgba(252, 224, 85, 0.6);
+
+  border:
+    1.5px solid
+    rgba(252, 224, 85, 0.6);
+
   border-radius: 12px;
+
   position: relative;
+
   display: flex;
+
   justify-content: center;
+
   padding-top: 5px;
 }
 
 .HoneySection-mouseDot {
   width: 3px;
+
   height: 6px;
+
   background-color: #fce055;
+
   border-radius: 2px;
+
+  animation:
+    mouseScroll
+    1.5s
+    infinite
+    ease-in-out;
+}
+
+@keyframes mouseScroll {
+  0% {
+    transform:
+      translateY(0);
+
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translateY(12px);
+
+    opacity: 0;
+  }
 }
 
 .HoneySection-scrollText {
   color: #fce055;
+
   font-size: 0.6rem;
+
   font-weight: 700;
+
   letter-spacing: 0.2em;
 }
 
 .HoneySection-scrollArrow {
   color: #fce055;
+
   font-size: 0.9rem;
 }
 
-/* Responsive Media Queries */
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .HoneySection-heroContent {
+    padding:
+      0 2rem;
+  }
+
+  .HoneySection-leftCol {
+    max-width: 440px;
+  }
+
+  .HoneySection-mainTitle {
+    font-size: 3.8rem;
+  }
+
+  .HoneySection-scriptTitle {
+    font-size: 2.1rem;
+  }
+
+  .HoneySection-bottleContainer {
+    width: 330px;
+
+    height: 430px;
+  }
+
+  .HoneySection-rightCol {
+    margin-right: 10px;
+  }
+}
+
+
+/* =========================================================
+   TABLET / SMALL LAPTOP
+========================================================= */
+
 @media (max-width: 1024px) {
+
+  .HoneySection {
+    min-height: 850px;
+
+    height: auto;
+
+    padding:
+      50px 0 30px;
+  }
+
   .HoneySection-heroContent {
     flex-direction: column;
+
     justify-content: center;
-    padding: 1rem 1.5rem;
+
+    padding:
+      1rem 1.5rem;
+
     text-align: center;
+
+    gap: 15px;
   }
 
   .HoneySection-leftCol {
     align-items: center;
-    max-width: 100%;
+
+    max-width: 720px;
+
+    width: 100%;
   }
 
   .HoneySection-mainTitle {
     font-size: 3.25rem;
   }
 
+  .HoneySection-scriptTitle {
+    font-size: 2rem;
+  }
+
+  .HoneySection-description {
+    max-width: 650px;
+  }
+
+  .HoneySection-seoText {
+    max-width: 650px;
+  }
+
   .HoneySection-bottleContainer {
     width: 300px;
+
     height: 380px;
   }
 
   .HoneySection-rightCol {
     display: none;
   }
+
+  .HoneySection-bottomContent {
+    position: relative;
+
+    left: auto;
+
+    bottom: auto;
+
+    transform: none;
+
+    margin:
+      10px auto
+      30px;
+  }
 }
 
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 640px) {
+
+  .HoneySection {
+    width: 100%;
+
+    margin-left: 0;
+
+    min-height: 900px;
+
+    height: auto;
+
+    padding:
+      45px 15px 25px;
+  }
+
+  .HoneySection-heroContent {
+    padding:
+      0 10px;
+
+    gap: 10px;
+  }
+
+  .HoneySection-tagline {
+    font-size: 0.62rem;
+
+    letter-spacing: 0.16em;
+  }
+
   .HoneySection-mainTitle {
     font-size: 2.5rem;
+
+    letter-spacing: 0.06em;
   }
 
   .HoneySection-scriptTitle {
     font-size: 1.8rem;
+
+    margin-bottom: 0.8rem;
+  }
+
+  .HoneySection-description {
+    font-size: 0.82rem;
+
+    line-height: 1.6;
+
+    max-width: 95%;
+
+    margin-bottom: 0.5rem;
+  }
+
+  .HoneySection-seoText {
+    font-size: 0.74rem;
+
+    line-height: 1.6;
+
+    max-width: 95%;
+
+    margin-bottom: 1rem;
+  }
+
+  .HoneySection-ctaGroup {
+    flex-direction: column;
+
+    width: 100%;
+
+    gap: 0.7rem;
+
+    margin-bottom: 1.25rem;
+  }
+
+  .HoneySection-primaryBtn,
+  .HoneySection-secondaryBtn {
+    width: 100%;
+
+    max-width: 290px;
+
+    justify-content: center;
+
+    padding:
+      0.8rem
+      1.2rem;
   }
 
   .HoneySection-featuresGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 0.55rem;
+
+    width: 100%;
+
+    max-width: 320px;
+  }
+
+  .HoneySection-featureCard {
+    padding:
+      0.65rem
+      0.4rem;
+  }
+
+  .HoneySection-featureIcon {
+    font-size: 1.05rem;
+  }
+
+  .HoneySection-featureTitle {
+    font-size: 0.55rem;
+  }
+
+  .HoneySection-bottleContainer {
+    width: 250px;
+
+    height: 320px;
+  }
+
+  .HoneySection-dipper {
+    width: 80px;
+
+    height: 80px;
+  }
+
+  .HoneySection-bottomContent {
+    width: 92%;
+
+    margin:
+      15px auto
+      25px;
+  }
+
+  .HoneySection-bottomContent p {
+    font-size: 0.68rem;
+
+    line-height: 1.65;
+  }
+
+  .HoneySection-scrollIndicator {
+    padding-bottom: 0.8rem;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .HoneySection {
+    min-height: 880px;
+  }
+
+  .HoneySection-mainTitle {
+    font-size: 2.15rem;
+  }
+
+  .HoneySection-scriptTitle {
+    font-size: 1.55rem;
+  }
+
+  .HoneySection-description {
+    font-size: 0.76rem;
+  }
+
+  .HoneySection-seoText {
+    font-size: 0.7rem;
+  }
+
+  .HoneySection-bottleContainer {
+    width: 220px;
+
+    height: 285px;
+  }
+
+  .HoneySection-featureCard {
+    padding:
+      0.55rem
+      0.3rem;
+  }
+
+  .HoneySection-featureTitle {
+    font-size: 0.5rem;
+  }
+
+  .HoneySection-bottomContent p {
+    font-size: 0.64rem;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .HoneySection-bgImage,
+  .HoneySection-sunGlow,
+  .HoneySection-honeyDrip,
+  .HoneySection-bee,
+  .HoneySection-dipper,
+  .HoneySection-bottleImg,
+  .HoneySection-scrollIndicator,
+  .HoneySection-mouseDot {
+    animation: none !important;
   }
 }

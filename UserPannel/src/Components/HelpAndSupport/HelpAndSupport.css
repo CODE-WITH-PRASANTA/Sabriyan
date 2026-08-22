@@ -1,0 +1,653 @@
+/* Container Base Styles */
+.HelpAndSupport {
+  padding: 24px;
+  background-color: #fcfcfc;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  color: #1a1a1a;
+  box-sizing: border-box;
+}
+
+.HelpAndSupport * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================
+   1. TOP BANNER ROW GRID
+========================================== */
+.HelpAndSupport_TopGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.HelpAndSupport_SearchCard {
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.HelpAndSupport_SearchIconBubble {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #fdf3e7;
+  color: #d97706;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.HelpAndSupport_SearchContent {
+  flex: 1;
+}
+
+.HelpAndSupport_SearchTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 12px;
+}
+
+.HelpAndSupport_SearchForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.HelpAndSupport_SearchInput {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #333333;
+  outline: none;
+  background-color: #fafafa;
+  transition: border-color 0.2s ease;
+}
+
+.HelpAndSupport_SearchInput:focus {
+  border-color: #2b1810;
+  background-color: #ffffff;
+}
+
+.HelpAndSupport_SearchBtn {
+  background-color: #2b1810;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.HelpAndSupport_SearchBtn:hover {
+  background-color: #1a0f0a;
+}
+
+.HelpAndSupport_ImmediateCard {
+  background-color: #f3f9f3;
+  border: 1px solid #e1f0e1;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.HelpAndSupport_ImmediateLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.HelpAndSupport_HeadsetIconBubble {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #dcfce7;
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.HelpAndSupport_ImmediateText {
+  display: flex;
+  flex-direction: column;
+}
+
+.HelpAndSupport_ImmediateTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 2px;
+}
+
+.HelpAndSupport_ImmediateSubtitle {
+  font-size: 11px;
+  color: #666666;
+  margin-bottom: 10px;
+}
+
+.HelpAndSupport_ContactSupportBtn {
+  background-color: #dcfce7;
+  color: #15803d;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.2s ease;
+}
+
+.HelpAndSupport_ContactSupportBtn:hover {
+  background-color: #bbf7d0;
+}
+
+.HelpAndSupport_DownloadBtn {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  color: #555555;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.HelpAndSupport_DownloadBtn:hover {
+  background-color: #f0f0f0;
+  color: #111111;
+}
+
+/* ==========================================
+   2. MIDDLE ROW GRID
+========================================== */
+.HelpAndSupport_MiddleGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.HelpAndSupport_Card {
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.HelpAndSupport_CardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.HelpAndSupport_CardSubtitle {
+  font-size: 12px;
+  color: #777777;
+  margin-top: 2px;
+  margin-bottom: 16px;
+}
+
+/* FAQs */
+.HelpAndSupport_FaqHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.HelpAndSupport_ViewAllBtn {
+  background: transparent;
+  border: none;
+  color: #7c3aed;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.HelpAndSupport_FaqList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.HelpAndSupport_FaqItem {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+.HelpAndSupport_FaqItem.open {
+  border-color: #e5e7eb;
+  background-color: #fafafa;
+}
+
+.HelpAndSupport_FaqQuestionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.HelpAndSupport_FaqQuestionLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.HelpAndSupport_FaqCategoryIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.faq-icon-box {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+.faq-icon-undo {
+  background-color: #fce8e6;
+  color: #ef4444;
+}
+.faq-icon-edit {
+  background-color: #f3e8ff;
+  color: #a855f7;
+}
+.faq-icon-card {
+  background-color: #dbeafe;
+  color: #3b82f6;
+}
+.faq-icon-tag {
+  background-color: #dcfce7;
+  color: #22c55e;
+}
+
+.HelpAndSupport_FaqQuestionText {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.HelpAndSupport_FaqArrow {
+  font-size: 18px;
+  color: #888888;
+  transition: transform 0.2s ease;
+}
+
+.HelpAndSupport_FaqArrow.rotated {
+  transform: rotate(180deg);
+}
+
+.HelpAndSupport_FaqAnswerRow {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eeeeee;
+  font-size: 12px;
+  color: #666666;
+  line-height: 1.4;
+}
+
+/* Support Channels */
+.HelpAndSupport_ChannelsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.HelpAndSupport_ChannelItem {
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.HelpAndSupport_ChannelItem:hover {
+  border-color: #e0e0e0;
+  background-color: #fafafa;
+}
+
+.HelpAndSupport_ChannelIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.HelpAndSupport_ChannelIcon.live-chat {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.HelpAndSupport_ChannelIcon.email {
+  background-color: #fce8e6;
+  color: #ef4444;
+}
+
+.HelpAndSupport_ChannelIcon.call {
+  background-color: #f3e8ff;
+  color: #9333ea;
+}
+
+.HelpAndSupport_ChannelIcon.whatsapp {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.HelpAndSupport_ChannelInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.HelpAndSupport_ChannelTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.HelpAndSupport_ChannelDetail {
+  font-size: 11px;
+  color: #666666;
+}
+
+.HelpAndSupport_ChannelSubDetail {
+  font-size: 10px;
+  color: #888888;
+}
+
+.HelpAndSupport_ChannelArrow {
+  font-size: 18px;
+  color: #bbbbbb;
+}
+
+/* ==========================================
+   3. BOTTOM ROW GRID
+========================================== */
+.HelpAndSupport_BottomGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* Submit Request Form */
+.HelpAndSupport_RequestForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.HelpAndSupport_FormRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.HelpAndSupport_FormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.HelpAndSupport_FormGroup label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666666;
+}
+
+.HelpAndSupport_SelectWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.HelpAndSupport_SelectInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #444444;
+  outline: none;
+  appearance: none;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.HelpAndSupport_SelectArrow {
+  position: absolute;
+  right: 12px;
+  font-size: 18px;
+  color: #888888;
+  pointer-events: none;
+}
+
+.HelpAndSupport_TextInput,
+.HelpAndSupport_TextareaInput {
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #333333;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.HelpAndSupport_TextInput:focus,
+.HelpAndSupport_TextareaInput:focus,
+.HelpAndSupport_SelectInput:focus {
+  border-color: #2b1810;
+}
+
+.HelpAndSupport_TextareaInput {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.HelpAndSupport_SubmitBtn {
+  align-self: flex-start;
+  background-color: #2b1810;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.HelpAndSupport_SubmitBtn:hover {
+  background-color: #1a0f0a;
+}
+
+/* Banner Card Graphic */
+.HelpAndSupport_BannerCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.HelpAndSupport_IllustrationContainer {
+  width: 100%;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.HelpAndSupport_SvgGraphic {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Side Info Column */
+.HelpAndSupport_SideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.HelpAndSupport_TimingCard,
+.HelpAndSupport_SafetyCard {
+  padding: 16px;
+}
+
+.HelpAndSupport_InfoBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.HelpAndSupport_InfoIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.HelpAndSupport_InfoIcon.blue {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.HelpAndSupport_InfoIcon.green {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.HelpAndSupport_InfoContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.HelpAndSupport_InfoTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 6px;
+}
+
+.HelpAndSupport_TimingText {
+  font-size: 11px;
+  color: #555555;
+}
+
+.HelpAndSupport_TimingText.margin-top {
+  margin-top: 6px;
+}
+
+.HelpAndSupport_TimingSub {
+  font-size: 10px;
+  color: #888888;
+}
+
+.HelpAndSupport_SafetyDesc {
+  font-size: 11px;
+  color: #666666;
+  line-height: 1.35;
+}
+
+/* ==========================================
+   4. RESPONSIVE DESIGN BREAKPOINTS
+========================================== */
+@media (max-width: 1024px) {
+  .HelpAndSupport_TopGrid,
+  .HelpAndSupport_MiddleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .HelpAndSupport_BottomGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .HelpAndSupport_SideColumn {
+    grid-column: span 2;
+    flex-direction: row;
+  }
+
+  .HelpAndSupport_TimingCard,
+  .HelpAndSupport_SafetyCard {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .HelpAndSupport {
+    padding: 16px;
+  }
+
+  .HelpAndSupport_BottomGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .HelpAndSupport_SideColumn {
+    grid-column: span 1;
+    flex-direction: column;
+  }
+
+  .HelpAndSupport_FormRow {
+    grid-template-columns: 1fr;
+  }
+
+  .HelpAndSupport_SearchCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .HelpAndSupport_SearchForm {
+    width: 100%;
+  }
+}

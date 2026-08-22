@@ -5,11 +5,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-
+ 
 const app = express();
 
 // Route Imports
-const honeyProductRoutes = require("./routes/honeyProductRoutes");
+const honeyProductRoutes = require('./routes/honeyProductRoutes');
 const testimonialRoutes = require("./routes/testimonialRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const premiumCollectionRoutes = require("./routes/premiumCollectionRoutes");
@@ -19,10 +19,12 @@ const brandRoutes = require("./routes/brandRoutes");
 const attributeRoutes = require("./routes/attributeRoutes");
 const productRoutes = require("./routes/productRoutes");
 const storeArticleRoutes = require("./routes/storeArticleRoutes");
+const blogRoutes = require('./routes/blogRoutes')
 const reviewRoutes = require('./routes/reviewRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const couponRoutes = require('./routes/couponRoutes');
 const supportRoutes = require("./routes/supportRoutes");
+const websiteSettingRoutes = require("./routes/websiteSettingRoutes");
 
 
 // ======================
@@ -91,10 +93,18 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/attributes", attributeRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/store-articles", storeArticleRoutes);
+app.use(
+  "/api/blog",
+  blogRoutes
+);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/coupons', require('./routes/couponRoutes'));
 app.use("/api/support", supportRoutes);
+app.use(
+  "/api/website-settings",
+  websiteSettingRoutes
+);
 
 // ======================
 // 404 Route Handler

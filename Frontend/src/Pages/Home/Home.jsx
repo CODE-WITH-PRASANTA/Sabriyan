@@ -1,8 +1,8 @@
 import React from "react";
 import "./Home.css";
 
-import BgOne from "../../assets/bg-1.jpeg";
-import BgTwo from "../../assets/bg-2.jpeg";
+import BgOne from "../../assets/bg-1.webp";
+import BgTwo from "../../assets/bg-2.webp";
 import Herosection from "../../Component/Herosection/Herosection";
 import ChocolateCard from "../../Component/ChocolateCard/ChocolateCard";
 import Ingrident from "../../Component/Ingrident/Ingrident";

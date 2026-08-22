@@ -1,313 +1,1413 @@
-import React, { useState } from 'react';
+import React, {
+  useState,
+  useEffect,
+} from 'react';
+
 import './BlogPost.css';
-import { 
-  FaSearch, FaLeaf, FaHeart, FaLungs, FaBolt, FaQuoteLeft, 
-  FaCheck, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, 
-  FaEnvelope, FaArrowRight, FaClock, FaEye 
+
+import {
+  FaSearch,
+  FaLeaf,
+  FaHeart,
+  FaLungs,
+  FaBolt,
+  FaQuoteLeft,
+  FaCheck,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedinIn,
+  FaEnvelope,
+  FaArrowRight,
+  FaClock,
+  FaEye,
+  FaCalendarAlt
 } from 'react-icons/fa';
 
+import {
+  useSearchParams,
+  useNavigate
+} from 'react-router-dom';
+
+import API, {
+  IMG_URL
+} from '../../api/axios';
+
+
+// =====================================================
+// IMAGE URL
+// =====================================================
+
+const getImageUrl = (
+  image
+) => {
+
+  if (!image) {
+    return '';
+  }
+
+  if (
+    image.startsWith(
+      'http://'
+    ) ||
+    image.startsWith(
+      'https://'
+    )
+  ) {
+    return image;
+  }
+
+  return `${IMG_URL}${image}`;
+};
+
+
+// =====================================================
+// DATE FORMAT
+// =====================================================
+
+const formatDate = (
+  date
+) => {
+
+  if (!date) {
+    return '-';
+  }
+
+  const parsedDate =
+    new Date(date);
+
+  if (
+    Number.isNaN(
+      parsedDate.getTime()
+    )
+  ) {
+    return date;
+  }
+
+  return parsedDate.toLocaleDateString(
+    'en-GB',
+    {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }
+  );
+};
+
+
+// =====================================================
+// COMPONENT
+// =====================================================
+
 const BlogPost = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(null);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      alert(`Searching for: ${searchQuery}`);
+  // ===================================================
+  // ROUTER
+  // ===================================================
+
+  const [
+    searchParams
+  ] = useSearchParams();
+
+  const navigate =
+    useNavigate();
+
+  const blogId =
+    searchParams.get(
+      'id'
+    );
+
+
+  // ===================================================
+  // STATE
+  // ===================================================
+
+  const [
+    searchQuery,
+    setSearchQuery
+  ] = useState('');
+
+  const [
+    email,
+    setEmail
+  ] = useState('');
+
+  const [
+    subscribed,
+    setSubscribed
+  ] = useState(false);
+
+  const [
+    activeCategory,
+    setActiveCategory
+  ] = useState(null);
+
+  const [
+    blog,
+    setBlog
+  ] = useState(null);
+
+  const [
+    relatedBlogs,
+    setRelatedBlogs
+  ] = useState([]);
+
+  const [
+    recentBlogs,
+    setRecentBlogs
+  ] = useState([]);
+
+  const [
+    loading,
+    setLoading
+  ] = useState(true);
+
+
+  // ===================================================
+  // FETCH BLOG
+  // ===================================================
+
+  const fetchBlog = async () => {
+
+    try {
+
+      setLoading(true);
+
+      if (!blogId) {
+
+        setBlog(null);
+
+        return;
+
+      }
+
+
+      // ===============================================
+      // GET SELECTED BLOG
+      // ===============================================
+
+      const response =
+        await API.get(
+          `/blog/${blogId}`
+        );
+
+      console.log(
+        'BLOG DETAILS RESPONSE:',
+        response.data
+      );
+
+
+      if (
+        response.data.success
+      ) {
+
+        const blogData =
+          response.data.blog ||
+          response.data.data;
+
+        setBlog(
+          blogData
+        );
+
+
+        // =============================================
+        // FETCH RELATED BLOGS
+        // =============================================
+
+        await fetchRelatedBlogs(
+          blogData
+        );
+
+      } else {
+
+        setBlog(null);
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        'FETCH BLOG DETAILS ERROR:',
+        error
+      );
+
+      setBlog(null);
+
+    } finally {
+
+      setLoading(false);
+
     }
+
   };
 
-  const handleSubscribe = (e) => {
+
+  // ===================================================
+  // FETCH RELATED BLOGS
+  // ===================================================
+
+  const fetchRelatedBlogs = async (
+    currentBlog
+  ) => {
+
+    try {
+
+      const response =
+        await API.get(
+          '/blog'
+        );
+
+      if (
+        !response.data.success
+      ) {
+        return;
+      }
+
+      const blogs =
+        response.data.blogs ||
+        [];
+
+      // Only published
+      const publishedBlogs =
+        blogs.filter(
+          (item) =>
+            item.status ===
+            'Published'
+        );
+
+
+      // ===============================================
+      // RECENT BLOGS
+      // ===============================================
+
+      const recent =
+        publishedBlogs
+          .filter(
+            (item) =>
+              item._id !==
+              currentBlog?._id
+          )
+          .slice(0, 3);
+
+      setRecentBlogs(
+        recent
+      );
+
+
+      // ===============================================
+      // RELATED BLOGS
+      // ===============================================
+
+      const related =
+        publishedBlogs
+          .filter(
+            (item) =>
+              item._id !==
+                currentBlog?._id &&
+              item.category ===
+                currentBlog?.category
+          )
+          .slice(0, 3);
+
+
+      // If same category doesn't
+      // have 3 blogs, use other blogs
+      if (
+        related.length < 3
+      ) {
+
+        const additional =
+          publishedBlogs
+            .filter(
+              (item) =>
+                item._id !==
+                  currentBlog?._id &&
+                !related.some(
+                  (r) =>
+                    r._id ===
+                    item._id
+                )
+            )
+            .slice(
+              0,
+              3 -
+                related.length
+            );
+
+        related.push(
+          ...additional
+        );
+
+      }
+
+      setRelatedBlogs(
+        related
+      );
+
+    } catch (error) {
+
+      console.error(
+        'RELATED BLOG ERROR:',
+        error
+      );
+
+    }
+
+  };
+
+
+  // ===================================================
+  // LOAD BLOG
+  // ===================================================
+
+  useEffect(() => {
+
+    fetchBlog();
+
+  }, [
+    blogId
+  ]);
+
+
+  // ===================================================
+  // SEARCH
+  // ===================================================
+
+  const handleSearch = (
+    e
+  ) => {
+
     e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
+
+    if (
+      searchQuery.trim()
+    ) {
+
+      window.location.href =
+        `/blog?search=${encodeURIComponent(
+          searchQuery
+        )}`;
+
+    }
+
+  };
+
+
+  // ===================================================
+  // SUBSCRIBE
+  // ===================================================
+
+  const handleSubscribe = (
+    e
+  ) => {
+
+    e.preventDefault();
+
+    if (
+      email.trim()
+    ) {
+
+      setSubscribed(
+        true
+      );
+
       setEmail('');
-      setTimeout(() => setSubscribed(false), 4000);
+
+      setTimeout(
+        () =>
+          setSubscribed(
+            false
+          ),
+        4000
+      );
+
     }
+
   };
 
-  return (
-    <div className="BlogPost-container">
-      {/* Background Animated Forest Elements */}
-      <div className="BlogPost-forest-bg">
-        <div className="BlogPost-leaf-glow glow-1"></div>
-        <div className="BlogPost-leaf-glow glow-2"></div>
+
+  // ===================================================
+  // OPEN RELATED BLOG
+  // ===================================================
+
+  const handleOpenBlog = (
+    id
+  ) => {
+
+    navigate(
+      `/blogDetails?id=${id}`
+    );
+
+  };
+
+
+  // ===================================================
+  // VIEW ALL
+  // ===================================================
+
+  const handleViewAll =
+    () => {
+
+      navigate(
+        '/blog'
+      );
+
+    };
+
+
+  // ===================================================
+  // LOADING
+  // ===================================================
+
+  if (loading) {
+
+    return (
+
+      <div className="BlogPost-container">
+
+        <div className="BlogPost-content-wrapper">
+
+          <main className="BlogPost-main">
+
+            <div className="BlogPost-section">
+
+              <h2 className="BlogPost-section-title">
+
+                <FaLeaf className="BlogPost-title-icon" />
+
+                Loading Blog...
+
+              </h2>
+
+            </div>
+
+          </main>
+
+        </div>
+
       </div>
 
+    );
+
+  }
+
+
+  // ===================================================
+  // BLOG NOT FOUND
+  // ===================================================
+
+  if (!blog) {
+
+    return (
+
+      <div className="BlogPost-container">
+
+        <div className="BlogPost-content-wrapper">
+
+          <main className="BlogPost-main">
+
+            <div className="BlogPost-section">
+
+              <h2 className="BlogPost-section-title">
+
+                <FaLeaf className="BlogPost-title-icon" />
+
+                Blog Not Found
+
+              </h2>
+
+              <p className="BlogPost-text">
+
+                The blog post you are looking for does not exist or has been removed.
+
+              </p>
+
+              <button
+                className="BlogPost-view-all-btn"
+                onClick={
+                  handleViewAll
+                }
+              >
+                View All Blogs
+                <FaArrowRight />
+              </button>
+
+            </div>
+
+          </main>
+
+        </div>
+
+      </div>
+
+    );
+
+  }
+
+
+  // ===================================================
+  // BLOG DATA
+  // ===================================================
+
+  const title =
+    blog.title ||
+    '';
+
+  const description =
+    blog.excerpt ||
+    '';
+
+  const image =
+    getImageUrl(
+      blog.featuredImage ||
+      blog.image
+    );
+
+  const category =
+    blog.category ||
+    'Nature';
+
+  const date =
+    formatDate(
+      blog.publishDate ||
+      blog.createdAt
+    );
+
+  const views =
+    blog.views ||
+    0;
+
+  const readTime =
+    blog.readTime ||
+    '4 min read';
+
+  const author =
+    blog.author ||
+    'Sabriyana Team';
+
+  const authorAvatar =
+    blog.authorAvatar ||
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+
+  const content =
+    blog.content ||
+    '';
+
+
+  // ===================================================
+  // RENDER
+  // ===================================================
+
+  return (
+
+    <div className="BlogPost-container">
+
+      {/* Background Animated Forest Elements */}
+
+      <div className="BlogPost-forest-bg">
+
+        <div className="BlogPost-leaf-glow glow-1">
+        </div>
+
+        <div className="BlogPost-leaf-glow glow-2">
+        </div>
+
+      </div>
+
+
       <div className="BlogPost-content-wrapper">
-        
-        {/* Main Content Area */}
+
+
+        {/* ================================================= */}
+        {/* MAIN */}
+        {/* ================================================= */}
+
         <main className="BlogPost-main">
-          
-          {/* Featured Image & Intro */}
+
+
+          {/* ================================================= */}
+          {/* HERO IMAGE & INTRO */}
+          {/* ================================================= */}
+
           <div className="BlogPost-hero-card">
+
             <div className="BlogPost-hero-image-wrapper">
-              <img 
-                src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80" 
-                alt="Forest stream" 
+
+              <img
+                src={image}
+                alt={title}
                 className="BlogPost-hero-img"
               />
+
             </div>
+
+
+            <div className="BlogPost-post-meta">
+
+              <span>
+                <FaClock />
+
+                {" "}
+
+                {readTime}
+              </span>
+
+              <span>
+                <FaEye />
+
+                {" "}
+
+                {views}
+              </span>
+
+              <span>
+                <FaCalendarAlt />
+
+                {" "}
+
+                {date}
+              </span>
+
+            </div>
+
+
+            <h1 className="BlogPost-section-title">
+
+              <FaLeaf className="BlogPost-title-icon" />
+
+              {title}
+
+            </h1>
+
+
             <p className="BlogPost-text">
-              Nature has an incredible way of healing our minds, bodies, and souls. In today's fast-paced world, taking time to connect with the natural world is more important than ever. Research shows that spending time in green environments reduces stress, boosts mood, and improves overall well-being.
+
+              {description}
+
             </p>
-            <p className="BlogPost-text">
-              The calmness of forests, the freshness of air, and the soothing sounds of flowing water create a sense of peace that no modern technology can match. Nature doesn't just inspire us — it restores us.
-            </p>
+
+
+            {/* ================================================= */}
+            {/* FULL DYNAMIC CONTENT */}
+            {/* ================================================= */}
+
+            {content ? (
+
+              <div
+                className="BlogPost-text"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    content
+                }}
+              />
+
+            ) : null}
+
           </div>
 
-          {/* Benefits Section */}
+
+          {/* ================================================= */}
+          {/* BENEFITS SECTION */}
+          {/* ================================================= */}
+
           <section className="BlogPost-section">
+
             <h2 className="BlogPost-section-title">
-              <FaLeaf className="BlogPost-title-icon" /> Benefits of Spending Time in Nature
+
+              <FaLeaf className="BlogPost-title-icon" />
+
+              Benefits of Spending Time in Nature
+
             </h2>
+
             <div className="BlogPost-benefits-grid">
+
               <div className="BlogPost-benefit-card">
-                <div className="BlogPost-benefit-icon"><FaLeaf /></div>
-                <div className="BlogPost-benefit-info">
-                  <h3>Reduces Stress</h3>
-                  <p>Natural surroundings lower cortisol levels and help you relax.</p>
+
+                <div className="BlogPost-benefit-icon">
+                  <FaLeaf />
                 </div>
+
+                <div className="BlogPost-benefit-info">
+
+                  <h3>
+                    Reduces Stress
+                  </h3>
+
+                  <p>
+                    Natural surroundings lower cortisol levels and help you relax.
+                  </p>
+
+                </div>
+
               </div>
+
+
               <div className="BlogPost-benefit-card">
-                <div className="BlogPost-benefit-icon"><FaHeart /></div>
-                <div className="BlogPost-benefit-info">
-                  <h3>Improves Mental Health</h3>
-                  <p>Fresh air and greenery uplift mood and reduce anxiety.</p>
+
+                <div className="BlogPost-benefit-icon">
+                  <FaHeart />
                 </div>
+
+                <div className="BlogPost-benefit-info">
+
+                  <h3>
+                    Improves Mental Health
+                  </h3>
+
+                  <p>
+                    Fresh air and greenery uplift mood and reduce anxiety.
+                  </p>
+
+                </div>
+
               </div>
+
+
               <div className="BlogPost-benefit-card">
-                <div className="BlogPost-benefit-icon"><FaLungs /></div>
-                <div className="BlogPost-benefit-info">
-                  <h3>Better Breathing</h3>
-                  <p>Clean, oxygen-rich air strengthens your lungs and immunity.</p>
+
+                <div className="BlogPost-benefit-icon">
+                  <FaLungs />
                 </div>
+
+                <div className="BlogPost-benefit-info">
+
+                  <h3>
+                    Better Breathing
+                  </h3>
+
+                  <p>
+                    Clean, oxygen-rich air strengthens your lungs and immunity.
+                  </p>
+
+                </div>
+
               </div>
+
+
               <div className="BlogPost-benefit-card">
-                <div className="BlogPost-benefit-icon"><FaBolt /></div>
-                <div className="BlogPost-benefit-info">
-                  <h3>Recharges Energy</h3>
-                  <p>Time in nature refreshes the mind and boosts productivity.</p>
+
+                <div className="BlogPost-benefit-icon">
+                  <FaBolt />
                 </div>
+
+                <div className="BlogPost-benefit-info">
+
+                  <h3>
+                    Recharges Energy
+                  </h3>
+
+                  <p>
+                    Time in nature refreshes the mind and boosts productivity.
+                  </p>
+
+                </div>
+
               </div>
+
             </div>
+
           </section>
 
-          {/* Quote Card */}
+
+          {/* ================================================= */}
+          {/* QUOTE */}
+          {/* ================================================= */}
+
           <div className="BlogPost-quote-card">
+
             <FaQuoteLeft className="BlogPost-quote-icon-bg" />
+
             <p className="BlogPost-quote-text">
+
               "Look deep into nature, and then you will understand everything better."
+
             </p>
-            <span className="BlogPost-quote-author">— Albert Einstein</span>
+
+            <span className="BlogPost-quote-author">
+
+              — Albert Einstein
+
+            </span>
+
           </div>
 
-          {/* Tips Section */}
+
+          {/* ================================================= */}
+          {/* TIPS */}
+          {/* ================================================= */}
+
           <section className="BlogPost-section">
+
             <h2 className="BlogPost-section-title">
-              <FaLeaf className="BlogPost-title-icon" /> Tips to Reconnect with Nature
+
+              <FaLeaf className="BlogPost-title-icon" />
+
+              Tips to Reconnect with Nature
+
             </h2>
+
             <ul className="BlogPost-tips-list">
-              <li><span className="BlogPost-check"><FaCheck /></span> Take regular walks in parks or forest trails.</li>
-              <li><span className="BlogPost-check"><FaCheck /></span> Spend time outdoors, away from digital screens.</li>
-              <li><span className="BlogPost-check"><FaCheck /></span> Try gardening to bring more greenery into your life.</li>
-              <li><span className="BlogPost-check"><FaCheck /></span> Listen to the natural sounds — birds, wind and flowing water.</li>
-              <li><span className="BlogPost-check"><FaCheck /></span> Choose eco-friendly and natural products for a healthier lifestyle.</li>
+
+              <li>
+                <span className="BlogPost-check">
+                  <FaCheck />
+                </span>
+
+                Take regular walks in parks or forest trails.
+              </li>
+
+              <li>
+                <span className="BlogPost-check">
+                  <FaCheck />
+                </span>
+
+                Spend time outdoors, away from digital screens.
+              </li>
+
+              <li>
+                <span className="BlogPost-check">
+                  <FaCheck />
+                </span>
+
+                Try gardening to bring more greenery into your life.
+              </li>
+
+              <li>
+                <span className="BlogPost-check">
+                  <FaCheck />
+                </span>
+
+                Listen to the natural sounds — birds, wind and flowing water.
+              </li>
+
+              <li>
+                <span className="BlogPost-check">
+                  <FaCheck />
+                </span>
+
+                Choose eco-friendly and natural products for a healthier lifestyle.
+              </li>
+
             </ul>
+
+
+            {/* TAGS */}
+
             <div className="BlogPost-tags">
-              <span className="BlogPost-tag-label">Tags:</span>
-              {['Nature', 'Health', 'Wellness', 'Eco Life', 'Lifestyle'].map((tag) => (
-                <button 
-                  key={tag} 
-                  className="BlogPost-tag-btn"
-                  onClick={() => alert(`Filtered by tag: ${tag}`)}
-                >
-                  {tag}
-                </button>
-              ))}
+
+              <span className="BlogPost-tag-label">
+                Tags:
+              </span>
+
+              {(
+                blog.tags
+                  ? blog.tags
+                      .split(',')
+                      .map(
+                        (tag) =>
+                          tag.trim()
+                      )
+                  : [
+                      category,
+                      'Health',
+                      'Wellness',
+                      'Eco Life',
+                      'Lifestyle'
+                    ]
+              ).map(
+                (tag) => (
+
+                  <button
+                    key={tag}
+                    className="BlogPost-tag-btn"
+                    onClick={() =>
+                      setActiveCategory(
+                        tag
+                      )
+                    }
+                  >
+                    {tag}
+                  </button>
+
+                )
+              )}
+
             </div>
+
           </section>
 
-          {/* Author Box */}
+
+          {/* ================================================= */}
+          {/* AUTHOR */}
+          {/* ================================================= */}
+
           <div className="BlogPost-author-box">
-            <img 
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" 
-              alt="Sabriyana Team" 
+
+            <img
+              src={
+                authorAvatar
+              }
+              alt={
+                author
+              }
               className="BlogPost-author-avatar"
             />
+
             <div className="BlogPost-author-details">
-              <span className="BlogPost-written-by">Written by</span>
-              <h4 className="BlogPost-author-name">Sabriyana Team <FaLeaf className="BlogPost-inline-leaf" /></h4>
-              <p className="BlogPost-author-bio">Passionate about nature, health and pure products for a better and greener tomorrow.</p>
+
+              <span className="BlogPost-written-by">
+                Written by
+              </span>
+
+              <h4 className="BlogPost-author-name">
+
+                {author}
+
+                <FaLeaf className="BlogPost-inline-leaf" />
+
+              </h4>
+
+              <p className="BlogPost-author-bio">
+
+                Passionate about nature, health and pure products for a better and greener tomorrow.
+
+              </p>
+
             </div>
+
+
             <div className="BlogPost-social-icons">
-              <a href="#facebook" onClick={(e) => e.preventDefault()}><FaFacebookF /></a>
-              <a href="#twitter" onClick={(e) => e.preventDefault()}><FaTwitter /></a>
-              <a href="#instagram" onClick={(e) => e.preventDefault()}><FaInstagram /></a>
-              <a href="#linkedin" onClick={(e) => e.preventDefault()}><FaLinkedinIn /></a>
+
+              <a
+                href="#facebook"
+                onClick={(e) =>
+                  e.preventDefault()
+                }
+              >
+                <FaFacebookF />
+              </a>
+
+              <a
+                href="#twitter"
+                onClick={(e) =>
+                  e.preventDefault()
+                }
+              >
+                <FaTwitter />
+              </a>
+
+              <a
+                href="#instagram"
+                onClick={(e) =>
+                  e.preventDefault()
+                }
+              >
+                <FaInstagram />
+              </a>
+
+              <a
+                href="#linkedin"
+                onClick={(e) =>
+                  e.preventDefault()
+                }
+              >
+                <FaLinkedinIn />
+              </a>
+
             </div>
+
           </div>
 
-          {/* Related Blog Posts */}
+
+          {/* ================================================= */}
+          {/* RELATED BLOG POSTS */}
+          {/* ================================================= */}
+
           <section className="BlogPost-section">
+
             <div className="BlogPost-flex-header">
+
               <h2 className="BlogPost-section-title">
-                <FaLeaf className="BlogPost-title-icon" /> Related Blog Posts
+
+                <FaLeaf className="BlogPost-title-icon" />
+
+                Related Blog Posts
+
               </h2>
-              <button className="BlogPost-view-all-btn" onClick={() => alert('Viewing all blog posts')}>
-                View All <FaArrowRight />
+
+              <button
+                className="BlogPost-view-all-btn"
+                onClick={
+                  handleViewAll
+                }
+              >
+
+                View All
+
+                <FaArrowRight />
+
               </button>
+
             </div>
-            
+
+
             <div className="BlogPost-related-grid">
-              
-              <div className="BlogPost-related-card">
-                <div className="BlogPost-related-img-wrap">
-                  <img src="https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=600&q=80" alt="Benefits of Pure Forest Honey" />
-                </div>
-                <div className="BlogPost-related-content">
-                  <h3>Benefits of Pure Forest Honey</h3>
-                  <div className="BlogPost-post-meta">
-                    <span><FaClock /> 4 min read</span>
-                    <span><FaEye /> 1.2k views</span>
-                  </div>
-                </div>
-              </div>
 
-              <div className="BlogPost-related-card">
-                <div className="BlogPost-related-img-wrap">
-                  <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80" alt="The Art of Chocolate Making" />
-                </div>
-                <div className="BlogPost-related-content">
-                  <h3>The Art of Chocolate Making</h3>
-                  <div className="BlogPost-post-meta">
-                    <span><FaClock /> 5 min read</span>
-                    <span><FaEye /> 950 views</span>
-                  </div>
-                </div>
-              </div>
+              {relatedBlogs.length >
+              0 ? (
 
-              <div className="BlogPost-related-card">
-                <div className="BlogPost-related-img-wrap">
-                  <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80" alt="Why Choose Natural Products" />
-                </div>
-                <div className="BlogPost-related-content">
-                  <h3>Why Choose Natural Products</h3>
-                  <div className="BlogPost-post-meta">
-                    <span><FaClock /> 3 min read</span>
-                    <span><FaEye /> 2.1k views</span>
-                  </div>
-                </div>
-              </div>
+                relatedBlogs.map(
+                  (item) => (
+
+                    <div
+                      key={
+                        item._id
+                      }
+                      className="BlogPost-related-card"
+                      onClick={() =>
+                        handleOpenBlog(
+                          item._id
+                        )
+                      }
+                      style={{
+                        cursor:
+                          'pointer'
+                      }}
+                    >
+
+                      <div className="BlogPost-related-img-wrap">
+
+                        <img
+                          src={getImageUrl(
+                            item.featuredImage ||
+                            item.image
+                          )}
+                          alt={
+                            item.title
+                          }
+                        />
+
+                      </div>
+
+                      <div className="BlogPost-related-content">
+
+                        <h3>
+                          {
+                            item.title
+                          }
+                        </h3>
+
+                        <div className="BlogPost-post-meta">
+
+                          <span>
+
+                            <FaClock />
+
+                            {" "}
+
+                            {
+                              item.readTime ||
+                              '4 min read'
+                            }
+
+                          </span>
+
+                          <span>
+
+                            <FaEye />
+
+                            {" "}
+
+                            {
+                              item.views ||
+                              0
+                            }
+
+                            {" "}
+                            views
+
+                          </span>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  )
+                )
+
+              ) : (
+
+                <p className="BlogPost-text">
+
+                  No related blogs found.
+
+                </p>
+
+              )}
 
             </div>
+
           </section>
 
         </main>
 
-        {/* Sidebar Area */}
+
+        {/* ================================================= */}
+        {/* SIDEBAR */}
+        {/* ================================================= */}
+
         <aside className="BlogPost-sidebar">
-          
-          {/* Search Widget */}
+
+
+          {/* SEARCH */}
+
           <div className="BlogPost-widget">
-            <h3 className="BlogPost-widget-title"><FaSearch /> Search Blog</h3>
-            <form onSubmit={handleSearch} className="BlogPost-search-form">
-              <input 
-                type="text" 
-                placeholder="Search articles..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+
+            <h3 className="BlogPost-widget-title">
+
+              <FaSearch />
+
+              Search Blog
+
+            </h3>
+
+            <form
+              onSubmit={
+                handleSearch
+              }
+              className="BlogPost-search-form"
+            >
+
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={
+                  searchQuery
+                }
+                onChange={(e) =>
+                  setSearchQuery(
+                    e.target.value
+                  )
+                }
               />
-              <button type="submit"><FaSearch /></button>
+
+              <button type="submit">
+                <FaSearch />
+              </button>
+
             </form>
+
           </div>
 
-          {/* Categories Widget */}
+
+          {/* CATEGORIES */}
+
           <div className="BlogPost-widget">
-            <h3 className="BlogPost-widget-title"><FaLeaf /> Categories</h3>
+
+            <h3 className="BlogPost-widget-title">
+
+              <FaLeaf />
+
+              Categories
+
+            </h3>
+
             <ul className="BlogPost-categories-list">
+
               {[
-                { name: 'Nature', count: 17 },
-                { name: 'Honey', count: 4 },
-                { name: 'Chocolate', count: 10 },
-                { name: 'Health', count: 14 },
-                { name: 'Recipes', count: 6 },
-                { name: 'Lifestyle', count: 7 }
-              ].map((cat) => (
-                <li 
-                  key={cat.name} 
-                  className={activeCategory === cat.name ? 'active' : ''}
-                  onClick={() => setActiveCategory(cat.name)}
-                >
-                  <span>{cat.name}</span>
-                  <span className="BlogPost-cat-count">({cat.count})</span>
-                </li>
-              ))}
+                'Nature',
+                'Honey',
+                'Chocolate',
+                'Health',
+                'Recipes',
+                'Lifestyle'
+              ].map(
+                (cat) => (
+
+                  <li
+                    key={cat}
+                    className={
+                      activeCategory ===
+                      cat
+                        ? 'active'
+                        : ''
+                    }
+                    onClick={() => {
+
+                      navigate(
+                        `/blog?category=${cat.toLowerCase()}`
+                      );
+
+                    }}
+                  >
+
+                    <span>
+                      {cat}
+                    </span>
+
+                  </li>
+
+                )
+              )}
+
             </ul>
+
           </div>
 
-          {/* Recent Posts Widget */}
+
+          {/* RECENT POSTS */}
+
           <div className="BlogPost-widget">
-            <h3 className="BlogPost-widget-title"><FaLeaf /> Recent Posts</h3>
+
+            <h3 className="BlogPost-widget-title">
+
+              <FaLeaf />
+
+              Recent Posts
+
+            </h3>
+
             <div className="BlogPost-recent-list">
-              
-              <div className="BlogPost-recent-item" onClick={() => alert('Opening: Benefits of Pure Forest Honey')}>
-                <img src="https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=150&q=80" alt="Honey" />
-                <div>
-                  <h4>Benefits of Pure Forest Honey</h4>
-                  <span>20 Jul 2026</span>
-                </div>
-              </div>
 
-              <div className="BlogPost-recent-item" onClick={() => alert('Opening: Daily Habits for a Better You')}>
-                <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=150&q=80" alt="Meditation" />
-                <div>
-                  <h4>Daily Habits for a Better You</h4>
-                  <span>18 Jul 2026</span>
-                </div>
-              </div>
+              {recentBlogs.length >
+              0 ? (
 
-              <div className="BlogPost-recent-item" onClick={() => alert('Opening: Healthy Recipes with Honey')}>
-                <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=150&q=80" alt="Food" />
-                <div>
-                  <h4>Healthy Recipes with Honey</h4>
-                  <span>15 Jul 2026</span>
-                </div>
-              </div>
+                recentBlogs.map(
+                  (item) => (
+
+                    <div
+                      key={
+                        item._id
+                      }
+                      className="BlogPost-recent-item"
+                      onClick={() =>
+                        handleOpenBlog(
+                          item._id
+                        )
+                      }
+                    >
+
+                      <img
+                        src={getImageUrl(
+                          item.featuredImage ||
+                          item.image
+                        )}
+                        alt={
+                          item.title
+                        }
+                      />
+
+                      <div>
+
+                        <h4>
+                          {
+                            item.title
+                          }
+                        </h4>
+
+                        <span>
+                          {formatDate(
+                            item.publishDate ||
+                            item.createdAt
+                          )}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                  )
+                )
+
+              ) : (
+
+                <p className="BlogPost-text">
+                  No recent posts.
+                </p>
+
+              )}
 
             </div>
+
           </div>
 
-          {/* Newsletter Widget */}
+
+          {/* NEWSLETTER */}
+
           <div className="BlogPost-widget BlogPost-newsletter-widget">
-            <div className="BlogPost-newsletter-icon-wrap"><FaEnvelope /></div>
-            <h3 className="BlogPost-widget-title">Subscribe to Our Newsletter</h3>
-            <p className="BlogPost-newsletter-text">Get the latest articles, tips and updates straight to your inbox.</p>
-            
-            <form onSubmit={handleSubscribe} className="BlogPost-newsletter-form">
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+
+            <div className="BlogPost-newsletter-icon-wrap">
+
+              <FaEnvelope />
+
+            </div>
+
+            <h3 className="BlogPost-widget-title">
+
+              Subscribe to Our Newsletter
+
+            </h3>
+
+            <p className="BlogPost-newsletter-text">
+
+              Get the latest articles, tips and updates straight to your inbox.
+
+            </p>
+
+            <form
+              onSubmit={
+                handleSubscribe
+              }
+              className="BlogPost-newsletter-form"
+            >
+
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={
+                  email
+                }
+                onChange={(e) =>
+                  setEmail(
+                    e.target.value
+                  )
+                }
                 required
               />
+
               <button type="submit">
-                Subscribe <FaArrowRight />
+
+                Subscribe
+
+                <FaArrowRight />
+
               </button>
+
             </form>
+
             {subscribed && (
-              <p className="BlogPost-success-msg">Thank you for subscribing to nature updates!</p>
+
+              <p className="BlogPost-success-msg">
+
+                Thank you for subscribing to nature updates!
+
+              </p>
+
             )}
+
           </div>
 
         </aside>
 
       </div>
+
     </div>
+
   );
+
 };
 
 export default BlogPost;

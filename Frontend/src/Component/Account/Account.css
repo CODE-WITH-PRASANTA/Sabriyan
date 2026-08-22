@@ -1,0 +1,837 @@
+
+:root {
+  --green-dark: #091a12;
+  --green-deep: #0e2a1e;
+  --green-medium: #174230;
+  --green-light: #235c44;
+  --green-subtle: #2d7054;
+  
+  --gold-primary: #d4af37;
+  --gold-light: #f7e7a9;
+  --gold-glow: rgba(212, 175, 55, 0.35);
+  --gold-gradient: linear-gradient(135deg, #f7e7a9 0%, #d4af37 50%, #aa820a 100%);
+  --gold-border: rgba(212, 175, 55, 0.4);
+  
+  --text-light: #f8faf7;
+  --text-muted: #a3b899;
+  --text-dark: #0b1f15;
+  
+  --card-shadow: 0 25px 50px -12px rgba(4, 15, 10, 0.75);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ================= WRAPPER ================= */
+.account-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background: radial-gradient(circle at 10% 20%, #153e2d 0%, #081710 80%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-light);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ================= MAIN CONTAINER ================= */
+.account-container {
+  height: 80vh;
+  min-height: 600px;
+  max-height: 820px;
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: rgba(14, 42, 30, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid var(--gold-border);
+  box-shadow: var(--card-shadow), 0 0 30px rgba(212, 175, 55, 0.1);
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  transition: var(--transition);
+  margin-top: 100px;
+}
+
+/* ================= LEFT HERO PANEL & BLUR BACKGROUND ================= */
+.account-hero-panel {
+  background: linear-gradient(145deg, #091b13, #153e2d);
+  position: relative;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
+  overflow: hidden;
+}
+
+/* Background image with blur effect */
+.account-hero-bg-layer {
+  position: absolute;
+  inset: -15px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(6px) brightness(0.85) saturate(1.2);
+  transform: scale(1.1);
+  transition: transform 8s ease-out;
+  z-index: 1;
+}
+
+.account-hero-panel:hover .account-hero-bg-layer {
+  transform: scale(1.16);
+}
+
+.account-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(9, 27, 19, 0.45) 0%, rgba(8, 23, 16, 0.88) 100%);
+  z-index: 2;
+}
+
+.account-hero-panel::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  animation: pulseGlow 6s ease-in-out infinite alternate;
+}
+
+.account-hero-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  z-index: 3;
+}
+
+/* Brand Header */
+.account-brand {
+  text-align: center;
+}
+
+.account-brand-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 0.75rem;
+  color: var(--gold-primary);
+  filter: drop-shadow(0 0 8px var(--gold-glow));
+}
+
+.account-logo-svg {
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  animation: floatIcon 4s ease-in-out infinite;
+}
+
+.account-logo-outline {
+  stroke-dasharray: 200;
+  animation: dashCycle 6s linear infinite;
+}
+
+.account-brand-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.85rem;
+  letter-spacing: 5px;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.account-brand-subtitle {
+  font-size: 0.68rem;
+  letter-spacing: 3px;
+  color: var(--gold-light);
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+/* Welcome Text */
+.account-hero-text {
+  text-align: center;
+  margin: 0.8rem 0;
+}
+
+.account-hero-text h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.25;
+}
+
+.account-divider-line {
+  width: 50px;
+  height: 2px;
+  background: var(--gold-gradient);
+  margin: 0.65rem auto;
+  border-radius: 2px;
+}
+
+.account-hero-text p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* Product Card */
+.account-hero-showcase {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+}
+
+.account-chocolate-card {
+  background: linear-gradient(135deg, rgba(23, 56, 40, 0.9) 0%, rgba(10, 27, 19, 0.95) 100%);
+  border: 1px solid var(--gold-border);
+  border-radius: 14px;
+  padding: 1.2rem;
+  width: 240px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(8px);
+  transition: transform 0.4s ease;
+}
+
+.account-chocolate-card:hover {
+  transform: translateY(-4px);
+}
+
+.account-card-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--gold-primary);
+}
+
+.account-mini-logo {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 2px;
+  animation: floatIcon 3.5s ease-in-out infinite reverse;
+}
+
+.account-card-logo span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.account-card-logo small {
+  font-size: 0.5rem;
+  letter-spacing: 1.5px;
+  opacity: 0.7;
+}
+
+.account-cocoa-percent {
+  text-align: center;
+  margin: 0.6rem 0;
+}
+
+.account-cocoa-percent h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
+}
+
+.account-cocoa-percent sup {
+  font-size: 0.9rem;
+  color: var(--gold-primary);
+}
+
+.account-cocoa-percent span {
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+
+.account-card-footer {
+  text-align: center;
+  border-top: 1px dashed rgba(212, 175, 55, 0.3);
+  padding-top: 0.5rem;
+}
+
+.account-card-footer p {
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  color: var(--gold-primary);
+}
+
+.account-card-footer h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  letter-spacing: 1.5px;
+  color: #fff;
+  margin: 2px 0;
+}
+
+.account-gold-dash {
+  width: 25px;
+  height: 1.5px;
+  background: var(--gold-primary);
+  margin: 3px auto;
+}
+
+.account-card-footer .account-sub-text {
+  font-size: 0.48rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.account-card-footer .account-origin {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-top: 3px;
+}
+
+.account-card-footer .account-weight {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+}
+
+.account-honey-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.account-honey-jar {
+  position: absolute;
+  right: 15px;
+  bottom: 5px;
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
+  animation: floatIcon 3.5s ease-in-out infinite;
+}
+
+.account-choco-pieces {
+  position: absolute;
+  left: 20px;
+  top: 48%;
+  font-size: 1.8rem;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+  animation: floatIcon 4s ease-in-out infinite reverse;
+}
+
+/* ================= RIGHT FORM PANEL ================= */
+.account-form-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: rgba(10, 31, 22, 0.7);
+  padding: 2.2rem 2.8rem;
+  overflow: hidden;
+}
+
+.account-form-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.account-form-header {
+  text-align: center;
+  margin-bottom: 0.6rem;
+}
+
+.account-form-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+}
+
+.account-form-header p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.account-ornament-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.2rem;
+}
+
+.account-ornament-line {
+  height: 1px;
+  width: 40px;
+  background: var(--gold-border);
+}
+
+.account-ornament-icon {
+  color: var(--gold-primary);
+  font-size: 0.8rem;
+  display: inline-block;
+  animation: rotateStar 8s linear infinite;
+}
+
+/* ================= FORM BODY & INPUTS ================= */
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  overflow-y: auto;
+  padding: 0.4rem 0.5rem 0.4rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-primary) transparent;
+}
+
+.account-form::-webkit-scrollbar {
+  width: 4px;
+}
+
+.account-form::-webkit-scrollbar-thumb {
+  background: var(--gold-primary);
+  border-radius: 4px;
+}
+
+.account-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-align: left;
+}
+
+.account-input-group label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 0.6px;
+}
+
+.account-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.account-field-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-primary);
+  font-size: 1.05rem;
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.account-input-box input {
+  width: 100%;
+  height: 44px;
+  background: rgba(8, 24, 17, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 10px;
+  padding: 0 2.5rem 0 2.6rem;
+  font-size: 0.85rem;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  outline: none;
+  transition: var(--transition);
+}
+
+.account-input-box input:focus {
+  border-color: var(--gold-primary);
+  background: rgba(14, 42, 30, 0.95);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15), 0 0 16px rgba(212, 175, 55, 0.2);
+}
+
+.account-input-box input:focus ~ .account-field-icon {
+  color: var(--gold-light);
+  transform: translateY(-50%) scale(1.1);
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+}
+
+.account-input-box input::placeholder {
+  color: rgba(163, 184, 153, 0.55);
+  font-size: 0.8rem;
+}
+
+.account-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--gold-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  z-index: 2;
+  transition: var(--transition);
+}
+
+.account-toggle-icon {
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.account-password-toggle:hover {
+  color: var(--gold-light);
+  transform: translateY(-50%) scale(1.12);
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+}
+
+/* Autofill override */
+.account-input-box input:-webkit-autofill,
+.account-input-box input:-webkit-autofill:hover,
+.account-input-box input:-webkit-autofill:focus,
+.account-input-box input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #081811 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ================= OPTIONS & BUTTONS ================= */
+.account-options-row,
+.account-terms-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  margin: 0.2rem 0;
+}
+
+.account-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.account-checkbox-label input {
+  display: none;
+}
+
+.account-custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--gold-primary);
+  border-radius: 4px;
+  background: rgba(8, 24, 17, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green-dark);
+  transition: var(--transition);
+}
+
+.account-checkbox-label input:checked + .account-custom-checkbox {
+  background: var(--gold-gradient);
+  border-color: var(--gold-light);
+}
+
+.account-check-icon {
+  font-size: 0.75rem;
+  stroke-width: 3.5;
+  animation: checkPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.account-checkbox-label a,
+.account-forgot-link {
+  color: var(--gold-light);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.account-checkbox-label a:hover,
+.account-forgot-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Submit Button */
+.account-submit-btn {
+  background: var(--gold-gradient);
+  border: none;
+  border-radius: 9px;
+  padding: 0.72rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  color: var(--green-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.25);
+  transition: var(--transition);
+  margin-top: 0.2rem;
+}
+
+.account-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(212, 175, 55, 0.4);
+}
+
+.account-btn-arrow {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.account-submit-btn:hover .account-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Or Divider */
+.account-or-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.2rem 0;
+}
+
+.account-or-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(212, 175, 55, 0.2);
+}
+
+.account-or-text {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Switch View */
+.account-switch-view {
+  text-align: center;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.account-switch-btn {
+  background: none;
+  border: none;
+  color: var(--gold-light);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.76rem;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 3px;
+  transition: var(--transition);
+}
+
+.account-switch-btn:hover {
+  color: #fff;
+}
+
+/* Slide Down Animation */
+.account-slide-down {
+  animation: slideInDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ================= BOTTOM FEATURE BAR ================= */
+.account-features-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 1.5rem;
+  z-index: 10;
+}
+
+.account-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: rgba(14, 42, 30, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+}
+
+.account-feature-item:hover {
+  border-color: var(--gold-primary);
+  background: rgba(18, 52, 37, 0.8);
+  transform: translateY(-3px);
+}
+
+.account-feature-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--gold-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.account-feature-icon {
+  color: var(--gold-primary);
+  font-size: 1.1rem;
+  animation: pulseIcon 3s ease-in-out infinite;
+}
+
+.account-feature-text h4 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gold-light);
+}
+
+.account-feature-text p {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* ================= KEYFRAME ANIMATIONS ================= */
+@keyframes floatIcon {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes rotateStar {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseIcon {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes checkPop {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dashCycle {
+  0% {
+    stroke-dashoffset: 200;
+  }
+  50% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -200;
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .account-container {
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    grid-template-columns: 1fr;
+  }
+
+  .account-hero-panel {
+    border-right: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding: 2rem;
+  }
+
+  .account-form-panel {
+    padding: 2rem;
+  }
+
+  .account-features-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .account-wrapper {
+    padding: 1rem 0.75rem;
+  }
+
+  .account-features-bar {
+    grid-template-columns: 1fr;
+  }
+}

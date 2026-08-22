@@ -20,7 +20,7 @@ import { GiHoneyJar, GiHoneycomb } from 'react-icons/gi';
 import './OurFaq.css';
 
 // ONLY BACKGROUND IMAGE IS IMPORTED
-import faqBg from '../../assets/faq.png';
+import faqBg from '../../assets/faq.webp';
 
 // Animated SVG Bee Component
 const BeeSVG = ({ className }) => (

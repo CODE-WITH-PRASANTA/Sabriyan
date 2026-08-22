@@ -42,6 +42,7 @@ import Reviews from "./Components/Reviews/Reviews";
 import Couponsoffers from "./Components/Couponsoffers/Couponsoffers";
 import Reports from "./Components/Reports/Reports";
 import Support from "./Components/Support/Support";
+import WebsiteSetthingSummary from "./Components/WebsiteSetthingSummary/WebsiteSetthingSummary";
 
 function App() {
   return (
@@ -191,7 +192,7 @@ function App() {
             {/* =========================
                 BLOG
             ========================== */}
-            <Route
+            {/* <Route
               path="blog/post"
               element={<BlogPost />}
             />
@@ -199,7 +200,7 @@ function App() {
             <Route
               path="blog/management"
               element={<BlogManagement />}
-            />
+            /> */}
 
             {/* Backward-compatible blog routes */}
             <Route
@@ -236,6 +237,11 @@ function App() {
             <Route
               path="processing"
               element={<ProcessingOrder />}
+            />
+
+            <Route
+              path="website-settings-summary"
+              element={<WebsiteSetthingSummary/>}
             />
 
             {/* =========================

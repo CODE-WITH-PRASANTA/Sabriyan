@@ -1,327 +1,700 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@500;700;800&family=Montserrat:wght@400;600;700&display=swap');
+/* =========================================
+   BREADCRUMB
+========================================= */
 
-/* Step 2: Main Section & Cinematic Background Zoom */
 .breadcrumb {
-  height: 65vh;
-  width: 100%;
   position: relative;
+  width: 100%;
+  height: 65vh;
+  min-height: 420px;
   overflow: hidden;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  animation: bgCinematicZoom 25s infinite alternate ease-in-out;
+
   box-sizing: border-box;
+  isolation: isolate;
+
+  background: #09210f;
 }
 
-@keyframes bgCinematicZoom {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
+/* =========================================
+   OPTIMIZED BACKGROUND IMAGE
+========================================= */
+
+.breadcrumb-bg-picture {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-/* Step 3: Dark Overlay Animation */
+.breadcrumb-bg-image {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  transform: scale(1.01);
+
+  animation: breadcrumbBgZoom 25s ease-in-out infinite
+    alternate;
+
+  will-change: transform;
+}
+
+@keyframes breadcrumbBgZoom {
+  from {
+    transform: scale(1.01);
+  }
+
+  to {
+    transform: scale(1.06);
+  }
+}
+
+/* =========================================
+   DARK OVERLAY
+========================================= */
+
 .breadcrumb-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8, 35, 15, 0.45), rgba(4, 20, 9, 0.75));
-  animation: overlayPulse 12s infinite ease-in-out;
-  z-index: 1;
+
+  z-index: -2;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(8, 35, 15, 0.42),
+      rgba(4, 20, 9, 0.72)
+    );
+
+  pointer-events: none;
 }
 
-@keyframes overlayPulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 0.75; }
-}
+/* =========================================
+   PARALLAX WRAPPER
+========================================= */
 
-/* Parallax Wrapper */
 .breadcrumb-parallax {
   position: relative;
+
   width: 100%;
   height: 100%;
-  z-index: 2;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  z-index: 2;
+
+  will-change: transform;
 }
 
-/* Step 5: Floating Fog Elements */
+/* =========================================
+   FOG
+========================================= */
+
 .breadcrumb-fog {
   position: absolute;
-  width: 60%;
-  height: 60%;
-  background: rgba(255, 255, 255, 0.08);
-  filter: blur(80px);
-  opacity: 0.18;
-  pointer-events: none;
-  z-index: 1;
+
+  width: 55%;
+  height: 55%;
+
   border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.07);
+
+  filter: blur(70px);
+
+  opacity: 0.13;
+
+  pointer-events: none;
+
+  z-index: 1;
+
+  will-change: transform;
 }
 
-.fog-1 { top: 10%; left: -10%; animation: fogMove1 40s infinite ease-in-out alternate; }
-.fog-2 { bottom: 0; right: -10%; animation: fogMove2 35s infinite ease-in-out alternate; }
-.fog-3 { top: 40%; left: 30%; animation: fogMove1 45s infinite ease-in-out alternate-reverse; }
+.fog-1 {
+  top: 10%;
+  left: -10%;
+
+  animation:
+    fogMove1 40s ease-in-out infinite alternate;
+}
+
+.fog-2 {
+  right: -10%;
+  bottom: 0;
+
+  animation:
+    fogMove2 35s ease-in-out infinite alternate;
+}
+
+.fog-3 {
+  top: 40%;
+  left: 30%;
+
+  animation:
+    fogMove1 45s ease-in-out infinite alternate-reverse;
+}
 
 @keyframes fogMove1 {
-  0% { transform: translateX(0) translateY(0); }
-  100% { transform: translateX(120px) translateY(-30px); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(80px, -20px, 0);
+  }
 }
 
 @keyframes fogMove2 {
-  0% { transform: translateX(0) translateY(0); }
-  100% { transform: translateX(-100px) translateY(40px); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-70px, 30px, 0);
+  }
 }
 
-/* Step 7: Golden Particles */
+/* =========================================
+   PARTICLES
+========================================= */
+
 .breadcrumb-particles {
   position: absolute;
   inset: 0;
+
   pointer-events: none;
 }
 
 .breadcrumb-particle {
   position: absolute;
   bottom: -10px;
+
   width: 3px;
   height: 3px;
+
   border-radius: 50%;
-  background: #FFD54F;
-  box-shadow: 0 0 8px #FFD54F, 0 0 12px #FFC107;
-  animation: floatUpParticle 8s infinite linear;
+
+  background: #ffd54f;
+
+  box-shadow:
+    0 0 6px #ffd54f,
+    0 0 10px #ffc107;
+
+  animation:
+    floatUpParticle 8s linear infinite;
+
+  will-change: transform, opacity;
 }
 
 @keyframes floatUpParticle {
-  0% { transform: translateY(0) scale(1); opacity: 0; }
-  50% { opacity: 0.9; }
-  100% { transform: translateY(-65vh) scale(1.4); opacity: 0; }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.75;
+  }
+
+  100% {
+    transform: translate3d(0, -65vh, 0) scale(1.3);
+    opacity: 0;
+  }
 }
 
-/* Step 6: Floating Leaves */
+/* =========================================
+   FLOATING LEAVES
+========================================= */
+
 .breadcrumb-leaves {
   position: absolute;
   inset: 0;
+
   pointer-events: none;
 }
 
 .breadcrumb-leaf {
   position: absolute;
   top: -20px;
+
   width: 12px;
   height: 20px;
-  background: rgba(124, 182, 48, 0.65);
-  border-radius: 0% 100% 0% 100% / 0% 100% 0% 100%;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
-  animation: leafFall 12s infinite linear;
+
+  background: rgba(124, 182, 48, 0.6);
+
+  border-radius:
+    0% 100% 0% 100% /
+    0% 100% 0% 100%;
+
+  box-shadow:
+    inset 0 0 4px rgba(0, 0, 0, 0.25);
+
+  animation:
+    leafFall 12s linear infinite;
+
+  will-change: transform, opacity;
 }
 
 @keyframes leafFall {
-  0% { transform: translateY(-80px) rotate(0deg) translateX(0); opacity: 0.8; }
-  100% { transform: translateY(70vh) rotate(360deg) translateX(50px); opacity: 0; }
+  from {
+    transform:
+      translate3d(0, -80px, 0)
+      rotate(0deg);
+    opacity: 0.75;
+  }
+
+  to {
+    transform:
+      translate3d(50px, 70vh, 0)
+      rotate(360deg);
+    opacity: 0;
+  }
 }
 
-/* Step 8: Flying Bees SVG */
+/* =========================================
+   BEES
+========================================= */
+
 .breadcrumb-bee {
   position: absolute;
+
   width: 44px;
   height: 44px;
+
   z-index: 4;
+
   pointer-events: none;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+
+  filter:
+    drop-shadow(0 4px 7px rgba(0, 0, 0, 0.45));
+
+  will-change: transform;
 }
 
-.breadcrumb-bee-svg { width: 100%; height: 100%; }
+.breadcrumb-bee-svg {
+  display: block;
 
-.bee-1 { top: 12%; left: 10%; }
-.bee-2 { top: 22%; right: 18%; }
-.bee-3 { bottom: 25%; left: 22%; }
-.bee-4 { bottom: 18%; right: 8%; }
+  width: 100%;
+  height: 100%;
+}
 
-/* Main Center Content Wrapper */
+.bee-1 {
+  top: 12%;
+  left: 10%;
+}
+
+.bee-2 {
+  top: 22%;
+  right: 18%;
+}
+
+.bee-3 {
+  bottom: 25%;
+  left: 22%;
+}
+
+.bee-4 {
+  right: 8%;
+  bottom: 18%;
+}
+
+/* =========================================
+   CENTER CONTENT
+========================================= */
+
 .breadcrumb-content {
-  text-align: center;
+  position: relative;
+
+  z-index: 5;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 3;
+
+  text-align: center;
 }
 
-/* Step 9: Sabriyana Title Design */
-.breadcrumb-title {
-  font-family: 'Great Vibes', 'Cinzel', cursive, Georgia, serif;
-  font-size: 100px;
-  font-weight: 800;
-  margin: 0;
-  line-height: 1;
-  background: linear-gradient(180deg, #FFF5C0 0%, #E2BA37 40%, #A37913 75%, #594002 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 10px rgba(255, 213, 79, 0.3));
-  position: relative;
-}
+/* =========================================
+   HONEY DROPS
+========================================= */
 
-/* Step 10: Subtitle & Golden Ornament Lines */
-.breadcrumb-subtitle-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
-  margin-bottom: 22px;
-}
-
-.breadcrumb-subtitle {
-  font-family: 'Cinzel', serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 4px;
-  color: #FFD54F;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-}
-
-.breadcrumb-line {
-  display: inline-block;
-  width: 50px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #FFD54F, transparent);
-}
-
-/* Step 13: Dripping Honey Drops */
 .breadcrumb-honey-drops {
   position: relative;
+
   width: 100%;
   height: 15px;
+
   margin-bottom: 15px;
+
+  pointer-events: none;
 }
 
 .breadcrumb-drop {
   position: absolute;
+
   width: 6px;
   height: 10px;
-  background: #FFC107;
-  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
-  box-shadow: 0 0 6px #FFC107;
-  animation: dripAnimation 3s infinite ease-in-out;
+
+  border-radius:
+    50% 50% 50% 50% /
+    30% 30% 70% 70%;
+
+  background: #ffc107;
+
+  box-shadow:
+    0 0 6px #ffc107;
+
+  animation:
+    dripAnimation 3s ease-in-out infinite;
 }
 
-.drop-1 { left: 42%; animation-delay: 0s; }
-.drop-2 { left: 50%; animation-delay: 1.2s; }
-.drop-3 { left: 58%; animation-delay: 0.6s; }
+.drop-1 {
+  left: 42%;
+}
+
+.drop-2 {
+  left: 50%;
+  animation-delay: 1.2s;
+}
+
+.drop-3 {
+  left: 58%;
+  animation-delay: 0.6s;
+}
 
 @keyframes dripAnimation {
-  0% { transform: translateY(0) scaleY(1); opacity: 0; }
-  30% { opacity: 1; }
-  70% { transform: translateY(16px) scaleY(1.4); opacity: 0.9; }
-  100% { transform: translateY(22px) scaleY(0.6); opacity: 0; }
+  0% {
+    transform: translate3d(0, 0, 0) scaleY(1);
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  70% {
+    transform: translate3d(0, 16px, 0) scaleY(1.3);
+    opacity: 0.85;
+  }
+
+  100% {
+    transform: translate3d(0, 22px, 0) scaleY(0.6);
+    opacity: 0;
+  }
 }
 
-/* Step 11 & 12: Glassmorphic Breadcrumb Container */
+/* =========================================
+   BREADCRUMB NAV
+========================================= */
+
 .breadcrumb-nav {
   display: flex;
   align-items: center;
+
   gap: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 50px;
+
   padding: 12px 32px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-  transition: all 0.3s ease;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  border-radius: 50px;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.35);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  animation:
+    breadcrumbNavIn 0.7s ease-out both;
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+@keyframes breadcrumbNavIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 25px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .breadcrumb-nav:hover {
-  transform: scale(1.03);
-  border-color: rgba(255, 213, 79, 0.4);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 20px rgba(255, 213, 79, 0.2);
+  transform: scale(1.02);
+
+  border-color:
+    rgba(255, 213, 79, 0.4);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.42),
+    0 0 20px rgba(255, 213, 79, 0.16);
 }
 
 .breadcrumb-link {
-  font-family: 'Montserrat', sans-serif;
-  color: rgba(255, 255, 255, 0.85);
+  color:
+    rgba(255, 255, 255, 0.85);
+
   text-decoration: none;
+
+  font-family:
+    'Montserrat',
+    Arial,
+    sans-serif;
+
   font-size: 0.9rem;
   font-weight: 600;
-  transition: color 0.3s ease;
+
+  transition:
+    color 0.25s ease;
 }
 
 .breadcrumb-link:hover {
-  color: #FFD54F;
+  color: #ffd54f;
 }
 
 .breadcrumb-arrow {
-  color: rgba(255, 255, 255, 0.4);
+  color:
+    rgba(255, 255, 255, 0.4);
+
   font-size: 0.7rem;
+
+  flex-shrink: 0;
 }
 
 .breadcrumb-current {
-  font-family: 'Montserrat', sans-serif;
-  color: #FFD54F;
+  color: #ffd54f;
+
+  font-family:
+    'Montserrat',
+    Arial,
+    sans-serif;
+
   font-size: 0.9rem;
   font-weight: 700;
 }
 
-/* Step 14: Decorative SVG Flowers & Honeycomb */
+/* =========================================
+   FLOWERS
+========================================= */
+
 .breadcrumb-flower {
   position: absolute;
-  pointer-events: none;
+
   z-index: 3;
+
   width: 70px;
   height: 70px;
+
   opacity: 0.6;
-  animation: floatFlower 10s infinite ease-in-out alternate;
+
+  pointer-events: none;
+
+  animation:
+    floatFlower 10s ease-in-out infinite alternate;
+
+  will-change: transform;
 }
 
-.breadcrumb-flower-svg { width: 100%; height: 100%; }
+.breadcrumb-flower-svg {
+  display: block;
 
-.breadcrumb-flower.left { bottom: 15px; left: 20px; }
-.breadcrumb-flower.right { bottom: 15px; right: 20px; }
+  width: 100%;
+  height: 100%;
+}
+
+.breadcrumb-flower.left {
+  left: 20px;
+  bottom: 15px;
+}
+
+.breadcrumb-flower.right {
+  right: 20px;
+  bottom: 15px;
+}
+
+@keyframes floatFlower {
+  from {
+    transform:
+      rotate(-3deg)
+      translate3d(0, 0, 0);
+  }
+
+  to {
+    transform:
+      rotate(3deg)
+      translate3d(0, -8px, 0);
+  }
+}
+
+/* =========================================
+   HONEYCOMB
+========================================= */
 
 .breadcrumb-honeycomb {
   position: absolute;
+
   right: 25px;
   bottom: 20%;
+
   display: flex;
   flex-wrap: wrap;
+
   width: 70px;
+
   opacity: 0.25;
+
   pointer-events: none;
 }
 
 .breadcrumb-honeycomb .hex {
   width: 20px;
   height: 22px;
-  background: #FFC107;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+
   margin: 1px;
+
+  background: #ffc107;
+
+  clip-path:
+    polygon(
+      50% 0%,
+      100% 25%,
+      100% 75%,
+      50% 100%,
+      0% 75%,
+      0% 25%
+    );
 }
 
-@keyframes floatFlower {
-  0% { transform: rotate(-3deg) translateY(0); }
-  100% { transform: rotate(3deg) translateY(-8px); }
+/* =========================================
+   ACCESSIBILITY / REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .breadcrumb-bg-image,
+  .breadcrumb-fog,
+  .breadcrumb-particle,
+  .breadcrumb-leaf,
+  .breadcrumb-bee,
+  .breadcrumb-drop,
+  .breadcrumb-flower,
+  .breadcrumb-nav {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
-/* Step 17: Responsive Layout Adjustments */
+/* =========================================
+   TABLET
+========================================= */
+
 @media (max-width: 1024px) {
-  .breadcrumb { height: 55vh; }
-  .breadcrumb-title { font-size: 75px; }
-  .breadcrumb-subtitle { font-size: 0.85rem; }
+  .breadcrumb {
+    height: 55vh;
+  }
 }
+
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 768px) {
-  .breadcrumb { height: 45vh; }
-  .breadcrumb-title { font-size: 55px; }
-  .breadcrumb-subtitle { font-size: 0.75rem; letter-spacing: 2px; }
+  .breadcrumb {
+    height: 45vh;
+    min-height: 350px;
+  }
+
+  .breadcrumb-bg-image {
+    object-position: center;
+  }
+
   .breadcrumb-nav {
     padding: 8px 20px;
     gap: 8px;
   }
-  .breadcrumb-link, .breadcrumb-current { font-size: 0.8rem; }
-  .breadcrumb-bee.bee-3, .breadcrumb-bee.bee-4 { display: none; }
+
+  .breadcrumb-link,
+  .breadcrumb-current {
+    font-size: 0.8rem;
+  }
+
+  .breadcrumb-bee.bee-3,
+  .breadcrumb-bee.bee-4 {
+    display: none;
+  }
+
+  .breadcrumb-honeycomb {
+    right: 15px;
+    bottom: 15%;
+    transform: scale(0.8);
+  }
+
+  .breadcrumb-flower {
+    width: 50px;
+    height: 50px;
+  }
 }
 
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
 @media (max-width: 480px) {
-  .breadcrumb-title { font-size: 42px; }
-  .breadcrumb-line { width: 30px; }
-  .breadcrumb-flower { width: 45px; height: 45px; }
+  .breadcrumb {
+    height: 42vh;
+    min-height: 300px;
+  }
+
+  .breadcrumb-nav {
+    padding: 8px 16px;
+    gap: 7px;
+  }
+
+  .breadcrumb-link,
+  .breadcrumb-current {
+    font-size: 0.75rem;
+  }
+
+  .breadcrumb-arrow {
+    font-size: 0.6rem;
+  }
+
+  .breadcrumb-flower {
+    width: 42px;
+    height: 42px;
+  }
+
+  .breadcrumb-flower.left {
+    left: 10px;
+  }
+
+  .breadcrumb-flower.right {
+    right: 10px;
+  }
+
+  .breadcrumb-honeycomb {
+    display: none;
+  }
 }

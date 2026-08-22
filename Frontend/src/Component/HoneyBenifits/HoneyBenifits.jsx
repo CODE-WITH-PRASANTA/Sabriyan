@@ -6,7 +6,7 @@ import { GiStomach } from 'react-icons/gi';
 import './HoneyBenifits.css';
 
 // Import background image
-import benefitsBgImg from '../../assets/honey-5.png';
+import benefitsBgImg from '../../assets/honey-5.webp';
 
 const BENEFITS_DATA = [
   {
