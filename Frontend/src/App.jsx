@@ -1,103 +1,174 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Pages
-import Home from "./Pages/Home/Home";
+// =========================================
+// GLOBAL COMPONENTS
+// Navbar is required immediately.
+// ScrollToTop is very small.
+// =========================================
+
 import Navbar from "./Pages/Navbar/Navbar";
-import About from "./Pages/About/About";
-import Honey from "./Pages/Honey/Honey";
-import Blog from "./Pages/Blog/Blog";
-import Faq from "./Pages/Faq/Faq";
-import Contact from "./Pages/Contact/Contact";
-import BlogDetails from "./Pages/BlogDetails/BlogDetails";
-
-import PremimuCollection from "./Pages/PremimuCollection/PremimuCollection";
-import Honeyaddtocart from "./Component/Honeyaddtocart/Honeyaddtocart";
-
-
-// Components
-import Footer from "./Component/Footer/Footer";
 import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
-import MyWishlist from "./Component/MyWishlist/MyWishlist";
-import Account from "./Component/Account/Account";
-import OurProducts from "./Component/OurProducts/OurProducts";
-import PrivacyPolicy from "./Component/PrivacyPolicy/PrivacyPolicy";
-import TermsAndConditions from "./Component/TermsAndConditions/TermsAndConditions";
-import Floating from "./Component/Floating/Floating";
-import Cart from "./Component/Cart/Cart";
 
+// =========================================
+// LAZY LOADED GLOBAL COMPONENTS
+// =========================================
+
+const Footer = lazy(() => import("./Component/Footer/Footer"));
+const Floating = lazy(() => import("./Component/Floating/Floating"));
+
+// =========================================
+// LAZY LOADED PAGES
+// =========================================
+
+const Home = lazy(() => import("./Pages/Home/Home"));
+const About = lazy(() => import("./Pages/About/About"));
+const Honey = lazy(() => import("./Pages/Honey/Honey"));
+const Blog = lazy(() => import("./Pages/Blog/Blog"));
+const Faq = lazy(() => import("./Pages/Faq/Faq"));
+const Contact = lazy(() => import("./Pages/Contact/Contact"));
+
+const BlogDetails = lazy(
+  () => import("./Pages/BlogDetails/BlogDetails")
+);
+
+const PremimuCollection = lazy(
+  () => import("./Pages/PremimuCollection/PremimuCollection")
+);
+
+const MyWishlist = lazy(
+  () => import("./Component/MyWishlist/MyWishlist")
+);
+
+const Account = lazy(
+  () => import("./Component/Account/Account")
+);
+
+const OurProducts = lazy(
+  () => import("./Component/OurProducts/OurProducts")
+);
+
+const PrivacyPolicy = lazy(
+  () => import("./Component/PrivacyPolicy/PrivacyPolicy")
+);
+
+const TermsAndConditions = lazy(
+  () => import("./Component/TermsAndConditions/TermsAndConditions")
+);
+
+const Cart = lazy(
+  () => import("./Component/Cart/Cart")
+);
+
+// =========================================
+// LOADING FALLBACK
+// =========================================
+
+const PageLoader = () => null;
+
+// =========================================
+// APP
+// =========================================
 
 const App = () => {
   return (
     <BrowserRouter>
+      {/* Scroll position handler */}
       <ScrollToTop />
+
+      {/* Header */}
       <Navbar />
 
+      {/* Main Content */}
       <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
 
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/honey" element={<Honey />} />
-        <Route path="/faq" element={<Faq />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blogDetails" element={<BlogDetails />} />
-       
-          <Route path="/about" element={<About />} />
-          <Route path="/honey" element={<Honey />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/contact" element={<Contact />} />
-
-          <Route
-            path="/blogDetails"
-            element={<BlogDetails />}
-          />
-
-          <Route
-            path="/premiumcollection"
-            element={<PremimuCollection />}
-          />
-
-          
-
-          <Route
-            path="/wishlist"
-            element={<MyWishlist />}
-            />
-              
-               <Route
-            path="/cart"
-            element={<Cart />}
+            {/* Home */}
+            <Route
+              path="/"
+              element={<Home />}
             />
 
+            {/* Main Pages */}
+            <Route
+              path="/about"
+              element={<About />}
+            />
 
-          <Route
-            path="/account"
-            element={<Account />}
-          />
+            <Route
+              path="/honey"
+              element={<Honey />}
+            />
 
-          <Route
-            path="/ourproduct"
-            element={<OurProducts />}
-          />
+            <Route
+              path="/blog"
+              element={<Blog />}
+            />
 
-          <Route
-            path="/privacypolicy"
-            element={<PrivacyPolicy />}
-          />
+            <Route
+              path="/blogDetails"
+              element={<BlogDetails />}
+            />
 
-          <Route
-            path="/termandcondition"
-            element={<TermsAndConditions />}
-          />
-        </Routes>
+            <Route
+              path="/faq"
+              element={<Faq />}
+            />
+
+            <Route
+              path="/contact"
+              element={<Contact />}
+            />
+
+            {/* Collection */}
+            <Route
+              path="/premiumcollection"
+              element={<PremimuCollection />}
+            />
+
+            {/* Products */}
+            <Route
+              path="/ourproduct"
+              element={<OurProducts />}
+            />
+
+            {/* User */}
+            <Route
+              path="/wishlist"
+              element={<MyWishlist />}
+            />
+
+            <Route
+              path="/cart"
+              element={<Cart />}
+            />
+
+            <Route
+              path="/account"
+              element={<Account />}
+            />
+
+            {/* Legal */}
+            <Route
+              path="/privacypolicy"
+              element={<PrivacyPolicy />}
+            />
+
+            <Route
+              path="/termandcondition"
+              element={<TermsAndConditions />}
+            />
+
+          </Routes>
+        </Suspense>
       </main>
 
-      <Footer />
-      <Floating />
+      {/* Lazy-loaded Footer and Floating Button */}
+      <Suspense fallback={null}>
+        <Footer />
+        <Floating />
+      </Suspense>
     </BrowserRouter>
   );
 };

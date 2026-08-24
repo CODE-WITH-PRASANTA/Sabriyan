@@ -94,7 +94,6 @@ const benefitCards = [
     icon: <FaLeaf aria-hidden="true" />,
     position: "left-top",
   },
-
   {
     id: 2,
     title: "Natural Goodness",
@@ -103,7 +102,6 @@ const benefitCards = [
     icon: <GiHoneyJar aria-hidden="true" />,
     position: "left-bottom",
   },
-
   {
     id: 3,
     title: "Crafted with Care",
@@ -112,7 +110,6 @@ const benefitCards = [
     icon: <FaShieldAlt aria-hidden="true" />,
     position: "right-top",
   },
-
   {
     id: 4,
     title: "Inspired by Nature",
@@ -132,7 +129,7 @@ const WhyChoose = () => {
   const beesRef = useRef([]);
 
   /* =======================================================
-     MOUSE PARALLAX
+     OPTIMIZED MOUSE PARALLAX
   ======================================================= */
 
   useEffect(() => {
@@ -140,40 +137,64 @@ const WhyChoose = () => {
 
     if (!element) return;
 
-    let frameId = null;
+    /*
+      No mouse parallax on mobile/touch devices.
+      This avoids unnecessary event handling and animation.
+    */
+    if (
+      window.matchMedia("(pointer: coarse)").matches
+    ) {
+      return;
+    }
+
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
+    let frameId = null;
+
+    /*
+      quickTo reuses the same GSAP animation instead
+      of creating a new tween on every mouse movement.
+    */
+    const moveX = gsap.quickTo(element, "x", {
+      duration: 0.6,
+      ease: "power2.out",
+    });
+
+    const moveY = gsap.quickTo(element, "y", {
+      duration: 0.6,
+      ease: "power2.out",
+    });
 
     const updateParallax = () => {
       frameId = null;
 
-      const moveX =
+      const x =
         (mouseX - window.innerWidth / 2) * 0.005;
 
-      const moveY =
+      const y =
         (mouseY - window.innerHeight / 2) * 0.005;
 
-      gsap.to(element, {
-        x: moveX,
-        y: moveY,
-        duration: 0.6,
-        ease: "power2.out",
-        overwrite: true,
-      });
+      moveX(x);
+      moveY(y);
     };
 
     const handleMouseMove = (event) => {
       mouseX = event.clientX;
       mouseY = event.clientY;
 
-      if (!frameId) {
-        frameId = requestAnimationFrame(updateParallax);
+      if (frameId === null) {
+        frameId =
+          requestAnimationFrame(updateParallax);
       }
     };
 
-    window.addEventListener("mousemove", handleMouseMove, {
-      passive: true,
-    });
+    window.addEventListener(
+      "mousemove",
+      handleMouseMove,
+      {
+        passive: true,
+      }
+    );
 
     return () => {
       window.removeEventListener(
@@ -181,7 +202,7 @@ const WhyChoose = () => {
         handleMouseMove
       );
 
-      if (frameId) {
+      if (frameId !== null) {
         cancelAnimationFrame(frameId);
       }
 
@@ -239,13 +260,19 @@ const WhyChoose = () => {
         decoding="async"
       />
 
-      {/* Dark Overlay */}
+      {/* ===================================================
+          DARK OVERLAY
+      =================================================== */}
+
       <div
         className="whyChoose-overlay"
         aria-hidden="true"
       />
 
-      {/* Floating Fog */}
+      {/* ===================================================
+          FLOATING FOG
+      =================================================== */}
+
       <div
         className="whyChoose-fog fog-1"
         aria-hidden="true"
@@ -261,7 +288,10 @@ const WhyChoose = () => {
         aria-hidden="true"
       />
 
-      {/* Sun Rays */}
+      {/* ===================================================
+          SUN RAYS
+      =================================================== */}
+
       <div
         className="whyChoose-sunRays"
         aria-hidden="true"
@@ -403,7 +433,6 @@ const WhyChoose = () => {
             </span>
           </motion.h2>
 
-          {/* SEO Introduction */}
           <motion.p
             className="whyChoose-intro"
             initial={{
@@ -441,9 +470,7 @@ const WhyChoose = () => {
         ================================================= */}
 
         <div className="whyChoose-container">
-          {/* =================================================
-              LEFT CARDS
-          ================================================= */}
+          {/* LEFT */}
 
           <div className="whyChoose-col left-col">
             {benefitCards
@@ -492,9 +519,7 @@ const WhyChoose = () => {
               ))}
           </div>
 
-          {/* =================================================
-              CENTER BOTTLE
-          ================================================= */}
+          {/* CENTER */}
 
           <div className="whyChoose-centerStage">
             <motion.div
@@ -528,9 +553,7 @@ const WhyChoose = () => {
             </motion.div>
           </div>
 
-          {/* =================================================
-              RIGHT CARDS
-          ================================================= */}
+          {/* RIGHT */}
 
           <div className="whyChoose-col right-col">
             {benefitCards

@@ -1,14 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { Link } from 'react-router-dom';
-import { FaChevronRight } from 'react-icons/fa';
-import './Breadcrumb.css';
+import React, { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { Link } from "react-router-dom";
+import { FaChevronRight } from "react-icons/fa";
+import "./Breadcrumb.css";
 
-import bgImage from '../../assets/breadcrumb.webp';
-
-// =========================================
-// SVG BEE COMPONENT
-// =========================================
+/* =========================================================
+   SVG BEE
+========================================================= */
 
 const BeeSVG = () => (
   <svg
@@ -73,9 +71,9 @@ const BeeSVG = () => (
   </svg>
 );
 
-// =========================================
-// SVG FLOWER COMPONENT
-// =========================================
+/* =========================================================
+   SVG FLOWER
+========================================================= */
 
 const FlowerSVG = () => (
   <svg
@@ -102,17 +100,21 @@ const FlowerSVG = () => (
   </svg>
 );
 
-// =========================================
-// BREADCRUMB COMPONENT
-// =========================================
+/* =========================================================
+   BREADCRUMB
+========================================================= */
 
 const Breadcrumb = () => {
   const parallaxRef = useRef(null);
   const beesRef = useRef([]);
 
-  // =========================================
-  // OPTIMIZED MOUSE PARALLAX
-  // =========================================
+  /* =======================================================
+     LIGHTWEIGHT MOUSE PARALLAX
+
+     IMPORTANT:
+     No gsap.to() on every mouse movement.
+     Uses requestAnimationFrame + transform only.
+  ======================================================= */
 
   useEffect(() => {
     const element = parallaxRef.current;
@@ -124,56 +126,69 @@ const Breadcrumb = () => {
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
+    let centerX = window.innerWidth / 2;
+    let centerY = window.innerHeight / 2;
+
+    const updateCenter = () => {
+      centerX = window.innerWidth / 2;
+      centerY = window.innerHeight / 2;
+    };
+
     const updateParallax = () => {
       frameId = null;
 
-      const moveX =
-        (mouseX - window.innerWidth / 2) * 0.006;
+      const moveX = (mouseX - centerX) * 0.006;
+      const moveY = (mouseY - centerY) * 0.006;
 
-      const moveY =
-        (mouseY - window.innerHeight / 2) * 0.006;
-
-      gsap.to(element, {
-        x: moveX,
-        y: moveY,
-        duration: 0.6,
-        ease: 'power2.out',
-        overwrite: true,
-      });
+      element.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
     };
 
     const handleMouseMove = (event) => {
       mouseX = event.clientX;
       mouseY = event.clientY;
 
-      if (!frameId) {
+      if (frameId === null) {
         frameId = requestAnimationFrame(updateParallax);
       }
     };
 
     window.addEventListener(
-      'mousemove',
+      "mousemove",
       handleMouseMove,
+      { passive: true }
+    );
+
+    window.addEventListener(
+      "resize",
+      updateCenter,
       { passive: true }
     );
 
     return () => {
       window.removeEventListener(
-        'mousemove',
+        "mousemove",
         handleMouseMove
       );
 
-      if (frameId) {
+      window.removeEventListener(
+        "resize",
+        updateCenter
+      );
+
+      if (frameId !== null) {
         cancelAnimationFrame(frameId);
       }
 
-      gsap.killTweensOf(element);
+      element.style.transform = "";
     };
   }, []);
 
-  // =========================================
-  // FLYING BEES
-  // =========================================
+  /* =======================================================
+     FLYING BEES
+
+     GSAP is kept only for the independent bee animations.
+     It is no longer used for mouse movement.
+  ======================================================= */
 
   useEffect(() => {
     const animations = [];
@@ -182,13 +197,13 @@ const Breadcrumb = () => {
       if (!bee) return;
 
       const animation = gsap.to(bee, {
-        x: 'random(-35,35,5)',
-        y: 'random(-25,25,5)',
-        rotation: 'random(-12,12)',
+        x: "random(-35,35,5)",
+        y: "random(-25,25,5)",
+        rotation: "random(-12,12)",
         duration: 4 + index,
         repeat: -1,
         yoyo: true,
-        ease: 'sine.inOut',
+        ease: "sine.inOut",
       });
 
       animations.push(animation);
@@ -204,35 +219,36 @@ const Breadcrumb = () => {
   return (
     <section className="breadcrumb">
 
-      {/* =====================================
-          OPTIMIZED BACKGROUND IMAGE
-      ===================================== */}
+      {/* =================================================
+          LCP BACKGROUND IMAGE
+      ================================================= */}
 
       <picture className="breadcrumb-bg-picture">
         <img
-          src={bgImage}
+          src="/images/breadcrumb.webp"
           alt=""
           aria-hidden="true"
           className="breadcrumb-bg-image"
-          width="1056"
-          height="887"
+          width="960"
+          height="480"
           fetchPriority="high"
+          loading="eager"
           decoding="async"
         />
       </picture>
 
-      {/* =====================================
+      {/* =================================================
           DARK OVERLAY
-      ===================================== */}
+      ================================================= */}
 
       <div
         className="breadcrumb-overlay"
         aria-hidden="true"
       />
 
-      {/* =====================================
+      {/* =================================================
           FOG
-      ===================================== */}
+      ================================================= */}
 
       <div
         className="breadcrumb-fog fog-1"
@@ -249,18 +265,18 @@ const Breadcrumb = () => {
         aria-hidden="true"
       />
 
-      {/* =====================================
+      {/* =================================================
           PARALLAX WRAPPER
-      ===================================== */}
+      ================================================= */}
 
       <div
         className="breadcrumb-parallax"
         ref={parallaxRef}
       >
 
-        {/* =====================================
+        {/* =================================================
             PARTICLES
-        ===================================== */}
+        ================================================= */}
 
         <div
           className="breadcrumb-particles"
@@ -272,21 +288,22 @@ const Breadcrumb = () => {
                 key={index}
                 className="breadcrumb-particle"
                 style={{
-                  left:
-                    `${(index * 17) % 100}%`,
-                  animationDelay:
-                    `${(index % 8) * 0.8}s`,
-                  animationDuration:
-                    `${6 + (index % 5)}s`,
+                  left: `${(index * 17) % 100}%`,
+                  animationDelay: `${
+                    (index % 8) * 0.8
+                  }s`,
+                  animationDuration: `${
+                    6 + (index % 5)
+                  }s`,
                 }}
               />
             )
           )}
         </div>
 
-        {/* =====================================
+        {/* =================================================
             FLOATING LEAVES
-        ===================================== */}
+        ================================================= */}
 
         <div
           className="breadcrumb-leaves"
@@ -298,41 +315,45 @@ const Breadcrumb = () => {
                 key={index}
                 className="breadcrumb-leaf"
                 style={{
-                  left:
-                    `${(index * 19) % 100}%`,
-                  animationDelay:
-                    `${(index % 5) * 1.2}s`,
-                  animationDuration:
-                    `${9 + (index % 4)}s`,
+                  left: `${(index * 19) % 100}%`,
+                  animationDelay: `${
+                    (index % 5) * 1.2
+                  }s`,
+                  animationDuration: `${
+                    9 + (index % 4)
+                  }s`,
                 }}
               />
             )
           )}
         </div>
 
-        {/* =====================================
+        {/* =================================================
             FLYING BEES
-        ===================================== */}
+        ================================================= */}
 
         {[0, 1, 2, 3].map((index) => (
           <div
             key={index}
-            className={`breadcrumb-bee bee-${index + 1}`}
-            ref={(el) => {
-              beesRef.current[index] = el;
+            className={`breadcrumb-bee bee-${
+              index + 1
+            }`}
+            ref={(element) => {
+              beesRef.current[index] = element;
             }}
           >
             <BeeSVG />
           </div>
         ))}
 
-        {/* =====================================
+        {/* =================================================
             CENTER CONTENT
-        ===================================== */}
+        ================================================= */}
 
         <div className="breadcrumb-content">
 
           {/* Honey Drops */}
+
           <div
             className="breadcrumb-honey-drops"
             aria-hidden="true"
@@ -343,11 +364,11 @@ const Breadcrumb = () => {
           </div>
 
           {/* Breadcrumb Navigation */}
+
           <nav
             className="breadcrumb-nav"
             aria-label="Breadcrumb"
           >
-
             <Link
               to="/"
               className="breadcrumb-link"
@@ -378,14 +399,12 @@ const Breadcrumb = () => {
             >
               About
             </span>
-
           </nav>
-
         </div>
 
-        {/* =====================================
+        {/* =================================================
             FLOWERS
-        ===================================== */}
+        ================================================= */}
 
         <div
           className="breadcrumb-flower left"
@@ -401,9 +420,9 @@ const Breadcrumb = () => {
           <FlowerSVG />
         </div>
 
-        {/* =====================================
+        {/* =================================================
             HONEYCOMB
-        ===================================== */}
+        ================================================= */}
 
         <div
           className="breadcrumb-honeycomb"

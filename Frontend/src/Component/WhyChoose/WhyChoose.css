@@ -1,4 +1,4 @@
- /* =========================================================
+/* =========================================================
    WHY CHOOSE SABRIYANA
 ========================================================= */
 
@@ -17,7 +17,6 @@
   overflow: hidden;
 
   background: #071c0b;
-
   isolation: isolate;
 
   content-visibility: auto;
@@ -44,10 +43,8 @@
 
   transform: scale(1.01);
 
-  animation: whyChooseBgZoom 25s ease-in-out infinite
-    alternate;
-
-  will-change: transform;
+  animation:
+    whyChooseBgZoom 25s ease-in-out infinite alternate;
 }
 
 @keyframes whyChooseBgZoom {
@@ -101,8 +98,6 @@
   pointer-events: none;
 
   z-index: 1;
-
-  will-change: transform;
 }
 
 .fog-1 {
@@ -186,8 +181,6 @@
 
   animation:
     rayPulse 12s ease-in-out infinite alternate;
-
-  will-change: transform, opacity;
 }
 
 @keyframes rayPulse {
@@ -223,8 +216,6 @@
   align-items: center;
 
   z-index: 2;
-
-  will-change: transform;
 }
 
 /* =========================================================
@@ -258,8 +249,6 @@
 
   animation:
     particleUp 8s linear infinite;
-
-  will-change: transform, opacity;
 }
 
 @keyframes particleUp {
@@ -313,8 +302,6 @@
 
   animation:
     leafFall 12s linear infinite;
-
-  will-change: transform, opacity;
 }
 
 @keyframes leafFall {
@@ -353,8 +340,6 @@
     drop-shadow(
       0 4px 8px rgba(0, 0, 0, 0.5)
     );
-
-  will-change: transform;
 }
 
 .whyChoose-bee-svg {
@@ -368,8 +353,7 @@
   transform-origin: center;
 
   animation:
-    wingVibrate 0.18s ease-in-out infinite
-    alternate;
+    wingVibrate 0.18s ease-in-out infinite alternate;
 }
 
 @keyframes wingVibrate {
@@ -434,7 +418,9 @@
   z-index: 7;
 }
 
-/* Badge */
+/* =========================================================
+   BADGE
+========================================================= */
 
 .whyChoose-badge {
   display: inline-block;
@@ -443,8 +429,7 @@
 
   padding: 6px 20px;
 
-  border:
-    1px solid #ffd54f;
+  border: 1px solid #ffd54f;
 
   border-radius: 30px;
 
@@ -472,7 +457,9 @@
     0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Main Heading */
+/* =========================================================
+   MAIN HEADING
+========================================================= */
 
 .whyChoose-title {
   margin: 0;
@@ -553,7 +540,9 @@
   width: 100%;
 }
 
-/* Columns */
+/* =========================================================
+   COLUMNS
+========================================================= */
 
 .whyChoose-col {
   display: flex;
@@ -597,8 +586,6 @@
   display: flex;
 
   justify-content: center;
-
-  will-change: transform, opacity;
 }
 
 .whyChoose-bottleImg {
@@ -618,8 +605,6 @@
     drop-shadow(
       0 0 15px rgba(255, 213, 79, 0.2)
     );
-
-  contain: layout paint;
 }
 
 /* =========================================================
@@ -855,19 +840,16 @@
 
 .drip-1 {
   left: 25%;
-
   animation-delay: 0s;
 }
 
 .drip-2 {
   left: 50%;
-
   animation-delay: 1.2s;
 }
 
 .drip-3 {
   left: 75%;
-
   animation-delay: 0.6s;
 }
 
@@ -913,7 +895,6 @@
 
   .whyChoose-card {
     padding: 15px 18px;
-
     gap: 12px;
   }
 
@@ -933,19 +914,16 @@
 @media (max-width: 1024px) {
   .whyChoose {
     min-height: auto;
-
     padding: 55px 20px;
   }
 
   .whyChoose-container {
     grid-template-columns: 1fr;
-
     gap: 30px;
   }
 
   .whyChoose-centerStage {
     min-height: auto;
-
     margin: 20px 0;
   }
 
@@ -957,7 +935,6 @@
   .left-col,
   .right-col {
     padding: 0;
-
     gap: 25px;
   }
 
@@ -981,7 +958,6 @@
 @media (max-width: 640px) {
   .whyChoose {
     min-height: auto;
-
     padding: 50px 15px 45px;
   }
 
@@ -991,23 +967,18 @@
 
   .whyChoose-badge {
     padding: 5px 14px;
-
     font-size: 0.68rem;
-
     letter-spacing: 1.5px;
   }
 
   .whyChoose-title {
     font-size: 1.7rem;
-
     line-height: 1.25;
   }
 
   .whyChoose-intro {
     padding: 0 10px;
-
     font-size: 0.8rem;
-
     line-height: 1.65;
   }
 
@@ -1022,7 +993,6 @@
 
   .whyChoose-card {
     width: 100%;
-
     box-sizing: border-box;
 
     padding: 14px 18px;
@@ -1045,19 +1015,16 @@
 
   .whyChoose-cardDesc {
     font-size: 0.72rem;
-
     line-height: 1.5;
   }
 
   .whyChoose-seoText {
     margin-top: 25px;
-
     padding: 0 12px;
   }
 
   .whyChoose-seoText p {
     font-size: 0.75rem;
-
     line-height: 1.7;
   }
 
@@ -1087,15 +1054,12 @@
 
   .whyChoose-badge {
     padding: 5px 12px;
-
     font-size: 0.6rem;
-
     letter-spacing: 1.2px;
   }
 
   .whyChoose-intro {
     font-size: 0.74rem;
-
     line-height: 1.65;
   }
 
@@ -1106,7 +1070,6 @@
   .whyChoose-iconWrapper {
     width: 43px;
     height: 43px;
-
     font-size: 1rem;
   }
 
@@ -1126,7 +1089,6 @@
     font-size: 0.7rem;
   }
 
-  /* Hide some decorative bees */
   .bee-3,
   .bee-4 {
     display: none;
@@ -1151,6 +1113,6 @@
   }
 
   .whyChoose-card {
-    transition: none;
+    transition: none !important;
   }
 }

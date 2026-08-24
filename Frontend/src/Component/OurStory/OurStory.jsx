@@ -1,62 +1,79 @@
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/all";
 import { FaArrowRight } from "react-icons/fa";
 import "./OurStory.css";
 
 import bgImage from "../../assets/story-bg.webp";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const OurStory = () => {
   const parallaxRef = useRef(null);
 
-  // Mouse Parallax Effect
+  // =========================================
+  // OPTIMIZED MOUSE PARALLAX
+  // =========================================
+
   useEffect(() => {
     const element = parallaxRef.current;
 
     if (!element) return;
 
-    let frameId = null;
+    // Disable mouse parallax on touch devices.
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      return;
+    }
+
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
+    let frameId = null;
+
+    // quickTo avoids creating a new GSAP tween
+    // on every mouse movement.
+    const moveX = gsap.quickTo(element, "x", {
+      duration: 0.6,
+      ease: "power2.out",
+    });
+
+    const moveY = gsap.quickTo(element, "y", {
+      duration: 0.6,
+      ease: "power2.out",
+    });
 
     const updateParallax = () => {
       frameId = null;
 
-      const moveX =
+      const x =
         (mouseX - window.innerWidth / 2) * 0.005;
 
-      const moveY =
+      const y =
         (mouseY - window.innerHeight / 2) * 0.005;
 
-      gsap.to(element, {
-        x: moveX,
-        y: moveY,
-        duration: 0.6,
-        ease: "power2.out",
-        overwrite: true,
-      });
+      moveX(x);
+      moveY(y);
     };
 
     const handleMouseMove = (event) => {
       mouseX = event.clientX;
       mouseY = event.clientY;
 
-      if (!frameId) {
+      if (frameId === null) {
         frameId = requestAnimationFrame(updateParallax);
       }
     };
 
-    window.addEventListener("mousemove", handleMouseMove, {
-      passive: true,
-    });
+    window.addEventListener(
+      "mousemove",
+      handleMouseMove,
+      { passive: true }
+    );
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener(
+        "mousemove",
+        handleMouseMove
+      );
 
-      if (frameId) {
+      if (frameId !== null) {
         cancelAnimationFrame(frameId);
       }
 
@@ -68,11 +85,12 @@ const OurStory = () => {
     <section
       className="aboutHero"
       aria-labelledby="savriyana-story-title"
-      style={{
-        backgroundImage: `url(${bgImage})`,
-      }}
     >
-      {/* Background Image */}
+
+      {/* =====================================
+          BACKGROUND IMAGE
+      ===================================== */}
+
       <img
         src={bgImage}
         alt=""
@@ -84,13 +102,19 @@ const OurStory = () => {
         decoding="async"
       />
 
-      {/* Dark Overlay */}
+      {/* =====================================
+          DARK OVERLAY
+      ===================================== */}
+
       <div
         className="aboutOverlay"
         aria-hidden="true"
       />
 
-      {/* Ambient Fog */}
+      {/* =====================================
+          AMBIENT FOG
+      ===================================== */}
+
       <div
         className="aboutHero-fog fog-left"
         aria-hidden="true"
@@ -101,12 +125,19 @@ const OurStory = () => {
         aria-hidden="true"
       />
 
-      {/* Parallax Wrapper */}
+      {/* =====================================
+          PARALLAX WRAPPER
+      ===================================== */}
+
       <div
         className="aboutHero-parallax"
         ref={parallaxRef}
       >
-        {/* Golden Particles */}
+
+        {/* =====================================
+            GOLDEN PARTICLES
+        ===================================== */}
+
         <div
           className="aboutHero-particles"
           aria-hidden="true"
@@ -130,7 +161,10 @@ const OurStory = () => {
           )}
         </div>
 
-        {/* Floating Leaves */}
+        {/* =====================================
+            FLOATING LEAVES
+        ===================================== */}
+
         <div
           className="aboutHero-leaves"
           aria-hidden="true"
@@ -154,11 +188,20 @@ const OurStory = () => {
           )}
         </div>
 
-        {/* Two Column Layout */}
+        {/* =====================================
+            TWO COLUMN LAYOUT
+        ===================================== */}
+
         <div className="aboutHero-container">
-          {/* LEFT CONTENT */}
+
+          {/* ===================================
+              LEFT CONTENT
+          =================================== */}
+
           <div className="aboutHero-content">
+
             {/* Tagline */}
+
             <motion.div
               className="aboutHero-tagline"
               initial={{
@@ -180,6 +223,7 @@ const OurStory = () => {
             </motion.div>
 
             {/* Main Heading */}
+
             <motion.h1
               id="savriyana-story-title"
               className="aboutHero-title"
@@ -205,6 +249,7 @@ const OurStory = () => {
             </motion.h1>
 
             {/* Brand Motto */}
+
             <motion.p
               className="aboutHero-motto"
               initial={{
@@ -227,6 +272,7 @@ const OurStory = () => {
             </motion.p>
 
             {/* Story Description */}
+
             <motion.div
               className="aboutHero-description"
               initial={{
@@ -278,6 +324,7 @@ const OurStory = () => {
             </motion.div>
 
             {/* SEO Supporting Text */}
+
             <motion.div
               className="aboutHero-seoText"
               initial={{
@@ -307,6 +354,7 @@ const OurStory = () => {
             </motion.div>
 
             {/* CTA Button */}
+
             <motion.button
               className="aboutHero-btn"
               type="button"
@@ -332,21 +380,28 @@ const OurStory = () => {
                 scale: 0.95,
               }}
             >
-              <span>Discover Our Journey</span>
+              <span>
+                Discover Our Journey
+              </span>
 
               <FaArrowRight
                 className="btn-arrow"
                 aria-hidden="true"
               />
             </motion.button>
+
           </div>
 
-          {/* RIGHT VISUAL */}
+          {/* ===================================
+              RIGHT VISUAL
+          =================================== */}
+
           <div className="aboutHero-visual">
             <div className="aboutHero-jarWrapper">
               {/* Visual composition can be styled using CSS */}
             </div>
           </div>
+
         </div>
       </div>
     </section>
