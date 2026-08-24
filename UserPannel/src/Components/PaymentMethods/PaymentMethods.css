@@ -1,0 +1,539 @@
+/* Container Base Styles */
+.PaymentMethods {
+  padding: 24px;
+  background-color: #fcfcfc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.PaymentMethods * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header Section */
+.PaymentMethods_Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.PaymentMethods_Title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 4px;
+}
+
+.PaymentMethods_Subtitle {
+  font-size: 13px;
+  color: #777777;
+}
+
+.PaymentMethods_HeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.PaymentMethods_AddBtn {
+  background-color: #2e1a12;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.PaymentMethods_AddBtn:hover {
+  background-color: #1c100b;
+}
+
+.PaymentMethods_AddBtn:active {
+  transform: scale(0.98);
+}
+
+.PaymentMethods_DownloadBtn {
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.PaymentMethods_DownloadBtn:hover {
+  background-color: #f7f7f7;
+  border-color: #cccccc;
+}
+
+/* Base Card Panel */
+.PaymentMethods_OptionsCard,
+.PaymentMethods_SavedCard {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.PaymentMethods_CardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 20px;
+}
+
+/* Payment Method Selection Grid */
+.PaymentMethods_OptionsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.PaymentMethods_OptionBox {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.PaymentMethods_OptionBox:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.PaymentMethods_OptionBox.selected {
+  border: 1.5px solid #d9a05b;
+  background-color: #fffbf7;
+}
+
+.PaymentMethods_RadioCircle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.PaymentMethods_OptionBox.selected .PaymentMethods_RadioCircle {
+  background-color: #e68a00;
+  border-color: #e68a00;
+  color: #ffffff;
+}
+
+.PaymentMethods_OptionIcon {
+  font-size: 30px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+}
+
+.PaymentMethods_OptionBox:nth-child(1) .PaymentMethods_OptionIcon {
+  color: #e0913e;
+}
+.PaymentMethods_OptionBox:nth-child(3) .PaymentMethods_OptionIcon {
+  color: #3b82f6;
+}
+.PaymentMethods_OptionBox:nth-child(4) .PaymentMethods_OptionIcon {
+  color: #8b5cf6;
+}
+.PaymentMethods_OptionBox:nth-child(5) .PaymentMethods_OptionIcon {
+  color: #10b981;
+}
+
+.PaymentMethods_UpiLogoText {
+  font-weight: 800;
+  font-size: 20px;
+  color: #333333;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+}
+
+.PaymentMethods_UpiAccent {
+  color: #e57e25;
+  font-size: 16px;
+  margin-left: 2px;
+}
+
+.PaymentMethods_OptionTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+.PaymentMethods_OptionSubtitle {
+  font-size: 11px;
+  color: #888888;
+  line-height: 1.35;
+}
+
+/* Saved Payment Methods Table */
+.PaymentMethods_TableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.PaymentMethods_Table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.PaymentMethods_Table th {
+  font-size: 11px;
+  font-weight: 700;
+  color: #888888;
+  padding: 12px 16px;
+  background-color: #f9f9f9;
+  letter-spacing: 0.5px;
+}
+
+.PaymentMethods_Table th:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.PaymentMethods_Table th:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.PaymentMethods_Table td {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.PaymentMethods_Table tr:last-child td {
+  border-bottom: none;
+}
+
+.PaymentMethods_MethodCell {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.PaymentMethods_BrandLogo {
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.visa-color {
+  color: #1434cb;
+}
+.mastercard-color {
+  color: #eb001b;
+}
+.paytm-color {
+  color: #002e6e;
+}
+
+.PaymentMethods_UpiLogoCell {
+  font-weight: 800;
+  font-size: 16px;
+  color: #333333;
+}
+
+.PaymentMethods_MethodInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.PaymentMethods_MethodName {
+  font-weight: 700;
+  color: #111111;
+  font-size: 13px;
+}
+
+.PaymentMethods_MethodNumber {
+  color: #888888;
+  font-size: 12px;
+}
+
+.PaymentMethods_DetailsText,
+.PaymentMethods_HolderText {
+  color: #555555;
+  font-size: 13px;
+}
+
+.PaymentMethods_ActiveBadge {
+  background-color: #ebfbee;
+  color: #22c55e;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.PaymentMethods_ActionsGroup {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.PaymentMethods_EditBtn,
+.PaymentMethods_RemoveBtn {
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.PaymentMethods_EditBtn {
+  background-color: #f7f7f7;
+  color: #444444;
+}
+
+.PaymentMethods_EditBtn:hover {
+  background-color: #eeeeee;
+}
+
+.PaymentMethods_RemoveBtn {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.PaymentMethods_RemoveBtn:hover {
+  background-color: #fee2e2;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Security Note */
+.PaymentMethods_SecurityFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 24px;
+  font-size: 12px;
+  color: #666666;
+}
+
+.PaymentMethods_SecurityIcon {
+  color: #22c55e;
+  font-size: 16px;
+}
+
+/* ==========================================
+   SMOOTH POPUP MODAL STYLES
+========================================== */
+.PaymentMethods_ModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.PaymentMethods_ModalOverlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.PaymentMethods_ModalContent {
+  background: #ffffff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.3s ease-in-out;
+}
+
+.PaymentMethods_ModalOverlay.open .PaymentMethods_ModalContent {
+  transform: translateY(0) scale(1);
+}
+
+.PaymentMethods_ModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 12px;
+}
+
+.PaymentMethods_ModalHeader h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.PaymentMethods_ModalCloseBtn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #888888;
+  cursor: pointer;
+}
+
+.PaymentMethods_ModalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.PaymentMethods_FormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.PaymentMethods_FormGroup label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555555;
+}
+
+.PaymentMethods_FormGroup input {
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.PaymentMethods_FormGroup input:focus {
+  border-color: #2e1a12;
+}
+
+.PaymentMethods_FormRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.PaymentMethods_ModalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.PaymentMethods_CancelBtn {
+  background-color: #f5f5f5;
+  color: #666666;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.PaymentMethods_SaveBtn {
+  background-color: #2e1a12;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN BREAKPOINTS
+========================================== */
+@media (max-width: 1024px) {
+  .PaymentMethods_OptionsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .PaymentMethods {
+    padding: 16px;
+  }
+
+  .PaymentMethods_Header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .PaymentMethods_HeaderActions {
+    width: 100%;
+  }
+
+  .PaymentMethods_AddBtn,
+  .PaymentMethods_DownloadBtn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .PaymentMethods_OptionsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .PaymentMethods_OptionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .PaymentMethods_FormRow {
+    grid-template-columns: 1fr;
+  }
+}

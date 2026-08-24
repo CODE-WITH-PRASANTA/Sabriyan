@@ -52,6 +52,14 @@ const upload = multer({
   },
 });
 
+<<<<<<< HEAD
+// Middleware Factory: Convert Buffer(s) to Optimized WebP
+const convertToWebp = (options = {}) => {
+  const {
+    quality = 80,
+    folder = "blogs",
+    prefix = "blog",
+=======
 // =====================================================
 // CONVERT IMAGE TO WEBP
 // =====================================================
@@ -65,10 +73,60 @@ const convertToWebp = (options = {}) => {
     width = null,
     height = null,
     effort = 4,
+>>>>>>> 6f93290034a3566a4452edf11a2d032388673970
   } = options;
 
   return async (req, res, next) => {
     try {
+<<<<<<< HEAD
+      // Helper function to process a single file object
+      const processFile = async (fileObj, filePrefix) => {
+        if (!fileObj || !fileObj.buffer || fileObj.buffer.length === 0) return;
+
+        const targetFolder = folder || "blogs";
+        const targetDir = path.join(__dirname, `../public/uploads/${targetFolder}`);
+
+        // Ensure target directory exists asynchronously
+        await fs.promises.mkdir(targetDir, { recursive: true });
+
+        // Generate unique, collision-resistant WebP filename
+        const uniqueName = `${filePrefix}-${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
+        const outputPath = path.join(targetDir, uniqueName);
+
+        // Optimize and convert image with Sharp
+        await sharp(fileObj.buffer)
+          .rotate() // Automatically orient image based on EXIF
+          .webp({ quality: Number(quality) || 80, effort: 4 })
+          .toFile(outputPath);
+
+        // Attach standardized metadata and URL path to file object
+        fileObj.filename = uniqueName;
+        fileObj.mimetype = "image/webp";
+        fileObj.path = outputPath;
+        fileObj.destinationPath = `/uploads/${targetFolder}/${uniqueName}`.replace(/\\/g, "/");
+      };
+
+      // 1. Handle single uploaded file (`req.file`)
+      if (req.file) {
+        await processFile(req.file, prefix);
+      }
+
+      // 2. Handle multiple uploaded files / fields (`req.files` as an object of arrays, e.g., multer.fields)
+      if (req.files && typeof req.files === 'object' && !Array.isArray(req.files)) {
+        for (const fieldName of Object.keys(req.files)) {
+          for (let i = 0; i < req.files[fieldName].length; i++) {
+            await processFile(req.files[fieldName][i], `${prefix}-${fieldName}`);
+          }
+        }
+      }
+
+      // 3. Handle multiple uploaded files (`req.files` as an array, e.g., multer.array)
+      if (Array.isArray(req.files)) {
+        for (let i = 0; i < req.files.length; i++) {
+          await processFile(req.files[i], prefix);
+        }
+      }
+=======
       // =================================================
       // SINGLE IMAGE: req.file
       // =================================================
@@ -278,6 +336,7 @@ const convertToWebp = (options = {}) => {
       // =================================================
       // NEXT MIDDLEWARE
       // =================================================
+>>>>>>> 6f93290034a3566a4452edf11a2d032388673970
 
       next();
     } catch (error) {

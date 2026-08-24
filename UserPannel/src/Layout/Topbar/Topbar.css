@@ -348,7 +348,7 @@
   background: white;
 }
 
-.Topbar_ProfileCardMenu button {
+.Topbar_ProfileMenuItem {
   width: 100%;
   height: 58px;
 
@@ -365,18 +365,20 @@
 
   font-size: 15px;
   color: #444;
+  text-decoration: none;
+  box-sizing: border-box;
 
   border-bottom: 1px solid #f0f0f0;
 
   transition: 0.3s;
 }
 
-.Topbar_ProfileCardMenu button:hover {
+.Topbar_ProfileMenuItem:hover {
   background: #f8faf8;
   padding-left: 28px;
 }
 
-.Topbar_ProfileCardMenu svg {
+.Topbar_ProfileMenuItem svg {
   font-size: 20px;
 }
 

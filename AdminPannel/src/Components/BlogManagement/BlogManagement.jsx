@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import React, { useState, useEffect, useCallback } from "react";
 import API, { IMG_URL } from "../../api/axios";
 import {
@@ -20,7 +21,38 @@ import "./BlogManagement.css";
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop";
 
+const MOCK_BLOGS = [
+  {
+    _id: '1',
+    title: 'The Healing Power of Nature',
+    description: 'Explore how spending time in nature improves mental health and overall well-being.',
+    category: 'Nature',
+    author: 'Admin User',
+    authorAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100',
+    publishDate: '2026-06-01',
+    readTime: '5 min read',
+    status: 'Published',
+    featured: true,
+    image: FALLBACK_IMAGE
+  },
+  {
+    _id: '2',
+    title: 'Benefits of Raw Honey',
+    description: 'Discover why raw honey is a powerful superfood loaded with antioxidants.',
+    category: 'Honey',
+    author: 'Admin User',
+    authorAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100',
+    publishDate: '2026-06-05',
+    readTime: '4 min read',
+    status: 'Draft',
+    featured: false,
+    image: FALLBACK_IMAGE
+  }
+];
+
 const BlogManagement = ({ onNavigateToEdit }) => {
+  const [blogs] = useState(MOCK_BLOGS);
+  const [viewMode, setViewMode] = useState('list');
   // =========================================================
   // BLOG DATA & VIEW STATES
   // =========================================================
@@ -293,6 +325,7 @@ const BlogManagement = ({ onNavigateToEdit }) => {
       blog.status === selectedStatus;
 
     const matchesAuthor =
+      selectedAuthor === 'All Authors' || blog.author === selectedAuthor;
       selectedAuthor === "All Authors" ||
       blog.author === selectedAuthor;
 
@@ -415,6 +448,7 @@ const BlogManagement = ({ onNavigateToEdit }) => {
         </div>
       </div>
 
+      {viewMode === 'list' ? (
       {/* CONTENT AREA */}
       {loading && blogs.length === 0 ? (
         <div
@@ -447,6 +481,98 @@ const BlogManagement = ({ onNavigateToEdit }) => {
 
             <tbody>
               {currentBlogs.length > 0 ? (
+                currentBlogs.map((blog, index) => (
+                  <tr key={blog._id}>
+                    <td>{indexOfFirstBlog + index + 1}</td>
+                    <td>
+                      <img
+                        src={blog.image}
+                        alt={blog.title}
+                        className="BlogManagement-thumb"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = FALLBACK_IMAGE;
+                        }}
+                      />
+                    </td>
+                    <td className="title-cell">
+                      <div className="title-text">{blog.title}</div>
+                      <div className="desc-text">{blog.description}</div>
+                    </td>
+                    <td>
+                      <span className={`category-badge cat-${(blog.category || 'general').toLowerCase()}`}>
+                        {blog.category}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="author-cell">
+                        <img src={blog.authorAvatar} alt={blog.author} />
+                        <span>{blog.author}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="meta-item">
+                        <FaCalendarAlt /> {blog.publishDate}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="meta-item">
+                        <FaClock /> {blog.readTime}
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`status-pill ${(blog.status || 'published').toLowerCase()}`}>
+                        {blog.status}
+                      </span>
+                    </td>
+                    <td>
+                      {blog.featured ? (
+                        <FaCheckCircle className="feat-icon active" />
+                      ) : (
+                        <FaTimesCircle className="feat-icon inactive" />
+                      )}
+                    </td>
+                    <td>
+                      <div className="action-buttons">
+                        <button
+                          type="button"
+                          className="act-btn view"
+                          onClick={() =>
+                            setViewModalData({
+                              ...blog,
+                              categoryClass: `cat-${(blog.category || 'general').toLowerCase()}`,
+                              date: blog.publishDate
+                            })
+                          }
+                          title="View Details"
+                        >
+                          <FaEye />
+                        </button>
+                        <button
+                          type="button"
+                          className="act-btn edit"
+                          onClick={() => {
+                            if (onNavigateToEdit) {
+                              onNavigateToEdit(blog);
+                            } else {
+                              setEditModalData(blog);
+                            }
+                          }}
+                          title="Edit Blog"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          type="button"
+                          className="act-btn delete"
+                          title="Delete Blog"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
                 currentBlogs.map((blog, index) => {
                   const blogId = blog._id || blog.id;
 
@@ -623,6 +749,77 @@ const BlogManagement = ({ onNavigateToEdit }) => {
         /* GRID VIEW */
         <div className="BlogManagement-gridContainer">
           <div className="BlogManagement-grid">
+            {currentBlogs.map((blog) => (
+              <div key={blog._id} className="BlogManagement-card">
+                <div className="card-top">
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = FALLBACK_IMAGE;
+                    }}
+                  />
+                  <span className={`category-badge cat-${(blog.category || 'general').toLowerCase()}`}>
+                    {blog.category}
+                  </span>
+                  <button type="button" className="card-bookmark">
+                    <FaBookmark />
+                  </button>
+                </div>
+
+                <div className="card-content">
+                  <div className="card-meta">
+                    <span>
+                      <FaCalendarAlt /> {blog.publishDate}
+                    </span>
+                    <span>
+                      <FaClock /> {blog.readTime}
+                    </span>
+                  </div>
+                  <h3 className="card-title">{blog.title}</h3>
+                  <p className="card-desc">{blog.description}</p>
+                </div>
+
+                <div className="card-footer">
+                  <div className="author-cell">
+                    <img src={blog.authorAvatar} alt={blog.author} />
+                    <span>{blog.author}</span>
+                  </div>
+                  <div className="action-buttons">
+                    <button
+                      type="button"
+                      className="act-btn view"
+                      onClick={() =>
+                        setViewModalData({
+                          ...blog,
+                          categoryClass: `cat-${(blog.category || 'general').toLowerCase()}`,
+                          date: blog.publishDate
+                        })
+                      }
+                    >
+                      <FaEye />
+                    </button>
+                    <button
+                      type="button"
+                      className="act-btn edit"
+                      onClick={() => {
+                        if (onNavigateToEdit) {
+                          onNavigateToEdit(blog);
+                        } else {
+                          setEditModalData(blog);
+                        }
+                      }}
+                    >
+                      <FaEdit />
+                    </button>
+                    <button type="button" className="act-btn delete">
+                      <FaTrash />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
             {currentBlogs.length > 0 ? (
               currentBlogs.map((blog) => {
                 const blogId = blog._id || blog.id;
@@ -876,6 +1073,7 @@ const BlogManagement = ({ onNavigateToEdit }) => {
             </button>
 
             <h3>Edit Blog Post</h3>
+            <form onSubmit={(e) => e.preventDefault()} className="edit-form">
 
             <form onSubmit={handleEditSave} className="edit-form">
               {/* TITLE */}
@@ -958,6 +1156,8 @@ const BlogManagement = ({ onNavigateToEdit }) => {
 
               {/* ACTIONS */}
               <div className="modal-actions">
+                <button type="button" className="save-btn" onClick={() => setEditModalData(null)}>
+                  Save Changes
                 <button
                   type="submit"
                   className="save-btn"
@@ -970,7 +1170,6 @@ const BlogManagement = ({ onNavigateToEdit }) => {
                   type="button"
                   className="cancel-btn"
                   onClick={() => setEditModalData(null)}
-                  disabled={saving}
                 >
                   Cancel
                 </button>

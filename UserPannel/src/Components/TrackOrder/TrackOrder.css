@@ -1,0 +1,489 @@
+.TrackOrder {
+  padding: 24px;
+  background-color: #fcfbfa;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #333333;
+  box-sizing: border-box;
+}
+
+.TrackOrder * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================
+   1. TOP CARD
+========================================== */
+.TrackOrder_TopCard {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #ebebeb;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.TrackOrder_MetaGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.TrackOrder_MetaItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.TrackOrder_MetaLabel {
+  font-size: 13px;
+  color: #888888;
+  margin-bottom: 6px;
+}
+
+.TrackOrder_MetaValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 4px;
+}
+
+.TrackOrder_SubText {
+  font-size: 12px;
+  color: #888888;
+}
+
+.TrackOrder_StatusBadge {
+  background-color: #fef4e8;
+  color: #e67e22;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  display: inline-block;
+  width: fit-content;
+  margin-bottom: 6px;
+}
+
+.TrackOrder_CustomerName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222222;
+  margin-bottom: 2px;
+}
+
+.TrackOrder_AddressText {
+  font-size: 12px;
+  color: #777777;
+  max-width: 230px;
+  line-height: 1.4;
+}
+
+.TrackOrder_NeedHelpBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #d09d6c;
+  color: #b57a41;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.TrackOrder_NeedHelpBtn:hover {
+  background: #fdf8f3;
+}
+
+.TrackOrder_NeedHelpBtn svg {
+  font-size: 18px;
+}
+
+/* ==========================================
+   2. ORDER STATUS STEPPER CARD
+========================================== */
+.TrackOrder_StatusCard {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #ebebeb;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.TrackOrder_SectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 24px;
+}
+
+.TrackOrder_Stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 28px;
+  padding: 0 20px;
+}
+
+.TrackOrder_Step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+  min-width: 100px;
+}
+
+.TrackOrder_StepIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+/* Step States */
+.TrackOrder_Step.completed .TrackOrder_StepIcon {
+  background-color: #27ae60;
+  color: #ffffff;
+}
+
+.TrackOrder_Step.active .TrackOrder_StepIcon {
+  background-color: #f39c12;
+  color: #ffffff;
+}
+
+.TrackOrder_Step.upcoming .TrackOrder_StepIcon {
+  background-color: #e2e8f0;
+  color: #64748b;
+}
+
+.TrackOrder_StepTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 4px;
+}
+
+.TrackOrder_StepDate {
+  font-size: 12px;
+  color: #777777;
+}
+
+.TrackOrder_StepTime {
+  font-size: 11px;
+  color: #999999;
+}
+
+/* Connecting Lines */
+.TrackOrder_Line {
+  flex: 1;
+  height: 2px;
+  margin-top: 22px;
+  z-index: 1;
+}
+
+.TrackOrder_Line.solid {
+  background-color: #27ae60;
+}
+
+.TrackOrder_Line.dashed {
+  border-top: 2px dashed #cbd5e1;
+  background: transparent;
+}
+
+/* Notification Info Banner */
+.TrackOrder_InfoBanner {
+  background-color: #fdf8f3;
+  border: 1px solid #faebd7;
+  border-radius: 8px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #8a623a;
+}
+
+.TrackOrder_BannerIcon {
+  font-size: 20px;
+  color: #d09d6c;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   3. BOTTOM GRID LAYOUT
+========================================== */
+.TrackOrder_Grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+}
+
+/* Items Card */
+.TrackOrder_ItemsCard {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #ebebeb;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.TrackOrder_ItemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.TrackOrder_ItemRow {
+  display: flex;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.TrackOrder_ItemsList .TrackOrder_ItemRow:last-child {
+  border-bottom: none;
+}
+
+.TrackOrder_ItemImg {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 16px;
+}
+
+.TrackOrder_ItemDetails {
+  flex: 1;
+}
+
+.TrackOrder_ItemName {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 4px;
+}
+
+.TrackOrder_ItemWeight {
+  font-size: 12px;
+  color: #888888;
+}
+
+.TrackOrder_ItemPricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.TrackOrder_ItemPrice {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 2px;
+}
+
+.TrackOrder_ItemQty {
+  font-size: 12px;
+  color: #888888;
+}
+
+.TrackOrder_InvoiceBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #d09d6c;
+  color: #b57a41;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: fit-content;
+  transition: all 0.2s ease;
+}
+
+.TrackOrder_InvoiceBtn:hover {
+  background: #fdf8f3;
+}
+
+.TrackOrder_InvoiceBtn svg {
+  font-size: 18px;
+}
+
+/* Right Column */
+.TrackOrder_RightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Order Summary */
+.TrackOrder_SummaryCard {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #ebebeb;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.TrackOrder_SummaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #666666;
+  margin-bottom: 12px;
+}
+
+.TrackOrder_DiscountRow span:last-child {
+  color: #27ae60;
+}
+
+.TrackOrder_Divider {
+  height: 1px;
+  background-color: #ebebeb;
+  margin: 16px 0;
+}
+
+.TrackOrder_TotalRow {
+  font-size: 15px;
+  color: #111111;
+  margin-bottom: 0;
+}
+
+/* Delivery Partner Card */
+.TrackOrder_PartnerCard {
+  background: #f7faf7;
+  border-radius: 12px;
+  border: 1px solid #e1efe2;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.TrackOrder_PartnerLabel {
+  font-size: 12px;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.TrackOrder_PartnerName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+  margin: 2px 0;
+}
+
+.TrackOrder_TrackingId {
+  font-size: 12px;
+  color: #666666;
+}
+
+.TrackOrder_TrackWebBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.TrackOrder_TrackWebBtn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* ==========================================
+   4. RESPONSIVE BREAKPOINTS
+========================================== */
+@media (max-width: 1024px) {
+  .TrackOrder_MetaGroup {
+    gap: 24px;
+  }
+
+  .TrackOrder_Grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .TrackOrder {
+    padding: 16px;
+  }
+
+  .TrackOrder_TopCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .TrackOrder_NeedHelpBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .TrackOrder_Stepper {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    gap: 20px;
+  }
+
+  .TrackOrder_Step {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .TrackOrder_StepIcon {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .TrackOrder_Line {
+    width: 2px;
+    height: 24px;
+    margin-top: 0;
+    margin-left: 21px;
+    flex: none;
+  }
+
+  .TrackOrder_PartnerCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .TrackOrder_TrackWebBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

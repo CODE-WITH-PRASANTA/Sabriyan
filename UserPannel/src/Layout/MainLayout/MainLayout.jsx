@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-
 import Sidebar from "../Sidebar/Sidebar";
 import Topbar from "../Topbar/Topbar";
-
 import "./MainLayout.css";
 
-const MainLayout = () => {
+const MainLayout = ({ setIsAuthenticated }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -26,6 +24,7 @@ const MainLayout = () => {
         <Topbar
           toggleSidebar={() => setCollapsed(!collapsed)}
           setMobileOpen={setMobileOpen}
+          setIsAuthenticated={setIsAuthenticated}
         />
 
         <main className="MainLayout_Page">
