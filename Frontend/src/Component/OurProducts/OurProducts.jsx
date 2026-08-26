@@ -1,7 +1,10 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./OurProducts.css";
 
-// React Icons
+// =====================================================
+// ICONS
+// =====================================================
+
 import {
   FiChevronDown,
   FiChevronUp,
@@ -17,20 +20,44 @@ import {
   FiShield,
   FiCompass,
   FiCheckSquare,
-  FiSquare
+  FiSquare,
 } from "react-icons/fi";
-import { FaStar, FaLeaf, FaMedal } from "react-icons/fa";
-import { GiHoneyJar, GiChocolateBar, GiWheat } from "react-icons/gi";
 
-// Header reference banner image (chocolates, truffles bowl, and honey jar with dipper)
-const HEADER_BG_IMAGE =
-  "https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=1600&q=85";
+import {
+  FaStar,
+  FaLeaf,
+  FaMedal,
+} from "react-icons/fa";
 
-// Promo gift box image
-const PROMO_BOX_IMAGE =
-  "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=150&q=80";
+import {
+  GiHoneyJar,
+  GiChocolateBar,
+  GiWheat,
+} from "react-icons/gi";
 
-// Base product template to generate 48 items
+// =====================================================
+// LOCAL IMAGES
+// =====================================================
+
+import ChocoHero from "../../assets/ch-1.webp";
+import Chocolate55 from "../../assets/ch-2.webp";
+import ChocolatePurple from "../../assets/chocolate.webp";
+
+import Honey from "../../assets/honey.webp";
+import Honey2 from "../../assets/honey-2.webp";
+import Honey3 from "../../assets/honey-3.webp";
+import Honey4 from "../../assets/honey4.webp";
+
+import SabriyanaChocolate from "../../assets/sabriyana-chocolate-bar.webp";
+import PromoImage from "../../assets/hero.png";
+
+// =====================================================
+// BASE PRODUCTS
+// IMPORTANT:
+// Every product is unique.
+// No duplicate batch generation.
+// =====================================================
+
 const BASE_PRODUCTS = [
   {
     title: "Dark Chocolate 55%",
@@ -43,23 +70,34 @@ const BASE_PRODUCTS = [
     badgeType: "green",
     category: "Chocolates",
     type: "Dark Chocolate",
-    attributes: ["Vegan", "Organic", "Gluten Free", "Premium Quality"],
-    image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "Vegan",
+      "Organic",
+      "Gluten Free",
+      "Premium Quality",
+    ],
+    image: Chocolate55,
   },
+
   {
     title: "Raw Forest Honey",
     weight: "500g",
     price: 499,
     originalPrice: 599,
-    rating: 5.0,
+    rating: 5,
     reviews: 96,
     badge: "Pure Honey",
     badgeType: "orange",
     category: "Honey",
     type: "Honey",
-    attributes: ["No Refined Sugar", "Organic", "Premium Quality"],
-    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "No Refined Sugar",
+      "Organic",
+      "Premium Quality",
+    ],
+    image: Honey,
   },
+
   {
     title: "Chocolate Truffles Box",
     weight: "9 Pieces",
@@ -71,9 +109,13 @@ const BASE_PRODUCTS = [
     badgeType: "lime",
     category: "Chocolates",
     type: "Truffles",
-    attributes: ["Premium Quality", "Gluten Free"],
-    image: "https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "Premium Quality",
+      "Gluten Free",
+    ],
+    image: ChocoHero,
   },
+
   {
     title: "Chocolate Gift Hamper",
     weight: "1 Unit",
@@ -84,10 +126,13 @@ const BASE_PRODUCTS = [
     badge: "Premium",
     badgeType: "purple",
     category: "Gift Hampers",
-    type: "Combo Offers",
-    attributes: ["Premium Quality"],
-    image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80"
+    type: "Truffles",
+    attributes: [
+      "Premium Quality",
+    ],
+    image: PromoImage,
   },
+
   {
     title: "Dark Chocolate 85%",
     weight: "200g",
@@ -99,9 +144,14 @@ const BASE_PRODUCTS = [
     badgeType: "",
     category: "Chocolates",
     type: "Dark Chocolate",
-    attributes: ["Vegan", "Organic", "No Refined Sugar"],
-    image: "https://images.unsplash.com/photo-1511381939415-e44015466834?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "Vegan",
+      "Organic",
+      "No Refined Sugar",
+    ],
+    image: ChocolatePurple,
   },
+
   {
     title: "Honey with Almonds",
     weight: "250g",
@@ -113,9 +163,13 @@ const BASE_PRODUCTS = [
     badgeType: "amber",
     category: "Honey",
     type: "Honey",
-    attributes: ["Organic", "Gluten Free"],
-    image: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "Organic",
+      "Gluten Free",
+    ],
+    image: Honey2,
   },
+
   {
     title: "Milk Chocolate 40%",
     weight: "200g",
@@ -127,9 +181,12 @@ const BASE_PRODUCTS = [
     badgeType: "",
     category: "Chocolates",
     type: "Milk Chocolate",
-    attributes: ["Gluten Free"],
-    image: "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "Gluten Free",
+    ],
+    image: SabriyanaChocolate,
   },
+
   {
     title: "Chocolate Assorted Box",
     weight: "16 Pieces",
@@ -141,9 +198,12 @@ const BASE_PRODUCTS = [
     badgeType: "lime",
     category: "Gift Hampers",
     type: "Truffles",
-    attributes: ["Premium Quality"],
-    image: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "Premium Quality",
+    ],
+    image: ChocolatePurple,
   },
+
   {
     title: "Wildflower Honey",
     weight: "500g",
@@ -155,9 +215,13 @@ const BASE_PRODUCTS = [
     badgeType: "",
     category: "Honey",
     type: "Honey",
-    attributes: ["No Refined Sugar", "Organic"],
-    image: "https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "No Refined Sugar",
+      "Organic",
+    ],
+    image: Honey3,
   },
+
   {
     title: "Organic Dark 70%",
     weight: "200g",
@@ -169,9 +233,14 @@ const BASE_PRODUCTS = [
     badgeType: "green",
     category: "Chocolates",
     type: "Dark Chocolate",
-    attributes: ["Vegan", "Organic", "No Refined Sugar"],
-    image: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "Vegan",
+      "Organic",
+      "No Refined Sugar",
+    ],
+    image: Chocolate55,
   },
+
   {
     title: "Honey Gift Hamper",
     weight: "1 Unit",
@@ -183,9 +252,13 @@ const BASE_PRODUCTS = [
     badgeType: "",
     category: "Gift Hampers",
     type: "Honey",
-    attributes: ["Premium Quality", "Organic"],
-    image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80"
+    attributes: [
+      "Premium Quality",
+      "Organic",
+    ],
+    image: Honey4,
   },
+
   {
     title: "Cocoa Truffles",
     weight: "12 Pieces",
@@ -197,83 +270,166 @@ const BASE_PRODUCTS = [
     badgeType: "",
     category: "Chocolates",
     type: "Truffles",
-    attributes: ["Gluten Free", "Premium Quality"],
-    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80"
-  }
+    attributes: [
+      "Gluten Free",
+      "Premium Quality",
+    ],
+    image: ChocoHero,
+  },
 ];
 
-// Generate 48 items for realistic multi-page pagination
-const ALL_PRODUCTS = Array.from({ length: 48 }, (_, index) => {
-  const base = BASE_PRODUCTS[index % BASE_PRODUCTS.length];
-  return {
-    ...base,
-    id: index + 1,
-    title: `${base.title} ${index >= 12 ? `(Batch ${Math.floor(index / 12) + 1})` : ""}`
-  };
-});
+// =====================================================
+// UNIQUE PRODUCTS
+// No duplicate / batch products
+// =====================================================
+
+const ALL_PRODUCTS = BASE_PRODUCTS.map((product, index) => ({
+  ...product,
+  id: index + 1,
+}));
 
 const ITEMS_PER_PAGE = 12;
 
+// =====================================================
+// COMPONENT
+// =====================================================
+
 export default function OurProducts() {
-  const [selectedCategory, setSelectedCategory] = useState("All Products");
-  const [priceRange, setPriceRange] = useState(2500);
-  const [sortBy, setSortBy] = useState("Newest First");
-  const [viewMode, setViewMode] = useState("grid");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [wishlist, setWishlist] = useState({});
-  const [cartToast, setCartToast] = useState(null);
+  const [selectedCategory, setSelectedCategory] =
+    useState("All Products");
 
-  // Accordion Sections
-  const [openSections, setOpenSections] = useState({
-    categories: true,
-    price: true,
-    productType: true,
-    attributes: true
-  });
+  const [priceRange, setPriceRange] =
+    useState(2500);
 
-  const [selectedTypes, setSelectedTypes] = useState({
-    All: true,
-    "Dark Chocolate": false,
-    "Milk Chocolate": false,
-    "White Chocolate": false,
-    Honey: false,
-    Truffles: false
-  });
+  const [sortBy, setSortBy] =
+    useState("Newest First");
 
-  const [selectedAttributes, setSelectedAttributes] = useState({
-    "No Refined Sugar": false,
-    Vegan: false,
-    Organic: false,
-    "Gluten Free": false,
-    "Premium Quality": false
-  });
+  const [viewMode, setViewMode] =
+    useState("grid");
 
-  const toggleSection = (section) => {
-    setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
-  };
+  const [currentPage, setCurrentPage] =
+    useState(1);
 
-  const categories = [
-    { name: "All Products", count: 48 },
-    { name: "Chocolates", count: 24 },
-    { name: "Honey", count: 12 },
-    { name: "Gift Hampers", count: 8 },
-    { name: "Combo Offers", count: 4 }
-  ];
+  const [wishlist, setWishlist] =
+    useState({});
+
+  const [cartToast, setCartToast] =
+    useState(null);
+
+  const [openSections, setOpenSections] =
+    useState({
+      categories: true,
+      price: true,
+      productType: true,
+      attributes: true,
+    });
+
+  const [selectedTypes, setSelectedTypes] =
+    useState({
+      All: true,
+      "Dark Chocolate": false,
+      "Milk Chocolate": false,
+      Honey: false,
+      Truffles: false,
+    });
+
+  const [selectedAttributes, setSelectedAttributes] =
+    useState({
+      "No Refined Sugar": false,
+      Vegan: false,
+      Organic: false,
+      "Gluten Free": false,
+      "Premium Quality": false,
+    });
+
+  // ===================================================
+  // CATEGORIES
+  // Dynamic counts
+  // ===================================================
+
+  const categories = useMemo(
+    () => [
+      {
+        name: "All Products",
+        count: ALL_PRODUCTS.length,
+      },
+      {
+        name: "Chocolates",
+        count: ALL_PRODUCTS.filter(
+          (product) =>
+            product.category === "Chocolates"
+        ).length,
+      },
+      {
+        name: "Honey",
+        count: ALL_PRODUCTS.filter(
+          (product) =>
+            product.category === "Honey"
+        ).length,
+      },
+      {
+        name: "Gift Hampers",
+        count: ALL_PRODUCTS.filter(
+          (product) =>
+            product.category === "Gift Hampers"
+        ).length,
+      },
+      {
+        name: "Combo Offers",
+        count: ALL_PRODUCTS.filter(
+          (product) =>
+            product.category === "Combo Offers"
+        ).length,
+      },
+    ],
+    []
+  );
 
   const priceQuickPills = [
-    { label: "Under ₹500", max: 500 },
-    { label: "₹500 - ₹1,000", max: 1000 },
-    { label: "₹1,000 - ₹2,000", max: 2000 },
-    { label: "Above ₹2,000", max: 2500 }
+    {
+      label: "Under ₹500",
+      max: 500,
+    },
+    {
+      label: "₹500 - ₹1,000",
+      max: 1000,
+    },
+    {
+      label: "₹1,000 - ₹2,000",
+      max: 2000,
+    },
+    {
+      label: "Above ₹2,000",
+      max: 2500,
+    },
   ];
 
+  // ===================================================
+  // FUNCTIONS
+  // ===================================================
+
+  const toggleSection = (section) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
   const toggleWishlist = (id) => {
-    setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
+    setWishlist((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   const handleAddToCart = (product) => {
-    setCartToast(`Added "${product.title}" to your cart!`);
-    setTimeout(() => setCartToast(null), 2500);
+    setCartToast(
+      `Added "${product.title}" to your cart!`
+    );
+
+    window.setTimeout(() => {
+      setCartToast(null);
+    }, 2500);
   };
 
   const handleTypeChange = (type) => {
@@ -282,194 +438,398 @@ export default function OurProducts() {
         All: true,
         "Dark Chocolate": false,
         "Milk Chocolate": false,
-        "White Chocolate": false,
         Honey: false,
-        Truffles: false
+        Truffles: false,
       });
     } else {
       setSelectedTypes((prev) => {
-        const next = { ...prev, All: false, [type]: !prev[type] };
-        const hasAny = Object.keys(next).some((k) => k !== "All" && next[k]);
-        if (!hasAny) next.All = true;
+        const next = {
+          ...prev,
+          All: false,
+          [type]: !prev[type],
+        };
+
+        const hasAny = Object.keys(next).some(
+          (key) =>
+            key !== "All" && next[key]
+        );
+
+        if (!hasAny) {
+          next.All = true;
+        }
+
         return next;
       });
     }
+
     setCurrentPage(1);
   };
 
-  const handleAttributeChange = (attr) => {
+  const handleAttributeChange = (attribute) => {
     setSelectedAttributes((prev) => ({
       ...prev,
-      [attr]: !prev[attr]
+      [attribute]: !prev[attribute],
     }));
-    setCurrentPage(1);
-  };
 
-  const handleFeatureClick = (featureName) => {
-    if (featureName === "Premium Ingredients") setSelectedCategory("All Products");
-    if (featureName === "Bean to Bar Crafted") setSelectedCategory("Chocolates");
-    if (featureName === "No Refined Sugar") handleAttributeChange("No Refined Sugar");
-    if (featureName === "Made in India") resetFilters();
-    if (featureName === "Secure Packaging") handleAddToCart({ title: "Safe Gift Packaging" });
+    setCurrentPage(1);
   };
 
   const resetFilters = () => {
     setSelectedCategory("All Products");
     setPriceRange(2500);
+
     setSelectedTypes({
       All: true,
       "Dark Chocolate": false,
       "Milk Chocolate": false,
-      "White Chocolate": false,
       Honey: false,
-      Truffles: false
+      Truffles: false,
     });
+
     setSelectedAttributes({
       "No Refined Sugar": false,
       Vegan: false,
       Organic: false,
       "Gluten Free": false,
-      "Premium Quality": false
+      "Premium Quality": false,
     });
+
     setCurrentPage(1);
   };
 
-  // Filter & Sort Logic
-  const filteredProducts = useMemo(() => {
-    return ALL_PRODUCTS.filter((product) => {
-      if (selectedCategory !== "All Products" && product.category !== selectedCategory) {
-        return false;
-      }
-      if (product.price > priceRange) {
-        return false;
-      }
-      if (!selectedTypes.All) {
-        const activeTypes = Object.keys(selectedTypes).filter((k) => selectedTypes[k]);
-        if (!activeTypes.includes(product.type)) return false;
-      }
-      const activeAttributes = Object.keys(selectedAttributes).filter((k) => selectedAttributes[k]);
-      if (activeAttributes.length > 0) {
-        const hasAll = activeAttributes.every((a) => product.attributes.includes(a));
-        if (!hasAll) return false;
-      }
-      return true;
-    }).sort((a, b) => {
-      if (sortBy === "Price: Low to High") return a.price - b.price;
-      if (sortBy === "Price: High to Low") return b.price - a.price;
-      if (sortBy === "Popularity") return b.reviews - a.reviews;
-      return a.id - b.id;
-    });
-  }, [selectedCategory, priceRange, selectedTypes, selectedAttributes, sortBy]);
+  const handleFeatureClick = (featureName) => {
+    if (featureName === "Premium Ingredients") {
+      setSelectedCategory("All Products");
+      setCurrentPage(1);
+    }
 
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE) || 1;
+    if (featureName === "Bean to Bar Crafted") {
+      setSelectedCategory("Chocolates");
+      setCurrentPage(1);
+    }
+
+    if (featureName === "No Refined Sugar") {
+      handleAttributeChange("No Refined Sugar");
+    }
+
+    if (featureName === "Made in India") {
+      resetFilters();
+    }
+
+    if (featureName === "Secure Packaging") {
+      handleAddToCart({
+        title: "Safe Gift Packaging",
+      });
+    }
+  };
+
+  // ===================================================
+  // FILTER + SORT
+  // ===================================================
+
+  const filteredProducts = useMemo(() => {
+    return ALL_PRODUCTS
+      .filter((product) => {
+        if (
+          selectedCategory !== "All Products" &&
+          product.category !== selectedCategory
+        ) {
+          return false;
+        }
+
+        if (product.price > priceRange) {
+          return false;
+        }
+
+        if (!selectedTypes.All) {
+          const activeTypes = Object.keys(
+            selectedTypes
+          ).filter(
+            (key) =>
+              key !== "All" &&
+              selectedTypes[key]
+          );
+
+          if (
+            !activeTypes.includes(product.type)
+          ) {
+            return false;
+          }
+        }
+
+        const activeAttributes =
+          Object.keys(
+            selectedAttributes
+          ).filter(
+            (key) => selectedAttributes[key]
+          );
+
+        if (activeAttributes.length > 0) {
+          const hasAll =
+            activeAttributes.every(
+              (attribute) =>
+                product.attributes.includes(
+                  attribute
+                )
+            );
+
+          if (!hasAll) {
+            return false;
+          }
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
+        if (
+          sortBy === "Price: Low to High"
+        ) {
+          return a.price - b.price;
+        }
+
+        if (
+          sortBy === "Price: High to Low"
+        ) {
+          return b.price - a.price;
+        }
+
+        if (sortBy === "Popularity") {
+          return b.reviews - a.reviews;
+        }
+
+        return a.id - b.id;
+      });
+  }, [
+    selectedCategory,
+    priceRange,
+    selectedTypes,
+    selectedAttributes,
+    sortBy,
+  ]);
+
+  // ===================================================
+  // PAGINATION
+  // ===================================================
+
+  const totalPages =
+    Math.ceil(
+      filteredProducts.length /
+        ITEMS_PER_PAGE
+    ) || 1;
 
   useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(1);
     }
-  }, [totalPages, currentPage]);
+  }, [currentPage, totalPages]);
 
   const currentProducts = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredProducts, currentPage]);
+    const start =
+      (currentPage - 1) *
+      ITEMS_PER_PAGE;
 
-  const startItem = filteredProducts.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
-  const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length);
+    return filteredProducts.slice(
+      start,
+      start + ITEMS_PER_PAGE
+    );
+  }, [
+    filteredProducts,
+    currentPage,
+  ]);
+
+  const startItem =
+    filteredProducts.length === 0
+      ? 0
+      : (currentPage - 1) *
+          ITEMS_PER_PAGE +
+        1;
+
+  const endItem = Math.min(
+    currentPage * ITEMS_PER_PAGE,
+    filteredProducts.length
+  );
+
+  // ===================================================
+  // RENDER
+  // ===================================================
 
   return (
     <div className="OurProducts">
-      {/* Toast Notification */}
-      {cartToast && <div className="OurProducts-toast">{cartToast}</div>}
 
-      {/* Header Banner - Matches Reference Image Background */}
-      <header
-        className="OurProducts-header"
-        style={{ backgroundImage: `url(${HEADER_BG_IMAGE})` }}
-      >
-        <div className="OurProducts-header-overlay" />
+      {/* TOAST */}
+
+      {cartToast && (
+        <div
+          className="OurProducts-toast"
+          role="status"
+          aria-live="polite"
+        >
+          {cartToast}
+        </div>
+      )}
+
+      {/* HERO */}
+
+      <header className="OurProducts-header">
+
+        <img
+          src={ChocoHero}
+          alt=""
+          className="OurProducts-header-image"
+          width="1200"
+          height="400"
+          fetchPriority="high"
+          decoding="async"
+        />
+
+        <div
+          className="OurProducts-header-overlay"
+          aria-hidden="true"
+        />
+
         <div className="OurProducts-header-content">
-          <h1 className="OurProducts-title">Our Products</h1>
+          <h1 className="OurProducts-title">
+            Our Products
+          </h1>
+
           <p className="OurProducts-subtitle">
-            Indulge in our finest chocolates and pure honey crafted with love.
+            Indulge in our finest chocolates
+            and pure honey crafted with love.
           </p>
         </div>
       </header>
 
-      {/* Main Layout */}
+      {/* MAIN */}
+
       <div className="OurProducts-container">
-        {/* Sidebar Filters */}
+
+        {/* SIDEBAR */}
+
         <aside className="OurProducts-sidebar">
-          {/* Categories Card */}
+
+          {/* CATEGORIES */}
+
           <div className="OurProducts-card">
-            <div
+
+            <button
+              type="button"
               className="OurProducts-card-header"
-              onClick={() => toggleSection("categories")}
+              onClick={() =>
+                toggleSection("categories")
+              }
+              aria-expanded={
+                openSections.categories
+              }
             >
               <span className="OurProducts-card-title">
-                <GiChocolateBar className="OurProducts-filter-icon" /> Categories
+                <GiChocolateBar className="OurProducts-filter-icon" />
+                Categories
               </span>
-              {openSections.categories ? <FiChevronUp /> : <FiChevronDown />}
-            </div>
+
+              {openSections.categories ? (
+                <FiChevronUp />
+              ) : (
+                <FiChevronDown />
+              )}
+            </button>
+
             {openSections.categories && (
               <ul className="OurProducts-category-list">
-                {categories.map((cat) => (
+                {categories.map((category) => (
                   <li
-                    key={cat.name}
+                    key={category.name}
                     className={`OurProducts-category-item ${
-                      selectedCategory === cat.name ? "active" : ""
+                      selectedCategory ===
+                      category.name
+                        ? "active"
+                        : ""
                     }`}
                     onClick={() => {
-                      setSelectedCategory(cat.name);
+                      setSelectedCategory(
+                        category.name
+                      );
                       setCurrentPage(1);
                     }}
                   >
-                    <span className="OurProducts-cat-name">{cat.name}</span>
-                    <span className="OurProducts-cat-count">{cat.count}</span>
+                    <span>
+                      {category.name}
+                    </span>
+
+                    <span className="OurProducts-cat-count">
+                      {category.count}
+                    </span>
                   </li>
                 ))}
               </ul>
             )}
           </div>
 
-          {/* Price Range Card */}
+          {/* PRICE */}
+
           <div className="OurProducts-card">
-            <div
+
+            <button
+              type="button"
               className="OurProducts-card-header"
-              onClick={() => toggleSection("price")}
+              onClick={() =>
+                toggleSection("price")
+              }
+              aria-expanded={
+                openSections.price
+              }
             >
               <span className="OurProducts-card-title">
-                <FaMedal className="OurProducts-filter-icon" /> Price Range
+                <FaMedal className="OurProducts-filter-icon" />
+                Price Range
               </span>
-              {openSections.price ? <FiChevronUp /> : <FiChevronDown />}
-            </div>
+
+              {openSections.price ? (
+                <FiChevronUp />
+              ) : (
+                <FiChevronDown />
+              )}
+            </button>
+
             {openSections.price && (
               <div className="OurProducts-range-container">
+
                 <input
                   type="range"
                   min="100"
                   max="2500"
                   step="50"
                   value={priceRange}
-                  onChange={(e) => {
-                    setPriceRange(Number(e.target.value));
+                  onChange={(event) => {
+                    setPriceRange(
+                      Number(event.target.value)
+                    );
                     setCurrentPage(1);
                   }}
                   className="OurProducts-slider"
+                  aria-label="Maximum product price"
                 />
+
                 <div className="OurProducts-range-labels">
-                  <span>₹0</span>
-                  <span>₹{priceRange.toLocaleString()}+</span>
+                  <span>₹100</span>
+                  <span>
+                    ₹{priceRange.toLocaleString()}+
+                  </span>
                 </div>
+
                 <div className="OurProducts-price-pills">
                   {priceQuickPills.map((pill) => (
                     <button
+                      type="button"
                       key={pill.label}
                       className={`OurProducts-pill-btn ${
-                        priceRange === pill.max ? "active" : ""
+                        priceRange === pill.max
+                          ? "active"
+                          : ""
                       }`}
                       onClick={() => {
-                        setPriceRange(pill.max);
+                        setPriceRange(
+                          pill.max
+                        );
                         setCurrentPage(1);
                       }}
                     >
@@ -481,338 +841,654 @@ export default function OurProducts() {
             )}
           </div>
 
-          {/* Product Type Card */}
+          {/* PRODUCT TYPE */}
+
           <div className="OurProducts-card">
-            <div
+
+            <button
+              type="button"
               className="OurProducts-card-header"
-              onClick={() => toggleSection("productType")}
+              onClick={() =>
+                toggleSection("productType")
+              }
+              aria-expanded={
+                openSections.productType
+              }
             >
               <span className="OurProducts-card-title">
-                <GiHoneyJar className="OurProducts-filter-icon" /> Product Type
+                <GiHoneyJar className="OurProducts-filter-icon" />
+                Product Type
               </span>
-              {openSections.productType ? <FiChevronUp /> : <FiChevronDown />}
-            </div>
+
+              {openSections.productType ? (
+                <FiChevronUp />
+              ) : (
+                <FiChevronDown />
+              )}
+            </button>
+
             {openSections.productType && (
               <div className="OurProducts-checkbox-group">
-                {Object.keys(selectedTypes).map((type) => (
-                  <label
-                    key={type}
-                    className="OurProducts-checkbox-label"
-                    onClick={() => handleTypeChange(type)}
-                  >
-                    {selectedTypes[type] ? (
-                      <FiCheckSquare className="OurProducts-check-icon checked" />
-                    ) : (
-                      <FiSquare className="OurProducts-check-icon" />
-                    )}
-                    <span>{type}</span>
-                  </label>
-                ))}
-              </div>
-            )}
-          </div>
 
-          {/* Attributes Card */}
-          <div className="OurProducts-card">
-            <div
-              className="OurProducts-card-header"
-              onClick={() => toggleSection("attributes")}
-            >
-              <span className="OurProducts-card-title">
-                <FaLeaf className="OurProducts-filter-icon" /> Attributes
-              </span>
-              {openSections.attributes ? <FiChevronUp /> : <FiChevronDown />}
-            </div>
-            {openSections.attributes && (
-              <>
-                <div className="OurProducts-checkbox-group">
-                  {Object.keys(selectedAttributes).map((attr) => (
-                    <label
-                      key={attr}
+                {Object.keys(selectedTypes).map(
+                  (type) => (
+                    <button
+                      type="button"
+                      key={type}
                       className="OurProducts-checkbox-label"
-                      onClick={() => handleAttributeChange(attr)}
+                      onClick={() =>
+                        handleTypeChange(type)
+                      }
+                      aria-pressed={
+                        selectedTypes[type]
+                      }
                     >
-                      {selectedAttributes[attr] ? (
+                      {selectedTypes[type] ? (
                         <FiCheckSquare className="OurProducts-check-icon checked" />
                       ) : (
                         <FiSquare className="OurProducts-check-icon" />
                       )}
-                      <span>{attr}</span>
-                    </label>
+
+                      <span>{type}</span>
+                    </button>
+                  )
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* ATTRIBUTES */}
+
+          <div className="OurProducts-card">
+
+            <button
+              type="button"
+              className="OurProducts-card-header"
+              onClick={() =>
+                toggleSection("attributes")
+              }
+              aria-expanded={
+                openSections.attributes
+              }
+            >
+              <span className="OurProducts-card-title">
+                <FaLeaf className="OurProducts-filter-icon" />
+                Attributes
+              </span>
+
+              {openSections.attributes ? (
+                <FiChevronUp />
+              ) : (
+                <FiChevronDown />
+              )}
+            </button>
+
+            {openSections.attributes && (
+              <>
+                <div className="OurProducts-checkbox-group">
+
+                  {Object.keys(
+                    selectedAttributes
+                  ).map((attribute) => (
+                    <button
+                      type="button"
+                      key={attribute}
+                      className="OurProducts-checkbox-label"
+                      onClick={() =>
+                        handleAttributeChange(
+                          attribute
+                        )
+                      }
+                      aria-pressed={
+                        selectedAttributes[
+                          attribute
+                        ]
+                      }
+                    >
+                      {selectedAttributes[
+                        attribute
+                      ] ? (
+                        <FiCheckSquare className="OurProducts-check-icon checked" />
+                      ) : (
+                        <FiSquare className="OurProducts-check-icon" />
+                      )}
+
+                      <span>
+                        {attribute}
+                      </span>
+                    </button>
                   ))}
+
                 </div>
+
                 <div className="OurProducts-filter-actions">
-                  <button className="OurProducts-btn-reset" onClick={resetFilters}>
+
+                  <button
+                    type="button"
+                    className="OurProducts-btn-reset"
+                    onClick={resetFilters}
+                  >
                     Reset Filters
                   </button>
+
                   <button
+                    type="button"
                     className="OurProducts-btn-apply"
-                    onClick={() => setCurrentPage(1)}
+                    onClick={() =>
+                      setCurrentPage(1)
+                    }
                   >
-                    Apply Filters <FiFilter />
+                    Apply Filters
+                    <FiFilter />
                   </button>
+
                 </div>
               </>
             )}
           </div>
 
-          {/* Free Shipping Card */}
+          {/* PROMO */}
+
           <div className="OurProducts-promo-card">
+
             <div className="OurProducts-promo-content">
+
               <h4>Free Shipping</h4>
-              <p>On all orders above ₹999</p>
+
+              <p>
+                On all orders above ₹999
+              </p>
+
               <button
+                type="button"
                 className="OurProducts-promo-link"
                 onClick={() => {
                   setPriceRange(2500);
-                  setSelectedCategory("All Products");
+                  setSelectedCategory(
+                    "All Products"
+                  );
+                  setCurrentPage(1);
                 }}
               >
-                Shop Now <FiArrowRight />
+                Shop Now
+                <FiArrowRight />
               </button>
+
             </div>
-            <div
+
+            <img
+              src={PromoImage}
+              alt=""
               className="OurProducts-promo-graphic"
-              style={{ backgroundImage: `url(${PROMO_BOX_IMAGE})` }}
+              width="120"
+              height="120"
+              loading="lazy"
+              decoding="async"
             />
+
           </div>
         </aside>
 
-        {/* Product Catalog Section */}
+        {/* PRODUCTS */}
+
         <main className="OurProducts-content">
-          {/* Controls Bar */}
+
           <div className="OurProducts-controls">
+
             <div className="OurProducts-results-count">
-              Showing {startItem}-{endItem} of {filteredProducts.length} products
+              Showing {startItem}-{endItem} of{" "}
+              {filteredProducts.length} products
             </div>
+
             <div className="OurProducts-actions">
+
               <div className="OurProducts-sort-wrapper">
-                <span className="OurProducts-sort-label">Sort by:</span>
+
+                <label
+                  htmlFor="product-sort"
+                  className="OurProducts-sort-label"
+                >
+                  Sort by:
+                </label>
+
                 <div className="OurProducts-select-container">
+
                   <select
+                    id="product-sort"
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
+                    onChange={(event) =>
+                      setSortBy(
+                        event.target.value
+                      )
+                    }
                     className="OurProducts-select"
                   >
-                    <option value="Newest First">Newest First</option>
-                    <option value="Price: Low to High">Price: Low to High</option>
-                    <option value="Price: High to Low">Price: High to Low</option>
-                    <option value="Popularity">Popularity</option>
+                    <option>
+                      Newest First
+                    </option>
+
+                    <option>
+                      Price: Low to High
+                    </option>
+
+                    <option>
+                      Price: High to Low
+                    </option>
+
+                    <option>
+                      Popularity
+                    </option>
                   </select>
+
                   <FiChevronDown className="OurProducts-select-arrow" />
+
                 </div>
               </div>
-              <div className="OurProducts-view-toggle">
+
+              <div
+                className="OurProducts-view-toggle"
+                role="group"
+                aria-label="Product view"
+              >
+
                 <button
+                  type="button"
                   className={`OurProducts-view-btn ${
-                    viewMode === "grid" ? "active" : ""
+                    viewMode === "grid"
+                      ? "active"
+                      : ""
                   }`}
-                  onClick={() => setViewMode("grid")}
+                  onClick={() =>
+                    setViewMode("grid")
+                  }
                   aria-label="Grid View"
+                  aria-pressed={
+                    viewMode === "grid"
+                  }
                 >
                   <FiGrid />
                 </button>
+
                 <button
+                  type="button"
                   className={`OurProducts-view-btn ${
-                    viewMode === "list" ? "active" : ""
+                    viewMode === "list"
+                      ? "active"
+                      : ""
                   }`}
-                  onClick={() => setViewMode("list")}
+                  onClick={() =>
+                    setViewMode("list")
+                  }
                   aria-label="List View"
+                  aria-pressed={
+                    viewMode === "list"
+                  }
                 >
                   <FiList />
                 </button>
+
               </div>
             </div>
           </div>
 
-          {/* Product Items */}
+          {/* PRODUCT GRID */}
+
           {filteredProducts.length === 0 ? (
             <div className="OurProducts-empty-state">
-              <p>No products found matching your current filter selections.</p>
-              <button className="OurProducts-btn-reset" onClick={resetFilters}>
+
+              <p>
+                No products found matching
+                your current filter selections.
+              </p>
+
+              <button
+                type="button"
+                className="OurProducts-btn-reset"
+                onClick={resetFilters}
+              >
                 Clear All Filters
               </button>
+
             </div>
           ) : (
-            <div className={`OurProducts-grid OurProducts-${viewMode}-mode`}>
-              {currentProducts.map((product) => (
-                <div key={product.id} className="OurProducts-product-card">
-                  <div className="OurProducts-image-container">
-                    {product.badge && (
-                      <span
-                        className={`OurProducts-badge OurProducts-badge-${product.badgeType}`}
+            <div
+              className={`OurProducts-grid ${
+                viewMode === "list"
+                  ? "OurProducts-list-mode"
+                  : ""
+              }`}
+            >
+
+              {currentProducts.map(
+                (product, index) => (
+                  <article
+                    key={product.id}
+                    className="OurProducts-product-card"
+                  >
+
+                    <div className="OurProducts-image-container">
+
+                      {product.badge && (
+                        <span
+                          className={`OurProducts-badge OurProducts-badge-${product.badgeType}`}
+                        >
+                          {product.badge}
+                        </span>
+                      )}
+
+                      <button
+                        type="button"
+                        className={`OurProducts-wishlist-btn ${
+                          wishlist[product.id]
+                            ? "active"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          toggleWishlist(
+                            product.id
+                          )
+                        }
+                        aria-label={
+                          wishlist[product.id]
+                            ? `Remove ${product.title} from wishlist`
+                            : `Add ${product.title} to wishlist`
+                        }
                       >
-                        {product.badge}
-                      </span>
-                    )}
-                    <button
-                      className={`OurProducts-wishlist-btn ${
-                        wishlist[product.id] ? "active" : ""
-                      }`}
-                      onClick={() => toggleWishlist(product.id)}
-                      aria-label="Add to wishlist"
-                    >
-                      <FiHeart />
-                    </button>
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="OurProducts-product-image"
-                      loading="lazy"
-                    />
-                  </div>
+                        <FiHeart />
+                      </button>
 
-                  <div className="OurProducts-product-details">
-                    <h3 className="OurProducts-product-title">{product.title}</h3>
-                    <div className="OurProducts-product-weight">{product.weight}</div>
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="OurProducts-product-image"
+                        width="600"
+                        height="600"
+                        loading={
+                          index < 4
+                            ? "eager"
+                            : "lazy"
+                        }
+                        fetchPriority={
+                          index === 0
+                            ? "high"
+                            : "auto"
+                        }
+                        decoding="async"
+                      />
 
-                    <div className="OurProducts-rating-row">
-                      <div className="OurProducts-stars">
-                        {[...Array(5)].map((_, i) => (
-                          <FaStar
-                            key={i}
-                            className={
-                              i < Math.floor(product.rating)
-                                ? "OurProducts-star filled"
-                                : "OurProducts-star"
-                            }
-                          />
-                        ))}
-                      </div>
-                      <span className="OurProducts-reviews-count">
-                        ({product.reviews})
-                      </span>
                     </div>
 
-                    <div className="OurProducts-price-row">
-                      <div className="OurProducts-prices">
-                        <span className="OurProducts-current-price">
-                          ₹{product.price}
+                    <div className="OurProducts-product-details">
+
+                      <h3 className="OurProducts-product-title">
+                        {product.title}
+                      </h3>
+
+                      <div className="OurProducts-product-weight">
+                        {product.weight}
+                      </div>
+
+                      <div className="OurProducts-rating-row">
+
+                        <div className="OurProducts-stars">
+                          {[0, 1, 2, 3, 4].map(
+                            (star) => (
+                              <FaStar
+                                key={star}
+                                className={
+                                  star <
+                                  Math.floor(
+                                    product.rating
+                                  )
+                                    ? "OurProducts-star filled"
+                                    : "OurProducts-star"
+                                }
+                              />
+                            )
+                          )}
+                        </div>
+
+                        <span className="OurProducts-reviews-count">
+                          ({product.reviews})
                         </span>
-                        {product.originalPrice && (
+
+                      </div>
+
+                      <div className="OurProducts-price-row">
+
+                        <div className="OurProducts-prices">
+
+                          <span className="OurProducts-current-price">
+                            ₹{product.price}
+                          </span>
+
                           <span className="OurProducts-old-price">
                             ₹{product.originalPrice}
                           </span>
-                        )}
+
+                        </div>
+
+                        <button
+                          type="button"
+                          className="OurProducts-cart-btn"
+                          onClick={() =>
+                            handleAddToCart(
+                              product
+                            )
+                          }
+                          aria-label={`Add ${product.title} to cart`}
+                        >
+                          <FiShoppingCart />
+                        </button>
+
                       </div>
-                      <button
-                        className="OurProducts-cart-btn"
-                        onClick={() => handleAddToCart(product)}
-                        aria-label="Add to cart"
-                      >
-                        <FiShoppingCart />
-                      </button>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  </article>
+                )
+              )}
+
             </div>
           )}
 
-          {/* Pagination */}
+          {/* PAGINATION */}
+
           {totalPages > 1 && (
-            <div className="OurProducts-pagination">
+            <nav
+              className="OurProducts-pagination"
+              aria-label="Product pagination"
+            >
+
               <button
+                type="button"
                 className="OurProducts-page-nav"
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                onClick={() =>
+                  setCurrentPage((page) =>
+                    Math.max(1, page - 1)
+                  )
+                }
+                aria-label="Previous page"
               >
                 <FiChevronLeft />
               </button>
 
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              {Array.from(
+                {
+                  length: totalPages,
+                },
+                (_, index) => index + 1
+              ).map((page) => (
                 <button
-                  key={pageNum}
+                  type="button"
+                  key={page}
                   className={`OurProducts-page-number ${
-                    currentPage === pageNum ? "active" : ""
+                    currentPage === page
+                      ? "active"
+                      : ""
                   }`}
-                  onClick={() => setCurrentPage(pageNum)}
+                  onClick={() =>
+                    setCurrentPage(page)
+                  }
+                  aria-label={`Go to page ${page}`}
+                  aria-current={
+                    currentPage === page
+                      ? "page"
+                      : undefined
+                  }
                 >
-                  {pageNum}
+                  {page}
                 </button>
               ))}
 
-              {totalPages > 4 && <span className="OurProducts-page-dots">...</span>}
-
               <button
+                type="button"
                 className="OurProducts-page-nav"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={
+                  currentPage === totalPages
+                }
+                onClick={() =>
+                  setCurrentPage((page) =>
+                    Math.min(
+                      totalPages,
+                      page + 1
+                    )
+                  )
+                }
+                aria-label="Next page"
               >
                 <FiChevronRight />
               </button>
-            </div>
+
+            </nav>
           )}
+
         </main>
       </div>
 
-      {/* Feature Badges Footer */}
+      {/* FEATURES */}
+
       <footer className="OurProducts-footer-features">
-        <div
+
+        <button
+          type="button"
           className="OurProducts-feature-item"
-          onClick={() => handleFeatureClick("Premium Ingredients")}
+          onClick={() =>
+            handleFeatureClick(
+              "Premium Ingredients"
+            )
+          }
         >
-          <div className="OurProducts-feature-icon-wrapper">
+          <span className="OurProducts-feature-icon-wrapper">
             <FiAward />
-          </div>
-          <div>
-            <h4>Premium Ingredients</h4>
-            <p>Finest cocoa & pure honey</p>
-          </div>
-        </div>
+          </span>
 
-        <div
+          <span>
+            <strong>
+              Premium Ingredients
+            </strong>
+
+            <small>
+              Finest cocoa & pure honey
+            </small>
+          </span>
+        </button>
+
+        <button
+          type="button"
           className="OurProducts-feature-item"
-          onClick={() => handleFeatureClick("Bean to Bar Crafted")}
+          onClick={() =>
+            handleFeatureClick(
+              "Bean to Bar Crafted"
+            )
+          }
         >
-          <div className="OurProducts-feature-icon-wrapper">
+          <span className="OurProducts-feature-icon-wrapper">
             <GiChocolateBar />
-          </div>
-          <div>
-            <h4>Bean to Bar Crafted</h4>
-            <p>Crafted with love</p>
-          </div>
-        </div>
+          </span>
 
-        <div
+          <span>
+            <strong>
+              Bean to Bar Crafted
+            </strong>
+
+            <small>
+              Crafted with love
+            </small>
+          </span>
+        </button>
+
+        <button
+          type="button"
           className="OurProducts-feature-item"
-          onClick={() => handleFeatureClick("No Refined Sugar")}
+          onClick={() =>
+            handleFeatureClick(
+              "No Refined Sugar"
+            )
+          }
         >
-          <div className="OurProducts-feature-icon-wrapper">
+          <span className="OurProducts-feature-icon-wrapper">
             <GiWheat />
-          </div>
-          <div>
-            <h4>No Refined Sugar</h4>
-            <p>Healthier choice</p>
-          </div>
-        </div>
+          </span>
 
-        <div
+          <span>
+            <strong>
+              No Refined Sugar
+            </strong>
+
+            <small>
+              Healthier choice
+            </small>
+          </span>
+        </button>
+
+        <button
+          type="button"
           className="OurProducts-feature-item"
-          onClick={() => handleFeatureClick("Made in India")}
+          onClick={() =>
+            handleFeatureClick(
+              "Made in India"
+            )
+          }
         >
-          <div className="OurProducts-feature-icon-wrapper">
+          <span className="OurProducts-feature-icon-wrapper">
             <FiCompass />
-          </div>
-          <div>
-            <h4>Made in India</h4>
-            <p>Proudly Indian</p>
-          </div>
-        </div>
+          </span>
 
-        <div
+          <span>
+            <strong>Made in India</strong>
+
+            <small>
+              Proudly Indian
+            </small>
+          </span>
+        </button>
+
+        <button
+          type="button"
           className="OurProducts-feature-item"
-          onClick={() => handleFeatureClick("Secure Packaging")}
+          onClick={() =>
+            handleFeatureClick(
+              "Secure Packaging"
+            )
+          }
         >
-          <div className="OurProducts-feature-icon-wrapper">
+          <span className="OurProducts-feature-icon-wrapper">
             <FiShield />
-          </div>
-          <div>
-            <h4>Secure Packaging</h4>
-            <p>Safe & eco-friendly</p>
-          </div>
-        </div>
+          </span>
+
+          <span>
+            <strong>
+              Secure Packaging
+            </strong>
+
+            <small>
+              Safe & eco-friendly
+            </small>
+          </span>
+        </button>
+
       </footer>
+
     </div>
   );
 }

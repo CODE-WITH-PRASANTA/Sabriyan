@@ -29,9 +29,30 @@
       href="/favicon.svg"
     />
 
+    <!-- =====================================================
+         LCP HERO IMAGE PRELOAD
+         Matches the hero <img> srcSet in OurProducts.jsx
+         ===================================================== -->
+
+    <link
+      rel="preload"
+      as="image"
+      href="https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=480&q=45&fm=webp"
+      imagesrcset="
+        https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=480&q=45&fm=webp 480w,
+        https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=1000&q=55&fm=webp 1000w
+      "
+      imagesizes="100vw"
+      fetchpriority="high"
+      type="image/webp"
+    />
+
     <title>Sabriyana | Pure Natural Honey</title>
 
-    <!-- Critical initial paint CSS -->
+    <!-- =====================================================
+         CRITICAL INITIAL PAINT CSS
+         ===================================================== -->
+
     <style>
       html {
         background: #07160d;

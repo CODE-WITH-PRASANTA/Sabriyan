@@ -1,96 +1,153 @@
 import React, { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
-// =========================================
+// =====================================================
 // GLOBAL COMPONENTS
-// Navbar is required immediately.
-// ScrollToTop is very small.
-// =========================================
+// Keep these normal because they are required immediately.
+// =====================================================
 
 import Navbar from "./Pages/Navbar/Navbar";
 import ScrollToTop from "./Component/ScrollToTop/ScrollToTop";
 
-// =========================================
-// LAZY LOADED GLOBAL COMPONENTS
-// =========================================
+// =====================================================
+// LAZY GLOBAL COMPONENTS
+// These are not required for the first paint.
+// =====================================================
 
-const Footer = lazy(() => import("./Component/Footer/Footer"));
-const Floating = lazy(() => import("./Component/Floating/Floating"));
-
-// =========================================
-// LAZY LOADED PAGES
-// =========================================
-
-const Home = lazy(() => import("./Pages/Home/Home"));
-const About = lazy(() => import("./Pages/About/About"));
-const Honey = lazy(() => import("./Pages/Honey/Honey"));
-const Blog = lazy(() => import("./Pages/Blog/Blog"));
-const Faq = lazy(() => import("./Pages/Faq/Faq"));
-const Contact = lazy(() => import("./Pages/Contact/Contact"));
-
-const BlogDetails = lazy(
-  () => import("./Pages/BlogDetails/BlogDetails")
+const Footer = lazy(() =>
+  import("./Component/Footer/Footer")
 );
 
-const PremimuCollection = lazy(
-  () => import("./Pages/PremimuCollection/PremimuCollection")
+const Floating = lazy(() =>
+  import("./Component/Floating/Floating")
 );
 
-const MyWishlist = lazy(
-  () => import("./Component/MyWishlist/MyWishlist")
+// =====================================================
+// LAZY PAGES
+// Route-level code splitting keeps initial JS small.
+// =====================================================
+
+const Home = lazy(() =>
+  import("./Pages/Home/Home")
 );
 
-const Account = lazy(
-  () => import("./Component/Account/Account")
+const About = lazy(() =>
+  import("./Pages/About/About")
 );
 
-const OurProducts = lazy(
-  () => import("./Component/OurProducts/OurProducts")
+const Honey = lazy(() =>
+  import("./Pages/Honey/Honey")
 );
 
-const PrivacyPolicy = lazy(
-  () => import("./Component/PrivacyPolicy/PrivacyPolicy")
+const Blog = lazy(() =>
+  import("./Pages/Blog/Blog")
 );
 
-const TermsAndConditions = lazy(
-  () => import("./Component/TermsAndConditions/TermsAndConditions")
+const BlogDetails = lazy(() =>
+  import("./Pages/BlogDetails/BlogDetails")
 );
 
-const Cart = lazy(
-  () => import("./Component/Cart/Cart")
+const Faq = lazy(() =>
+  import("./Pages/Faq/Faq")
 );
 
-// =========================================
+const Contact = lazy(() =>
+  import("./Pages/Contact/Contact")
+);
+
+const PremimuCollection = lazy(() =>
+  import(
+    "./Pages/PremimuCollection/PremimuCollection"
+  )
+);
+
+const OurProducts = lazy(() =>
+  import(
+    "./Component/OurProducts/OurProducts"
+  )
+);
+
+const MyWishlist = lazy(() =>
+  import(
+    "./Component/MyWishlist/MyWishlist"
+  )
+);
+
+const Account = lazy(() =>
+  import("./Component/Account/Account")
+);
+
+const Cart = lazy(() =>
+  import("./Component/Cart/Cart")
+);
+
+const PrivacyPolicy = lazy(() =>
+  import(
+    "./Component/PrivacyPolicy/PrivacyPolicy"
+  )
+);
+
+const TermsAndConditions = lazy(() =>
+  import(
+    "./Component/TermsAndConditions/TermsAndConditions"
+  )
+);
+
+// =====================================================
 // LOADING FALLBACK
-// =========================================
+// Keep this empty so Lighthouse doesn't have to render
+// an additional loader element during route loading.
+// =====================================================
 
 const PageLoader = () => null;
 
-// =========================================
+// =====================================================
 // APP
-// =========================================
+// =====================================================
 
 const App = () => {
   return (
     <BrowserRouter>
-      {/* Scroll position handler */}
+
+      {/* =================================================
+          SCROLL POSITION
+          ================================================= */}
+
       <ScrollToTop />
 
-      {/* Header */}
+      {/* =================================================
+          NAVBAR
+          Required immediately.
+          ================================================= */}
+
       <Navbar />
 
-      {/* Main Content */}
+      {/* =================================================
+          MAIN CONTENT
+          ================================================= */}
+
       <main>
         <Suspense fallback={<PageLoader />}>
+
           <Routes>
 
-            {/* Home */}
+            {/* ============================================
+                HOME
+                ============================================ */}
+
             <Route
               path="/"
               element={<Home />}
             />
 
-            {/* Main Pages */}
+            {/* ============================================
+                MAIN PAGES
+                ============================================ */}
+
             <Route
               path="/about"
               element={<About />}
@@ -121,19 +178,32 @@ const App = () => {
               element={<Contact />}
             />
 
-            {/* Collection */}
+            {/* ============================================
+                PREMIUM COLLECTION
+                ============================================ */}
+
             <Route
               path="/premiumcollection"
-              element={<PremimuCollection />}
+              element={
+                <PremimuCollection />
+              }
             />
 
-            {/* Products */}
+            {/* ============================================
+                PRODUCTS
+                ============================================ */}
+
             <Route
               path="/ourproduct"
-              element={<OurProducts />}
+              element={
+                <OurProducts />
+              }
             />
 
-            {/* User */}
+            {/* ============================================
+                USER
+                ============================================ */}
+
             <Route
               path="/wishlist"
               element={<MyWishlist />}
@@ -149,7 +219,10 @@ const App = () => {
               element={<Account />}
             />
 
-            {/* Legal */}
+            {/* ============================================
+                LEGAL
+                ============================================ */}
+
             <Route
               path="/privacypolicy"
               element={<PrivacyPolicy />}
@@ -157,18 +230,26 @@ const App = () => {
 
             <Route
               path="/termandcondition"
-              element={<TermsAndConditions />}
+              element={
+                <TermsAndConditions />
+              }
             />
 
           </Routes>
+
         </Suspense>
       </main>
 
-      {/* Lazy-loaded Footer and Floating Button */}
+      {/* =================================================
+          FOOTER + FLOATING
+          Loaded after the main route.
+          ================================================= */}
+
       <Suspense fallback={null}>
         <Footer />
         <Floating />
       </Suspense>
+
     </BrowserRouter>
   );
 };

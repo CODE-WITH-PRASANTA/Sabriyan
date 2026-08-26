@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import './MainAbout.css';
+import bgImage from '../../assets/about-3.webp';
 
 // Component for word-by-word animation
 const AnimatedText = ({ text, className, tag: Tag = 'p' }) => {
@@ -65,15 +66,12 @@ const MainAbout = () => {
   return (
     <section className="main-about">
 
-      {/* ================================
-          LCP IMAGE
-          ================================ */}
+      {/* LCP Background Image */}
       <img
-        src="/images/about-3.webp"
+        src={bgImage}
         alt=""
         className="main-about__bg"
         fetchPriority="high"
-        loading="eager"
         decoding="async"
         aria-hidden="true"
       />
