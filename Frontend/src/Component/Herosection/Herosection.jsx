@@ -89,7 +89,7 @@ const Herosection = () => {
 
           {/* SEO-Friendly Description */}
           <p>
-            Discover Savriyana, a premium chocolate brand from Odisha,
+            Discover Sabriyana, a premium chocolate brand from Odisha,
             crafting rich and indulgent chocolates with carefully selected
             cocoa, traditional Indian ingredients and thoughtful
             craftsmanship. Every bar is created to deliver authentic

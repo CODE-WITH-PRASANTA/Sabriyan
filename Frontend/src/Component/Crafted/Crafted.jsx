@@ -23,7 +23,7 @@ const Crafted = () => {
         <div className="Crafted-imageWrapper">
           <img
             src={heroImage}
-            alt="Savriyana premium chocolate crafted with rich cocoa and traditional Indian-inspired techniques"
+            alt="Sabriyana premium chocolate crafted with rich cocoa and traditional Indian-inspired techniques"
             className="Crafted-image"
             itemProp="image"
           />
@@ -52,7 +52,7 @@ const Crafted = () => {
             className="Crafted-description"
             itemProp="description"
           >
-            Savriyana is a premium chocolate brand from Odisha,
+            Sabriyana is a premium chocolate brand from Odisha,
             created for people who appreciate the beauty of
             thoughtfully crafted chocolate. We bring together
             carefully selected cocoa, traditional Indian
@@ -149,7 +149,7 @@ const Crafted = () => {
             <p>
               As a{" "}
               <strong>premium chocolate brand in Odisha</strong>,
-              Savriyana combines quality cocoa with Indian-inspired
+              Sabriyana combines quality cocoa with Indian-inspired
               craftsmanship to create chocolates that feel refined,
               authentic and distinctly our own.
             </p>
