@@ -1,96 +1,107 @@
-/*==============================
-Navbar Main
-===============================*/
-
+/*=============================================
+  1. BASE HEADER & CONTAINER
+=============================================*/
 .Navbar {
   width: 100%;
   position: fixed;
-  top: 25px;
+  top: 24px;
   left: 0;
-  z-index: 999999;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   pointer-events: none;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 .Navbar-container {
-  width: min(1380px, 94%);
-  height: 82px;
+  width: 100%;
+  max-width: 1360px;
+  height: 78px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 38px;
-  border-radius: 30px;
-  background: rgba(0, 0, 0, 0.18);
+  padding: 0 32px;
+  border-radius: 26px;
+  background: rgba(8, 20, 16, 0.45);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
   pointer-events: auto;
+  box-sizing: border-box;
+  transition: height 0.3s ease, padding 0.3s ease;
 }
 
-/*==============================
-Logo
-===============================*/
+/*=============================================
+  2. LOGO
+=============================================*/
+.Navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
 
 .Navbar-logo img {
-  height: 42px;
+  height: 40px;
   width: auto;
   display: block;
+  object-fit: contain;
+  transition: height 0.3s ease;
 }
 
-/*==============================
-Desktop Menu
-===============================*/
-
+/*=============================================
+  3. DESKTOP LINKS
+=============================================*/
 .Navbar-links {
   display: flex;
-  gap: 40px;
+  gap: 32px;
   align-items: center;
 }
 
 .Navbar-links a {
-  color: #fff;
+  color: #f1f5f9;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 500;
   position: relative;
-  transition: 0.35s;
-  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+  letter-spacing: 0.2px;
+  padding: 6px 0;
+  white-space: nowrap;
 }
 
 .Navbar-links a::after {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -8px;
+  bottom: 0;
   transform: translateX(-50%);
   width: 0;
   height: 2px;
+  border-radius: 2px;
   background: #dfab54;
-  transition: 0.4s;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.Navbar-links a:hover {
+.Navbar-links a:hover,
+.Navbar-links a.active {
   color: #dfab54;
 }
 
-.Navbar-links a:hover::after {
+.Navbar-links a:hover::after,
+.Navbar-links a.active::after {
   width: 100%;
 }
 
-.Navbar-links .active {
-  color: #dfab54;
-}
-
-/*==============================
-3 Action Icons (Wishlist, Account, Cart)
-===============================*/
-
+/*=============================================
+  4. ACTION ITEMS (Wishlist, Account, Cart)
+=============================================*/
 .Navbar-actions {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 
 .Navbar-action-item {
@@ -99,29 +110,17 @@ Desktop Menu
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  gap: 3px;
+  gap: 2px;
   cursor: pointer;
   background: transparent;
   padding: 4px 6px;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: inherit;
+  transition: transform 0.2s ease;
   border: none;
   outline: none;
 }
 
 .Navbar-action-item:hover {
-  transform: translateY(-3px);
-}
-
-/* Button style reset for cart drawer trigger */
-.Navbar-cart-btn {
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 4px 6px;
-  font-family: inherit;
-  color: inherit;
+  transform: translateY(-2px);
 }
 
 .Navbar-action-icon-wrap {
@@ -132,7 +131,7 @@ Desktop Menu
 }
 
 .Navbar-action-icon {
-  font-size: 21px;
+  font-size: 20px;
   color: #dfab54;
   transition: color 0.3s ease, filter 0.3s ease;
 }
@@ -140,7 +139,7 @@ Desktop Menu
 .Navbar-action-item:hover .Navbar-action-icon,
 .Navbar-action-item.active .Navbar-action-icon {
   color: #f5d799;
-  filter: drop-shadow(0 0 8px rgba(223, 171, 84, 0.7));
+  filter: drop-shadow(0 0 6px rgba(223, 171, 84, 0.7));
 }
 
 .Navbar-action-item span {
@@ -156,7 +155,6 @@ Desktop Menu
   color: #dfab54;
 }
 
-/* Golden Circular Badge for Cart */
 .Navbar-badge {
   position: absolute;
   top: -7px;
@@ -165,74 +163,77 @@ Desktop Menu
   color: #03140f;
   font-size: 10px;
   font-weight: 800;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 2px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 8px rgba(223, 171, 84, 0.9);
+  box-shadow: 0 0 8px rgba(223, 171, 84, 0.85);
   line-height: 1;
 }
 
-/*==============================
-Button
-===============================*/
-
+/*=============================================
+  5. CTA BUTTON & TOGGLE
+=============================================*/
 .Navbar-btn {
   text-decoration: none;
   color: #03140f;
-  padding: 11px 24px;
+  padding: 10px 22px;
   border-radius: 100px;
   background: linear-gradient(135deg, #f5d799 0%, #dfab54 100%);
   font-weight: 700;
-  font-size: 14px;
-  transition: 0.35s;
-  border: 1px solid transparent;
+  font-size: 13.5px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .Navbar-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(223, 171, 84, 0.4);
+  box-shadow: 0 8px 20px rgba(223, 171, 84, 0.4);
 }
-
-/*==============================
-Toggle
-===============================*/
 
 .Navbar-toggle {
   display: none;
   border: none;
-  background: none;
+  background: transparent;
   color: #dfab54;
-  font-size: 33px;
+  font-size: 30px;
   cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
 }
 
-/*==============================
-Mobile Menu
-===============================*/
+.Navbar-toggle:active {
+  transform: scale(0.92);
+}
 
+/*=============================================
+  6. MOBILE & TABLET DRAWER
+=============================================*/
 .Navbar-mobile {
   position: absolute;
-  top: 100px;
-  width: min(94%, 420px);
+  top: 90px;
+  width: min(92%, 400px);
   left: 50%;
-  transform: translateX(-50%) translateY(-30px);
+  transform: translateX(-50%) translateY(-20px);
   opacity: 0;
   visibility: hidden;
+  border-radius: 22px;
+  background: rgba(4, 18, 14, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(223, 171, 84, 0.25);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+  max-height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 28px;
-  border-radius: 25px;
-  background: rgba(3, 20, 15, 0.95);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  transition: all 0.45s ease;
-  border: 1px solid rgba(223, 171, 84, 0.2);
-  z-index: 999999;
-  pointer-events: none;
 }
 
 .Navbar-mobile-show {
@@ -242,18 +243,34 @@ Mobile Menu
   pointer-events: auto;
 }
 
-.Navbar-mobile a {
-  text-decoration: none;
-  color: white;
-  font-size: 16px;
-  transition: 0.3s;
-  padding: 4px 0;
-  display: block;
+.Navbar-mobile-scroll {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.Navbar-mobile a:hover,
-.Navbar-mobile a.active {
+.Navbar-mobile-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.Navbar-mobile-links a {
+  text-decoration: none;
+  color: #f1f5f9;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.Navbar-mobile-links a:hover,
+.Navbar-mobile-links a.active {
   color: #dfab54;
+  background: rgba(223, 171, 84, 0.08);
 }
 
 .Navbar-mobile-actions {
@@ -270,25 +287,52 @@ Mobile Menu
   background: linear-gradient(135deg, #f5d799 0%, #dfab54 100%);
   color: #03140f !important;
   text-align: center;
-  padding: 13px;
-  border-radius: 50px;
+  padding: 12px;
+  border-radius: 100px;
   font-weight: 700;
+  text-decoration: none;
+  font-size: 14px;
 }
 
-/*==============================
-Responsive
-===============================*/
+/* Overlay Backdrop */
+.Navbar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 999;
+}
 
-@media (max-width: 1150px) {
+.Navbar-backdrop-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/*=============================================
+  7. RESPONSIVE BREAKPOINTS
+=============================================*/
+/* Standard Laptops & MacBooks */
+@media (max-width: 1200px) {
   .Navbar-links {
-    gap: 24px;
+    gap: 20px;
+  }
+  .Navbar-links a {
+    font-size: 14px;
   }
   .Navbar-actions {
-    gap: 16px;
+    gap: 14px;
+  }
+  .Navbar-container {
+    padding: 0 24px;
   }
 }
 
-@media (max-width: 950px) {
+/* Tablets, iPad Landscape & Small Laptops (Collapse to Hamburger) */
+@media (max-width: 1024px) {
   .Navbar-links,
   .Navbar-actions,
   .Navbar-btn {
@@ -296,45 +340,56 @@ Responsive
   }
 
   .Navbar-toggle {
-    display: block;
+    display: flex;
   }
 
-  .Navbar-container {
-    height: 74px;
-    padding: 0 24px;
-  }
-}
-
-@media (max-width: 768px) {
   .Navbar {
-    top: 15px;
+    top: 16px;
   }
 
   .Navbar-container {
-    width: 94%;
-    height: 70px;
-    border-radius: 22px;
+    height: 68px;
+    padding: 0 20px;
+    border-radius: 20px;
   }
 
   .Navbar-logo img {
-    height: 36px;
+    height: 34px;
   }
 
   .Navbar-mobile {
-    top: 85px;
+    top: 78px;
   }
 }
 
+/* Mobile Devices & iPad Portrait */
 @media (max-width: 480px) {
+  .Navbar {
+    top: 12px;
+    padding: 0 10px;
+  }
+
   .Navbar-container {
-    padding: 0 18px;
+    height: 60px;
+    padding: 0 16px;
+    border-radius: 18px;
   }
 
   .Navbar-logo img {
-    height: 32px;
+    height: 28px;
+  }
+
+  .Navbar-toggle {
+    font-size: 26px;
   }
 
   .Navbar-mobile {
-    padding: 22px;
+    top: 70px;
+    width: min(94%, 360px);
+    border-radius: 18px;
+  }
+
+  .Navbar-mobile-scroll {
+    padding: 18px 16px;
   }
 }

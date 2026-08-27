@@ -31,7 +31,7 @@ const ingredientData = [
     icon: LuLeaf,
     title: "Carefully Selected Ingredients",
     description:
-      "Savriyana uses thoughtfully selected cocoa and natural ingredients to create rich, smooth and memorable chocolate flavours.",
+      "Sabriyana uses thoughtfully selected cocoa and natural ingredients to create rich, smooth and memorable chocolate flavours.",
   },
   {
     id: 2,
@@ -59,7 +59,7 @@ const ingredientData = [
     icon: LuAward,
     title: "Premium Chocolate Quality",
     description:
-      "Every Savriyana bar is crafted with attention to flavour, texture and detail, reflecting our passion for premium chocolate.",
+      "Every Sabriyana bar is crafted with attention to flavour, texture and detail, reflecting our passion for premium chocolate.",
   },
 ];
 
@@ -106,7 +106,7 @@ const Ingrident = () => {
         className="Ingrident-header"
       >
         <span className="Ingrident-subtitle">
-          WHY CHOOSE SAVRIYANA
+          WHY CHOOSE SABRIYANA
         </span>
 
         <h2
@@ -120,7 +120,7 @@ const Ingrident = () => {
         </h2>
 
         <p className="Ingrident-intro">
-          Savriyana is a premium chocolate brand from Odisha,
+          Sabriyana is a premium chocolate brand from Odisha,
           bringing together carefully selected cocoa, traditional
           Indian ingredients and thoughtful craftsmanship. Our
           chocolates are made for people who appreciate authentic
@@ -174,7 +174,7 @@ const Ingrident = () => {
       >
         <p>
           As a <strong>premium chocolate brand in Odisha</strong>,
-          Savriyana combines traditional inspiration with a modern
+          Sabriyana combines traditional inspiration with a modern
           approach to chocolate making. From rich cocoa flavours to
           carefully crafted textures, each chocolate reflects our
           commitment to creating a{" "}
