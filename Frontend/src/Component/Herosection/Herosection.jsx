@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import "./Herosection.css";
 
 import {
@@ -97,11 +98,13 @@ const Herosection = () => {
           </p>
 
           {/* Buttons */}
+         
           <div className="Herosection-buttons">
 
             <button
               className="Herosection-btnPrimary"
               type="button"
+              onClick={() => window.location.href = "/ourproduct"}
             >
               Shop Now
               <FaArrowRight />

@@ -286,16 +286,21 @@ const TermsAndConditions = () => {
                 ), url("${promoCardBg}")`,
               }}
             >
-              <div className="terms-and-conditions__promo-content">
-                <h3>Indulge in Pure Happiness</h3>
-                <p>Finest single-origin cocoa, crafted with love.</p>
-                <button
-                  type="button"
-                  className="terms-and-conditions__gold-btn"
-                >
-                  SHOP NOW
-                </button>
-              </div>
+             <div className="terms-and-conditions__promo-content">
+                  <h3>Indulge in Pure Happiness</h3>
+
+                  <p>Finest single-origin cocoa, crafted with love.</p>
+
+                  <button
+                    type="button"
+                    className="terms-and-conditions__gold-btn"
+                    onClick={() => {
+                      window.location.href = "/ourproduct";
+                    }}
+                  >
+                    SHOP NOW
+                  </button>
+                </div>
             </div>
           </aside>
 

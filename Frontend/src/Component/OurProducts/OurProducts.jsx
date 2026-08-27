@@ -999,15 +999,11 @@ export default function OurProducts() {
                 On all orders above ₹999
               </p>
 
-              <button
+             <button
                 type="button"
                 className="OurProducts-promo-link"
                 onClick={() => {
-                  setPriceRange(2500);
-                  setSelectedCategory(
-                    "All Products"
-                  );
-                  setCurrentPage(1);
+                  window.location.href = "/ourproduct";
                 }}
               >
                 Shop Now

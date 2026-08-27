@@ -174,18 +174,30 @@ const PrivacyPolicy = () => {
             </div>
 
             {/* Premium Chocolate Promo Card */}
-            <div className="privacy-policy-promo-card">
-              <div className="promo-card-overlay"></div>
-              <div className="promo-card-content">
-                <h3 className="promo-card-title">Indulge in Pure Elegance</h3>
-                <p className="promo-card-desc">
-                  Crafted with artisanal single-origin cocoa, velvety smooth textures, and pure botanical richness.
-                </p>
-                <button type="button" className="promo-card-btn">
-                  SHOP NOW
-                </button>
+           <div className="privacy-policy-promo-card">
+                <div className="promo-card-overlay"></div>
+
+                <div className="promo-card-content">
+                  <h3 className="promo-card-title">
+                    Indulge in Pure Elegance
+                  </h3>
+
+                  <p className="promo-card-desc">
+                    Crafted with artisanal single-origin cocoa, velvety smooth
+                    textures, and pure botanical richness.
+                  </p>
+
+                  <button
+                    type="button"
+                    className="promo-card-btn"
+                    onClick={() => {
+                      window.location.href = "/ourproduct";
+                    }}
+                  >
+                    SHOP NOW
+                  </button>
+                </div>
               </div>
-            </div>
           </aside>
 
           {/* ================= POLICY CONTENT ================= */}
